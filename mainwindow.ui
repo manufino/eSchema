@@ -1,0 +1,1193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>887</width>
+    <height>713</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>eSchema</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/res/resources/data-structure.png</normaloff>:/res/resources/data-structure.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QToolBar, QMenuBar,QStatusBar,QMenu {
+	background-color: qlineargradient(spread:reflect, x1:0.506, y1:0.488637, x2:0.494, y2:1, stop:0 rgba(179, 170, 168, 231), stop:1 rgba(199, 199, 199, 207));
+}
+QMenu {
+
+}
+
+QMenu::item {
+	font: 10pt &quot;BankGothic Lt BT&quot;;
+padding-left:2px;
+padding-right:25px;
+padding-top:4px;
+padding-bottom:4px;
+}
+QMenu::item:selected {/*
+	background-color: qlineargradient(spread:reflect, x1:0.494, y1:0.505455, x2:0.494, y2:1, stop:0 rgba(80, 80, 80, 229), stop:1 rgba(168, 168, 168, 247));
+	color: rgb(255, 255, 255);*/
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 211), stop:0.508772 rgba(197, 225, 255, 202), stop:0.997301 rgba(176, 255, 255, 206));
+
+}
+QStatusBar{
+border-top:1px solid black;
+}
+
+
+QToolBox::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+ /*   border-radius: 5px;*/
+    color: rgb(115, 115, 115);
+border:1px solid gray;
+}
+
+QToolBox::tab:selected { /* italicize selected tabs */
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
+    font: italic;
+    color: black;
+border:1px solid cyan;
+}
+
+QToolButton { /* all types of tool button */
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+}
+
+QToolButton[popupMode=&quot;1&quot;] { /* only for MenuButtonPopup */
+    padding-right: 20px; /* make way for the popup button */
+}
+
+QToolButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QToolButton:checked {
+	border-color: rgb(170, 255, 255);
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
+}
+
+/* the subcontrols below are used only in the MenuButtonPopup mode */
+QToolButton::menu-button {
+    border: 2px solid gray;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    /* 16px width + 4px for border = 20px allocated above */
+    width: 16px;
+}
+
+QToolButton::menu-arrow {
+    image: url(downarrow.png);
+}
+
+QToolButton::menu-arrow:open {
+    top: 1px; left: 1px; /* shift it a bit */
+}
+
+QToolTip {
+    border: 2px solid darkkhaki;
+    padding: 5px;
+    border-radius: 3px;
+    opacity: 200;
+}
+
+
+
+QTabWidget::pane { /* The tab widget frame */
+    border-top: 2px solid #C2C7CB;
+}
+
+QTabWidget::tab-bar {
+    left: 5px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+    border:1px solid #C4C4C3;
+    border-bottom-color: #C2C7CB; /* same as the pane color */
+height:12px;
+    min-width: 14ex;
+    padding: 8px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+}
+
+QTabBar::tab:selected {
+	border-color: rgb(170, 255, 255);
+    border-bottom-color: #C2C7CB; /* same as pane color */
+}
+
+QTabBar::tab:!selected {
+    margin-top: 0px; /* make non-selected tabs look smaller */
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QSplitter" name="splitter_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="handleWidth">
+       <number>4</number>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QGraphicsView" name="graphicsView">
+          <property name="minimumSize">
+           <size>
+            <width>600</width>
+            <height>500</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QSplitter" name="splitter">
+       <property name="minimumSize">
+        <size>
+         <width>198</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="QFrame" name="frame">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>2</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QFrame" name="frame_2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="font">
+               <font>
+                <family>BankGothic Lt BT</family>
+                <pointsize>15</pointsize>
+                <bold>false</bold>
+                <underline>false</underline>
+               </font>
+              </property>
+              <property name="text">
+               <string>Librerie</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit"/>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="scrollArea">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustIgnored</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>192</width>
+              <height>405</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QToolBox" name="toolBox">
+               <property name="font">
+                <font>
+                 <family>Consolas</family>
+                 <pointsize>10</pointsize>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="currentIndex">
+                <number>6</number>
+               </property>
+               <property name="tabSpacing">
+                <number>0</number>
+               </property>
+               <widget class="QWidget" name="page">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page 1</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_2">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page 2</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_10">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_11">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_12">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_13">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_14">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+                <widget class="QPushButton" name="pushButton">
+                 <property name="geometry">
+                  <rect>
+                   <x>70</x>
+                   <y>0</y>
+                   <width>75</width>
+                   <height>24</height>
+                  </rect>
+                 </property>
+                 <property name="text">
+                  <string>PushButton</string>
+                 </property>
+                </widget>
+               </widget>
+               <widget class="QWidget" name="page_3">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_4">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_5">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_6">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_7">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_8">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="page_9">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>192</width>
+                  <height>69</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Page</string>
+                </attribute>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>250</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Century</family>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="currentIndex">
+         <number>1</number>
+        </property>
+        <widget class="QWidget" name="tab">
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/res/resources/properties.png</normaloff>:/res/resources/properties.png</iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Proprieta'</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_2">
+         <attribute name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/res/resources/layers.ico</normaloff>:/res/resources/layers.ico</iconset>
+         </attribute>
+         <attribute name="title">
+          <string>Layers</string>
+         </attribute>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>887</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>BankGothic Lt BT</family>
+     <pointsize>11</pointsize>
+     <bold>false</bold>
+    </font>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNewDraw"/>
+    <addaction name="actionOpenFile"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrint"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Modifica</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRestore"/>
+    <addaction name="separator"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
+    <addaction name="actionDuplicate"/>
+    <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionRotate"/>
+    <addaction name="actionMirror"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelectAll"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>Vista</string>
+    </property>
+    <addaction name="actionLibrary"/>
+    <addaction name="actionLayers"/>
+    <addaction name="actionProterties"/>
+    <addaction name="separator"/>
+    <addaction name="actionGrid"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Strumenti</string>
+    </property>
+    <addaction name="actionGestione_librerie"/>
+    <addaction name="separator"/>
+    <addaction name="actionBitamapBackground"/>
+    <addaction name="separator"/>
+    <addaction name="actionViewCode"/>
+    <addaction name="separator"/>
+    <addaction name="actionOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuInformation">
+    <property name="title">
+     <string>Informazioni</string>
+    </property>
+    <addaction name="actionInformation"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuInformation"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>26</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="toolBarTools">
+   <property name="windowTitle">
+    <string>ToolBarStandard</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>30</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonIconOnly</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNewDraw"/>
+   <addaction name="actionOpenFile"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionSaveAs"/>
+   <addaction name="separator"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRestore"/>
+   <addaction name="separator"/>
+   <addaction name="actionCopy"/>
+   <addaction name="actionCut"/>
+   <addaction name="actionPaste"/>
+   <addaction name="actionDelete"/>
+   <addaction name="actionDuplicate"/>
+   <addaction name="actionSelectAll"/>
+   <addaction name="separator"/>
+   <addaction name="actionRotate"/>
+   <addaction name="actionMirror"/>
+   <addaction name="separator"/>
+   <addaction name="actionBitamapBackground"/>
+   <addaction name="actionViewCode"/>
+   <addaction name="actionOptions"/>
+   <addaction name="separator"/>
+   <addaction name="actionGrid"/>
+   <addaction name="separator"/>
+   <addaction name="actionLibrary"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarPrimitive">
+   <property name="windowTitle">
+    <string>ToolBarPrimitive</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>30</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>true</bool>
+   </attribute>
+   <addaction name="actionSelect"/>
+   <addaction name="actionLine"/>
+   <addaction name="actionRectangle"/>
+   <addaction name="actionPolygon"/>
+   <addaction name="actionEllipse"/>
+   <addaction name="actionBezier"/>
+   <addaction name="actionCurve"/>
+   <addaction name="actionText"/>
+   <addaction name="actionConnection"/>
+   <addaction name="separator"/>
+  </widget>
+  <action name="actionNewDraw">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/document_new.ico</normaloff>:/res/resources/document_new.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Nuovo disegno</string>
+   </property>
+  </action>
+  <action name="actionOpenFile">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/document_open.ico</normaloff>:/res/resources/document_open.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Apri un file</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/save.ico</normaloff>:/res/resources/save.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Salva</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/save_as.ico</normaloff>:/res/resources/save_as.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Salva con nome</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/printer.ico</normaloff>:/res/resources/printer.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Stampa</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/cancel.png</normaloff>:/res/resources/cancel.png</iconset>
+   </property>
+   <property name="text">
+    <string>Chiudi</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/undo_blue.ico</normaloff>:/res/resources/undo_blue.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Annulla</string>
+   </property>
+  </action>
+  <action name="actionRestore">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/redo_blue.ico</normaloff>:/res/resources/redo_blue.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Ripristina</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/cut.ico</normaloff>:/res/resources/cut.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Taglia</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/copy.ico</normaloff>:/res/resources/copy.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Copia</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/paste.png</normaloff>:/res/resources/paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>Incolla</string>
+   </property>
+  </action>
+  <action name="actionDuplicate">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/duplicate.png</normaloff>:/res/resources/duplicate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Duplica</string>
+   </property>
+  </action>
+  <action name="actionRotate">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/refresh.png</normaloff>:/res/resources/refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ruota</string>
+   </property>
+  </action>
+  <action name="actionMirror">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/symmetry.png</normaloff>:/res/resources/symmetry.png</iconset>
+   </property>
+   <property name="text">
+    <string>Specchia</string>
+   </property>
+  </action>
+  <action name="actionSelectAll">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/select.png</normaloff>:/res/resources/select.png</iconset>
+   </property>
+   <property name="text">
+    <string>Seleziona tutto</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/delete.ico</normaloff>:/res/resources/delete.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Elimina</string>
+   </property>
+  </action>
+  <action name="actionBitamapBackground">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/image.png</normaloff>:/res/resources/image.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bitmap di sfondo</string>
+   </property>
+  </action>
+  <action name="actionViewCode">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/code.png</normaloff>:/res/resources/code.png</iconset>
+   </property>
+   <property name="text">
+    <string>Visualizza codice</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/settings.png</normaloff>:/res/resources/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Opzioni</string>
+   </property>
+  </action>
+  <action name="actionInformation">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/data-structure.png</normaloff>:/res/resources/data-structure.png</iconset>
+   </property>
+   <property name="text">
+    <string>Informazioni su eSchema</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/qt.png</normaloff>:/res/resources/qt.png</iconset>
+   </property>
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionLayers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/layers.png</normaloff>:/res/resources/layers.png</iconset>
+   </property>
+   <property name="text">
+    <string>Layers</string>
+   </property>
+  </action>
+  <action name="actionProterties">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/properties.png</normaloff>:/res/resources/properties.png</iconset>
+   </property>
+   <property name="text">
+    <string>Proprieta'</string>
+   </property>
+  </action>
+  <action name="actionLine">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/line.png</normaloff>:/res/resources/line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Line</string>
+   </property>
+   <property name="toolTip">
+    <string>Line</string>
+   </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
+  </action>
+  <action name="actionRectangle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/rectangle.png</normaloff>:/res/resources/rectangle.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rectangle</string>
+   </property>
+   <property name="toolTip">
+    <string>Rectangle</string>
+   </property>
+   <property name="shortcut">
+    <string>Q</string>
+   </property>
+  </action>
+  <action name="actionPolygon">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/polygon.png</normaloff>:/res/resources/polygon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Polygon</string>
+   </property>
+   <property name="toolTip">
+    <string>Polygon</string>
+   </property>
+  </action>
+  <action name="actionEllipse">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/ellipse.png</normaloff>:/res/resources/ellipse.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ellipse</string>
+   </property>
+   <property name="toolTip">
+    <string>Ellipse</string>
+   </property>
+  </action>
+  <action name="actionSelect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/arrow.png</normaloff>:/res/resources/arrow.png</iconset>
+   </property>
+   <property name="text">
+    <string>Select</string>
+   </property>
+   <property name="toolTip">
+    <string>Select</string>
+   </property>
+  </action>
+  <action name="actionBezier">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/bezier.png</normaloff>:/res/resources/bezier.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bezier</string>
+   </property>
+   <property name="toolTip">
+    <string>Bezier</string>
+   </property>
+  </action>
+  <action name="actionCurve">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/complexcurve.png</normaloff>:/res/resources/complexcurve.png</iconset>
+   </property>
+   <property name="text">
+    <string>Curve</string>
+   </property>
+   <property name="toolTip">
+    <string>Curve</string>
+   </property>
+  </action>
+  <action name="actionText">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/text.png</normaloff>:/res/resources/text.png</iconset>
+   </property>
+   <property name="text">
+    <string>Text</string>
+   </property>
+   <property name="toolTip">
+    <string>Text</string>
+   </property>
+  </action>
+  <action name="actionConnection">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/connection.png</normaloff>:/res/resources/connection.png</iconset>
+   </property>
+   <property name="text">
+    <string>Connection</string>
+   </property>
+   <property name="toolTip">
+    <string>Connection</string>
+   </property>
+  </action>
+  <action name="actionGrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/grid.ico</normaloff>:/res/resources/grid.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Grid</string>
+   </property>
+   <property name="toolTip">
+    <string>Grid</string>
+   </property>
+  </action>
+  <action name="actionLibrary">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/class_libraries.ico</normaloff>:/res/resources/class_libraries.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Library</string>
+   </property>
+  </action>
+  <action name="actionGestione_librerie">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/res/resources/class_libraries.ico</normaloff>:/res/resources/class_libraries.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Gestione librerie</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
