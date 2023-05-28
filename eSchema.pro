@@ -10,10 +10,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    toolbarprimitive.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    toolbarprimitive.h
 
 FORMS += \
     mainwindow.ui

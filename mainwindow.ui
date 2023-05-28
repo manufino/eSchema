@@ -22,7 +22,7 @@
 	background-color: qlineargradient(spread:reflect, x1:0.506, y1:0.488637, x2:0.494, y2:1, stop:0 rgba(179, 170, 168, 231), stop:1 rgba(199, 199, 199, 207));
 }
 QMenu {
-
+border:1px solid black;
 }
 
 QMenu::item {
@@ -160,7 +160,7 @@ QTabBar::tab:!selected {
      <number>0</number>
     </property>
     <item>
-     <widget class="QSplitter" name="splitter_2">
+     <widget class="QSplitter" name="splitterH">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -184,7 +184,7 @@ QTabBar::tab:!selected {
         </item>
        </layout>
       </widget>
-      <widget class="QSplitter" name="splitter">
+      <widget class="QSplitter" name="splitterV">
        <property name="minimumSize">
         <size>
          <width>198</width>
@@ -317,7 +317,7 @@ QTabBar::tab:!selected {
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>192</width>
+              <width>213</width>
               <height>405</height>
              </rect>
             </property>
@@ -344,7 +344,7 @@ QTabBar::tab:!selected {
               <number>0</number>
              </property>
              <item>
-              <widget class="QToolBox" name="toolBox">
+              <widget class="QToolBox" name="toolBoxLib">
                <property name="font">
                 <font>
                  <family>Consolas</family>
@@ -353,7 +353,7 @@ QTabBar::tab:!selected {
                 </font>
                </property>
                <property name="currentIndex">
-                <number>6</number>
+                <number>0</number>
                </property>
                <property name="tabSpacing">
                 <number>0</number>
@@ -363,7 +363,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -376,7 +376,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -389,7 +389,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -402,7 +402,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -415,7 +415,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -428,7 +428,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -441,7 +441,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -467,7 +467,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -480,7 +480,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -493,7 +493,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -506,7 +506,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -519,7 +519,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -532,7 +532,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -545,7 +545,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>192</width>
+                  <width>213</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -561,7 +561,7 @@ QTabBar::tab:!selected {
          </item>
         </layout>
        </widget>
-       <widget class="QTabWidget" name="tabWidget">
+       <widget class="QTabWidget" name="tabPropertiesLayers">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -577,7 +577,7 @@ QTabBar::tab:!selected {
         <property name="currentIndex">
          <number>1</number>
         </property>
-        <widget class="QWidget" name="tab">
+        <widget class="QWidget" name="tabProperties">
          <attribute name="icon">
           <iconset resource="resources.qrc">
            <normaloff>:/res/resources/properties.png</normaloff>:/res/resources/properties.png</iconset>
@@ -586,7 +586,7 @@ QTabBar::tab:!selected {
           <string>Proprieta'</string>
          </attribute>
         </widget>
-        <widget class="QWidget" name="tab_2">
+        <widget class="QWidget" name="tabLayers">
          <attribute name="icon">
           <iconset resource="resources.qrc">
            <normaloff>:/res/resources/layers.ico</normaloff>:/res/resources/layers.ico</iconset>
@@ -735,7 +735,7 @@ QTabBar::tab:!selected {
    <addaction name="separator"/>
    <addaction name="actionLibrary"/>
   </widget>
-  <widget class="QToolBar" name="toolBarPrimitive">
+  <widget class="ToolBarPrimitive" name="toolBarPrimitive">
    <property name="windowTitle">
     <string>ToolBarPrimitive</string>
    </property>
@@ -1186,6 +1186,13 @@ QTabBar::tab:!selected {
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ToolBarPrimitive</class>
+   <extends>QToolBar</extends>
+   <header location="global">toolbarprimitive.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>
