@@ -140,7 +140,17 @@ QTabBar::tab:selected {
 
 QTabBar::tab:!selected {
     margin-top: 0px; /* make non-selected tabs look smaller */
-}</string>
+}
+
+#txtSearch {
+border:1px solid gray;
+border-top-right-radius:12px;
+border-top-left-radius:12px;
+margin-right:1px;
+    padding: 2  2 2 25; /* left padding (last number) must be more than the icon's width */
+}
+
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -215,7 +225,7 @@ QTabBar::tab:!selected {
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
-          <number>5</number>
+          <number>0</number>
          </property>
          <property name="leftMargin">
           <number>0</number>
@@ -284,7 +294,20 @@ QTabBar::tab:!selected {
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit"/>
+          <widget class="QLineEdit" name="txtSearch">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="placeholderText">
+            <string>Cerca ...</string>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QScrollArea" name="scrollArea">
@@ -295,7 +318,7 @@ QTabBar::tab:!selected {
             </size>
            </property>
            <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+            <enum>QFrame::Box</enum>
            </property>
            <property name="frameShadow">
             <enum>QFrame::Sunken</enum>
@@ -304,7 +327,7 @@ QTabBar::tab:!selected {
             <enum>Qt::ScrollBarAlwaysOff</enum>
            </property>
            <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
+            <enum>Qt::ScrollBarAsNeeded</enum>
            </property>
            <property name="sizeAdjustPolicy">
             <enum>QAbstractScrollArea::AdjustIgnored</enum>
@@ -317,7 +340,7 @@ QTabBar::tab:!selected {
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>213</width>
+              <width>211</width>
               <height>405</height>
              </rect>
             </property>
@@ -352,6 +375,9 @@ QTabBar::tab:!selected {
                  <bold>false</bold>
                 </font>
                </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
                <property name="currentIndex">
                 <number>0</number>
                </property>
@@ -363,7 +389,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -376,7 +402,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -389,7 +415,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -402,7 +428,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -415,7 +441,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -428,7 +454,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -441,7 +467,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -467,7 +493,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -480,7 +506,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -493,7 +519,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -506,7 +532,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -519,7 +545,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -532,7 +558,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>
@@ -545,7 +571,7 @@ QTabBar::tab:!selected {
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>213</width>
+                  <width>211</width>
                   <height>69</height>
                  </rect>
                 </property>

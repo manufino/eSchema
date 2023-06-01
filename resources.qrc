@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/res">
+    <file>resources/s1.jpeg</file>
+    <file>resources/s2.jpeg</file>
     <file>resources/properties.png</file>
     <file>resources/layers.png</file>
     <file>resources/code.png</file>
