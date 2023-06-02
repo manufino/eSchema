@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QGraphicsSceneMouseEvent>
 #include "sheetview.h"
-
+#include <QAction>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::GraphicsViewMousePos);
 
     ui->graphicsView->setScene(scene);
+
+    connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(ClickOptionMenu()));
+    connect(ui->actionInformation, SIGNAL(triggered()), this, SLOT(ClickAboutMenu()));
 }
 
 MainWindow::~MainWindow()

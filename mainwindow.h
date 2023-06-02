@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "sheet.h"
+#include "optionsdialog.h"
+#include "aboutdialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,6 +17,17 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+public slots:
+    void ClickOptionMenu(){
+        OptionsDialog *od = new OptionsDialog(this);
+        od->show();
+    };
+
+    void ClickAboutMenu(){
+        AboutDialog *ad = new AboutDialog(this);
+        ad->show();
+    }
 
 private:
     Ui::MainWindow *ui;

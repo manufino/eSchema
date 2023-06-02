@@ -9,22 +9,28 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    aboutdialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    optionsdialog.cpp \
     sheet.cpp \
     sheetview.cpp \
     statusbar.cpp \
     toolbarprimitive.cpp
 
 HEADERS += \
+    aboutdialog.h \
     mainwindow.h \
+    optionsdialog.h \
     sheet.h \
     sheetview.h \
     statusbar.h \
     toolbarprimitive.h
 
 FORMS += \
-    mainwindow.ui
+    aboutdialog.ui \
+    mainwindow.ui \
+    optionsdialog.ui
 
 TRANSLATIONS += \
     eSchema_it_IT.ts
