@@ -23,6 +23,7 @@
 }
 QMenu {
 border:1px solid black;
+padding-left:2px;
 }
 
 QMenu::item {
@@ -60,10 +61,11 @@ border:1px solid cyan;
 }
 
 QToolButton { /* all types of tool button */
-    border: 2px solid #8f8f91;
+    border: 1px solid #8f8f91;
     border-radius: 6px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+margin:1px;
 }
 
 QToolButton[popupMode=&quot;1&quot;] { /* only for MenuButtonPopup */
@@ -82,7 +84,7 @@ QToolButton:checked {
 
 /* the subcontrols below are used only in the MenuButtonPopup mode */
 QToolButton::menu-button {
-    border: 2px solid gray;
+    border: 1px solid gray;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
     /* 16px width + 4px for border = 20px allocated above */
@@ -107,11 +109,13 @@ QToolTip {
 
 
 QTabWidget::pane { /* The tab widget frame */
-    border-top: 2px solid #C2C7CB;
+border: 2px solid #C2C7CB;
+    /*border-top: 2px solid #C2C7CB;*/
+margin-right:4px;
 }
 
 QTabWidget::tab-bar {
-    left: 5px; /* move to the right by 5px */
+    
 }
 
 /* Style the tab using the tab sub-control. Note that
@@ -144,12 +148,49 @@ QTabBar::tab:!selected {
 
 #txtSearch {
 border:1px solid gray;
-border-top-right-radius:12px;
-border-top-left-radius:12px;
+border-top-right-radius:8px;
+border-top-left-radius:8px;
 margin-right:1px;
-    padding: 2  2 2 25; /* left padding (last number) must be more than the icon's width */
+    padding: 2  2 2 20; /* left padding (last number) must be more than the icon's width */
+
+    background-image: url(:res/resources/search.png); /* actual size, e.g. 16x16 */
+    background-repeat: no-repeat;
+background-position: left center;
+
 }
 
+
+ QScrollBar:horizontal {
+        min-width: 240px;
+        height: 10px;
+    }
+
+    QScrollBar:vertical {
+        min-height: 240px;
+        width: 10px;
+    }
+
+    QScrollBar::groove {
+        background: black;
+        border-radius: 10px;
+    }
+
+
+
+    QScrollBar::handle:horizontal {
+        width: 25px;
+    }
+
+    QScrollBar::handle:vertical {
+        height: 25px;
+    }
+
+StatusBar &gt; QLabel {
+	
+	color: rgb(53, 53, 53);
+	font: 10pt &quot;CFBSFONT&quot;;
+margin-left:5px;
+}
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -183,12 +224,21 @@ margin-right:1px;
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QGraphicsView" name="graphicsView">
+         <widget class="SheetView" name="graphicsView">
           <property name="minimumSize">
            <size>
             <width>600</width>
             <height>500</height>
            </size>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="viewportUpdateMode">
+           <enum>QGraphicsView::FullViewportUpdate</enum>
           </property>
          </widget>
         </item>
@@ -197,7 +247,7 @@ margin-right:1px;
       <widget class="QSplitter" name="splitterV">
        <property name="minimumSize">
         <size>
-         <width>198</width>
+         <width>218</width>
          <height>0</height>
         </size>
        </property>
@@ -302,7 +352,7 @@ margin-right:1px;
             </sizepolicy>
            </property>
            <property name="placeholderText">
-            <string>Cerca ...</string>
+            <string>Cerca nelle librerie ...</string>
            </property>
            <property name="clearButtonEnabled">
             <bool>true</bool>
@@ -324,10 +374,10 @@ margin-right:1px;
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
+            <enum>Qt::ScrollBarAsNeeded</enum>
            </property>
            <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
+            <enum>Qt::ScrollBarAlwaysOff</enum>
            </property>
            <property name="sizeAdjustPolicy">
             <enum>QAbstractScrollArea::AdjustIgnored</enum>
@@ -340,8 +390,8 @@ margin-right:1px;
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>211</width>
-              <height>405</height>
+              <width>250</width>
+              <height>586</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -379,7 +429,7 @@ margin-right:1px;
                 <number>1</number>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <property name="tabSpacing">
                 <number>0</number>
@@ -389,8 +439,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -402,8 +452,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -415,8 +465,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -428,8 +478,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -441,8 +491,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -454,8 +504,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -467,8 +517,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -493,8 +543,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -506,8 +556,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -519,8 +569,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -532,8 +582,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -545,8 +595,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -558,8 +608,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -571,8 +621,8 @@ margin-right:1px;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
-                  <height>69</height>
+                  <width>250</width>
+                  <height>250</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -596,12 +646,13 @@ margin-right:1px;
         </property>
         <property name="font">
          <font>
-          <family>Century</family>
-          <pointsize>9</pointsize>
+          <family>Hack</family>
+          <pointsize>8</pointsize>
+          <bold>false</bold>
          </font>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tabProperties">
          <attribute name="icon">
@@ -708,7 +759,7 @@ margin-right:1px;
    <addaction name="menuTools"/>
    <addaction name="menuInformation"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar">
+  <widget class="StatusBar" name="statusbar">
    <property name="minimumSize">
     <size>
      <width>0</width>
@@ -1184,7 +1235,7 @@ margin-right:1px;
      <normaloff>:/res/resources/grid.ico</normaloff>:/res/resources/grid.ico</iconset>
    </property>
    <property name="text">
-    <string>Grid</string>
+    <string>Griglia</string>
    </property>
    <property name="toolTip">
     <string>Grid</string>
@@ -1194,12 +1245,15 @@ margin-right:1px;
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resources.qrc">
      <normaloff>:/res/resources/class_libraries.ico</normaloff>:/res/resources/class_libraries.ico</iconset>
    </property>
    <property name="text">
-    <string>Library</string>
+    <string>Librerie</string>
    </property>
   </action>
   <action name="actionGestione_librerie">
@@ -1216,7 +1270,17 @@ margin-right:1px;
   <customwidget>
    <class>ToolBarPrimitive</class>
    <extends>QToolBar</extends>
-   <header location="global">toolbarprimitive.h</header>
+   <header>toolbarprimitive.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SheetView</class>
+   <extends>QGraphicsView</extends>
+   <header>sheetview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StatusBar</class>
+   <extends>QStatusBar</extends>
+   <header>statusbar.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -11,10 +11,16 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    sheet.cpp \
+    sheetview.cpp \
+    statusbar.cpp \
     toolbarprimitive.cpp
 
 HEADERS += \
     mainwindow.h \
+    sheet.h \
+    sheetview.h \
+    statusbar.h \
     toolbarprimitive.h
 
 FORMS += \

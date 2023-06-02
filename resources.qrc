@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/res">
+    <file>resources/search.png</file>
     <file>resources/s1.jpeg</file>
     <file>resources/s2.jpeg</file>
     <file>resources/properties.png</file>
