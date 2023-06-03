@@ -14,7 +14,7 @@
    <string>eSchema</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset resource="../resources.qrc">
     <normaloff>:/res/resources/data-structure.png</normaloff>:/res/resources/data-structure.png</iconset>
   </property>
   <property name="styleSheet">
@@ -39,6 +39,13 @@ QMenu::item:selected {/*
 	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 211), stop:0.508772 rgba(197, 225, 255, 202), stop:0.997301 rgba(176, 255, 255, 206));
 
 }
+
+QMenu::item:checked {
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 164), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 155));
+
+}
+
+
 QStatusBar{
 border-top:1px solid black;
 }
@@ -100,10 +107,11 @@ QToolButton::menu-arrow:open {
 }
 
 QToolTip {
-    border: 2px solid darkkhaki;
-    padding: 5px;
-    border-radius: 3px;
-    opacity: 200;
+    /*border: 2px solid darkkhaki;*/
+border: 1px solid gray;
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 164), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 155));
+font:10pt &quot;Hack&quot;;
+	color: rgb(0, 0, 0);
 }
 
 
@@ -190,6 +198,19 @@ StatusBar &gt; QLabel {
 	color: rgb(53, 53, 53);
 	font: 10pt &quot;CFBSFONT&quot;;
 margin-left:5px;
+}
+
+StatusBar &gt; QPushButton {
+    border: 1px solid #8f8f91;
+    border-radius: 3px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+margin:1px;
+}
+
+StatusBar &gt; QPushButton:checked {
+	border-color: rgb(170, 255, 255);
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
 }
 </string>
   </property>
@@ -656,7 +677,7 @@ margin-left:5px;
         </property>
         <widget class="QWidget" name="tabProperties">
          <attribute name="icon">
-          <iconset resource="resources.qrc">
+          <iconset resource="../resources.qrc">
            <normaloff>:/res/resources/properties.png</normaloff>:/res/resources/properties.png</iconset>
          </attribute>
          <attribute name="title">
@@ -665,7 +686,7 @@ margin-left:5px;
         </widget>
         <widget class="QWidget" name="tabLayers">
          <attribute name="icon">
-          <iconset resource="resources.qrc">
+          <iconset resource="../resources.qrc">
            <normaloff>:/res/resources/layers.ico</normaloff>:/res/resources/layers.ico</iconset>
          </attribute>
          <attribute name="title">
@@ -723,27 +744,24 @@ margin-left:5px;
     <addaction name="actionRotate"/>
     <addaction name="actionMirror"/>
     <addaction name="separator"/>
+    <addaction name="actionAddPart"/>
+    <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
      <string>Vista</string>
     </property>
-    <addaction name="actionLibrary"/>
+    <addaction name="actionSidebar"/>
+    <addaction name="separator"/>
     <addaction name="actionLayers"/>
     <addaction name="actionProterties"/>
-    <addaction name="separator"/>
-    <addaction name="actionGrid"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Strumenti</string>
     </property>
-    <addaction name="actionGestione_librerie"/>
-    <addaction name="separator"/>
     <addaction name="actionBitamapBackground"/>
-    <addaction name="separator"/>
-    <addaction name="actionViewCode"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -805,12 +823,9 @@ margin-left:5px;
    <addaction name="actionMirror"/>
    <addaction name="separator"/>
    <addaction name="actionBitamapBackground"/>
-   <addaction name="actionViewCode"/>
    <addaction name="actionOptions"/>
    <addaction name="separator"/>
-   <addaction name="actionGrid"/>
-   <addaction name="separator"/>
-   <addaction name="actionLibrary"/>
+   <addaction name="actionSidebar"/>
   </widget>
   <widget class="ToolBarPrimitive" name="toolBarPrimitive">
    <property name="windowTitle">
@@ -841,7 +856,7 @@ margin-left:5px;
   </widget>
   <action name="actionNewDraw">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/document_new.ico</normaloff>:/res/resources/document_new.ico</iconset>
    </property>
    <property name="text">
@@ -850,7 +865,7 @@ margin-left:5px;
   </action>
   <action name="actionOpenFile">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/document_open.ico</normaloff>:/res/resources/document_open.ico</iconset>
    </property>
    <property name="text">
@@ -859,7 +874,7 @@ margin-left:5px;
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/save.ico</normaloff>:/res/resources/save.ico</iconset>
    </property>
    <property name="text">
@@ -868,7 +883,7 @@ margin-left:5px;
   </action>
   <action name="actionSaveAs">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/save_as.ico</normaloff>:/res/resources/save_as.ico</iconset>
    </property>
    <property name="text">
@@ -877,7 +892,7 @@ margin-left:5px;
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/printer.ico</normaloff>:/res/resources/printer.ico</iconset>
    </property>
    <property name="text">
@@ -886,7 +901,7 @@ margin-left:5px;
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/cancel.png</normaloff>:/res/resources/cancel.png</iconset>
    </property>
    <property name="text">
@@ -898,7 +913,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/undo_blue.ico</normaloff>:/res/resources/undo_blue.ico</iconset>
    </property>
    <property name="text">
@@ -910,7 +925,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/redo_blue.ico</normaloff>:/res/resources/redo_blue.ico</iconset>
    </property>
    <property name="text">
@@ -922,7 +937,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/cut.ico</normaloff>:/res/resources/cut.ico</iconset>
    </property>
    <property name="text">
@@ -934,7 +949,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/copy.ico</normaloff>:/res/resources/copy.ico</iconset>
    </property>
    <property name="text">
@@ -946,7 +961,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/paste.png</normaloff>:/res/resources/paste.png</iconset>
    </property>
    <property name="text">
@@ -958,7 +973,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/duplicate.png</normaloff>:/res/resources/duplicate.png</iconset>
    </property>
    <property name="text">
@@ -970,7 +985,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/refresh.png</normaloff>:/res/resources/refresh.png</iconset>
    </property>
    <property name="text">
@@ -982,7 +997,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/symmetry.png</normaloff>:/res/resources/symmetry.png</iconset>
    </property>
    <property name="text">
@@ -994,7 +1009,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/select.png</normaloff>:/res/resources/select.png</iconset>
    </property>
    <property name="text">
@@ -1006,7 +1021,7 @@ margin-left:5px;
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/delete.ico</normaloff>:/res/resources/delete.ico</iconset>
    </property>
    <property name="text">
@@ -1015,25 +1030,16 @@ margin-left:5px;
   </action>
   <action name="actionBitamapBackground">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/image.png</normaloff>:/res/resources/image.png</iconset>
    </property>
    <property name="text">
     <string>Bitmap di sfondo</string>
    </property>
   </action>
-  <action name="actionViewCode">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/resources/code.png</normaloff>:/res/resources/code.png</iconset>
-   </property>
-   <property name="text">
-    <string>Visualizza codice</string>
-   </property>
-  </action>
   <action name="actionOptions">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/settings.png</normaloff>:/res/resources/settings.png</iconset>
    </property>
    <property name="text">
@@ -1042,7 +1048,7 @@ margin-left:5px;
   </action>
   <action name="actionInformation">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/data-structure.png</normaloff>:/res/resources/data-structure.png</iconset>
    </property>
    <property name="text">
@@ -1051,7 +1057,7 @@ margin-left:5px;
   </action>
   <action name="actionAbout_Qt">
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/qt.png</normaloff>:/res/resources/qt.png</iconset>
    </property>
    <property name="text">
@@ -1063,7 +1069,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/layers.png</normaloff>:/res/resources/layers.png</iconset>
    </property>
    <property name="text">
@@ -1075,7 +1081,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/properties.png</normaloff>:/res/resources/properties.png</iconset>
    </property>
    <property name="text">
@@ -1087,7 +1093,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/line.png</normaloff>:/res/resources/line.png</iconset>
    </property>
    <property name="text">
@@ -1105,7 +1111,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/rectangle.png</normaloff>:/res/resources/rectangle.png</iconset>
    </property>
    <property name="text">
@@ -1123,7 +1129,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/polygon.png</normaloff>:/res/resources/polygon.png</iconset>
    </property>
    <property name="text">
@@ -1138,7 +1144,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/ellipse.png</normaloff>:/res/resources/ellipse.png</iconset>
    </property>
    <property name="text">
@@ -1156,7 +1162,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/arrow.png</normaloff>:/res/resources/arrow.png</iconset>
    </property>
    <property name="text">
@@ -1171,7 +1177,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/bezier.png</normaloff>:/res/resources/bezier.png</iconset>
    </property>
    <property name="text">
@@ -1186,7 +1192,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/complexcurve.png</normaloff>:/res/resources/complexcurve.png</iconset>
    </property>
    <property name="text">
@@ -1201,7 +1207,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/text.png</normaloff>:/res/resources/text.png</iconset>
    </property>
    <property name="text">
@@ -1216,7 +1222,7 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/connection.png</normaloff>:/res/resources/connection.png</iconset>
    </property>
    <property name="text">
@@ -1226,22 +1232,7 @@ margin-left:5px;
     <string>Connection</string>
    </property>
   </action>
-  <action name="actionGrid">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/resources/grid.ico</normaloff>:/res/resources/grid.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Griglia</string>
-   </property>
-   <property name="toolTip">
-    <string>Grid</string>
-   </property>
-  </action>
-  <action name="actionLibrary">
+  <action name="actionSidebar">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -1249,20 +1240,23 @@ margin-left:5px;
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/res/resources/class_libraries.ico</normaloff>:/res/resources/class_libraries.ico</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/sidebar.png</normaloff>:/res/resources/sidebar.png</iconset>
    </property>
    <property name="text">
-    <string>Librerie</string>
+    <string>Barra laterale</string>
    </property>
   </action>
-  <action name="actionGestione_librerie">
+  <action name="actionAddPart">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
+    <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/class_libraries.ico</normaloff>:/res/resources/class_libraries.ico</iconset>
    </property>
    <property name="text">
-    <string>Gestione librerie</string>
+    <string>Crea parte</string>
    </property>
   </action>
  </widget>
@@ -1284,7 +1278,7 @@ margin-left:5px;
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections/>
 </ui>

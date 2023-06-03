@@ -77,7 +77,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="resources.qrc">:/res/resources/data-structure.png</pixmap>
+            <pixmap resource="../resources.qrc">:/res/resources/data-structure.png</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -102,7 +102,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="resources.qrc">:/res/resources/Built_with_Qt.png</pixmap>
+            <pixmap resource="../resources.qrc">:/res/resources/Built_with_Qt.png</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -356,7 +356,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="resources.qrc">:/res/resources/GLP3.png</pixmap>
+               <pixmap resource="../resources.qrc">:/res/resources/GLP3.png</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -422,7 +422,7 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections>
   <connection>
