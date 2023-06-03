@@ -9,31 +9,33 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    aboutdialog.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    optionsdialog.cpp \
-    sheet.cpp \
-    sheetview.cpp \
-    statusbar.cpp \
-    toolbarprimitive.cpp
+	src/aboutdialog.cpp \
+	src/main.cpp \
+	src/mainwindow.cpp \
+	src/optionsdialog.cpp \
+	src/sheet.cpp \
+	src/sheetview.cpp \
+    src/statusbar.cpp \
+    src/toolbarprimitive.cpp \
+	src/statusbar.cpp
 
 HEADERS += \
-    aboutdialog.h \
-    mainwindow.h \
-    optionsdialog.h \
-    sheet.h \
-    sheetview.h \
-    statusbar.h \
-    toolbarprimitive.h
+	src/aboutdialog.h \
+	src/mainwindow.h \
+    src/optionsdialog.h \
+    src/sheet.h \
+    src/sheetview.h \
+	src/statusbar.h
 
 FORMS += \
-    aboutdialog.ui \
-    mainwindow.ui \
-    optionsdialog.ui
+	gui/aboutdialog.ui \
+    gui/mainwindow.ui \
+	gui/optionsdialog.ui
+
+
 
 TRANSLATIONS += \
-    eSchema_it_IT.ts
+	language/eSchema_it_IT.ts
 CONFIG += lrelease
 CONFIG += embed_translations
 
@@ -46,4 +48,5 @@ RESOURCES += \
 	resources.qrc
 
 DISTFILES += \
-	LICENSE
+	LICENSE \
+	language/eSchema_it_IT.ts
