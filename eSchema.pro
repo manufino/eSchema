@@ -33,6 +33,7 @@ FORMS += \
 	gui/optionsdialog.ui
 
 
+RC_ICONS = "resources/main.ico"
 
 TRANSLATIONS += \
 	language/eSchema_it_IT.ts
