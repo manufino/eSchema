@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/res">
+    <file>resources/GLP3.png</file>
     <file>resources/search.png</file>
     <file>resources/Built_with_Qt.png</file>
     <file>resources/search.png</file>
