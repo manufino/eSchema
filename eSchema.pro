@@ -1,3 +1,13 @@
+VERSION = 0.6.2
+
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
+win32 {
+DEFINES += BUILDDATE=\\\"$$system('echo %date%')\\\"
+} else {
+DEFINES += BUILDDATE=\\\"$$system(date '+%d/%m/%y')\\\"
+}
+
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
