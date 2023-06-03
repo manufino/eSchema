@@ -12,7 +12,7 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
     gridSize = 10;//s.value("grid_step").toInt();
     gridColor = QColor("black");//s.value("grid_color").value<QColor>();
 
-    enab=true;
+    gridEnabled=true;
 
     setMouseTracking(true);
 
@@ -29,22 +29,26 @@ void SheetView::setGrid(int size, QColor clr)
 
 void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    QPen pen;
-    painter->setPen(pen);
+    if(gridEnabled)
+    {
+        QPen pen;
+        painter->setPen(pen);
 
-    qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
-    qreal top = int(rect.top()) - (int(rect.top()) % gridSize);
-    QVector<QPointF> points;
-    for (qreal x = left; x < rect.right(); x += gridSize){
-        for (qreal y = top; y < rect.bottom(); y += gridSize){
-            points.append(QPointF(x,y));
+        qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
+        qreal top = int(rect.top()) - (int(rect.top()) % gridSize);
+        QVector<QPointF> points;
+        for (qreal x = left; x < rect.right(); x += gridSize){
+            for (qreal y = top; y < rect.bottom(); y += gridSize){
+                points.append(QPointF(x,y));
+            }
         }
+        painter->drawPoints(points.data(), points.size());
     }
-    painter->drawPoints(points.data(), points.size());
 }
 
+int zoomLevel=100;
 void SheetView::wheelEvent(QWheelEvent *event)
-{/*
+{
     if (event->modifiers() & Qt::ControlModifier) {
         // zoom
         const ViewportAnchor anchor = transformationAnchor();
@@ -56,14 +60,30 @@ void SheetView::wheelEvent(QWheelEvent *event)
         } else {
             factor = 0.9;
         }
+
+        // Limiti del fattore di zoom
+        qreal currentScale = transform().m11(); // Ottiene la scala corrente sull'asse x
+        qreal newScale = currentScale * factor; // Calcola la nuova scala
+        qreal minScale = 0.5; // Scala minima consentita
+        qreal maxScale = 2.0; // Scala massima consentita
+        if (newScale < minScale) {
+            factor = minScale / currentScale;
+        } else if (newScale > maxScale) {
+            factor = maxScale / currentScale;
+        }
+
         scale(factor, factor);
         setTransformationAnchor(anchor);
 
+        // Calcola la percentuale di zoom
+        qreal zoomPercentage = (transform().m11() * 100) / maxScale;
+        zoomLevel = qRound(zoomPercentage);
+         qDebug(QString::number(zoomLevel).toUtf8());
     } else {
         QGraphicsView::wheelEvent(event);
-    }*/
-     QGraphicsView::wheelEvent(event);
+    }
 }
+
 
 void SheetView::mouseMoveEvent(QMouseEvent *event)
 {

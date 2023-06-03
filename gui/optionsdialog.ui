@@ -34,7 +34,7 @@
    <string>Opzioni</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset resource="../resources.qrc">
     <normaloff>:/res/resources/settings.png</normaloff>:/res/resources/settings.png</iconset>
   </property>
   <property name="styleSheet">
@@ -49,7 +49,7 @@
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/res/resources/settings.png</normaloff>:/res/resources/settings.png</iconset>
       </attribute>
       <attribute name="title">
@@ -223,7 +223,7 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/res/resources/grid.ico</normaloff>:/res/resources/grid.ico</iconset>
       </attribute>
       <attribute name="title">
@@ -369,7 +369,7 @@
      </widget>
      <widget class="QWidget" name="tab_3">
       <attribute name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources.qrc">
         <normaloff>:/res/resources/layers.png</normaloff>:/res/resources/layers.png</iconset>
       </attribute>
       <attribute name="title">
@@ -391,7 +391,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections>
   <connection>

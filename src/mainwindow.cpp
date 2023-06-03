@@ -20,6 +20,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(ClickOptionMenu()));
     connect(ui->actionInformation, SIGNAL(triggered()), this, SLOT(ClickAboutMenu()));
+
+    QPushButton *btnGrid = new QPushButton(ui->statusbar);
+    btnGrid->setCheckable(true);
+    btnGrid->setChecked(true);
+
+    connect(btnGrid, &QPushButton::toggled, ui->graphicsView, &SheetView::EnableGrid);
+
+    QIcon icon(":/res/resources/grid.ico");
+    btnGrid->setIcon(icon);
+    btnGrid->setIconSize(QSize(24,24));
+    btnGrid->setMinimumSize(QSize(24,24));
+    btnGrid->setMaximumSize(QSize(24,24));
+    btnGrid->setToolTip("Attiva o disattiva la griglia");
+
+    ui->statusbar->addWidget(btnGrid);
 }
 
 MainWindow::~MainWindow()

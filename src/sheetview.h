@@ -14,7 +14,6 @@ public:
     explicit SheetView(QWidget *parent = nullptr);
     int getGridSize() const {return this->gridSize;}
     void setGrid(int size, QColor clr);
-    void enableGrid(bool enabled) {enab = enabled;}
     QPoint getMousePos() { return point;}
 
 protected:
@@ -22,13 +21,20 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
+public slots:
+    void EnableGrid(bool enable = true) {
+        gridEnabled = enable;
+        this->scene()->update();
+    }
+
 signals:
     void mouseMoved(QMouseEvent *event);
 
 private:
+
     int gridSize;
     QColor gridColor;
-    bool enab;
+    bool gridEnabled;
     QPoint point;
     QRubberBand *rubberBand;
     QPoint origin;
