@@ -16,8 +16,7 @@ SOURCES += \
 	src/sheet.cpp \
 	src/sheetview.cpp \
     src/statusbar.cpp \
-    src/toolbarprimitive.cpp \
-	src/statusbar.cpp
+	src/toolbarprimitive.cpp
 
 HEADERS += \
 	src/aboutdialog.h \
@@ -25,20 +24,15 @@ HEADERS += \
     src/optionsdialog.h \
     src/sheet.h \
     src/sheetview.h \
-	src/statusbar.h
+	src/statusbar.h \
+	src/toolbarprimitive.h
 
 FORMS += \
 	gui/aboutdialog.ui \
     gui/mainwindow.ui \
 	gui/optionsdialog.ui
 
-
-RC_ICONS = "resources/main.ico"
-
-TRANSLATIONS += \
-	language/eSchema_it_IT.ts
 CONFIG += lrelease
-CONFIG += embed_translations
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -48,6 +42,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
 	resources.qrc
 
-DISTFILES += \
-	LICENSE \
-	language/eSchema_it_IT.ts
+win32 {
+    RC_ICONS = "resources/main.ico"
+}
+
+
+

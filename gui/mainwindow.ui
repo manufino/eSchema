@@ -240,7 +240,7 @@ StatusBar &gt; QPushButton:checked {
        <number>4</number>
       </property>
       <property name="childrenCollapsible">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -280,6 +280,9 @@ StatusBar &gt; QPushButton:checked {
        </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="childrenCollapsible">
+        <bool>false</bool>
        </property>
        <widget class="QFrame" name="frame">
         <property name="minimumSize">
@@ -1280,5 +1283,22 @@ StatusBar &gt; QPushButton:checked {
  <resources>
   <include location="../resources.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionSidebar</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>splitterV</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>754</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
