@@ -2,9 +2,6 @@
 #define SHEET_H
 
 #include <QGraphicsScene>
-#include <QPainter>
-#include <QApplication>
-#include <QGraphicsSceneMouseEvent>
 
 class Sheet : public QGraphicsScene
 {
