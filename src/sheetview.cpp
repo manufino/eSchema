@@ -105,8 +105,8 @@ void SheetView::wheelEvent(QWheelEvent *event)
         // Limiti del fattore di zoom
         qreal currentScale = transform().m11(); // Ottiene la scala corrente sull'asse x
         qreal newScale = currentScale * factor; // Calcola la nuova scala
-        qreal minScale = 0.5; // Scala minima consentita
-        qreal maxScale = 2.0; // Scala massima consentita
+        qreal minScale = 0.3; // Scala minima consentita
+        qreal maxScale = 10.0; // Scala massima consentita
         if (newScale < minScale) {
             factor = minScale / currentScale;
         } else if (newScale > maxScale) {
@@ -119,7 +119,9 @@ void SheetView::wheelEvent(QWheelEvent *event)
         // Calcola la percentuale di zoom
         qreal zoomPercentage = (transform().m11() * 100) / maxScale;
         zoomLevel = qRound(zoomPercentage);
-         qDebug(QString::number(zoomLevel).toUtf8());
+        qDebug(QString::number(zoomLevel).toUtf8());
+        emit ZoomLevel(zoomLevel);
+
     } else {
         QGraphicsView::wheelEvent(event);
     }
@@ -128,7 +130,11 @@ void SheetView::wheelEvent(QWheelEvent *event)
 
 void SheetView::mouseMoveEvent(QMouseEvent *event)
 {
-    emit mouseMoved(event);
+    // mappo le coordinate della vista sulla scena
+    QPoint origin = mapFromGlobal(QCursor::pos());
+    QPointF relativeOrigin = mapToScene(origin);
+
+    emit mouseMoved(relativeOrigin);
     QGraphicsView::mouseMoveEvent(event);
 }
 

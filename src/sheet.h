@@ -3,11 +3,14 @@
 
 #include <QGraphicsScene>
 
+
 class Sheet : public QGraphicsScene
 {
     Q_OBJECT
 public:
     explicit Sheet(QObject *parent = 0);
+
+
 
 };
 

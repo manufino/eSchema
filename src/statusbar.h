@@ -15,7 +15,9 @@ public:
     QPushButton *btnSnapGrid = new QPushButton(this);
 
 public slots:
-    void GraphicsViewMousePos(QMouseEvent *event);
+    void SceneMousePos(QPointF point);
+    void ZoomLevel(unsigned int level);
+
 
 
 private:

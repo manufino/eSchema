@@ -212,8 +212,6 @@ margin-left:5px;
 StatusBar &gt; QPushButton {
     border: 1px solid #8f8f91;
     border-radius: 3px;
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
 margin:1px;
 }
 
@@ -462,7 +460,7 @@ StatusBar &gt; QPushButton:checked {
                 <number>1</number>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>13</number>
                </property>
                <property name="tabSpacing">
                 <number>0</number>

@@ -28,7 +28,8 @@ public slots:
     }
 
 signals:
-    void mouseMoved(QMouseEvent *event);
+    void mouseMoved(QPointF point);
+    void ZoomLevel(unsigned int level);
 
 private:
 

@@ -12,14 +12,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     scene = new Sheet();
     scene->setSceneRect(0,0,2000,2000);
-
     ui->graphicsView->setScene(scene);
 
-    connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::GraphicsViewMousePos);
+    connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::SceneMousePos);
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(ClickOptionMenu()));
     connect(ui->actionInformation, SIGNAL(triggered()), this, SLOT(ClickAboutMenu()));
     connect(ui->statusbar->btnGrid, &QPushButton::toggled, ui->graphicsView, &SheetView::EnableGrid);
-
+    connect(ui->graphicsView, &SheetView::ZoomLevel, ui->statusbar, &StatusBar::ZoomLevel);
 }
 
 MainWindow::~MainWindow()
