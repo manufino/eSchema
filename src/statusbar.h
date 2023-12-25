@@ -5,7 +5,6 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QPushButton>
-#include <QSlider>
 
 class StatusBar : public QStatusBar
 {
@@ -22,12 +21,9 @@ public slots:
 signals:
     void ZoomChanged(unsigned int level);
 
-
-
 private:
         QLabel *lblPos = new QLabel(this);
         QLabel *lblZoomLevel = new QLabel(this);
-        QSlider *sliderZoom = new QSlider(this);
 
 };
 

@@ -26,19 +26,6 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 
     lblZoomLevel->setText(" 7%");
 
-    sliderZoom->setTickInterval(1);
-    sliderZoom->setMinimum(1);
-    sliderZoom->setMaximum(100);
-    sliderZoom->setSliderPosition(14);
-    sliderZoom->setOrientation(Qt::Horizontal);
-
-    connect(sliderZoom, &QSlider::sliderMoved, this, [this](unsigned int lev)
-    {
-        emit ZoomChanged(lev);
-        lblZoomLevel->setText(QString("%1%").arg(lev));
-    });
-
-    this->addPermanentWidget(sliderZoom);
     this->addPermanentWidget(lblZoomLevel);
     this->addPermanentWidget(lblPos);
     this->addPermanentWidget(btnGrid);

@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionInformation, SIGNAL(triggered()), this, SLOT(ClickAboutMenu()));
     connect(ui->statusbar->btnGrid, &QPushButton::toggled, ui->graphicsView, &SheetView::EnableGrid);
     connect(ui->graphicsView, &SheetView::ZoomLevel, ui->statusbar, &StatusBar::ZoomLevel);
-    connect(ui->statusbar, &StatusBar::ZoomChanged, ui->graphicsView, &SheetView::onZoomSliderValueChanged);
 }
 
 MainWindow::~MainWindow()

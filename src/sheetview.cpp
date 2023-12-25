@@ -10,9 +10,14 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
    // QSettings s;
     gridSize = 10;//s.value("grid_step").toInt();
-    gridColor = QColor("black");//s.value("grid_color").value<QColor>();
+    dotsGridColor = QColor("blue");//s.value("grid_color").value<QColor>();
 
     gridEnabled=true;
+
+    lineGridColor = QColor(100, 100, 100);
+    lineThickGridColor = QColor(100, 100, 100);
+    lineThickGridWidth = 0.2;
+    lineGridWidth = 0.1;
 
     setMouseTracking(true);
 
@@ -23,7 +28,7 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 void SheetView::setGrid(int size, QColor clr)
 {
     gridSize = size;
-    gridColor = clr;
+    dotsGridColor = clr;
 
     this->update();
 }
@@ -67,15 +72,15 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
            painter->setPen(myPen);
            painter->drawRect(rect);
 
-           QPen penHLines(QColor(75, 75, 75), 0.4, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin);
+           QPen penHLines(lineGridColor, lineGridWidth, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin);
            painter->setPen(penHLines);
            painter->drawLines(lines.data(), lines.size());
 
-           painter->setPen(QPen(QColor(100, 100, 100), 0.4, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
+           painter->setPen(QPen(lineThickGridColor, lineThickGridWidth, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
            painter->drawLines(thickLines.data(), thickLines.size());
 
 
-           painter->setPen(Qt::blue);
+           painter->setPen(dotsGridColor);
 
            QVector<QPointF> points;
            for (qreal x = left; x < rect.right(); x += gridSize) {
@@ -138,22 +143,4 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     QGraphicsView::mouseMoveEvent(event);
 }
 
-void SheetView::onZoomSliderValueChanged(int value)
-{
-    // Calcola la scala in base al valore della QSlider
-    qreal minScale = 0.3;
-    qreal maxScale = 15.0;
-    qreal newScale = minScale + (maxScale - minScale) * (value / 100.0);
-
-    // Esegui lo zoom rispetto al centro della vista
-    const ViewportAnchor anchor = transformationAnchor();
-    setTransformationAnchor(QGraphicsView::AnchorViewCenter);
-    resetTransform();
-    scale(newScale, newScale);
-    setTransformationAnchor(anchor);
-
-    // Aggiorna la variabile di livello di zoom e emetti il segnale
-    zoomLevel = value;
-    emit ZoomLevel(zoomLevel);
-}
 

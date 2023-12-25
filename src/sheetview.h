@@ -22,7 +22,6 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 public slots:
-    void onZoomSliderValueChanged(int value);
     void EnableGrid(bool enable = true) {
         gridEnabled = enable;
         this->scene()->update();
@@ -35,7 +34,8 @@ signals:
 private:
 
     int gridSize;
-    QColor gridColor;
+    float lineGridWidth, lineThickGridWidth;
+    QColor lineGridColor, lineThickGridColor, dotsGridColor;
     bool gridEnabled;
     QPoint point;
     QRubberBand *rubberBand;
