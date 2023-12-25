@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     scene = new Sheet();
-    scene->setSceneRect(0,0,2000,2000);
+    scene->setSceneRect(0,0,5000,5000);
+    scene->addRect(10,10,100,100,QPen(QColor("black"), 2));
     ui->graphicsView->setScene(scene);
 
     connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::SceneMousePos);
@@ -19,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionInformation, SIGNAL(triggered()), this, SLOT(ClickAboutMenu()));
     connect(ui->statusbar->btnGrid, &QPushButton::toggled, ui->graphicsView, &SheetView::EnableGrid);
     connect(ui->graphicsView, &SheetView::ZoomLevel, ui->statusbar, &StatusBar::ZoomLevel);
+    connect(ui->statusbar, &StatusBar::ZoomChanged, ui->graphicsView, &SheetView::onZoomSliderValueChanged);
 }
 
 MainWindow::~MainWindow()

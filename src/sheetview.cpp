@@ -106,7 +106,7 @@ void SheetView::wheelEvent(QWheelEvent *event)
         qreal currentScale = transform().m11(); // Ottiene la scala corrente sull'asse x
         qreal newScale = currentScale * factor; // Calcola la nuova scala
         qreal minScale = 0.3; // Scala minima consentita
-        qreal maxScale = 10.0; // Scala massima consentita
+        qreal maxScale = 15.0; // Scala massima consentita
         if (newScale < minScale) {
             factor = minScale / currentScale;
         } else if (newScale > maxScale) {
@@ -138,4 +138,22 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     QGraphicsView::mouseMoveEvent(event);
 }
 
+void SheetView::onZoomSliderValueChanged(int value)
+{
+    // Calcola la scala in base al valore della QSlider
+    qreal minScale = 0.3;
+    qreal maxScale = 15.0;
+    qreal newScale = minScale + (maxScale - minScale) * (value / 100.0);
+
+    // Esegui lo zoom rispetto al centro della vista
+    const ViewportAnchor anchor = transformationAnchor();
+    setTransformationAnchor(QGraphicsView::AnchorViewCenter);
+    resetTransform();
+    scale(newScale, newScale);
+    setTransformationAnchor(anchor);
+
+    // Aggiorna la variabile di livello di zoom e emetti il segnale
+    zoomLevel = value;
+    emit ZoomLevel(zoomLevel);
+}
 

@@ -22,6 +22,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 public slots:
+    void onZoomSliderValueChanged(int value);
     void EnableGrid(bool enable = true) {
         gridEnabled = enable;
         this->scene()->update();
