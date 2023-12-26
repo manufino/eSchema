@@ -34,18 +34,20 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 
 void StatusBar::SceneMousePos(QPointF point)
 {
-    int x = 0, y = 0;
-
-    x = point.x();
-    y = point.y();
+    int x = static_cast<int>(point.x());
+    int y = static_cast<int>(point.y());
 
     int gridSize = 10;
-    x = round(x/gridSize)*gridSize;
-    y = round(y/gridSize)*gridSize;
+    int halfGridSize = gridSize / 2;
+
+    // Arrotonda alla griglia in base alla distanza dalla griglia
+    x = (x + halfGridSize) / gridSize * gridSize;
+    y = (y + halfGridSize) / gridSize * gridSize;
 
     QString pos = QString("X %1  Y %2").arg(x).arg(y);
     lblPos->setText(pos);
 }
+
 
 void StatusBar::ZoomLevel(unsigned int level)
 {

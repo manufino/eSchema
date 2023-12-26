@@ -4,11 +4,20 @@
 #include "sheetview.h"
 #include <QAction>
 
+#include "LayerComboBox.h"
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));
+
+    LayerComboBox *lcb = new LayerComboBox(this);
+    lcb->setMinimumSize(180,32);
+    ui->toolBarTools->addWidget(lcb);
 
     scene = new Sheet();
     scene->setSceneRect(0,0,5000,5000);

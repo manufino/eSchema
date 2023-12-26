@@ -1,0 +1,3 @@
+creare una ACTION "zoomAdjust" per adattare la vista (da inserire sia nel menu "Vista" che nella toolbar)
+
+
