@@ -1,16 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QGraphicsSceneMouseEvent>
-#include "sheetview.h"
-#include <QAction>
-
-#include "LayerComboBox.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    settings = new SettingsManager();
+    settings->restoreDefaultSettings();
+
     ui->setupUi(this);
 
     setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));
@@ -29,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionInformation, SIGNAL(triggered()), this, SLOT(ClickAboutMenu()));
     connect(ui->statusbar->btnGrid, &QPushButton::toggled, ui->graphicsView, &SheetView::EnableGrid);
     connect(ui->graphicsView, &SheetView::ZoomLevel, ui->statusbar, &StatusBar::ZoomLevel);
+
 }
 
 MainWindow::~MainWindow()

@@ -2,9 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsSceneMouseEvent>
+#include <QAction>
+
+#include "sheetview.h"
 #include "sheet.h"
 #include "optionsdialog.h"
 #include "aboutdialog.h"
+#include "LayerComboBox.h"
+#include "settings_manager.h"
+
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,5 +40,6 @@ public slots:
 private:
     Ui::MainWindow *ui;
     Sheet *scene;
+    SettingsManager *settings;
 };
 #endif // MAINWINDOW_H

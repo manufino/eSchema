@@ -3,7 +3,9 @@
 
 StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 {
-    lblPos->setText("X 0  Y 0");
+    lblPos->setText("X 0  Y 0 (X 0.0mm Y 0.0mm)");
+
+    lblPos->setMinimumWidth(350);
 
     btnGrid->setCheckable(true);
     btnGrid->setChecked(true);
@@ -24,7 +26,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     btnSnapGrid->setMaximumSize(QSize(24,24));
     btnSnapGrid->setToolTip("Attiva o disattiva \nil snap sulla griglia");
 
-    lblZoomLevel->setText(" 7%");
+    lblZoomLevel->setText("Zoom 7%");
 
     this->addPermanentWidget(lblZoomLevel);
     this->addPermanentWidget(lblPos);
@@ -44,14 +46,17 @@ void StatusBar::SceneMousePos(QPointF point)
     x = (x + halfGridSize) / gridSize * gridSize;
     y = (y + halfGridSize) / gridSize * gridSize;
 
-    QString pos = QString("X %1  Y %2").arg(x).arg(y);
+    float xmm = 1.27 * (x/10);
+    float ymm = 1.27 * (y/10);
+
+    QString pos = QString("X %1 Y %2 (X %3mm Y %4mm)").arg(x).arg(y).arg(xmm).arg(ymm);
     lblPos->setText(pos);
 }
 
 
 void StatusBar::ZoomLevel(unsigned int level)
 {
-    QString pos = QString(" %1%").arg(level);
+    QString pos = QString("Zoom %1%").arg(level);
     lblZoomLevel->setText(pos);
 }
 

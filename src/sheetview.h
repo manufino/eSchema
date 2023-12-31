@@ -32,7 +32,6 @@ signals:
     void ZoomLevel(unsigned int level);
 
 private:
-
     int gridSize;
     float lineGridWidth, lineThickGridWidth;
     QColor lineGridColor, lineThickGridColor, dotsGridColor;

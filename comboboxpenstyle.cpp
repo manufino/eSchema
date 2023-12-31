@@ -6,12 +6,13 @@ PenStyleDelegate::PenStyleDelegate(QObject *parent)
 {
 }
 
-void PenStyleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void PenStyleDelegate::paint(QPainter *painter,
+                             const QStyleOptionViewItem &option,
+                             const QModelIndex &index) const
 {
     QStyleOptionViewItem opt = option;
     initStyleOption(&opt, index);
 
-    // Draw a horizontal line with the pen style
     QRect rect = opt.rect;
     int midY = rect.top() + rect.height() / 2;
     QLine line(rect.left() + 10, midY, rect.right() - 10, midY);
@@ -21,7 +22,9 @@ void PenStyleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->setPen(pen);
     painter->drawLine(line);
 
-
+    // Draw border
+    painter->setPen(QPen(QColor("gray")));
+    painter->drawRect(rect);
 }
 
 ComboBoxPenStyle::ComboBoxPenStyle(QWidget *parent)
@@ -32,25 +35,36 @@ ComboBoxPenStyle::ComboBoxPenStyle(QWidget *parent)
 
 ComboBoxPenStyle::~ComboBoxPenStyle()
 {
-    // Cleanup, if needed
+    delete mainLayout;
+    delete penStyleComboBox;
 }
 
 void ComboBoxPenStyle::setupUi()
 {
-    mainLayout = new QVBoxLayout(this);
+    mainLayout = new QVBoxLayout();
 
     // Create and populate the pen style combobox with custom delegate
     penStyleComboBox = new QComboBox(this);
     penStyleComboBox->setItemDelegate(new PenStyleDelegate(this));
 
-    penStyleComboBox->addItem("Solid Line", QVariant(static_cast<int>(Qt::SolidLine)));
-    penStyleComboBox->addItem("Dash Line", QVariant(static_cast<int>(Qt::DashLine)));
-    penStyleComboBox->addItem("Dot Line", QVariant(static_cast<int>(Qt::DotLine)));
-    penStyleComboBox->addItem("Dash Dot Line", QVariant(static_cast<int>(Qt::DashDotLine)));
-    penStyleComboBox->addItem("Dash Dot Dot Line", QVariant(static_cast<int>(Qt::DashDotDotLine)));
+    penStyleComboBox->addItem("Solid Line",
+                              QVariant(static_cast<int>(Qt::SolidLine)));
+
+    penStyleComboBox->addItem("Dash Line",
+                              QVariant(static_cast<int>(Qt::DashLine)));
+
+    penStyleComboBox->addItem("Dot Line",
+                              QVariant(static_cast<int>(Qt::DotLine)));
+
+    penStyleComboBox->addItem("Dash Dot Line",
+                              QVariant(static_cast<int>(Qt::DashDotLine)));
+
+    penStyleComboBox->addItem("Dash Dot Dot Line",
+                              QVariant(static_cast<int>(Qt::DashDotDotLine)));
 
     // Connect the signal for style change
-    connect(penStyleComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(penStyleChanged(int)));
+    connect(penStyleComboBox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(penStyleChanged(int)));
 
     // Add widgets to the layout
     mainLayout->addWidget(penStyleComboBox);
@@ -64,11 +78,8 @@ void ComboBoxPenStyle::setupUi()
 void ComboBoxPenStyle::penStyleChanged(int index)
 {
     // Update the pen style based on the selected index
-    Qt::PenStyle style = static_cast<Qt::PenStyle>(penStyleComboBox->itemData(index).toInt());
-    currentPen.setStyle(style);
+    Qt::PenStyle style = static_cast<Qt::PenStyle>(
+                penStyleComboBox->itemData(index).toInt());
 
-    // You can now use 'currentPen' for your drawing operations
-    // For example, you can set the pen of a QPainter in your paintEvent:
-    // QPainter painter(this);
-    // painter.setPen(currentPen);
+    currentPen.setStyle(style);
 }

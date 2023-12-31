@@ -20,6 +20,7 @@ CONFIG += c++17
 
 SOURCES += \
 	comboboxpenstyle.cpp \
+	settings_manager.cpp \
 	src/aboutdialog.cpp \
 	src/main.cpp \
 	src/mainwindow.cpp \
@@ -30,7 +31,9 @@ SOURCES += \
 	src/toolbarprimitive.cpp
 
 HEADERS += \
+	Ruler.h \
 	comboboxpenstyle.h \
+	settings_manager.h \
 	src/LayerComboBox.h \
 	src/aboutdialog.h \
 	src/mainwindow.h \

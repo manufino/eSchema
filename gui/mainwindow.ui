@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>965</width>
-    <height>721</height>
+    <width>1012</width>
+    <height>776</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -329,7 +329,10 @@ QComboBox QAbstractItemView::item {
 QComboBox QAbstractItemView::item:hover {
 color:black;
 	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 211), stop:0.508772 rgba(197, 225, 255, 202), stop:0.997301 rgba(176, 255, 255, 206));
-                }</string>
+                }
+
+
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -383,9 +386,15 @@ color:black;
        </layout>
       </widget>
       <widget class="QSplitter" name="splitterV">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
-         <width>275</width>
+         <width>235</width>
          <height>0</height>
         </size>
        </property>
@@ -505,7 +514,7 @@ color:black;
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>50</height>
+             <height>110</height>
             </size>
            </property>
            <property name="frameShape">
@@ -521,7 +530,7 @@ color:black;
             <enum>Qt::ScrollBarAlwaysOff</enum>
            </property>
            <property name="sizeAdjustPolicy">
-            <enum>QAbstractScrollArea::AdjustIgnored</enum>
+            <enum>QAbstractScrollArea::AdjustToContents</enum>
            </property>
            <property name="widgetResizable">
             <bool>true</bool>
@@ -531,8 +540,8 @@ color:black;
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>259</width>
-              <height>364</height>
+              <width>279</width>
+              <height>372</height>
              </rect>
             </property>
             <property name="minimumSize">
@@ -540,6 +549,9 @@ color:black;
               <width>0</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="autoFillBackground">
+             <bool>true</bool>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_5">
              <property name="spacing">
@@ -559,12 +571,24 @@ color:black;
              </property>
              <item>
               <widget class="QToolBox" name="toolBoxLib">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="font">
                 <font>
                  <family>Consolas</family>
                  <pointsize>10</pointsize>
                  <bold>false</bold>
                 </font>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
                </property>
                <property name="lineWidth">
                 <number>1</number>
@@ -580,21 +604,43 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>271</width>
+                  <height>100</height>
                  </rect>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <attribute name="icon">
+                 <iconset resource="../resources.qrc">
+                  <normaloff>:/res/resources/magnet.png</normaloff>:/res/resources/magnet.png</iconset>
+                </attribute>
                 <attribute name="label">
                  <string>Page 1</string>
                 </attribute>
+                <layout class="QVBoxLayout" name="verticalLayout_7">
+                 <property name="sizeConstraint">
+                  <enum>QLayout::SetMaximumSize</enum>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="label_10">
+                   <property name="text">
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
                <widget class="QWidget" name="page_2">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -606,8 +652,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -619,8 +665,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -632,8 +678,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -645,8 +691,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -658,8 +704,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -671,8 +717,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -684,8 +730,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -697,8 +743,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -710,8 +756,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -723,8 +769,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -736,8 +782,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -749,8 +795,8 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
-                  <height>28</height>
+                  <width>279</width>
+                  <height>36</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -769,7 +815,7 @@ color:black;
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>300</height>
+          <height>250</height>
          </size>
         </property>
         <property name="font">
@@ -804,265 +850,237 @@ color:black;
           <number>0</number>
          </property>
          <item>
-          <widget class="QScrollArea" name="scrollArea_2">
-           <property name="widgetResizable">
-            <bool>true</bool>
+          <layout class="QGridLayout" name="gridLayoutProp" columnstretch="0,0">
+           <property name="leftMargin">
+            <number>5</number>
            </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_2">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>267</width>
-              <height>271</height>
-             </rect>
-            </property>
-            <property name="font">
-             <font>
-              <family>Hack</family>
-              <pointsize>9</pointsize>
-             </font>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_2">
-             <property name="leftMargin">
-              <number>0</number>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <property name="spacing">
+            <number>5</number>
+           </property>
+           <item row="7" column="1">
+            <widget class="QCheckBox" name="checkBox">
+             <property name="text">
+              <string/>
              </property>
-             <property name="topMargin">
-              <number>0</number>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
-             <property name="rightMargin">
-              <number>0</number>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
              </property>
-             <property name="bottomMargin">
-              <number>0</number>
+            </spacer>
+           </item>
+           <item row="6" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
              </property>
-             <property name="spacing">
-              <number>0</number>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayoutProp">
-               <property name="leftMargin">
-                <number>5</number>
-               </property>
-               <property name="topMargin">
-                <number>4</number>
-               </property>
-               <property name="rightMargin">
-                <number>5</number>
-               </property>
-               <property name="bottomMargin">
-                <number>4</number>
-               </property>
-               <property name="horizontalSpacing">
-                <number>10</number>
-               </property>
-               <property name="verticalSpacing">
-                <number>9</number>
-               </property>
-               <item row="7" column="1">
-                <widget class="QCheckBox" name="checkBox">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_7">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Stile linea</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="label_5">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Spessore linea</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QDoubleSpinBox" name="doubleSpinBox">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Layer</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Valore</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="lineEdit">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="lineEdit_2">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Nome</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="1">
-                <spacer name="verticalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="5" column="1">
-                <widget class="ComboBoxPenStyle" name="comboBox_2">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>150</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_6">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Riempimento</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QComboBox" name="comboBox">
-                 <property name="font">
-                  <font>
-                   <family>Hack</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
-                 <item>
-                  <property name="text">
-                   <string>New Item</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>New Item</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>New Item</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>New Item</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>New Item</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>New Item</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-              </layout>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Valore</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBox">
+             <property name="minimumSize">
+              <size>
+               <width>119</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
              </item>
-            </layout>
-           </widget>
-          </widget>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="ComboBoxPenStyle" name="comboBox_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>119</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>0</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="lineEdit">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Riempimento</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Stile linea</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Layer</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="lineEdit_2">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Nome</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Spessore linea</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -1076,7 +1094,7 @@ color:black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>965</width>
+     <width>1012</width>
      <height>19</height>
     </rect>
    </property>
