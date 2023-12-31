@@ -6,8 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    settings = new SettingsManager();
-    settings->restoreDefaultSettings();
+    //SettingsManager::getInstance().restoreDefaultSettings();
 
     ui->setupUi(this);
 
@@ -32,6 +31,21 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete optionDialog;
+    delete aboutDialog;
+    delete scene;
     delete ui;
+}
+
+void MainWindow::ClickOptionMenu()
+{
+    optionDialog = new OptionsDialog(this);
+    optionDialog->show();
+}
+
+void MainWindow::ClickAboutMenu()
+{
+    aboutDialog = new AboutDialog(this);
+    aboutDialog->show();
 }
 

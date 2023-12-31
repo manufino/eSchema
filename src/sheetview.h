@@ -7,6 +7,8 @@
 #include <QRubberBand>
 #include <QMouseEvent>
 
+#include "settings_manager.h"
+
 class SheetView : public QGraphicsView
 {
     Q_OBJECT
@@ -16,12 +18,18 @@ public:
     void setGrid(int size, QColor clr);
     QPoint getMousePos() { return point;}
 
+
 protected:
     void drawBackground (QPainter* painter, const QRectF &rect);
     void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
+private:
+    void loadSettings();
+
 public slots:
+    void settingChanged();
+
     void EnableGrid(bool enable = true) {
         gridEnabled = enable;
         this->scene()->update();
@@ -30,17 +38,16 @@ public slots:
 signals:
     void mouseMoved(QPointF point);
     void ZoomLevel(unsigned int level);
+    void mousePosChanged();
 
 private:
-    int gridSize;
+    int gridSize, gridMarkSize, zoomLevel;
     float lineGridWidth, lineThickGridWidth;
-    QColor lineGridColor, lineThickGridColor, dotsGridColor;
+    QColor lineGridColor, lineThickGridColor, dotsGridColor, backgroundColor;
     bool gridEnabled;
     QPoint point;
     QRubberBand *rubberBand;
     QPoint origin;
-signals:
-    void mousePosChanged();
 };
 
 #endif // SHEETVIEW_H

@@ -19,6 +19,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+	colorselector.cpp \
 	comboboxpenstyle.cpp \
 	settings_manager.cpp \
 	src/aboutdialog.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
 
 HEADERS += \
 	Ruler.h \
+	colorselector.h \
 	comboboxpenstyle.h \
 	settings_manager.h \
 	src/LayerComboBox.h \

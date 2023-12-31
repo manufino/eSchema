@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "settings_manager.h"
+
 namespace Ui {
 class OptionsDialog;
 }
@@ -14,6 +16,16 @@ class OptionsDialog : public QDialog
 public:
     explicit OptionsDialog(QWidget *parent = nullptr);
     ~OptionsDialog();
+
+protected:
+    void loadSettings();
+    void saveSettings();
+
+public slots:
+    void accept();
+    void cancel();
+    void apply();
+    void restore();
 
 private:
     Ui::OptionsDialog *ui;

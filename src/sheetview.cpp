@@ -1,5 +1,4 @@
 #include "sheetview.h"
-#include <QSettings>
 #include <QColor>
 #include "sheet.h"
 #include "math.h"
@@ -8,19 +7,16 @@
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
-   // QSettings s;
-    gridSize = 10;//s.value("grid_step").toInt();
-    dotsGridColor = QColor("blue");//s.value("grid_color").value<QColor>();
-
     gridEnabled=true;
 
-    lineGridColor = QColor(100, 100, 100);
-    lineThickGridColor = QColor(100, 100, 100);
-    lineThickGridWidth = 0.2;
-    lineGridWidth = 0.1;
+    zoomLevel=100;
+
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, &SheetView::settingChanged);
+
+    loadSettings();
 
     setMouseTracking(true);
-
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
 }
@@ -62,13 +58,13 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 
            QVarLengthArray<QLineF, 100> thickLines;
 
-           for (qreal x = left; x < rect.right(); x += gridSize * 5)
+           for (qreal x = left; x < rect.right(); x += gridSize * (gridMarkSize/10))
                thickLines.append(QLineF(x, rect.top(), x, rect.bottom()));
-           for (qreal y = top; y < rect.bottom(); y += gridSize * 5)
+           for (qreal y = top; y < rect.bottom(); y += gridSize * (gridMarkSize/10))
                thickLines.append(QLineF(rect.left(), y, rect.right(), y));
 
            QPen myPen(Qt::NoPen);
-           painter->setBrush(QBrush(QColor(255, 255, 255, 255)));
+           painter->setBrush(QBrush(backgroundColor));
            painter->setPen(myPen);
            painter->drawRect(rect);
 
@@ -78,7 +74,6 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 
            painter->setPen(QPen(lineThickGridColor, lineThickGridWidth, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
            painter->drawLines(thickLines.data(), thickLines.size());
-
 
            painter->setPen(dotsGridColor);
 
@@ -92,7 +87,7 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     }
 }
 
-int zoomLevel=100;
+
 void SheetView::wheelEvent(QWheelEvent *event)
 {
     if (event->modifiers() & Qt::ControlModifier) {
@@ -141,6 +136,39 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
 
     emit mouseMoved(relativeOrigin);
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void SheetView::loadSettings()
+{
+    QVariant val = SettingsManager::getInstance().loadSetting("grid_step");
+    gridSize = val.toInt();
+
+    val = SettingsManager::getInstance().loadSetting("grid_line_width");
+    lineGridWidth = val.toDouble();
+
+    val = SettingsManager::getInstance().loadSetting("grid_line_mark_width");
+    lineThickGridWidth = val.toDouble();
+
+    val = SettingsManager::getInstance().loadSetting("grid_line_color");
+    lineGridColor = QColor(val.toString());
+
+    val = SettingsManager::getInstance().loadSetting("grid_line_mark_color");
+    lineThickGridColor = QColor(val.toString());
+
+    val = SettingsManager::getInstance().loadSetting("grid_dot_color");
+    dotsGridColor = QColor(val.toString());
+
+    val = SettingsManager::getInstance().loadSetting("background_color");
+    backgroundColor = QColor(val.toString());
+
+    val = SettingsManager::getInstance().loadSetting("grid_step_mark");
+    gridMarkSize = val.toInt();
+}
+
+void SheetView::settingChanged()
+{
+    loadSettings();
+    update();
 }
 
 

@@ -27,19 +27,13 @@ public:
     ~MainWindow();
 
 public slots:
-    void ClickOptionMenu(){
-        OptionsDialog *od = new OptionsDialog(this);
-        od->show();
-    };
-
-    void ClickAboutMenu(){
-        AboutDialog *ad = new AboutDialog(this);
-        ad->show();
-    }
+    void ClickOptionMenu();
+    void ClickAboutMenu();
 
 private:
     Ui::MainWindow *ui;
     Sheet *scene;
-    SettingsManager *settings;
+    OptionsDialog *optionDialog;
+    AboutDialog *aboutDialog;
 };
 #endif // MAINWINDOW_H
