@@ -6,8 +6,12 @@
 #include <QWheelEvent>
 #include <QRubberBand>
 #include <QMouseEvent>
+#include <QGraphicsRectItem>
 
 #include "SettingsManager.h"
+
+#define ZOOM_SCALE_MIN 0.3// Scala minima consentita
+#define ZOOM_SCALE_MAX 15.0// Scala massima consentita
 
 class SheetView : public QGraphicsView
 {
@@ -27,6 +31,7 @@ protected:
 
 private:
     void loadSettings();
+    void zoomUpdate();
 
 public slots:
     void settingChanged();
@@ -40,7 +45,7 @@ public slots:
 
 signals:
     void mouseMoved(QPointF point);
-    void ZoomLevel(unsigned int level);
+    void ZoomScaleIsChanged(unsigned int level);
     void mousePosChanged();
 
 private:

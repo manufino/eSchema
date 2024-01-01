@@ -106,22 +106,17 @@ void SheetView::wheelEvent(QWheelEvent *event)
         // Limiti del fattore di zoom
         qreal currentScale = transform().m11(); // Ottiene la scala corrente sull'asse x
         qreal newScale = currentScale * factor; // Calcola la nuova scala
-        qreal minScale = 0.3; // Scala minima consentita
-        qreal maxScale = 15.0; // Scala massima consentita
-        if (newScale < minScale) {
-            factor = minScale / currentScale;
-        } else if (newScale > maxScale) {
-            factor = maxScale / currentScale;
+
+        if (newScale < ZOOM_SCALE_MIN) {
+            factor = ZOOM_SCALE_MIN / currentScale;
+        } else if (newScale > ZOOM_SCALE_MAX) {
+            factor = ZOOM_SCALE_MAX / currentScale;
         }
 
         scale(factor, factor);
         setTransformationAnchor(anchor);
 
-        // Calcola la percentuale di zoom
-        qreal zoomPercentage = (transform().m11() * 100) / maxScale;
-        zoomLevel = qRound(zoomPercentage);
-        qDebug(QString::number(zoomLevel).toUtf8());
-        emit ZoomLevel(zoomLevel);
+        zoomUpdate();
 
     } else {
         QGraphicsView::wheelEvent(event);
@@ -191,6 +186,15 @@ void SheetView::loadSettings()
     gridMarkSize = val.toInt();
 }
 
+void SheetView::zoomUpdate()
+{
+    // Calcola la percentuale di zoom
+    qreal zoomPercentage = (transform().m11() * 100) / ZOOM_SCALE_MAX;
+    zoomLevel = qRound(zoomPercentage);
+    //qDebug(QString::number(zoomLevel).toUtf8());
+    emit ZoomScaleIsChanged(zoomLevel);
+}
+
 void SheetView::settingChanged()
 {
     loadSettings();
@@ -200,6 +204,7 @@ void SheetView::settingChanged()
 void SheetView::AdjustView()
 {
     fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
+    zoomUpdate();
 }
 
 

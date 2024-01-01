@@ -43,7 +43,7 @@
    <string>Opzioni</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../resources.qrc">
+   <iconset>
     <normaloff>:/res/resources/settings.png</normaloff>:/res/resources/settings.png</iconset>
   </property>
   <property name="styleSheet">
@@ -69,12 +69,12 @@
    <item>
     <widget class="QTabWidget" name="tabOptions">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="icon">
        <iconset resource="../resources.qrc">
-        <normaloff>:/res/resources/settings.png</normaloff>:/res/resources/settings.png</iconset>
+        <normaloff>:/res/resources/remix/settings-3-line.png</normaloff>:/res/resources/remix/settings-3-line.png</iconset>
       </attribute>
       <attribute name="title">
        <string>Generale</string>
@@ -328,7 +328,7 @@
      <widget class="QWidget" name="tab_2">
       <attribute name="icon">
        <iconset resource="../resources.qrc">
-        <normaloff>:/res/resources/grid.ico</normaloff>:/res/resources/grid.ico</iconset>
+        <normaloff>:/res/resources/remix/grid-line.png</normaloff>:/res/resources/remix/grid-line.png</iconset>
       </attribute>
       <attribute name="title">
        <string>Griglia</string>

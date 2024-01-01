@@ -9,7 +9,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 
     btnGrid->setCheckable(true);
     btnGrid->setChecked(true);
-    QIcon icon(":/res/resources/grid.ico");
+    QIcon icon(":/res/resources/remix/grid-line.png");
     btnGrid->setIcon(icon);
     btnGrid->setIconSize(QSize(24,24));
     btnGrid->setMinimumSize(QSize(24,24));
@@ -18,7 +18,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 
     btnSnapGrid->setCheckable(true);
     btnSnapGrid->setChecked(true);
-    QIcon icon2(":/res/resources/magnet.png");
+    QIcon icon2(":/res/resources/remix/grid-fill.png");
     btnSnapGrid->setIcon(icon2);
     btnSnapGrid->setIconSize(QSize(24,24));
     btnSnapGrid->setMinimumSize(QSize(24,24));

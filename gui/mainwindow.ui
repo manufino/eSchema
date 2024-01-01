@@ -19,8 +19,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QToolBar, QMenuBar,QStatusBar,QMenu {
-	background-color: rgb(97, 97, 97);
-	background-color: qlineargradient(spread:reflect, x1:0.495, y1:0.505682, x2:0.494, y2:1, stop:0 rgba(168, 168, 168, 231), stop:1 rgba(199, 199, 199, 207));
+
 }
 QMenu {
 border:1px solid black;
@@ -76,7 +75,7 @@ border:1px solid cyan;
 
 QToolButton { /* all types of tool button */
     border: 1px solid #8f8f91;
-    border-radius: 6px;
+    border-radius: 3px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
 margin:1px;
@@ -92,7 +91,7 @@ QToolButton:pressed {
 }
 
 QToolButton:checked {
-	border-color: rgb(170, 255, 255);
+    border: 1px solid #8f8f91;
 	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
 }
 
@@ -360,7 +359,7 @@ color:black;
        <number>4</number>
       </property>
       <property name="childrenCollapsible">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -540,7 +539,7 @@ color:black;
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>257</width>
+              <width>259</width>
               <height>364</height>
              </rect>
             </property>
@@ -604,7 +603,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>249</width>
+                  <width>251</width>
                   <height>103</height>
                  </rect>
                 </property>
@@ -639,7 +638,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -652,7 +651,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -665,7 +664,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -678,7 +677,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -691,7 +690,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -704,7 +703,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -717,7 +716,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -730,7 +729,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -743,7 +742,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -756,7 +755,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -769,7 +768,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -782,7 +781,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -795,7 +794,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>257</width>
+                  <width>259</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -866,52 +865,6 @@ color:black;
            <property name="spacing">
             <number>5</number>
            </property>
-           <item row="7" column="1">
-            <widget class="QCheckBox" name="checkBox">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="1">
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="6" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Valore</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="1">
             <widget class="QComboBox" name="comboBox">
              <property name="minimumSize">
@@ -958,52 +911,8 @@ color:black;
              </item>
             </widget>
            </item>
-           <item row="5" column="1">
-            <widget class="ComboBoxPenStyle" name="comboBox_2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>119</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>0</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="lineEdit">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_6">
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_5">
              <property name="font">
               <font>
                <family>Hack</family>
@@ -1011,46 +920,7 @@ color:black;
               </font>
              </property>
              <property name="text">
-              <string>Riempimento</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_7">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Stile linea</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_4">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Layer</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="lineEdit_2">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
+              <string>Spessore linea</string>
              </property>
             </widget>
            </item>
@@ -1067,8 +937,54 @@ color:black;
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_5">
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="lineEdit_2">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QCheckBox" name="checkBox">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="lineEdit">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_3">
              <property name="font">
               <font>
                <family>Hack</family>
@@ -1076,8 +992,106 @@ color:black;
               </font>
              </property>
              <property name="text">
-              <string>Spessore linea</string>
+              <string>Valore</string>
              </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Stile linea</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Riempimento</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Layer</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="5" column="1">
+            <widget class="QComboBox" name="comboBox_2">
+             <property name="minimumSize">
+              <size>
+               <width>119</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>New Item</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>
@@ -1104,6 +1118,7 @@ color:black;
     </property>
     <addaction name="actionNewDraw"/>
     <addaction name="actionOpenFile"/>
+    <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
@@ -1180,8 +1195,8 @@ color:black;
    </property>
    <property name="iconSize">
     <size>
-     <width>30</width>
-     <height>30</height>
+     <width>25</width>
+     <height>25</height>
     </size>
    </property>
    <property name="toolButtonStyle">
@@ -1223,13 +1238,16 @@ color:black;
    <property name="windowTitle">
     <string>ToolBarPrimitive</string>
    </property>
+   <property name="allowedAreas">
+    <set>Qt::AllToolBarAreas</set>
+   </property>
    <property name="orientation">
     <enum>Qt::Vertical</enum>
    </property>
    <property name="iconSize">
     <size>
-     <width>32</width>
-     <height>30</height>
+     <width>25</width>
+     <height>25</height>
     </size>
    </property>
    <property name="toolButtonStyle">
@@ -1699,11 +1717,6 @@ color:black;
    <class>StatusBar</class>
    <extends>QStatusBar</extends>
    <header>StatusBar.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ComboBoxPenStyle</class>
-   <extends>QComboBox</extends>
-   <header>ComboBoxPenStyle.h</header>
   </customwidget>
  </customwidgets>
  <resources>
