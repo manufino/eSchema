@@ -1,4 +1,4 @@
-VERSION = 0.6.2
+VERSION = 0.6.5
 
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
@@ -19,8 +19,9 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+	src/LayerDialog.cpp \
 	src/ColorSelector.cpp \
-	src/ComboBoxPenStyle.cpp \
+	src/LayerComboBox.cpp \
 	src/SettingsManager.cpp \
 	src/AboutDialog.cpp \
 	src/main.cpp \
@@ -32,8 +33,9 @@ SOURCES += \
 	src/ToolBarPrimitive.cpp
 
 HEADERS += \
+	src/LinkLabel.h \
+	src/LayerDialog.h \
 	src/ColorSelector.h \
-	src/ComboBoxPenStyle.h \
 	src/SettingsManager.h \
 	src/LayerComboBox.h \
 	src/AboutDialog.h \
@@ -45,6 +47,7 @@ HEADERS += \
 	src/ToolBarPrimitive.h
 
 FORMS += \
+	gui/LayerDialog.ui \
 	gui/AboutDialog.ui \
     gui/MainWindow.ui \
 	gui/OptionsDialog.ui

@@ -197,6 +197,7 @@ void SheetView::zoomUpdate()
 
 void SheetView::settingChanged()
 {
+    //qDebug("SheetView::settingChanged()");
     loadSettings();
     update();
 }

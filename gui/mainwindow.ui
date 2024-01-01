@@ -443,7 +443,7 @@ color:black;
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>30</height>
+             <height>23</height>
             </size>
            </property>
            <property name="styleSheet">
@@ -476,7 +476,7 @@ color:black;
               <property name="font">
                <font>
                 <family>BankGothic Lt BT</family>
-                <pointsize>13</pointsize>
+                <pointsize>12</pointsize>
                 <bold>false</bold>
                 <underline>false</underline>
                </font>
@@ -820,7 +820,7 @@ color:black;
         <property name="font">
          <font>
           <family>BankGothic Lt BT</family>
-          <pointsize>13</pointsize>
+          <pointsize>11</pointsize>
          </font>
         </property>
         <property name="title">

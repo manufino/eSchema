@@ -105,5 +105,16 @@
         <file>resources/remix/zoom-in-line.png</file>
         <file>resources/remix/zoom-out-fill.png</file>
         <file>resources/remix/zoom-out-line.png</file>
+        <file>resources/remix/eye-fill.png</file>
+        <file>resources/remix/eye-line.png</file>
+        <file>resources/remix/eye-off-fill.png</file>
+        <file>resources/remix/eye-off-line.png</file>
+        <file>resources/remix/delete-bin-2-fill.png</file>
+        <file>resources/remix/delete-bin-2-line.png</file>
+        <file>resources/remix/delete-bin-fill.png</file>
+        <file>resources/remix/delete-bin-line.png</file>
+        <file>resources/remix/remixicon-line.png</file>
+        <file>resources/remix/icona_fidocadj.png</file>
+        <file>resources/dafont.png</file>
     </qresource>
 </RCC>
