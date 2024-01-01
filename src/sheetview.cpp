@@ -19,6 +19,7 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
     setMouseTracking(true);
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
+    setTransformationAnchor(QGraphicsView::NoAnchor);
 }
 
 void SheetView::setGrid(int size, QColor clr)
@@ -134,8 +135,33 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     QPoint origin = mapFromGlobal(QCursor::pos());
     QPointF relativeOrigin = mapToScene(origin);
 
+    if (event->buttons() & Qt::MiddleButton)
+    {
+        setCursor(Qt::ClosedHandCursor);
+        QPointF oldp = mapToScene(m_originX, m_originY);
+        QPointF newp = mapToScene(event->pos());
+        QPointF translation = newp - oldp;
+
+        translate(translation.x(), translation.y());
+
+        m_originX = event->position().x();
+        m_originY = event->position().y();
+    } else {
+        setCursor(Qt::ArrowCursor);
+    }
+
     emit mouseMoved(relativeOrigin);
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void SheetView::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::MiddleButton)
+    {
+        // Store original position.
+        m_originX = event->position().x();
+        m_originY = event->position().y();
+    }
 }
 
 void SheetView::loadSettings()

@@ -23,6 +23,7 @@ protected:
     void drawBackground (QPainter* painter, const QRectF &rect);
     void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent* event);
 
 private:
     void loadSettings();
@@ -43,6 +44,7 @@ signals:
     void mousePosChanged();
 
 private:
+    int m_originX, m_originY;
     int gridSize, gridMarkSize, zoomLevel;
     float lineGridWidth, lineThickGridWidth;
     QColor lineGridColor, lineThickGridColor, dotsGridColor, backgroundColor;
