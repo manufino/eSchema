@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionInformation, SIGNAL(triggered()), this, SLOT(ClickAboutMenu()));
     connect(ui->statusbar->btnGrid, &QPushButton::toggled, ui->graphicsView, &SheetView::EnableGrid);
     connect(ui->graphicsView, &SheetView::ZoomLevel, ui->statusbar, &StatusBar::ZoomLevel);
+    connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::AdjustView);
 
 }
 

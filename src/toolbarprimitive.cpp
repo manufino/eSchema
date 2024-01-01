@@ -1,4 +1,4 @@
-#include "toolbarprimitive.h"
+#include "ToolBarPrimitive.h"
 
 ToolBarPrimitive::ToolBarPrimitive(QWidget *parent) : QToolBar(parent)
 {

@@ -7,7 +7,7 @@
 #include <QRubberBand>
 #include <QMouseEvent>
 
-#include "settings_manager.h"
+#include "SettingsManager.h"
 
 class SheetView : public QGraphicsView
 {
@@ -29,6 +29,8 @@ private:
 
 public slots:
     void settingChanged();
+
+    void AdjustView();
 
     void EnableGrid(bool enable = true) {
         gridEnabled = enable;

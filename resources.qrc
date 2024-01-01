@@ -6,67 +6,104 @@
         <file>resources/search.png</file>
         <file>resources/Built_with_Qt.png</file>
         <file>resources/search.png</file>
-        <file>resources/s1.jpeg</file>
-        <file>resources/s2.jpeg</file>
         <file>resources/properties.png</file>
-        <file>resources/layers.png</file>
         <file>resources/code.png</file>
-        <file>resources/select.png</file>
-        <file>resources/schema.png</file>
         <file>resources/data-structure.png</file>
-        <file>resources/image.png</file>
-        <file>resources/cancel.png</file>
-        <file>resources/paste.png</file>
-        <file>resources/refresh.png</file>
         <file>resources/symmetry.png</file>
-        <file>resources/settings.png</file>
-        <file>resources/duplicate.png</file>
-        <file>resources/settings.png</file>
-        <file>resources/duplicate.png</file>
         <file>resources/arrow.png</file>
         <file>resources/bezier.png</file>
-        <file>resources/class_libraries.ico</file>
         <file>resources/complexcurve.png</file>
         <file>resources/connection.png</file>
-        <file>resources/copy.ico</file>
-        <file>resources/cut.ico</file>
-        <file>resources/delete.ico</file>
-        <file>resources/document_new.ico</file>
-        <file>resources/document_open.ico</file>
-        <file>resources/document_save_as.ico</file>
         <file>resources/ellipse.png</file>
-        <file>resources/filesaveas.ico</file>
-        <file>resources/folder_open.ico</file>
-        <file>resources/gnome_dialog_question.ico</file>
-        <file>resources/gnome_edit_paste.ico</file>
         <file>resources/grid.ico</file>
-        <file>resources/layers.ico</file>
         <file>resources/line.png</file>
-        <file>resources/magnifier.png</file>
-        <file>resources/move.png</file>
-        <file>resources/new_file.ico</file>
         <file>resources/pcbline.png</file>
         <file>resources/pcbpad.png</file>
         <file>resources/polygon.png</file>
-        <file>resources/printer.ico</file>
-        <file>resources/qt.png</file>
         <file>resources/rectangle.png</file>
-        <file>resources/redo.ico</file>
-        <file>resources/redo_blue.ico</file>
-        <file>resources/rotate_ccw.ico</file>
-        <file>resources/rotate_cw.ico</file>
-        <file>resources/save (2).ico</file>
-        <file>resources/save (3).ico</file>
-        <file>resources/save (4).ico</file>
-        <file>resources/save.ico</file>
-        <file>resources/save_as (1).ico</file>
-        <file>resources/save_as.ico</file>
-        <file>resources/settings1.ico</file>
         <file>resources/text.png</file>
-        <file>resources/undo.ico</file>
-        <file>resources/undo_blue.ico</file>
         <file>resources/light-bulb-off.png</file>
         <file>resources/down.png</file>
         <file>resources/light-bulb.png</file>
+        <file>resources/adjustView.png</file>
+        <file>resources/remix/article-fill.png</file>
+        <file>resources/remix/article-line.png</file>
+        <file>resources/remix/chat-delete-fill.png</file>
+        <file>resources/remix/chat-delete-line.png</file>
+        <file>resources/remix/chat-new-fill.png</file>
+        <file>resources/remix/chat-new-line.png</file>
+        <file>resources/remix/clipboard-fill.png</file>
+        <file>resources/remix/clipboard-line.png</file>
+        <file>resources/remix/clockwise-fill.png</file>
+        <file>resources/remix/clockwise-line.png</file>
+        <file>resources/remix/close-line.png</file>
+        <file>resources/remix/file-copy-2-fill.png</file>
+        <file>resources/remix/file-copy-2-line.png</file>
+        <file>resources/remix/file-copy-fill.png</file>
+        <file>resources/remix/file-copy-line.png</file>
+        <file>resources/remix/folder-info-fill.png</file>
+        <file>resources/remix/folder-info-line.png</file>
+        <file>resources/remix/folder-open-fill.png</file>
+        <file>resources/remix/folder-open-line.png</file>
+        <file>resources/remix/printer-fill.png</file>
+        <file>resources/remix/printer-line.png</file>
+        <file>resources/remix/save-3-fill.png</file>
+        <file>resources/remix/save-3-line.png</file>
+        <file>resources/remix/scissors-cut-fill.png</file>
+        <file>resources/remix/arrow-go-back-line.png</file>
+        <file>resources/remix/arrow-go-forward-line.png</file>
+        <file>resources/remix/chat-settings-fill.png</file>
+        <file>resources/remix/list-settings-line.png</file>
+        <file>resources/remix/settings-3-fill.png</file>
+        <file>resources/remix/settings-3-line.png</file>
+        <file>resources/remix/tools-fill.png</file>
+        <file>resources/remix/add-box-fill.png</file>
+        <file>resources/remix/add-box-line.png</file>
+        <file>resources/remix/add-circle-fill.png</file>
+        <file>resources/remix/add-circle-line.png</file>
+        <file>resources/remix/bookmark-2-fill.png</file>
+        <file>resources/remix/bookmark-2-line.png</file>
+        <file>resources/remix/bookmark-3-fill.png</file>
+        <file>resources/remix/bookmark-3-line.png</file>
+        <file>resources/remix/book-open-fill.png</file>
+        <file>resources/remix/chat-check-fill.png</file>
+        <file>resources/remix/chat-check-line.png</file>
+        <file>resources/remix/checkbox-blank-fill.png</file>
+        <file>resources/remix/checkbox-blank-line.png</file>
+        <file>resources/remix/checkbox-indeterminate-fill.png</file>
+        <file>resources/remix/checkbox-indeterminate-line.png</file>
+        <file>resources/remix/checkbox-multiple-blank-fill.png</file>
+        <file>resources/remix/checkbox-multiple-blank-line.png</file>
+        <file>resources/remix/checkbox-multiple-fill.png</file>
+        <file>resources/remix/checkbox-multiple-line.png</file>
+        <file>resources/remix/check-double-line.png</file>
+        <file>resources/remix/code-view.png</file>
+        <file>resources/remix/folder-add-fill.png</file>
+        <file>resources/remix/folder-add-line.png</file>
+        <file>resources/remix/git-repository-commits-fill.png</file>
+        <file>resources/remix/git-repository-commits-line.png</file>
+        <file>resources/remix/git-repository-fill.png</file>
+        <file>resources/remix/git-repository-line.png</file>
+        <file>resources/remix/grid-fill.png</file>
+        <file>resources/remix/grid-line.png</file>
+        <file>resources/remix/image-2-line.png</file>
+        <file>resources/remix/information-2-fill.png</file>
+        <file>resources/remix/information-2-line.png</file>
+        <file>resources/remix/list-view.png</file>
+        <file>resources/remix/question-fill.png</file>
+        <file>resources/remix/question-line.png</file>
+        <file>resources/remix/questionnaire-fill.png</file>
+        <file>resources/remix/questionnaire-line.png</file>
+        <file>resources/remix/sidebar-fold-fill.png</file>
+        <file>resources/remix/sidebar-fold-line.png</file>
+        <file>resources/remix/stack-fill.png</file>
+        <file>resources/remix/stack-line.png</file>
+        <file>resources/remix/sticky-note-add-fill.png</file>
+        <file>resources/remix/sticky-note-add-line.png</file>
+        <file>resources/remix/timeline-view.png</file>
+        <file>resources/remix/zoom-in-fill.png</file>
+        <file>resources/remix/zoom-in-line.png</file>
+        <file>resources/remix/zoom-out-fill.png</file>
+        <file>resources/remix/zoom-out-line.png</file>
     </qresource>
 </RCC>

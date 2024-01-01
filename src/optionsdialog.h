@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "settings_manager.h"
+#include "SettingsManager.h"
 
 namespace Ui {
 class OptionsDialog;

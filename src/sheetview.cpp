@@ -1,6 +1,6 @@
-#include "sheetview.h"
+#include "SheetView.h"
 #include <QColor>
-#include "sheet.h"
+#include "Sheet.h"
 #include "math.h"
 #include <QEvent>
 
@@ -169,6 +169,11 @@ void SheetView::settingChanged()
 {
     loadSettings();
     update();
+}
+
+void SheetView::AdjustView()
+{
+    fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
 }
 
 

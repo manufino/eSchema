@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>888</width>
+    <width>966</width>
     <height>615</height>
    </rect>
   </property>
@@ -540,7 +540,7 @@ color:black;
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>219</width>
+              <width>257</width>
               <height>364</height>
              </rect>
             </property>
@@ -604,7 +604,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>211</width>
+                  <width>249</width>
                   <height>103</height>
                  </rect>
                 </property>
@@ -639,7 +639,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -652,7 +652,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -665,7 +665,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -678,7 +678,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -691,7 +691,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -704,7 +704,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -717,7 +717,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -730,7 +730,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -743,7 +743,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -756,7 +756,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -769,7 +769,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -782,7 +782,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -795,7 +795,7 @@ color:black;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>219</width>
+                  <width>257</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -1094,7 +1094,7 @@ color:black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>888</width>
+     <width>966</width>
      <height>19</height>
     </rect>
    </property>
@@ -1130,15 +1130,14 @@ color:black;
     <addaction name="actionAddPart"/>
     <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionProterties"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
      <string>Vista</string>
     </property>
     <addaction name="actionSidebar"/>
-    <addaction name="separator"/>
-    <addaction name="actionLayers"/>
-    <addaction name="actionProterties"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -1153,6 +1152,10 @@ color:black;
      <string>Informazioni</string>
     </property>
     <addaction name="actionInformation"/>
+    <addaction name="separator"/>
+    <addaction name="actionControlla_aggiornamenti"/>
+    <addaction name="separator"/>
+    <addaction name="actionGuida_all_uso"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -1211,9 +1214,9 @@ color:black;
    <addaction name="actionRotate"/>
    <addaction name="actionMirror"/>
    <addaction name="separator"/>
-   <addaction name="actionBitamapBackground"/>
-   <addaction name="actionOptions"/>
+   <addaction name="actionAdjustView"/>
    <addaction name="actionSidebar"/>
+   <addaction name="actionOptions"/>
    <addaction name="separator"/>
   </widget>
   <widget class="ToolBarPrimitive" name="toolBarPrimitive">
@@ -1252,7 +1255,7 @@ color:black;
   <action name="actionNewDraw">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/document_new.ico</normaloff>:/res/resources/document_new.ico</iconset>
+     <normaloff>:/res/resources/remix/sticky-note-add-line.png</normaloff>:/res/resources/remix/sticky-note-add-line.png</iconset>
    </property>
    <property name="text">
     <string>Nuovo disegno</string>
@@ -1261,7 +1264,7 @@ color:black;
   <action name="actionOpenFile">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/document_open.ico</normaloff>:/res/resources/document_open.ico</iconset>
+     <normaloff>:/res/resources/remix/folder-open-line.png</normaloff>:/res/resources/remix/folder-open-line.png</iconset>
    </property>
    <property name="text">
     <string>Apri un file</string>
@@ -1270,7 +1273,7 @@ color:black;
   <action name="actionSave">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/save.ico</normaloff>:/res/resources/save.ico</iconset>
+     <normaloff>:/res/resources/remix/save-3-line.png</normaloff>:/res/resources/remix/save-3-line.png</iconset>
    </property>
    <property name="text">
     <string>Salva</string>
@@ -1279,7 +1282,7 @@ color:black;
   <action name="actionSaveAs">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/save_as.ico</normaloff>:/res/resources/save_as.ico</iconset>
+     <normaloff>:/res/resources/remix/save-3-fill.png</normaloff>:/res/resources/remix/save-3-fill.png</iconset>
    </property>
    <property name="text">
     <string>Salva con nome</string>
@@ -1288,7 +1291,7 @@ color:black;
   <action name="actionPrint">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/printer.ico</normaloff>:/res/resources/printer.ico</iconset>
+     <normaloff>:/res/resources/remix/printer-line.png</normaloff>:/res/resources/remix/printer-line.png</iconset>
    </property>
    <property name="text">
     <string>Stampa</string>
@@ -1297,7 +1300,7 @@ color:black;
   <action name="actionClose">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/cancel.png</normaloff>:/res/resources/cancel.png</iconset>
+     <normaloff>:/res/resources/remix/close-line.png</normaloff>:/res/resources/remix/close-line.png</iconset>
    </property>
    <property name="text">
     <string>Chiudi</string>
@@ -1309,7 +1312,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/undo_blue.ico</normaloff>:/res/resources/undo_blue.ico</iconset>
+     <normaloff>:/res/resources/remix/arrow-go-back-line.png</normaloff>:/res/resources/remix/arrow-go-back-line.png</iconset>
    </property>
    <property name="text">
     <string>Annulla</string>
@@ -1321,7 +1324,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/redo_blue.ico</normaloff>:/res/resources/redo_blue.ico</iconset>
+     <normaloff>:/res/resources/remix/arrow-go-forward-line.png</normaloff>:/res/resources/remix/arrow-go-forward-line.png</iconset>
    </property>
    <property name="text">
     <string>Ripristina</string>
@@ -1333,7 +1336,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/cut.ico</normaloff>:/res/resources/cut.ico</iconset>
+     <normaloff>:/res/resources/remix/scissors-cut-fill.png</normaloff>:/res/resources/remix/scissors-cut-fill.png</iconset>
    </property>
    <property name="text">
     <string>Taglia</string>
@@ -1345,7 +1348,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/copy.ico</normaloff>:/res/resources/copy.ico</iconset>
+     <normaloff>:/res/resources/remix/file-copy-2-fill.png</normaloff>:/res/resources/remix/file-copy-2-fill.png</iconset>
    </property>
    <property name="text">
     <string>Copia</string>
@@ -1357,7 +1360,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/paste.png</normaloff>:/res/resources/paste.png</iconset>
+     <normaloff>:/res/resources/remix/clipboard-fill.png</normaloff>:/res/resources/remix/clipboard-fill.png</iconset>
    </property>
    <property name="text">
     <string>Incolla</string>
@@ -1369,7 +1372,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/duplicate.png</normaloff>:/res/resources/duplicate.png</iconset>
+     <normaloff>:/res/resources/remix/file-copy-line.png</normaloff>:/res/resources/remix/file-copy-line.png</iconset>
    </property>
    <property name="text">
     <string>Duplica</string>
@@ -1381,7 +1384,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/refresh.png</normaloff>:/res/resources/refresh.png</iconset>
+     <normaloff>:/res/resources/remix/clockwise-fill.png</normaloff>:/res/resources/remix/clockwise-fill.png</iconset>
    </property>
    <property name="text">
     <string>Ruota</string>
@@ -1405,7 +1408,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/select.png</normaloff>:/res/resources/select.png</iconset>
+     <normaloff>:/res/resources/remix/check-double-line.png</normaloff>:/res/resources/remix/check-double-line.png</iconset>
    </property>
    <property name="text">
     <string>Seleziona tutto</string>
@@ -1417,7 +1420,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/delete.ico</normaloff>:/res/resources/delete.ico</iconset>
+     <normaloff>:/res/resources/remix/chat-delete-line.png</normaloff>:/res/resources/remix/chat-delete-line.png</iconset>
    </property>
    <property name="text">
     <string>Elimina</string>
@@ -1426,7 +1429,7 @@ color:black;
   <action name="actionBitamapBackground">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/image.png</normaloff>:/res/resources/image.png</iconset>
+     <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
    </property>
    <property name="text">
     <string>Bitmap di sfondo</string>
@@ -1435,7 +1438,7 @@ color:black;
   <action name="actionOptions">
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/settings.png</normaloff>:/res/resources/settings.png</iconset>
+     <normaloff>:/res/resources/remix/settings-3-line.png</normaloff>:/res/resources/remix/settings-3-line.png</iconset>
    </property>
    <property name="text">
     <string>Opzioni</string>
@@ -1452,7 +1455,7 @@ color:black;
   </action>
   <action name="actionAbout_Qt">
    <property name="icon">
-    <iconset resource="../resources.qrc">
+    <iconset>
      <normaloff>:/res/resources/qt.png</normaloff>:/res/resources/qt.png</iconset>
    </property>
    <property name="text">
@@ -1465,7 +1468,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/layers.png</normaloff>:/res/resources/layers.png</iconset>
+     <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
    </property>
    <property name="text">
     <string>Layers</string>
@@ -1477,7 +1480,7 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/properties.png</normaloff>:/res/resources/properties.png</iconset>
+     <normaloff>:/res/resources/remix/article-line.png</normaloff>:/res/resources/remix/article-line.png</iconset>
    </property>
    <property name="text">
     <string>Proprieta'</string>
@@ -1648,10 +1651,36 @@ color:black;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/class_libraries.ico</normaloff>:/res/resources/class_libraries.ico</iconset>
+     <normaloff>:/res/resources/remix/folder-add-fill.png</normaloff>:/res/resources/remix/folder-add-fill.png</iconset>
    </property>
    <property name="text">
     <string>Crea parte</string>
+   </property>
+  </action>
+  <action name="actionAdjustView">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/adjustView.png</normaloff>:/res/resources/adjustView.png</iconset>
+   </property>
+   <property name="text">
+    <string>Adatta la vista</string>
+   </property>
+   <property name="toolTip">
+    <string>Adatta la vista del disegno</string>
+   </property>
+  </action>
+  <action name="actionControlla_aggiornamenti">
+   <property name="text">
+    <string>Controlla aggiornamenti</string>
+   </property>
+  </action>
+  <action name="actionGuida_all_uso">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/question-line.png</normaloff>:/res/resources/remix/question-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Guida all'uso</string>
    </property>
   </action>
  </widget>
@@ -1659,22 +1688,22 @@ color:black;
   <customwidget>
    <class>ToolBarPrimitive</class>
    <extends>QToolBar</extends>
-   <header>toolbarprimitive.h</header>
+   <header>ToolBarPrimitive.h</header>
   </customwidget>
   <customwidget>
    <class>SheetView</class>
    <extends>QGraphicsView</extends>
-   <header>sheetview.h</header>
+   <header>SheetView.h</header>
   </customwidget>
   <customwidget>
    <class>StatusBar</class>
    <extends>QStatusBar</extends>
-   <header>statusbar.h</header>
+   <header>StatusBar.h</header>
   </customwidget>
   <customwidget>
    <class>ComboBoxPenStyle</class>
    <extends>QComboBox</extends>
-   <header>comboboxpenstyle.h</header>
+   <header>ComboBoxPenStyle.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -19,36 +19,35 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-	colorselector.cpp \
-	comboboxpenstyle.cpp \
-	settings_manager.cpp \
-	src/aboutdialog.cpp \
+	src/ColorSelector.cpp \
+	src/ComboBoxPenStyle.cpp \
+	src/SettingsManager.cpp \
+	src/AboutDialog.cpp \
 	src/main.cpp \
-	src/mainwindow.cpp \
-	src/optionsdialog.cpp \
-	src/sheet.cpp \
-	src/sheetview.cpp \
-    src/statusbar.cpp \
-	src/toolbarprimitive.cpp
+	src/MainWindow.cpp \
+	src/OptionsDialog.cpp \
+	src/Sheet.cpp \
+	src/SheetView.cpp \
+    src/StatusBar.cpp \
+	src/ToolBarPrimitive.cpp
 
 HEADERS += \
-	Ruler.h \
-	colorselector.h \
-	comboboxpenstyle.h \
-	settings_manager.h \
+	src/ColorSelector.h \
+	src/ComboBoxPenStyle.h \
+	src/SettingsManager.h \
 	src/LayerComboBox.h \
-	src/aboutdialog.h \
-	src/mainwindow.h \
-    src/optionsdialog.h \
-    src/sheet.h \
-    src/sheetview.h \
-	src/statusbar.h \
-	src/toolbarprimitive.h
+	src/AboutDialog.h \
+	src/MainWindow.h \
+    src/OptionsDialog.h \
+    src/Sheet.h \
+    src/SheetView.h \
+	src/StatusBar.h \
+	src/ToolBarPrimitive.h
 
 FORMS += \
-	gui/aboutdialog.ui \
-    gui/mainwindow.ui \
-	gui/optionsdialog.ui
+	gui/AboutDialog.ui \
+    gui/MainWindow.ui \
+	gui/OptionsDialog.ui
 
 CONFIG += lrelease
 

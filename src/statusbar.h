@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 #include <QPushButton>
 
-#include "settings_manager.h"
+#include "SettingsManager.h"
 
 class StatusBar : public QStatusBar
 {

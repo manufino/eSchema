@@ -5,12 +5,12 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QAction>
 
-#include "sheetview.h"
-#include "sheet.h"
-#include "optionsdialog.h"
-#include "aboutdialog.h"
+#include "SheetView.h"
+#include "Sheet.h"
+#include "OptionsDialog.h"
+#include "AboutDialog.h"
 #include "LayerComboBox.h"
-#include "settings_manager.h"
+#include "SettingsManager.h"
 
 
 
