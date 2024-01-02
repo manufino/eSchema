@@ -29,11 +29,24 @@
    <string>&lt; Layer Manager &gt;</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset resource="../resources.qrc">
     <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
   </property>
   <property name="windowOpacity">
    <double>1.000000000000000</double>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton {
+    border: 1px solid #8f8f91;
+    border-radius: 3px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+margin:1px;
+}
+
+QPushButton:hover {
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
+}</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -57,10 +70,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
-      <number>0</number>
+      <number>2</number>
      </property>
      <item>
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="btnSetAllVisible">
        <property name="minimumSize">
         <size>
          <width>30</width>
@@ -77,43 +90,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="resources.qrc">
-         <normaloff>:/res/resources/remix/bookmark-3-line.png</normaloff>:/res/resources/remix/bookmark-3-line.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>25</width>
-         <height>25</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="minimumSize">
-        <size>
-         <width>30</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>30</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="resources.qrc">
+        <iconset resource="../resources.qrc">
          <normaloff>:/res/resources/remix/eye-line.png</normaloff>:/res/resources/remix/eye-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -125,7 +102,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="btnSetAllHidden">
        <property name="minimumSize">
         <size>
          <width>30</width>
@@ -142,7 +119,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="resources.qrc">
+        <iconset resource="../resources.qrc">
          <normaloff>:/res/resources/remix/eye-off-line.png</normaloff>:/res/resources/remix/eye-off-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -167,7 +144,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="btnAddNewLayer">
        <property name="minimumSize">
         <size>
          <width>30</width>
@@ -184,7 +161,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="resources.qrc">
+        <iconset resource="../resources.qrc">
          <normaloff>:/res/resources/remix/sticky-note-add-line.png</normaloff>:/res/resources/remix/sticky-note-add-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -196,7 +173,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="btnDeleteLayer">
        <property name="minimumSize">
         <size>
          <width>30</width>
@@ -213,7 +190,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="resources.qrc">
+        <iconset resource="../resources.qrc">
          <normaloff>:/res/resources/remix/delete-bin-2-line.png</normaloff>:/res/resources/remix/delete-bin-2-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -227,20 +204,19 @@
     </layout>
    </item>
    <item>
-    <widget class="QListView" name="listView"/>
+    <widget class="QListWidget" name="listWidget"/>
    </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>listView</tabstop>
-  <tabstop>pushButton_4</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>pushButton_3</tabstop>
-  <tabstop>pushButton_5</tabstop>
-  <tabstop>pushButton_2</tabstop>
+  <tabstop>listWidget</tabstop>
+  <tabstop>btnSetAllHidden</tabstop>
+  <tabstop>btnAddNewLayer</tabstop>
+  <tabstop>btnDeleteLayer</tabstop>
+  <tabstop>btnSetAllVisible</tabstop>
  </tabstops>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../resources.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -69,7 +69,7 @@
    <item>
     <widget class="QTabWidget" name="tabOptions">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="icon">
@@ -479,7 +479,7 @@
           </widget>
          </item>
          <item row="15" column="2">
-          <widget class="ColorSelector" name="lblGridLineMarkColor">
+          <widget class="ColorPicker" name="lblGridLineMarkColor">
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
@@ -515,7 +515,7 @@
           </widget>
          </item>
          <item row="14" column="2">
-          <widget class="ColorSelector" name="lblGridLineNormalColor">
+          <widget class="ColorPicker" name="lblGridLineNormalColor">
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
@@ -592,7 +592,7 @@
           </widget>
          </item>
          <item row="8" column="2">
-          <widget class="ColorSelector" name="lblBackColor">
+          <widget class="ColorPicker" name="lblBackColor">
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
@@ -628,7 +628,7 @@
           </widget>
          </item>
          <item row="12" column="2">
-          <widget class="ColorSelector" name="lblGridColor">
+          <widget class="ColorPicker" name="lblGridColor">
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
@@ -754,9 +754,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ColorSelector</class>
+   <class>ColorPicker</class>
    <extends>QLabel</extends>
-   <header>colorselector.h</header>
+   <header>ColorPicker.h</header>
   </customwidget>
  </customwidgets>
  <resources>

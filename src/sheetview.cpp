@@ -192,7 +192,7 @@ void SheetView::zoomUpdate()
     qreal zoomPercentage = (transform().m11() * 100) / ZOOM_SCALE_MAX;
     zoomLevel = qRound(zoomPercentage);
     //qDebug(QString::number(zoomLevel).toUtf8());
-    emit ZoomScaleIsChanged(zoomLevel);
+    emit zoomScaleIsChanged(zoomLevel);
 }
 
 void SheetView::settingChanged()
@@ -202,7 +202,7 @@ void SheetView::settingChanged()
     update();
 }
 
-void SheetView::AdjustView()
+void SheetView::adjustView()
 {
     fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
     zoomUpdate();

@@ -1233,6 +1233,7 @@ color:black;
    <addaction name="actionSidebar"/>
    <addaction name="actionOptions"/>
    <addaction name="separator"/>
+   <addaction name="actionLayerManager"/>
   </widget>
   <widget class="ToolBarPrimitive" name="toolBarPrimitive">
    <property name="windowTitle">
@@ -1699,6 +1700,18 @@ color:black;
    </property>
    <property name="text">
     <string>Guida all'uso</string>
+   </property>
+  </action>
+  <action name="actionLayerManager">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/list-settings-line.png</normaloff>:/res/resources/remix/list-settings-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Gestione layer</string>
+   </property>
+   <property name="toolTip">
+    <string>Gestione layer</string>
    </property>
   </action>
  </widget>

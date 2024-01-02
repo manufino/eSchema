@@ -50,4 +50,6 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("grid_dot_color", QColor("blue").name());
     saveSetting("grid_line_color", QColor(100, 100, 100).name());
     saveSetting("grid_line_mark_color", QColor(100, 100, 100).name());
+
+    m_settings.sync();
 }

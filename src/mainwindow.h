@@ -11,7 +11,9 @@
 #include "AboutDialog.h"
 #include "LayerComboBox.h"
 #include "SettingsManager.h"
-
+#include "Layer.h"
+#include "LayerToolBarWidget.h"
+#include "LayerDialog.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -27,13 +29,16 @@ public:
     ~MainWindow();
 
 public slots:
-    void ClickOptionMenu();
-    void ClickAboutMenu();
+    void clickOptionAction();
+    void clickAboutAction();
+    void clickLayerManagerAction();
 
 private:
     Ui::MainWindow *ui;
     Sheet *scene;
     OptionsDialog *optionDialog;
     AboutDialog *aboutDialog;
+    LayerDialog *layerManager;
+    LayerToolBarWidget *layWidget;
 };
 #endif // MAINWINDOW_H

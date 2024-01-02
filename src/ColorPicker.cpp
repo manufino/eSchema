@@ -1,6 +1,7 @@
-#include "ColorSelector.h"
+#include "ColorPicker.h"
 
-ColorSelector::ColorSelector(QWidget *parent) : QLabel(parent) {
+ColorPicker::ColorPicker(QWidget *parent) : QLabel(parent)
+{
     setAlignment(Qt::AlignCenter);
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     setAutoFillBackground(true);
@@ -10,13 +11,14 @@ ColorSelector::ColorSelector(QWidget *parent) : QLabel(parent) {
     setProperty("class", "labelColor");
 }
 
-void ColorSelector::setColor(QColor color)
+void ColorPicker::setColor(QColor color)
 {
     m_color = color;
     setStyleSheet(QString(".labelColor {background-color: %1;}").arg(m_color.name()));
 }
 
-void ColorSelector::mousePressEvent(QMouseEvent *event) {
+void ColorPicker::mousePressEvent(QMouseEvent *event)
+{
     if (event->button() == Qt::LeftButton) {
         QColorDialog colorDialog(this);
         QColor color = colorDialog.getColor(getColor(), this, "Seleziona colore");

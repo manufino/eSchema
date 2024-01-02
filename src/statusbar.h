@@ -17,15 +17,15 @@ public:
     QPushButton *btnSnapGrid = new QPushButton(this);
 
 private:
-    void LoadSettings();
+    void loadSettings();
 
 public slots:
-    void SceneMousePos(QPointF point);
-    void ZoomLevel(unsigned int level);
-    void SettingChanged();
+    void sceneMousePos(QPointF point);
+    void zoomLevel(unsigned int level);
+    void settingChanged();
 
 signals:
-    void ZoomChanged(unsigned int level);
+    void zoomChanged(unsigned int level);
 
 private:
         QLabel *lblPos = new QLabel(this);

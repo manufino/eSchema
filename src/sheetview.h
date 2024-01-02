@@ -36,16 +36,16 @@ private:
 public slots:
     void settingChanged();
 
-    void AdjustView();
+    void adjustView();
 
-    void EnableGrid(bool enable = true) {
+    void enableGrid(bool enable = true) {
         gridEnabled = enable;
         this->scene()->update();
     }
 
 signals:
     void mouseMoved(QPointF point);
-    void ZoomScaleIsChanged(unsigned int level);
+    void zoomScaleIsChanged(unsigned int level);
     void mousePosChanged();
 
 private:

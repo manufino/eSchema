@@ -1,15 +1,15 @@
-#ifndef COLORSELECTOR_H
-#define COLORSELECTOR_H
+#ifndef COLORPICKER_H
+#define COLORPICKER_H
 
 #include <QLabel>
 #include <QColorDialog>
 #include <QMouseEvent>
 
-class ColorSelector : public QLabel {
+class ColorPicker : public QLabel {
     Q_OBJECT
 
 public:
-    ColorSelector(QWidget *parent = nullptr);
+    ColorPicker(QWidget *parent = nullptr);
 
     QColor getColor() { return m_color; }
     void setColor(QColor color);
@@ -25,4 +25,4 @@ private:
 
 };
 
-#endif // COLORSELECTOR_H
+#endif // COLORPICKER_H

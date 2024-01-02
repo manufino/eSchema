@@ -28,9 +28,9 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     lblZoomLevel->setText("Zoom 7%");
 
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
-            this, &StatusBar::SettingChanged);
+            this, &StatusBar::settingChanged);
 
-    LoadSettings();
+    loadSettings();
 
     this->addPermanentWidget(lblZoomLevel);
     this->addPermanentWidget(lblPos);
@@ -38,7 +38,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     this->addPermanentWidget(btnSnapGrid);
 }
 
-void StatusBar::LoadSettings()
+void StatusBar::loadSettings()
 {
     QVariant val = SettingsManager::getInstance().loadSetting("grid_step");
     gridSize = val.toInt();
@@ -47,7 +47,7 @@ void StatusBar::LoadSettings()
     mm_step = val.toDouble();
 }
 
-void StatusBar::SceneMousePos(QPointF point)
+void StatusBar::sceneMousePos(QPointF point)
 {
     int x = static_cast<int>(point.x());
     int y = static_cast<int>(point.y());
@@ -66,15 +66,15 @@ void StatusBar::SceneMousePos(QPointF point)
 }
 
 
-void StatusBar::ZoomLevel(unsigned int level)
+void StatusBar::zoomLevel(unsigned int level)
 {
     QString pos = QString("Zoom %1%").arg(level);
     lblZoomLevel->setText(pos);
 }
 
-void StatusBar::SettingChanged()
+void StatusBar::settingChanged()
 {
-    LoadSettings();
+    loadSettings();
     update();
 }
 
