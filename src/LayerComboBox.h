@@ -28,7 +28,8 @@ public:
 
         // Disegna il quadratino colorato
         QColor colore = index.data(Qt::UserRole + 1).value<QColor>();
-        painter->fillRect(rect.x(), rect.y(), 20, 20, colore);
+        QRect colorRect = QRect(rect.x(), rect.y(), 20, 20);
+        painter->fillRect(colorRect, colore);
 
         // Imposta il colore del testo
         painter->setPen(opt.palette.color(QPalette::WindowText));
@@ -37,6 +38,9 @@ public:
         QString testo = index.data(Qt::DisplayRole).toString();
         QRect textRect = opt.rect.adjusted(25, 0, 0, 0); // Sposta il testo a destra del quadratino
         painter->drawText(textRect, Qt::AlignVCenter, testo);
+
+       // painter->setPen(QPen(QColor("black"),1));
+       // painter->drawRect(colorRect);
     }
 
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override {
@@ -54,12 +58,13 @@ public:
         : QComboBox(parent) {
         setItemDelegate(new LayerItemDelegate(this));
 
+        addLayer("LAYER 0", Qt::black);
         addLayer("Forature", Qt::red);
         addLayer("Strato superiore", Qt::green);
         addLayer("Strato inferiore", Qt::blue);
-        addLayer("Strato 1", Qt::darkGreen);
-        addLayer("Strato f444a", Qt::lightGray);
-        addLayer("Strato ", Qt::cyan);
+        addLayer("Strato medio", Qt::darkGreen);
+        addLayer("Quote", Qt::lightGray);
+        addLayer("MARCATURE ", Qt::cyan);
     }
 
     void addLayer(const QString& testo, const QColor& colore) {
@@ -85,9 +90,12 @@ protected:
 
         // Disegna il quadratino colorato anche sull'elemento selezionato
         if (currentIndex() >= 0 && currentIndex() < count()) {
-            QRect colorRect = QRect(5, 4, 20, 16);  // Posizione del quadratino a sinistra dell'elemento selezionato
+            QRect colorRect = QRect(5, 5, 20, 14);  // Posizione del quadratino a sinistra dell'elemento selezionato
             QColor colore = itemData(currentIndex(), Qt::UserRole + 1).value<QColor>();
             painter.fillRect(colorRect, colore);
+
+           // painter.setPen(QPen(QColor("black"),1));
+           // painter.drawRect(colorRect);
 
             QRect textRect = opt.rect.adjusted(28, 0, 0, 0);
             painter.setPen(opt.palette.color(QPalette::WindowText));
@@ -105,7 +113,6 @@ protected:
             int textWidth = fontMetrics().horizontalAdvance(text);
             maxWidth = qMax(maxWidth, textWidth);
         }
-
         hint.setWidth(maxWidth + 70);
         return hint;
     }

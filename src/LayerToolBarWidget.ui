@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>206</width>
-    <height>37</height>
+    <height>32</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -46,15 +46,24 @@
      <property name="font">
       <font>
        <family>Hack</family>
-       <pointsize>8</pointsize>
-       <bold>false</bold>
+       <pointsize>6</pointsize>
+       <bold>true</bold>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(124, 124, 124);</string>
+     </property>
      <property name="text">
-      <string>(layer di disegno)</string>
+      <string>LAYER ATTIVO</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+     <property name="margin">
+      <number>-1</number>
+     </property>
+     <property name="indent">
+      <number>35</number>
      </property>
     </widget>
    </item>

@@ -2,6 +2,7 @@
 #define OPTIONSDIALOG_H
 
 #include <QDialog>
+#include <QMessageBox>
 
 #include "SettingsManager.h"
 

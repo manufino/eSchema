@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     scene->addRect(10,10,100,100,QPen(QColor("black"), 2));
     ////
 
+
     ui->graphicsView->setScene(scene);
 
     connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::sceneMousePos);

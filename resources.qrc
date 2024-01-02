@@ -116,5 +116,15 @@
         <file>resources/remix/remixicon-line.png</file>
         <file>resources/remix/icona_fidocadj.png</file>
         <file>resources/dafont.png</file>
+        <file>resources/remix/arrow-down-s-fill.png</file>
+        <file>resources/remix/arrow-down-s-line.png</file>
+        <file>resources/remix/arrow-drop-down-fill.png</file>
+        <file>resources/remix/arrow-drop-down-line.png</file>
+        <file>resources/remix/arrow-drop-up-fill.png</file>
+        <file>resources/remix/arrow-drop-up-line.png</file>
+        <file>resources/remix/arrow-left-s-line.png</file>
+        <file>resources/remix/arrow-right-s-line.png</file>
+        <file>resources/remix/arrow-up-s-fill.png</file>
+        <file>resources/remix/arrow-up-s-line.png</file>
     </qresource>
 </RCC>

@@ -194,7 +194,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Set di icone da:</string>
+               <string>Set di icone:</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -227,7 +227,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Font da:</string>
+               <string>Font:</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

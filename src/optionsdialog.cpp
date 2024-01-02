@@ -49,10 +49,14 @@ void OptionsDialog::loadSettings()
 
     val = SettingsManager::getInstance().loadSetting("mm_step");
     ui->doubleSpinStep_mm->setValue(val.toDouble());
+
+    val = SettingsManager::getInstance().loadSetting("grid_type");
+    ui->cboxGridType->setCurrentText(val.toString());
 }
 
 void OptionsDialog::saveSettings()
 {
+    SettingsManager::getInstance().saveSetting("grid_type", ui->cboxGridType->currentText());
     SettingsManager::getInstance().saveSetting("grid_step", ui->spinGridStep->value());
     SettingsManager::getInstance().saveSetting("grid_line_width", ui->doubleSpinGridLineWidth->value());
     SettingsManager::getInstance().saveSetting("grid_line_mark_width", ui->doubleSpinGridLineMarkWidth->value());
@@ -82,6 +86,13 @@ void OptionsDialog::apply()
 
 void OptionsDialog::restore()
 {
-    SettingsManager::getInstance().restoreDefaultSettings();
-    loadSettings();
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Attenzione ..",
+                                  "Tutti i settaggi verranno cancellati.\n"
+                                  "Procedere con il ripristino dei valori ?",
+                                  QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+        SettingsManager::getInstance().restoreDefaultSettings();
+        loadSettings();
+    }
 }

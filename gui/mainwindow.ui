@@ -331,6 +331,25 @@ color:black;
                 }
 
 
+
+/******************************************************************************************************/
+
+QDoubleSpinBox, QSpinBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+	    border: 1px solid gray;
+    border-radius: 3px;
+}
+
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+	    border: 1px solid gray;
+    border-radius: 3px;
+}
+
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -475,11 +494,14 @@ color:black;
              <widget class="QLabel" name="label">
               <property name="font">
                <font>
-                <family>BankGothic Lt BT</family>
-                <pointsize>12</pointsize>
+                <family>Hack</family>
+                <pointsize>10</pointsize>
                 <bold>false</bold>
                 <underline>false</underline>
                </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(66, 66, 66);</string>
               </property>
               <property name="text">
                <string>Librerie</string>
@@ -819,12 +841,15 @@ color:black;
         </property>
         <property name="font">
          <font>
-          <family>BankGothic Lt BT</family>
-          <pointsize>11</pointsize>
+          <family>Hack</family>
+          <pointsize>10</pointsize>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(66, 66, 66);</string>
+        </property>
         <property name="title">
-         <string>Proprieta'</string>
+         <string>Proprietà</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -866,11 +891,23 @@ color:black;
             <number>5</number>
            </property>
            <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox">
+            <widget class="LayerComboBox" name="cbPropLayer">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimumSize">
               <size>
                <width>119</width>
-               <height>0</height>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>24</height>
               </size>
              </property>
              <property name="font">
@@ -879,36 +916,6 @@ color:black;
                <pointsize>9</pointsize>
               </font>
              </property>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
             </widget>
            </item>
            <item row="6" column="0">
@@ -972,6 +979,12 @@ color:black;
            </item>
            <item row="6" column="1">
             <widget class="QDoubleSpinBox" name="doubleSpinBox">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>15</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <family>Hack</family>
@@ -980,6 +993,15 @@ color:black;
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
+             </property>
+             <property name="minimum">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.050000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -1049,11 +1071,17 @@ color:black;
             </spacer>
            </item>
            <item row="5" column="1">
-            <widget class="QComboBox" name="comboBox_2">
+            <widget class="QComboBox" name="cbPropLineStyle">
              <property name="minimumSize">
               <size>
                <width>119</width>
                <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>24</height>
               </size>
              </property>
              <property name="font">
@@ -1730,6 +1758,11 @@ color:black;
    <class>StatusBar</class>
    <extends>QStatusBar</extends>
    <header>StatusBar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LayerComboBox</class>
+   <extends>QComboBox</extends>
+   <header>LayerComboBox.h</header>
   </customwidget>
  </customwidgets>
  <resources>

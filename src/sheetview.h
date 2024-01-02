@@ -57,6 +57,7 @@ private:
     QPoint point;
     QRubberBand *rubberBand;
     QPoint origin;
+    QString gridType;
 };
 
 #endif // SHEETVIEW_H
