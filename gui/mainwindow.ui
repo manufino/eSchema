@@ -1186,15 +1186,19 @@ background-position: left center;
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>Vista</string>
+     <string>Visualizza</string>
     </property>
     <addaction name="actionSidebar"/>
+    <addaction name="actionToolBarBaseVisible"/>
+    <addaction name="actionToolBarPrimitiveVisible"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdjustView"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Strumenti</string>
     </property>
-    <addaction name="actionBitamapBackground"/>
+    <addaction name="actionLayerManager"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -1306,6 +1310,9 @@ background-position: left center;
    <addaction name="separator"/>
   </widget>
   <action name="actionNewDraw">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/sticky-note-add-line.png</normaloff>:/res/resources/remix/sticky-note-add-line.png</iconset>
@@ -1315,6 +1322,9 @@ background-position: left center;
    </property>
   </action>
   <action name="actionOpenFile">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/folder-open-line.png</normaloff>:/res/resources/remix/folder-open-line.png</iconset>
@@ -1324,6 +1334,9 @@ background-position: left center;
    </property>
   </action>
   <action name="actionSave">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/save-3-line.png</normaloff>:/res/resources/remix/save-3-line.png</iconset>
@@ -1333,6 +1346,9 @@ background-position: left center;
    </property>
   </action>
   <action name="actionSaveAs">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/save-3-fill.png</normaloff>:/res/resources/remix/save-3-fill.png</iconset>
@@ -1361,7 +1377,7 @@ background-position: left center;
   </action>
   <action name="actionUndo">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1373,7 +1389,7 @@ background-position: left center;
   </action>
   <action name="actionRestore">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1385,7 +1401,7 @@ background-position: left center;
   </action>
   <action name="actionCut">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1397,7 +1413,7 @@ background-position: left center;
   </action>
   <action name="actionCopy">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1409,7 +1425,7 @@ background-position: left center;
   </action>
   <action name="actionPaste">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1421,7 +1437,7 @@ background-position: left center;
   </action>
   <action name="actionDuplicate">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1433,7 +1449,7 @@ background-position: left center;
   </action>
   <action name="actionRotate">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1445,7 +1461,7 @@ background-position: left center;
   </action>
   <action name="actionMirror">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1457,7 +1473,7 @@ background-position: left center;
   </action>
   <action name="actionSelectAll">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1469,7 +1485,7 @@ background-position: left center;
   </action>
   <action name="actionDelete">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1489,6 +1505,9 @@ background-position: left center;
    </property>
   </action>
   <action name="actionOptions">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/settings-3-line.png</normaloff>:/res/resources/remix/settings-3-line.png</iconset>
@@ -1530,6 +1549,9 @@ background-position: left center;
   <action name="actionProterties">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1690,6 +1712,9 @@ background-position: left center;
    <property name="checked">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/sidebar.png</normaloff>:/res/resources/sidebar.png</iconset>
@@ -1711,6 +1736,9 @@ background-position: left center;
    </property>
   </action>
   <action name="actionAdjustView">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/adjustView.png</normaloff>:/res/resources/adjustView.png</iconset>
@@ -1737,6 +1765,9 @@ background-position: left center;
    </property>
   </action>
   <action name="actionLayerManager">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/list-settings-line.png</normaloff>:/res/resources/remix/list-settings-line.png</iconset>
@@ -1746,6 +1777,36 @@ background-position: left center;
    </property>
    <property name="toolTip">
     <string>Gestione layer</string>
+   </property>
+  </action>
+  <action name="actionToolBarBaseVisible">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/tools-fill.png</normaloff>:/res/resources/remix/tools-fill.png</iconset>
+   </property>
+   <property name="text">
+    <string>Strumenti base</string>
+   </property>
+  </action>
+  <action name="actionToolBarPrimitiveVisible">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/git-repository-commits-fill.png</normaloff>:/res/resources/remix/git-repository-commits-fill.png</iconset>
+   </property>
+   <property name="text">
+    <string>Strumenti di disegno</string>
    </property>
   </action>
  </widget>
@@ -1788,6 +1849,70 @@ background-position: left center;
     <hint type="destinationlabel">
      <x>754</x>
      <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionToolBarBaseVisible</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolBarTools</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>482</x>
+     <y>38</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolBarTools</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>actionToolBarBaseVisible</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>482</x>
+     <y>38</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionToolBarPrimitiveVisible</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolBarPrimitive</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>19</x>
+     <y>323</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>toolBarPrimitive</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>actionToolBarPrimitiveVisible</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>19</x>
+     <y>323</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
    </hints>
   </connection>

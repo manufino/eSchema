@@ -58,8 +58,8 @@ void StatusBar::sceneMousePos(QPointF point)
     x = (x + halfGridSize) / gridSize * gridSize;
     y = (y + halfGridSize) / gridSize * gridSize;
 
-    double xmm = mm_step * (x/10);
-    double ymm = mm_step * (y/10);
+    double xmm = mm_step * (x/gridSize);
+    double ymm = mm_step * (y/gridSize);
 
     QString pos = QString("X %1 Y %2 (X %3mm Y %4mm)").arg(x).arg(y).arg(xmm).arg(ymm);
     lblPos->setText(pos);

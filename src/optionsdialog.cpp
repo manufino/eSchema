@@ -87,9 +87,9 @@ void OptionsDialog::apply()
 void OptionsDialog::restore()
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Attenzione ..",
-                                  "Tutti i settaggi verranno cancellati.\n"
-                                  "Procedere con il ripristino dei valori ?",
+    reply = QMessageBox::question(this, "Attenzione !",
+                                  "Tutti i settaggi verranno sovrascritti.\n\n"
+                                  "Procedere con il ripristino dei valori ?\n",
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         SettingsManager::getInstance().restoreDefaultSettings();
