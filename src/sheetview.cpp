@@ -9,6 +9,8 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
     gridEnabled=true;
 
+    rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+
     zoomLevel=100;
 
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
@@ -151,7 +153,8 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     } else {
         setCursor(Qt::ArrowCursor);
     }
-
+    if (rubberBand->isVisible())
+        rubberBand->setGeometry(QRect(originSelection, event->pos()).normalized());
     emit mouseMoved(relativeOrigin);
     QGraphicsView::mouseMoveEvent(event);
 }
@@ -164,6 +167,22 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         m_originX = event->position().x();
         m_originY = event->position().y();
     }
+    else
+        if(event->button() == Qt::LeftButton)
+        {
+            originSelection = event->pos();
+
+            rubberBand->setGeometry(QRect(originSelection, QSize()));
+            rubberBand->show();
+        }
+}
+
+void SheetView::mouseReleaseEvent(QMouseEvent *event)
+{
+    rubberBand->hide();
+    update();
+    scene()->update();
+    //repaint();
 }
 
 void SheetView::loadSettings()
@@ -204,6 +223,11 @@ void SheetView::zoomUpdate()
     //qDebug(QString::number(zoomLevel).toUtf8());
     emit zoomScaleIsChanged(zoomLevel);
 }
+/*
+QPoint SheetView::pointArrountGrid(QPoint rawPoint)
+{
+
+}*/
 
 void SheetView::settingChanged()
 {

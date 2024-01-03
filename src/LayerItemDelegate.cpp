@@ -37,5 +37,6 @@ QSize LayerItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QMod
     // Aggiungi un margine per aumentare la distanza tra le righe della combobox
     QSize hint = QStyledItemDelegate::sizeHint(option, index);
     hint.setHeight(hint.height() + 2);
+    hint.setWidth(hint.width() - 40);
     return hint;
 }

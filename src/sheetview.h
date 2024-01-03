@@ -28,10 +28,13 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent *event);
+
 
 private:
     void loadSettings();
     void zoomUpdate();
+    //QPoint pointArrountGrid(QPoint rawPoint);
 
 public slots:
     void settingChanged();
@@ -58,6 +61,7 @@ private:
     QRubberBand *rubberBand;
     QPoint origin;
     QString gridType;
+    QPoint  originSelection;
 };
 
 #endif // SHEETVIEW_H
