@@ -86,6 +86,9 @@ QPushButton:hover {
          <height>30</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Mostra tutti</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -114,6 +117,9 @@ QPushButton:hover {
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Nascondi tutti</string>
        </property>
        <property name="text">
         <string/>
@@ -144,6 +150,83 @@ QPushButton:hover {
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="btnLayerLevelUp">
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Sposta in alto</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/res/resources/remix/arrow-up-s-line.png</normaloff>:/res/resources/remix/arrow-up-s-line.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnLayerLevelDown">
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Sposta in basso</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/res/resources/remix/arrow-down-s-line.png</normaloff>:/res/resources/remix/arrow-down-s-line.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>25</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QPushButton" name="btnAddNewLayer">
        <property name="minimumSize">
         <size>
@@ -156,6 +239,9 @@ QPushButton:hover {
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Aggiungi un layer</string>
        </property>
        <property name="text">
         <string/>
@@ -185,6 +271,9 @@ QPushButton:hover {
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Elimina selezionato</string>
        </property>
        <property name="text">
         <string/>

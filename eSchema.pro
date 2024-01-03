@@ -23,9 +23,11 @@ SOURCES += \
 	src/GraphicsPrimitive.cpp \
 	src/LayerDialog.cpp \
 	src/LayerComboBox.cpp \
+	src/LayerItemDelegate.cpp \
 	src/LayerToolBarWidget.cpp \
 	src/SettingsManager.cpp \
 	src/AboutDialog.cpp \
+	src/ShortcutsDialog.cpp \
 	src/main.cpp \
 	src/MainWindow.cpp \
 	src/OptionsDialog.cpp \
@@ -38,6 +40,8 @@ HEADERS += \
 	src/ColorPicker.h \
 	src/GraphicsPrimitive.h \
 	src/Layer.h \
+	src/LayerItemDelegate.h \
+	src/LayerListView.h \
 	src/LayerToolBarWidget.h \
 	src/LinkLabel.h \
 	src/LayerDialog.h \
@@ -48,6 +52,7 @@ HEADERS += \
     src/OptionsDialog.h \
     src/Sheet.h \
     src/SheetView.h \
+	src/ShortcutsDialog.h \
 	src/StatusBar.h \
 	src/ToolBarPrimitive.h
 
@@ -56,7 +61,8 @@ FORMS += \
 	gui/AboutDialog.ui \
     gui/MainWindow.ui \
 	gui/OptionsDialog.ui \
-	src/LayerToolBarWidget.ui
+	gui/LayerToolBarWidget.ui \
+	src/ShortcutsDialog.ui
 
 CONFIG += lrelease
 

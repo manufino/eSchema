@@ -3,6 +3,9 @@
 
 #include <QDialog>
 
+#include "Layer.h"
+
+
 namespace Ui {
 class LayerDialog;
 }

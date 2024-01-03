@@ -14,6 +14,7 @@
 #include "Layer.h"
 #include "LayerToolBarWidget.h"
 #include "LayerDialog.h"
+#include "ShortcutsDialog.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -31,7 +32,9 @@ public:
 public slots:
     void clickOptionAction();
     void clickAboutAction();
+    void clickShortcutsAction();
     void clickLayerManagerAction();
+
 
 private:
     Ui::MainWindow *ui;
@@ -39,6 +42,7 @@ private:
     OptionsDialog *optionDialog;
     AboutDialog *aboutDialog;
     LayerDialog *layerManager;
+    ShortcutsDialog *shortcutsDialog;
     LayerToolBarWidget *layWidget;
 };
 #endif // MAINWINDOW_H

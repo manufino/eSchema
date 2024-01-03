@@ -162,18 +162,7 @@ QTabBar::tab:!selected {
     margin-top: 0px; /* make non-selected tabs look smaller */
 }
 
-#txtSearch {
-border:1px solid gray;
-border-top-right-radius:8px;
-border-top-left-radius:8px;
-margin-right:1px;
-    padding: 2  2 2 20; /* left padding (last number) must be more than the icon's width */
 
-    background-image: url(:res/resources/search.png); /* actual size, e.g. 16x16 */
-    background-repeat: no-repeat;
-background-position: left center;
-
-}
 
 /*
  QScrollBar:horizontal {
@@ -350,6 +339,22 @@ QLineEdit {
     border-radius: 3px;
 }
 
+
+#txtSearch {
+border:1px solid gray;
+border-top-right-radius:8px;
+border-top-left-radius:8px;
+
+border-bottom-right-radius:0px;
+border-bottom-left-radius:0px;
+margin-right:1px;
+    padding: 2  2 2 20; /* left padding (last number) must be more than the icon's width */
+
+    background-image: url(:res/resources/search.png); /* actual size, e.g. 16x16 */
+    background-repeat: no-repeat;
+background-position: left center;
+
+}
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -378,7 +383,7 @@ QLineEdit {
        <number>4</number>
       </property>
       <property name="childrenCollapsible">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -522,6 +527,9 @@ QLineEdit {
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
            <property name="placeholderText">
             <string>Cerca nelle librerie ...</string>
            </property>
@@ -615,7 +623,7 @@ QLineEdit {
                 <number>1</number>
                </property>
                <property name="currentIndex">
-                <number>5</number>
+                <number>2</number>
                </property>
                <property name="tabSpacing">
                 <number>0</number>
@@ -1196,9 +1204,7 @@ QLineEdit {
     </property>
     <addaction name="actionInformation"/>
     <addaction name="separator"/>
-    <addaction name="actionControlla_aggiornamenti"/>
-    <addaction name="separator"/>
-    <addaction name="actionGuida_all_uso"/>
+    <addaction name="actionShortcuts"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -1721,13 +1727,13 @@ QLineEdit {
     <string>Controlla aggiornamenti</string>
    </property>
   </action>
-  <action name="actionGuida_all_uso">
+  <action name="actionShortcuts">
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/question-line.png</normaloff>:/res/resources/remix/question-line.png</iconset>
    </property>
    <property name="text">
-    <string>Guida all'uso</string>
+    <string>Tasti rapidi</string>
    </property>
   </action>
   <action name="actionLayerManager">

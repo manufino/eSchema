@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
     connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::adjustView);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
+    connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
+
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +54,12 @@ void MainWindow::clickAboutAction()
 {
     aboutDialog = new AboutDialog(this);
     aboutDialog->show();
+}
+
+void MainWindow::clickShortcutsAction()
+{
+    shortcutsDialog = new ShortcutsDialog(this);
+    shortcutsDialog->show();
 }
 
 void MainWindow::clickLayerManagerAction()
