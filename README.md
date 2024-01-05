@@ -1,5 +1,8 @@
 # eSchema
 
+![alt text](https://github.com/manufino/eSchema/blob/main/resources/win.JPG?raw=true)
+
+
 eSchema is an evolving 2D CAD software designed to be simple yet customizable. Currently in its initial development stage, the software aims to offer a range of drawing primitives and associated functions for comprehensive design capabilities.
 
 
@@ -16,4 +19,6 @@ Format compatibility: eSchema is intended to support the reading and writing of 
 that the software is a work in progress, and additional drawing primitives and related functionalities are yet to be implemented.
 
 
+![alt text](https://github.com/manufino/eSchema/blob/main/resources/layer_win.JPG?raw=true)
 
+![alt text](https://github.com/manufino/eSchema/blob/main/resources/option_win.JPG?raw=true)
