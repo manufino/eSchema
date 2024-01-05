@@ -1,5 +1,3 @@
-// settings_manager.h
-
 #ifndef SETTINGS_MANAGER_H
 #define SETTINGS_MANAGER_H
 

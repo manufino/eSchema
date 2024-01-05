@@ -23,10 +23,7 @@ public slots:
     void setList(QList<Layer> *layerList);
 
 private slots:
-    void selectedChanged(Layer *layer);
-
-signals:
-    void layerSelectedChanged(Layer *layer);
+    void selectedChanged(int index);
 
 private:
     Ui::LayerToolBarWidget *ui;

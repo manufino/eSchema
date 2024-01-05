@@ -9,6 +9,7 @@
 
 #include "LayerItemDelegate.h"
 #include "Layer.h"
+#include "LayerList.h"
 
 
 class LayerComboBox : public QComboBox {
@@ -24,7 +25,7 @@ protected:
     QSize sizeHint() const override;
 
 signals:
-    void layerSelectedChanged(const Layer* layer);
+    void layerSelectedChanged(int i);
 
 public slots:
     void layerListIsChanged(QList<Layer> *layerList);

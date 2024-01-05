@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsSceneMouseEvent>
 #include <QAction>
+#include <QDoubleSpinBox>
 
 #include "SheetView.h"
 #include "Sheet.h"

@@ -1,9 +1,4 @@
 #include "SheetView.h"
-#include <QColor>
-#include "Sheet.h"
-#include "math.h"
-#include <QEvent>
-
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -179,10 +174,10 @@ void SheetView::mousePressEvent(QMouseEvent *event)
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
     rubberBand->hide();
     update();
     scene()->update();
-    //repaint();
 }
 
 void SheetView::loadSettings()

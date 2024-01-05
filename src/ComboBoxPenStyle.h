@@ -12,7 +12,6 @@
 #include <QHoverEvent>
 #include <QPainter>
 
-
 class PenStyleDelegate : public QStyledItemDelegate
 {
 public:
@@ -28,7 +27,7 @@ public:
 
 };
 
-
+/****************************************/
 class ComboBoxPenStyle : public QComboBox
 {
     Q_OBJECT

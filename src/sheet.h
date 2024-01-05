@@ -2,7 +2,7 @@
 #define SHEET_H
 
 #include <QGraphicsScene>
-
+#include <QGraphicsSceneMouseEvent>
 
 class Sheet : public QGraphicsScene
 {

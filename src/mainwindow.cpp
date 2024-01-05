@@ -1,16 +1,16 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include <QDoubleSpinBox>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    LayerList::getInstance().addLayer("Layer 0", QColor("black"));
+    LayerList::getInstance().addLayer(Layer("Layer 0", QColor("black"), true));
     LayerList::getInstance().addLayer("Quote", QColor("cyan"));
     LayerList::getInstance().addLayer("Forature", QColor("red"));
     LayerList::getInstance().addLayer("Ingombro", QColor("blue"));
-    LayerList::getInstance().addLayer(Layer("ASSI", QColor("yellow"),true));
+    LayerList::getInstance().addLayer("ASSI", QColor("yellow"));
 
     ui->setupUi(this);
     setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));

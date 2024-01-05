@@ -24,6 +24,8 @@ SOURCES += \
 	src/LayerDialog.cpp \
 	src/LayerComboBox.cpp \
 	src/LayerItemDelegate.cpp \
+	src/LayerList.cpp \
+	src/LayerListView.cpp \
 	src/LayerToolBarWidget.cpp \
 	src/SettingsManager.cpp \
 	src/AboutDialog.cpp \

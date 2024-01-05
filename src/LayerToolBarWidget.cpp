@@ -6,14 +6,14 @@ LayerToolBarWidget::LayerToolBarWidget(QWidget *parent) :
     ui(new Ui::LayerToolBarWidget)
 {
     ui->setupUi(this);
-/*
+
     connect(&LayerList::getInstance(),
     &LayerList::layerListChanged,
-    this, &LayerToolBarWidget::setList);*/
-/*
+    this, &LayerToolBarWidget::setList);
+
     connect(ui->comboBox,
     &LayerComboBox::layerSelectedChanged,
-    this, &LayerToolBarWidget::selectedChanged);*/
+    this, &LayerToolBarWidget::selectedChanged);
 }
 
 LayerToolBarWidget::~LayerToolBarWidget()
@@ -31,7 +31,7 @@ void LayerToolBarWidget::setList(QList<Layer> *layerList)
     ui->comboBox->addLayerList(layerList);
 }
 
-void LayerToolBarWidget::selectedChanged(Layer *layer)
+void LayerToolBarWidget::selectedChanged(int index)
 {
-    emit layerSelectedChanged(layer);
+    LayerList::getInstance().setMaster(index);
 }

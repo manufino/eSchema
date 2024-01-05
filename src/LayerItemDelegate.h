@@ -2,6 +2,7 @@
 #define LAYERITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include <QPainter>
 
 class LayerItemDelegate : public QStyledItemDelegate {
 public:

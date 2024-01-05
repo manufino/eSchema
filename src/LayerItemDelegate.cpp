@@ -1,5 +1,4 @@
 #include "LayerItemDelegate.h"
-#include <QPainter>
 
 LayerItemDelegate::LayerItemDelegate(QObject* parent)
     : QStyledItemDelegate(parent) {}

@@ -1,7 +1,4 @@
 #include "GraphicsPrimitive.h"
-#include "Sheet.h"
-#include "SettingsManager.h"
-
 
 GraphicsPrimitive::GraphicsPrimitive(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
@@ -23,7 +20,7 @@ QVariant GraphicsPrimitive::itemChange(GraphicsItemChange change, const QVariant
         QPointF newPos = value.toPointF();
         if(QApplication::mouseButtons() == Qt::LeftButton &&
                 qobject_cast<Sheet*> (scene())){
-            Sheet* customScene = qobject_cast<Sheet*> (scene());
+            //Sheet* customScene = qobject_cast<Sheet*> (scene());
 
             qreal xV = round(newPos.x()/gridSize)*gridSize;
             qreal yV = round(newPos.y()/gridSize)*gridSize;

@@ -1,5 +1,4 @@
 #include "ComboBoxPenStyle.h"
-#include <QPainter>
 
 PenStyleDelegate::PenStyleDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
@@ -63,7 +62,6 @@ void PenStyleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->setPen(pen);
     painter->drawLine(line);
 
-    // Draw border
     painter->setPen(QPen(QColor("gray")));
     painter->drawRect(rect);
 }
@@ -73,18 +71,19 @@ void PenStyleDelegate::drawItemText(QPainter *painter, const QRect &rect, int al
                                     const QPalette &pal, bool enabled, const QString &text,
                                     QPalette::ColorRole textRole) const
 {
+    Q_UNUSED(painter);
     Q_UNUSED(rect);
     Q_UNUSED(alignment);
     Q_UNUSED(pal);
     Q_UNUSED(enabled);
     Q_UNUSED(textRole);
+    Q_UNUSED(text);
 }
-
 
 ComboBoxPenStyle::ComboBoxPenStyle(QWidget *parent)
     : QComboBox(parent), lineWidth(1)
 {
-    setView(new QListView());  // Usa un QListView per visualizzare gli elementi
+    setView(new QListView());
     setItemDelegate(new PenStyleDelegate(this));
     setFixedHeight(22);  // Imposta un'altezza fissa per mantenere il disegno visibile
     setupUi();
@@ -111,23 +110,21 @@ void ComboBoxPenStyle::setupUi()
     addItem("", QVariant(static_cast<int>(Qt::DashDotLine)));
     addItem("", QVariant(static_cast<int>(Qt::DashDotDotLine)));
 
-    // Connect the signal for style change
     connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(penStyleChanged(int)));
 
-    // Set initial pen style
     currentPen.setStyle(Qt::SolidLine);
 }
 
 void ComboBoxPenStyle::penStyleChanged(int index)
 {
-    // Update the pen style based on the selected index
     Qt::PenStyle style = static_cast<Qt::PenStyle>(itemData(index).toInt());
     currentPen.setStyle(style);
 }
 
-
 void ComboBoxPenStyle::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
+
     // Disattivo il paint del controllo padre,
     // non voglio che venga disegnato il bordo e la freccina
     // delle classiche combobox.
@@ -148,5 +145,4 @@ void ComboBoxPenStyle::paintEvent(QPaintEvent *event)
     painter.drawLine(line);
     painter.setPen(QPen(QColor("gray"),1));
     painter.drawRoundedRect(rect,3,3);
-
 }

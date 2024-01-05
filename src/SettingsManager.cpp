@@ -1,5 +1,3 @@
-// SettingsManager.cpp
-
 #include "SettingsManager.h"
 
 SettingsManager& SettingsManager::getInstance()

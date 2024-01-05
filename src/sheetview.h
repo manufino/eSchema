@@ -7,7 +7,10 @@
 #include <QRubberBand>
 #include <QMouseEvent>
 #include <QGraphicsRectItem>
+#include <QColor>
+#include <QEvent>
 
+#include "Sheet.h"
 #include "SettingsManager.h"
 
 #define ZOOM_SCALE_MIN 0.3// Scala minima consentita
@@ -22,14 +25,12 @@ public:
     void setGrid(int size, QColor clr);
     QPoint getMousePos() { return point;}
 
-
 protected:
     void drawBackground (QPainter* painter, const QRectF &rect);
     void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent *event);
-
 
 private:
     void loadSettings();
@@ -55,8 +56,8 @@ private:
     int m_originX, m_originY;
     int gridSize, gridMarkSize, zoomLevel;
     float lineGridWidth, lineThickGridWidth;
-    QColor lineGridColor, lineThickGridColor, dotsGridColor, backgroundColor;
     bool gridEnabled;
+    QColor lineGridColor, lineThickGridColor, dotsGridColor, backgroundColor;
     QPoint point;
     QRubberBand *rubberBand;
     QPoint origin;
