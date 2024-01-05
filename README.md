@@ -19,6 +19,11 @@ eSchema is an evolving 2D CAD software designed to be simple yet customizable. C
 that the software is a work in progress, and additional drawing primitives and related functionalities are yet to be implemented.
 
 
+# Dependencies
+
++ Qt Framework (version 6 or higher)
+
+
 ![alt text](https://github.com/manufino/eSchema/blob/main/resources/layer_win.JPG?raw=true)
 
 ![alt text](https://github.com/manufino/eSchema/blob/main/resources/option_win.JPG?raw=true)
