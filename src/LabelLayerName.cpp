@@ -18,12 +18,8 @@ LabelLayerName::LabelLayerName(const QString &name, QWidget *parent) : QWidget(p
     layout->setStretch(0, 0);  // QLabel non si espande
     layout->setStretch(1, 1);  // QLineEdit si espande
 
-    // Impostazione del layout per il widget principale
     setLayout(layout);
-
-    // Connessione dei segnali ai slot
     connect(lineEdit, &QLineEdit::editingFinished, this, &LabelLayerName::lineEditEditingFinished);
-
 }
 
 bool LabelLayerName::eventFilter(QObject *obj, QEvent *event) {
