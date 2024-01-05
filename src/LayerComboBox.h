@@ -16,25 +16,28 @@ class LayerComboBox : public QComboBox {
 public:
     LayerComboBox(QWidget* parent = nullptr);
     void addLayer(const QString& testo, const QColor& colore);
-    void addLayerList(QList<Layer *> list);
+    void addLayerList(QList<Layer> *list);
+    void setMaster(Layer *layer);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
     QSize sizeHint() const override;
-    void currentIndexChanged(int index);
 
 signals:
-    void layerSelectedChanged(Layer *layer);
+    void layerSelectedChanged(const Layer* layer);
 
 public slots:
-    void layerListIsChanged(QList<Layer *> layerList);
+    void layerListIsChanged(QList<Layer> *layerList);
+
+private slots:
+    void currentIndexChanged(int index);
 
 private:
     bool layerNameIsUnique(QString name);
 
 
 private:
-    QList<Layer *> layerList;
+    QList<Layer> *layerList;
 };
 
 #endif // LAYERCOMBOBOX_H

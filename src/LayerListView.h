@@ -10,11 +10,20 @@
 #include <QLineEdit>
 #include "Layer.h"
 #include "ColorPicker.h"
+#include "LayerList.h"
+
 
 class LayerListView : public QListWidget {
     Q_OBJECT
 public:
-    LayerListView(QWidget *parent = nullptr) : QListWidget(parent) {}
+    LayerListView(QWidget *parent = nullptr) : QListWidget(parent) {
+        addLayerList(LayerList::getInstance().getList());
+/*
+        connect(&LayerList::getInstance(),
+        &LayerList::layerListChanged, this, &LayerListView::addLayerList);*/
+    }
+
+
 
     void addLayer(Layer *layer) {
         QListWidgetItem *item = new QListWidgetItem(this);
@@ -48,8 +57,7 @@ public:
 
         layout->addWidget(label);
 
-        // Non-clickable Icon
-        if(this->count() < 2)
+        if(layer->isMaster())
         {
             QLabel *nonClickableIconLabel = new QLabel(widget);
             QIcon icon = QIcon(":/res/resources/remix/bookmark-3-line.png");
@@ -65,8 +73,13 @@ public:
 signals:
 
 
-private slots:
- ;
+public slots:
+    void addLayerList(QList<Layer> *layerList) {
+        this->clear();
+        for (Layer layer : *layerList) {
+            addLayer(&layer);
+        }
+    }
 };
 
 

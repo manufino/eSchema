@@ -42,6 +42,7 @@ HEADERS += \
 	src/GraphicsPrimitive.h \
 	src/Layer.h \
 	src/LayerItemDelegate.h \
+	src/LayerList.h \
 	src/LayerListView.h \
 	src/LayerToolBarWidget.h \
 	src/LinkLabel.h \

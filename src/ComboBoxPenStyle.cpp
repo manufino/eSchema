@@ -6,7 +6,8 @@ PenStyleDelegate::PenStyleDelegate(QObject *parent)
 {
 }
 
-void PenStyleDelegate::initStyleOptionHover(QStyleOptionViewItem &option, const QModelIndex &index) const
+void PenStyleDelegate::initStyleOptionHover(QStyleOptionViewItem &option,
+                                            const QModelIndex &index) const
 {
     QStyledItemDelegate::initStyleOption(&option, index);
 
@@ -16,39 +17,31 @@ void PenStyleDelegate::initStyleOptionHover(QStyleOptionViewItem &option, const 
 
 bool PenStyleDelegate::eventFilter(QObject *object, QEvent *event)
 {
-    if (event->type() == QEvent::HoverEnter || event->type() == QEvent::HoverLeave)
+    if (event->type() == QEvent::HoverEnter ||
+            event->type() == QEvent::HoverLeave)
     {
         QHoverEvent *hoverEvent = dynamic_cast<QHoverEvent *>(event);
-        if (hoverEvent)
-        {
+        if (hoverEvent) {
             QAbstractItemView *view = qobject_cast<QAbstractItemView*>(object);
 
-            if (view)
-            {
+            if (view) {
                 QModelIndex index = view->model()->index(view->currentIndex().row(), 0);
-
-                if (index.isValid())
-                {
+                if (index.isValid()) {
                     // Forza un aggiornamento dell'elemento sotto il cursore
                     QStyleOptionViewItem option;
                     initStyleOptionHover(option, index);
-
                     // Ottenere la vista associata all'oggetto
                     view->update(index);
                 }
             }
         }
     }
-
     return QStyledItemDelegate::eventFilter(object, event);
 }
 
 
-
-
-
-
-void PenStyleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void PenStyleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+                             const QModelIndex &index) const
 {
     QStyleOptionViewItem opt = option;
     initStyleOption(&opt, index);
@@ -63,7 +56,8 @@ void PenStyleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     if (opt.state & QStyle::State_MouseOver)
     {
         // Aggiungi l'effetto hover
-        pen.setColor(QColor("lightGray"));
+        //pen.setColor(QColor("white"));
+        painter->fillRect(rect, QBrush(QColor("cyan")));
     }
 
     painter->setPen(pen);
@@ -84,8 +78,6 @@ void PenStyleDelegate::drawItemText(QPainter *painter, const QRect &rect, int al
     Q_UNUSED(pal);
     Q_UNUSED(enabled);
     Q_UNUSED(textRole);
-
-    // Non disegnare il testo, solo la linea
 }
 
 
@@ -103,9 +95,7 @@ ComboBoxPenStyle::ComboBoxPenStyle(QWidget *parent)
 }
 
 ComboBoxPenStyle::~ComboBoxPenStyle()
-{
-    //delete mainLayout;
-}
+{}
 
 void ComboBoxPenStyle::lineWidthChanged(qreal lineWidth)
 {
@@ -138,8 +128,11 @@ void ComboBoxPenStyle::penStyleChanged(int index)
 
 void ComboBoxPenStyle::paintEvent(QPaintEvent *event)
 {
-    //QComboBox::paintEvent(event);
+    // Disattivo il paint del controllo padre,
+    // non voglio che venga disegnato il bordo e la freccina
+    // delle classiche combobox.
 
+    //QComboBox::paintEvent(event);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);

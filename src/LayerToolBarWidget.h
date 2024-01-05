@@ -2,6 +2,9 @@
 #define LAYERTOOLBARWIDGET_H
 
 #include <QWidget>
+#include "Layer.h"
+#include "LayerComboBox.h"
+#include "LayerList.h"
 
 namespace Ui {
 class LayerToolBarWidget;
@@ -14,6 +17,16 @@ class LayerToolBarWidget : public QWidget
 public:
     explicit LayerToolBarWidget(QWidget *parent = nullptr);
     ~LayerToolBarWidget();
+
+public slots:
+    void setMaster(Layer *layer);
+    void setList(QList<Layer> *layerList);
+
+private slots:
+    void selectedChanged(Layer *layer);
+
+signals:
+    void layerSelectedChanged(Layer *layer);
 
 private:
     Ui::LayerToolBarWidget *ui;

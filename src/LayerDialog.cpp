@@ -8,6 +8,7 @@ LayerDialog::LayerDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+/*
     Layer l1("layer 1");
     Layer l3("layer 2", QColor("red"));
     Layer l4("lay5555555555555555er 3", QColor("blue"));
@@ -21,7 +22,7 @@ LayerDialog::LayerDialog(QWidget *parent) :
     ui->listWidget->addLayer(&l5);
     ui->listWidget->addLayer(&l6);
     ui->listWidget->addLayer(&l7);
-
+*/
     /*
     LayerItemWidget *l1 = new LayerItemWidget(this);
     ui->listWidget->addItem()

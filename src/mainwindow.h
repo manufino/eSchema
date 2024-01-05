@@ -12,6 +12,7 @@
 #include "LayerComboBox.h"
 #include "SettingsManager.h"
 #include "Layer.h"
+#include "LayerList.h"
 #include "LayerToolBarWidget.h"
 #include "LayerDialog.h"
 #include "ShortcutsDialog.h"
@@ -44,5 +45,6 @@ private:
     LayerDialog *layerManager;
     ShortcutsDialog *shortcutsDialog;
     LayerToolBarWidget *layWidget;
+
 };
 #endif // MAINWINDOW_H

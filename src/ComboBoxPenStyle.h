@@ -10,6 +10,8 @@
 #include <QEvent>
 #include <QCoreApplication>
 #include <QHoverEvent>
+#include <QPainter>
+
 
 class PenStyleDelegate : public QStyledItemDelegate
 {
@@ -45,7 +47,6 @@ private:
     void paintEvent(QPaintEvent *event) override;
     void setupUi();
 
-    //QVBoxLayout *mainLayout;
     QPen currentPen;
     int lineWidth;
 };

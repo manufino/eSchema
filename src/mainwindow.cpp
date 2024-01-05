@@ -6,6 +6,12 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    LayerList::getInstance().addLayer("Layer 0", QColor("black"));
+    LayerList::getInstance().addLayer("Quote", QColor("cyan"));
+    LayerList::getInstance().addLayer("Forature", QColor("red"));
+    LayerList::getInstance().addLayer("Ingombro", QColor("blue"));
+    LayerList::getInstance().addLayer(Layer("ASSI", QColor("yellow"),true));
+
     ui->setupUi(this);
     setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));
 
@@ -25,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     scene->addRect(10,10,100,100,QPen(QColor("black"), 2));
     ////
 
-
     ui->graphicsView->setScene(scene);
 
     connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::sceneMousePos);
@@ -37,6 +42,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
     connect(ui->DSpinBoxLineHeight, &QSpinBox::valueChanged, ui->cbPropLineStyle, &ComboBoxPenStyle::lineWidthChanged);
+/*connect(layWidget,
+    &LayerToolBarWidget::layerSelectedChanged,
+    &LayerList::getInstance(),
+    &LayerList::setMaster);*/
+
 }
 
 MainWindow::~MainWindow()

@@ -1,18 +1,20 @@
 #include "LayerComboBox.h"
+#include "LayerList.h"
 
 LayerComboBox::LayerComboBox(QWidget* parent)
-    : QComboBox(parent) {
+    : QComboBox(parent)
+{
     setItemDelegate(new LayerItemDelegate(this));
 
-    addLayer("LAYER 0", Qt::black);
-    addLayer("Forature", Qt::red);
-    addLayer("Strato superiore", Qt::green);
-    addLayer("Strato inferiore", Qt::blue);
-    addLayer("Strato medio", Qt::darkGreen);
-    addLayer("Quote", Qt::lightGray);
-    addLayer("MARCATURE ", Qt::cyan);
+    QList<Layer> *la = LayerList::getInstance().getList();
+
+    addLayerList(la);
+/*
+    connect(this, &QComboBox::currentIndexChanged,
+    this, &LayerComboBox::currentIndexChanged);*/
 }
 
+// Modifica la funzione addLayer come segue
 void LayerComboBox::addLayer(const QString& testo, const QColor& colore)
 {
     QStandardItem* item = new QStandardItem;
@@ -25,22 +27,40 @@ void LayerComboBox::addLayer(const QString& testo, const QColor& colore)
         standardModel->insertRow(standardModel->rowCount(), item);
 }
 
-void LayerComboBox::addLayerList(QList<Layer *> list)
+
+
+// Modifica la funzione addLayerList come segue
+void LayerComboBox::addLayerList(QList<Layer> *list)
 {
     clear();
     layerList = list;
 
-    Layer *layer;
-    foreach(layer, list)
-        addLayer(layer->name(), QColor(layer->color()));
+    for(Layer layer: *list)
+        addLayer(layer.name(), QColor(layer.color()));
 }
 
-void LayerComboBox::paintEvent(QPaintEvent *event)
+void LayerComboBox::setMaster(Layer *layer)
+{
+    // Trova l'indice del layer nella lista
+    int index = -1;
+    for (int i = 0; i < layerList->size(); ++i) {
+        if (&layerList->at(i) == layer) {
+            index = i;
+            break;
+        }
+    }
+
+    // Imposta l'elemento corrispondente come elemento corrente nella ComboBox
+    setCurrentIndex(index);
+}
+
+// Modifica la funzione paintEvent come segue
+void LayerComboBox::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
     QStyleOptionComboBox opt;
     initStyleOption(&opt);
-    opt.rect = QRect(2, 2, width() - 22, 20); // Modificato per spostare il testo più a destra
+    opt.rect = QRect(2, 2, width() - 22, 20);  // Modificato per spostare il testo più a destra
 
     // Chiamiamo solo la parte di disegno della combobox che disegna il bordo, la freccia, ecc.
     style()->drawComplexControl(QStyle::CC_ComboBox, &opt, &painter, this);
@@ -48,7 +68,7 @@ void LayerComboBox::paintEvent(QPaintEvent *event)
     // Disegna il quadratino colorato
     if (currentIndex() >= 0 && currentIndex() < count()) {
         QRect colorRect = QRect(5, 5, 20, 14);
-        QColor colore = itemData(currentIndex(), Qt::UserRole + 1).value<QColor>();
+        QColor colore = itemData(currentIndex(), Qt::UserRole + 1).value<Layer>().color();
         painter.fillRect(colorRect, colore);
 
         QRect textRect = opt.rect.adjusted(28, 0, 0, 0);
@@ -73,24 +93,22 @@ QSize LayerComboBox::sizeHint() const
 }
 
 void LayerComboBox::currentIndexChanged(int index)
-{
-    Layer *layer;
-
-    foreach(layer,layerList)
-        if(layer->name() == itemData(currentIndex()))
-               emit layerSelectedChanged(layer);
+{/*
+    if (index >= 0 && index < count()) {
+        Layer selectedLayer = itemData(index, Qt::UserRole + 1).value<Layer>();
+        emit layerSelectedChanged(&selectedLayer);
+    }*/
 }
 
-void LayerComboBox::layerListIsChanged(QList<Layer *> layerList)
+void LayerComboBox::layerListIsChanged(QList<Layer> *layerList)
 {
     this->layerList = layerList;
 }
 
 bool LayerComboBox::layerNameIsUnique(QString name)
 {
-    Layer *layer;
-    foreach(layer, layerList)
-        if(layer->name() == name)
+    for(Layer layer : *layerList)
+        if(layer.name() == name)
             return false;
 
     return true;

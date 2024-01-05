@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "Layer.h"
+//#include "Layer.h"
 
 
 namespace Ui {
