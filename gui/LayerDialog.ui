@@ -35,19 +35,6 @@
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>
-  <property name="styleSheet">
-   <string notr="true">QPushButton {
-    border: 1px solid #8f8f91;
-    border-radius: 3px;
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
-margin:1px;
-}
-
-QPushButton:hover {
-	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
-}</string>
-  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
@@ -293,10 +280,17 @@ QPushButton:hover {
     </layout>
    </item>
    <item>
-    <widget class="QListWidget" name="listWidget"/>
+    <widget class="LayerListView" name="listWidget"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LayerListView</class>
+   <extends>QListWidget</extends>
+   <header>LayerListView.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>listWidget</tabstop>
   <tabstop>btnSetAllHidden</tabstop>

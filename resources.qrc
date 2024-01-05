@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/res">
         <file>resources/sidebar.png</file>
-        <file>resources/magnet.png</file>
         <file>resources/GLP3.png</file>
         <file>resources/search.png</file>
         <file>resources/Built_with_Qt.png</file>
@@ -15,7 +14,6 @@
         <file>resources/complexcurve.png</file>
         <file>resources/connection.png</file>
         <file>resources/ellipse.png</file>
-        <file>resources/grid.ico</file>
         <file>resources/line.png</file>
         <file>resources/pcbline.png</file>
         <file>resources/pcbpad.png</file>

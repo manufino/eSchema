@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>966</width>
-    <height>615</height>
+    <width>886</width>
+    <height>587</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,10 +18,7 @@
     <normaloff>:/res/resources/data-structure.png</normaloff>:/res/resources/data-structure.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QToolBar, QMenuBar,QStatusBar,QMenu {
-
-}
-QMenu {
+   <string notr="true">QMenu {
 border:1px solid black;
 padding-left:2px;
 }
@@ -73,7 +70,7 @@ QToolBox::tab:selected {
 border:1px solid cyan;
 }
 
-QToolButton { /* all types of tool button */
+QToolBar QToolButton { /* all types of tool button */
     border: 1px solid #8f8f91;
     border-radius: 3px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -81,22 +78,22 @@ QToolButton { /* all types of tool button */
 margin:1px;
 }
 
-QToolButton[popupMode=&quot;1&quot;] { /* only for MenuButtonPopup */
+QToolBar QToolButton[popupMode=&quot;1&quot;] { /* only for MenuButtonPopup */
     padding-right: 20px; /* make way for the popup button */
 }
 
-QToolButton:pressed {
+QToolBar QToolButton:pressed {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
 }
 
-QToolButton:checked {
+QToolBar QToolButton:checked {
     border: 1px solid #8f8f91;
 	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
 }
 
 /* the subcontrols below are used only in the MenuButtonPopup mode */
-QToolButton::menu-button {
+QToolBar QToolButton::menu-button {
     border: 1px solid gray;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
@@ -104,11 +101,11 @@ QToolButton::menu-button {
     width: 16px;
 }
 
-QToolButton::menu-arrow {
-    image: url(downarrow.png);
+QToolBar QToolButton::menu-arrow {
+
 }
 
-QToolButton::menu-arrow:open {
+QToolBar QToolButton::menu-arrow:open {
     top: 1px; left: 1px; /* shift it a bit */
 }
 
@@ -162,34 +159,6 @@ QTabBar::tab:!selected {
     margin-top: 0px; /* make non-selected tabs look smaller */
 }
 
-
-
-/*
- QScrollBar:horizontal {
-        min-width: 240px;
-        height: 10px;
-    }
-
-    QScrollBar:vertical {
-        min-height: 240px;
-        width: 10px;
-    }
-
-    QScrollBar::groove {
-        background: black;
-        border-radius: 10px;
-    }
-
-
-
-    QScrollBar::handle:horizontal {
-        width: 25px;
-    }
-
-    QScrollBar::handle:vertical {
-        height: 25px;
-    }
-*/
 StatusBar &gt; QLabel {
 	
 	color: rgb(53, 53, 53);
@@ -207,8 +176,6 @@ StatusBar &gt; QPushButton:checked {
 	border-color: rgb(170, 255, 255);
 	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
 }
-
-
 
 QScrollBar:vertical {          
         border: 1px solid gray;
@@ -354,7 +321,56 @@ margin-right:1px;
     background-repeat: no-repeat;
 background-position: left center;
 
+	background-color: rgb(255, 255, 255);
+
 }
+
+
+LayerListView {
+
+}
+
+LayerListView QLineEdit {
+font: 10pt &quot;Hack&quot;;
+border:1px solid white;
+background:white;
+height: 20px;
+text-align:left;
+}
+
+LayerListView::item {
+    border-bottom:1px solid gray;
+}
+
+
+LayerListView::item:selected {
+    border: 1px solid rgb(68, 68, 68);
+}
+
+LayerListView::item:selected:!active {
+	background-color: rgb(163, 163, 163);
+}
+
+LayerListView::item:selected:active {
+	background-color: rgb(163, 163, 163);
+}
+
+LayerListView::item:hover {
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
+}
+
+#LayerDialog QPushButton {
+    border: 1px solid #8f8f91;
+    border-radius: 3px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+margin:1px;
+}
+
+#LayerDialog QPushButton:hover {
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
+}
+
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -417,13 +433,13 @@ background-position: left center;
        </property>
        <property name="minimumSize">
         <size>
-         <width>235</width>
+         <width>240</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
+         <width>240</width>
          <height>16777215</height>
         </size>
        </property>
@@ -436,8 +452,14 @@ background-position: left center;
        <widget class="QFrame" name="frame">
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>240</width>
           <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>240</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="frameShape">
@@ -569,7 +591,7 @@ background-position: left center;
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>259</width>
+              <width>224</width>
               <height>364</height>
              </rect>
             </property>
@@ -623,7 +645,7 @@ background-position: left center;
                 <number>1</number>
                </property>
                <property name="currentIndex">
-                <number>2</number>
+                <number>1</number>
                </property>
                <property name="tabSpacing">
                 <number>0</number>
@@ -633,7 +655,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>251</width>
+                  <width>216</width>
                   <height>103</height>
                  </rect>
                 </property>
@@ -645,7 +667,7 @@ background-position: left center;
                 </property>
                 <attribute name="icon">
                  <iconset resource="../resources.qrc">
-                  <normaloff>:/res/resources/magnet.png</normaloff>:/res/resources/magnet.png</iconset>
+                  <normaloff>:/res/resources/remix/article-line.png</normaloff>:/res/resources/remix/article-line.png</iconset>
                 </attribute>
                 <attribute name="label">
                  <string>Page 1</string>
@@ -668,7 +690,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -681,7 +703,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -694,7 +716,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -707,7 +729,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -720,7 +742,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -733,7 +755,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -746,7 +768,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -759,7 +781,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -772,7 +794,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -785,7 +807,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -798,7 +820,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -811,7 +833,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -824,7 +846,7 @@ background-position: left center;
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>259</width>
+                  <width>224</width>
                   <height>28</height>
                  </rect>
                 </property>
@@ -843,8 +865,14 @@ background-position: left center;
        <widget class="QGroupBox" name="groupBoxProp">
         <property name="minimumSize">
          <size>
-          <width>0</width>
-          <height>250</height>
+          <width>240</width>
+          <height>218</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>240</width>
+          <height>218</height>
          </size>
         </property>
         <property name="font">
@@ -895,27 +923,18 @@ background-position: left center;
            <property name="bottomMargin">
             <number>5</number>
            </property>
-           <property name="spacing">
-            <number>5</number>
+           <property name="horizontalSpacing">
+            <number>8</number>
            </property>
-           <item row="3" column="1">
-            <widget class="LayerComboBox" name="cbPropLayer">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
+           <property name="verticalSpacing">
+            <number>6</number>
+           </property>
+           <item row="7" column="1">
+            <widget class="QSpinBox" name="DSpinBoxLineHeight">
              <property name="minimumSize">
               <size>
-               <width>119</width>
-               <height>24</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>24</height>
+               <width>0</width>
+               <height>20</height>
               </size>
              </property>
              <property name="font">
@@ -924,18 +943,14 @@ background-position: left center;
                <pointsize>9</pointsize>
               </font>
              </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_5">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
-             <property name="text">
-              <string>Spessore linea</string>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>5</number>
              </property>
             </widget>
            </item>
@@ -952,45 +967,53 @@ background-position: left center;
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="lineEdit_2">
+           <item row="3" column="1">
+            <widget class="LayerComboBox" name="cbPropLayer">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>119</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>24</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <family>Hack</family>
                <pointsize>9</pointsize>
               </font>
              </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
             </widget>
            </item>
-           <item row="7" column="1">
-            <widget class="QCheckBox" name="checkBox">
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_8">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string/>
+              <string>Font testo</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
             <widget class="QLineEdit" name="lineEdit">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox">
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>15</height>
+               <height>20</height>
               </size>
              </property>
              <property name="font">
@@ -1002,14 +1025,98 @@ background-position: left center;
              <property name="alignment">
               <set>Qt::AlignCenter</set>
              </property>
-             <property name="minimum">
-              <double>0.050000000000000</double>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
              </property>
-             <property name="singleStep">
-              <double>0.050000000000000</double>
+             <property name="text">
+              <string>Stile linea</string>
              </property>
-             <property name="value">
-              <double>1.000000000000000</double>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Riempimento</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Spessore linea</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QCheckBox" name="checkBox">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="ComboBoxPenStyle" name="cbPropLineStyle">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>119</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="lineEdit_2">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Hack</family>
+               <pointsize>9</pointsize>
+              </font>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -1026,29 +1133,19 @@ background-position: left center;
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_7">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
+           <item row="9" column="1">
+            <widget class="QFontComboBox" name="fontComboBox">
+             <property name="minimumSize">
+              <size>
+               <width>119</width>
+               <height>20</height>
+              </size>
              </property>
-             <property name="text">
-              <string>Stile linea</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Riempimento</string>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>20</height>
+              </size>
              </property>
             </widget>
            </item>
@@ -1065,71 +1162,6 @@ background-position: left center;
              </property>
             </widget>
            </item>
-           <item row="8" column="1">
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="cbPropLineStyle">
-             <property name="minimumSize">
-              <size>
-               <width>119</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>24</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Hack</family>
-               <pointsize>9</pointsize>
-              </font>
-             </property>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>New Item</string>
-              </property>
-             </item>
-            </widget>
-           </item>
           </layout>
          </item>
         </layout>
@@ -1144,7 +1176,7 @@ background-position: left center;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>966</width>
+     <width>886</width>
      <height>19</height>
     </rect>
    </property>
@@ -1830,6 +1862,11 @@ background-position: left center;
    <class>LayerComboBox</class>
    <extends>QComboBox</extends>
    <header>LayerComboBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ComboBoxPenStyle</class>
+   <extends>QComboBox</extends>
+   <header>ComboBoxPenStyle.h</header>
   </customwidget>
  </customwidgets>
  <resources>

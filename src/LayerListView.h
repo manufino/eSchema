@@ -7,7 +7,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QColorDialog>
-
+#include <QLineEdit>
 #include "Layer.h"
 #include "ColorPicker.h"
 
@@ -23,45 +23,50 @@ public:
         QWidget *widget = new QWidget(this);
         QHBoxLayout *layout = new QHBoxLayout(widget);
 
+        layout->setContentsMargins(2,0,4,0);
+
         // Clickable Icon
-        QPushButton *clickableIconButton = new QPushButton(widget);
-        clickableIconButton->setIcon(QIcon(":/res/resources/light-bulb.png"));
-        clickableIconButton->setFlat(true);
-        clickableIconButton->setCheckable(true);
-        layout->addWidget(clickableIconButton);
+        QLabel *lickableIconLabel = new QLabel(widget);
+        QIcon icon2 = QIcon(":/res/resources/remix/eye-line.png");
+        QPixmap pixmap2 = icon2.pixmap(icon2.actualSize(QSize(28, 28)));
+        lickableIconLabel->setPixmap(pixmap2);
+        lickableIconLabel->setCursor(Qt::PointingHandCursor);
+        lickableIconLabel->setFixedSize(28,28);
+
+        layout->addWidget(lickableIconLabel);
+
 
         // Color Picker
         ColorPicker *colorPicker = new ColorPicker(widget);
         colorPicker->setColor(layer->color());
-
+        colorPicker->setFixedSize(25,25);
         layout->addWidget(colorPicker);
 
         // Text
-        QLabel *label = new QLabel(layer->name(), widget);
+        QLineEdit *label = new QLineEdit(widget);
+        label->setText(layer->name());
+
         layout->addWidget(label);
 
         // Non-clickable Icon
-        QLabel *nonClickableIconLabel = new QLabel(widget);
-        QIcon icon = QIcon(":/res/resources/light-bulb.png");
-        QPixmap pixmap = icon.pixmap(icon.actualSize(QSize(32, 32)));
-        nonClickableIconLabel->setPixmap(pixmap);
-        layout->addWidget(nonClickableIconLabel);
-
+        if(this->count() < 2)
+        {
+            QLabel *nonClickableIconLabel = new QLabel(widget);
+            QIcon icon = QIcon(":/res/resources/remix/bookmark-3-line.png");
+            QPixmap pixmap = icon.pixmap(icon.actualSize(QSize(28, 28)));
+            nonClickableIconLabel->setPixmap(pixmap);
+            nonClickableIconLabel->setFixedSize(28,28);
+            layout->addWidget(nonClickableIconLabel);
+        }
         widget->setLayout(layout);
         setItemWidget(item, widget);
     }
 
 signals:
-    void colorChanged(QListWidgetItem *item);
+
 
 private slots:
-    void handleColorPickerClick(QListWidgetItem *item) {
-        QColorDialog colorDialog;
-        QColor selectedColor = colorDialog.getColor();
-        if (selectedColor.isValid()) {
-            emit colorChanged(item);
-        }
-    }
+ ;
 };
 
 

@@ -28,9 +28,6 @@ void LayerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     QString testo = index.data(Qt::DisplayRole).toString();
     QRect textRect = opt.rect.adjusted(25, 0, 0, 0); // Sposta il testo a destra del quadratino
     painter->drawText(textRect, Qt::AlignVCenter, testo);
-
-    // painter->setPen(QPen(QColor("black"),1));
-    // painter->drawRect(colorRect);
 }
 
 QSize LayerItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
