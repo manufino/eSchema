@@ -8,9 +8,12 @@
 #include <QPushButton>
 #include <QColorDialog>
 #include <QLineEdit>
+
 #include "Layer.h"
 #include "ColorPicker.h"
 #include "LayerList.h"
+#include "ButtonLayerHide.h"
+#include "LabelLayerName.h"
 
 
 class LayerListView : public QListWidget {

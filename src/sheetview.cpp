@@ -215,18 +215,13 @@ void SheetView::zoomUpdate()
     // Calcola la percentuale di zoom
     qreal zoomPercentage = (transform().m11() * 100) / ZOOM_SCALE_MAX;
     zoomLevel = qRound(zoomPercentage);
-    //qDebug(QString::number(zoomLevel).toUtf8());
+
     emit zoomScaleIsChanged(zoomLevel);
 }
-/*
-QPoint SheetView::pointArrountGrid(QPoint rawPoint)
-{
 
-}*/
 
 void SheetView::settingChanged()
 {
-    //qDebug("SheetView::settingChanged()");
     loadSettings();
     update();
 }

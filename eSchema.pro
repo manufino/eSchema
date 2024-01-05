@@ -18,9 +18,11 @@ CONFIG += c++17
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
 
 SOURCES += \
+	src/ButtonLayerHide.cpp \
 	src/ColorPicker.cpp \
 	src/ComboBoxPenStyle.cpp \
 	src/GraphicsPrimitive.cpp \
+	src/LabelLayerName.cpp \
 	src/LayerDialog.cpp \
 	src/LayerComboBox.cpp \
 	src/LayerItemDelegate.cpp \
@@ -39,9 +41,11 @@ SOURCES += \
 	src/ToolBarPrimitive.cpp
 
 HEADERS += \
+	src/ButtonLayerHide.h \
 	src/ColorPicker.h \
 	src/ComboBoxPenStyle.h \
 	src/GraphicsPrimitive.h \
+	src/LabelLayerName.h \
 	src/Layer.h \
 	src/LayerItemDelegate.h \
 	src/LayerList.h \

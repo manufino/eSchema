@@ -16,12 +16,7 @@ void LayerListView::addLayer(Layer *layer)
     layout->setContentsMargins(2,0,4,0);
 
     // Clickable Icon
-    QLabel *lickableIconLabel = new QLabel(widget);
-    QIcon icon2 = QIcon(":/res/resources/remix/eye-line.png");
-    QPixmap pixmap2 = icon2.pixmap(icon2.actualSize(QSize(28, 28)));
-    lickableIconLabel->setPixmap(pixmap2);
-    lickableIconLabel->setCursor(Qt::PointingHandCursor);
-    lickableIconLabel->setFixedSize(28,28);
+    ButtonLayerHide *lickableIconLabel = new ButtonLayerHide(widget);
 
     layout->addWidget(lickableIconLabel);
 
@@ -33,9 +28,7 @@ void LayerListView::addLayer(Layer *layer)
     layout->addWidget(colorPicker);
 
     // Text
-    QLineEdit *label = new QLineEdit(widget);
-    label->setText(layer->name());
-
+    LabelLayerName *label = new LabelLayerName(layer->name(),widget);
     layout->addWidget(label);
 
     if(layer->isMaster())

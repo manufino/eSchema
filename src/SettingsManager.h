@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QCoreApplication>
 #include <QSettings>
-#include <QDebug>
 #include <QColor>
 
 class SettingsManager : public QObject

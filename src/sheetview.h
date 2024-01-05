@@ -35,13 +35,10 @@ protected:
 private:
     void loadSettings();
     void zoomUpdate();
-    //QPoint pointArrountGrid(QPoint rawPoint);
 
 public slots:
     void settingChanged();
-
     void adjustView();
-
     void enableGrid(bool enable = true) {
         gridEnabled = enable;
         this->scene()->update();
