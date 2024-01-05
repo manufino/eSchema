@@ -1,6 +1,19 @@
-# eSchema
-A small 2D CAD, simply and customizable. 
+#eSchema
 
-# Work in progress ...
-It is currently still in the initial stage.
-I have yet to implement all the drawing primitives and related functions to handle them.
+eSchema is an evolving 2D CAD software designed to be simple yet customizable. Currently in its initial development stage, the software aims to offer a range of drawing primitives and associated functions for comprehensive design capabilities.
+
+
+#Key Features:
+
+Cross-platform compatibility: Developed using C++ and Qt, eSchema ensures usability across multiple operating systems.
+Simple and customizable 2D CAD: The software provides an intuitive interface for 2D drafting while allowing users to tailor their experience to meet specific design preferences.
+Custom block creation: Users can generate personalized drawing blocks and construct libraries of these blocks for efficient design workflows.
+Format compatibility: eSchema is intended to support the reading and writing of various file formats, including DXF (Autocad), Kicad (schematics only), and FidoCadJ.
+
+
+#Please note ...
+
+that the software is a work in progress, and additional drawing primitives and related functionalities are yet to be implemented.
+
+
+
