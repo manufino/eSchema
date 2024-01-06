@@ -18,6 +18,16 @@ public:
     explicit LayerDialog(QWidget *parent = nullptr);
     ~LayerDialog();
 
+public slots:
+    void levelUp();
+    void levelDown();
+    void setAllVisible();
+    void setAllHidden();
+    void deleteCurrent();
+    void addNewLayer();
+
+
+
 private:
     Ui::LayerDialog *ui;
 };

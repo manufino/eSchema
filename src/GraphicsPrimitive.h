@@ -8,12 +8,11 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QApplication>
 
-#include "Sheet.h"
-#include "SettingsManager.h"
 
 class GraphicsPrimitive : public QObject, public QGraphicsItem
 {
     Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
 
 public:
     explicit GraphicsPrimitive(QGraphicsItem *parent = nullptr);

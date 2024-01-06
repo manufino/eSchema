@@ -1,0 +1,13 @@
+Da aggiungere ai settings:
+
++ grid_visible
++
+
+Aggiungere un layer come base dati da caricare sempre.
+Definito come:
+layer_pos = 0
+layer_name = "Layer1"
+layer_color = #454433
+
+
+

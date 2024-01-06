@@ -7,7 +7,9 @@ ButtonLayerHide::ButtonLayerHide(QWidget *parent)
     images.append(QPixmap(":/res/resources/remix/eye-line.png"));
     images.append(QPixmap(":/res/resources/remix/eye-off-line.png"));
 
-    // Visualizza l'immagine iniziale
+    // setto una immagine iniziale,
+    // altrimenti non si visualizza nulla se non..
+    // viene specificato uno stato.
     setStatus(true);
 
     setMouseTracking(true);

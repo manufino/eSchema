@@ -1,21 +1,20 @@
+# eSchema Version
 VERSION = 0.6.6
 
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-
-win32 {
-DEFINES += BUILDDATE=\\\"$$system('echo %date%')\\\"
-} else {
-DEFINES += BUILDDATE=\\\"$$system(date '+%d/%m/%y')\\\"
-}
-
-QT       += core gui
+QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17
+CONFIG += c++17 # lrelease
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
 
 # disables all the APIs deprecated before Qt 6.0.0
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
 	src/ButtonLayerHide.cpp \
@@ -72,19 +71,15 @@ FORMS += \
 	gui/LayerToolBarWidget.ui \
 	gui/ShortcutsDialog.ui
 
-CONFIG += lrelease
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
-
-RESOURCES += \
-	resources.qrc
+RESOURCES += resources.qrc
 
 win32 {
-    RC_ICONS = "resources/main.ico"
+	RC_ICONS = "resources/main.ico"
+	DEFINES += BUILDDATE=\\\"$$system('echo %date%')\\\"
+} else {
+	DEFINES += BUILDDATE=\\\"$$system(date '+%d/%m/%y')\\\"
 }
 
-
+DISTFILES += \
+	TODO.txt
 

@@ -1,5 +1,8 @@
 #include "GraphicsPrimitive.h"
 
+#include "Sheet.h"
+#include "SettingsManager.h"
+
 GraphicsPrimitive::GraphicsPrimitive(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
     gridSize = SettingsManager::getInstance().loadSetting("grid_step").toInt();

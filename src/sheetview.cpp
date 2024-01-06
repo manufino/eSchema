@@ -2,6 +2,8 @@
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
+    /* TODO: per ora lo lascio cosi ..
+     * ma sara' da salvare nel file dei settings.*/
     gridEnabled=true;
 
     rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
@@ -15,7 +17,7 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 
     setMouseTracking(true);
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
-    setRenderHint(QPainter::Antialiasing);
+    setRenderHint(QPainter::Antialiasing); //TODO: da valutare
     setTransformationAnchor(QGraphicsView::NoAnchor);
 }
 
@@ -29,67 +31,56 @@ void SheetView::setGrid(int size, QColor clr)
 
 void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    if(gridEnabled)
-    {
-        /*
-        QPen pen;
-        painter->setPen(pen);
+    // se la griglia e' disabilitata
+    // non disegno niente
+    if(!gridEnabled)
+        return;
 
-        qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
-        qreal top = int(rect.top()) - (int(rect.top()) % gridSize);
+    qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
+    qreal top = int(rect.top()) - (int(rect.top()) % gridSize);
+
+    QPen myPen(Qt::NoPen);
+    painter->setBrush(QBrush(backgroundColor));
+    painter->setPen(myPen);
+    painter->drawRect(rect);
+
+    if(gridType == "LINEE+PUNTI" || gridType == "LINEE")
+    {
+        QVarLengthArray<QLineF, 100> lines;
+
+        for (qreal x = left; x < rect.right(); x += gridSize)
+            lines.append(QLineF(x, rect.top(), x, rect.bottom()));
+        for (qreal y = top; y < rect.bottom(); y += gridSize)
+            lines.append(QLineF(rect.left(), y, rect.right(), y));
+
+        QVarLengthArray<QLineF, 100> thickLines;
+
+        for (qreal x = left; x < rect.right(); x += gridSize * (gridMarkSize/10))
+            thickLines.append(QLineF(x, rect.top(), x, rect.bottom()));
+        for (qreal y = top; y < rect.bottom(); y += gridSize * (gridMarkSize/10))
+            thickLines.append(QLineF(rect.left(), y, rect.right(), y));
+
+        QPen penHLines(lineGridColor, lineGridWidth, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin);
+        painter->setPen(penHLines);
+        painter->drawLines(lines.data(), lines.size());
+
+        painter->setPen(QPen(lineThickGridColor, lineThickGridWidth, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
+        painter->drawLines(thickLines.data(), thickLines.size());
+    }
+
+    if(gridType == "PUNTI" || gridType == "LINEE+PUNTI")
+    {
+        painter->setPen(dotsGridColor);
+
         QVector<QPointF> points;
-        for (qreal x = left; x < rect.right(); x += gridSize){
-            for (qreal y = top; y < rect.bottom(); y += gridSize){
-                points.append(QPointF(x,y));
+        for (qreal x = left; x < rect.right(); x += gridSize) {
+            for (qreal y = top; y < rect.bottom(); y += gridSize) {
+                points.append(QPointF(x, y));
             }
         }
         painter->drawPoints(points.data(), points.size());
-        */
-        qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
-        qreal top = int(rect.top()) - (int(rect.top()) % gridSize);
-
-        QPen myPen(Qt::NoPen);
-        painter->setBrush(QBrush(backgroundColor));
-        painter->setPen(myPen);
-        painter->drawRect(rect);
-
-        if(gridType == "LINEE+PUNTI" || gridType == "LINEE")
-        {
-            QVarLengthArray<QLineF, 100> lines;
-
-            for (qreal x = left; x < rect.right(); x += gridSize)
-                lines.append(QLineF(x, rect.top(), x, rect.bottom()));
-            for (qreal y = top; y < rect.bottom(); y += gridSize)
-                lines.append(QLineF(rect.left(), y, rect.right(), y));
-
-            QVarLengthArray<QLineF, 100> thickLines;
-
-            for (qreal x = left; x < rect.right(); x += gridSize * (gridMarkSize/10))
-                thickLines.append(QLineF(x, rect.top(), x, rect.bottom()));
-            for (qreal y = top; y < rect.bottom(); y += gridSize * (gridMarkSize/10))
-                thickLines.append(QLineF(rect.left(), y, rect.right(), y));
-
-            QPen penHLines(lineGridColor, lineGridWidth, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin);
-            painter->setPen(penHLines);
-            painter->drawLines(lines.data(), lines.size());
-
-            painter->setPen(QPen(lineThickGridColor, lineThickGridWidth, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
-            painter->drawLines(thickLines.data(), thickLines.size());
-        }
-
-        if(gridType == "PUNTI" || gridType == "LINEE+PUNTI")
-        {
-            painter->setPen(dotsGridColor);
-
-            QVector<QPointF> points;
-            for (qreal x = left; x < rect.right(); x += gridSize) {
-                for (qreal y = top; y < rect.bottom(); y += gridSize) {
-                    points.append(QPointF(x, y));
-                }
-            }
-            painter->drawPoints(points.data(), points.size());
-        }
     }
+
 }
 
 
@@ -107,10 +98,10 @@ void SheetView::wheelEvent(QWheelEvent *event)
             factor = 0.9;
         }
 
-        // Limiti del fattore di zoom
         qreal currentScale = transform().m11(); // Ottiene la scala corrente sull'asse x
         qreal newScale = currentScale * factor; // Calcola la nuova scala
 
+        // Limiti del fattore di zoom
         if (newScale < ZOOM_SCALE_MIN) {
             factor = ZOOM_SCALE_MIN / currentScale;
         } else if (newScale > ZOOM_SCALE_MAX) {
