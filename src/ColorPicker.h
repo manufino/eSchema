@@ -5,7 +5,8 @@
 #include <QColorDialog>
 #include <QMouseEvent>
 
-class ColorPicker : public QLabel {
+class ColorPicker : public QLabel
+{
     Q_OBJECT
 
 public:
@@ -15,7 +16,7 @@ public:
     void setColor(QColor color);
 
 signals:
-    void colorChanged();
+    void colorChanged(QColor color);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

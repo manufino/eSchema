@@ -44,6 +44,11 @@ void LayerList::moveDown(Layer *layer)
     }
 }
 
+void LayerList::update()
+{
+    emit layerListChanged(layerList);
+}
+
 void LayerList::setMaster(Layer* layer)
 {
     for (int i = 0; i < layerList->count(); i++)

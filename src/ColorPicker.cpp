@@ -25,7 +25,7 @@ void ColorPicker::mousePressEvent(QMouseEvent *event)
 
         if (color.isValid()) {
             setColor(color);
-            emit colorChanged();
+            emit colorChanged(color);
         }
     }
 }

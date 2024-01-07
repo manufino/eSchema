@@ -22,6 +22,7 @@ SOURCES += \
 	src/ComboBoxPenStyle.cpp \
 	src/GraphicsPrimitive.cpp \
 	src/LabelLayerName.cpp \
+	src/LayerColorPicker.cpp \
 	src/LayerDialog.cpp \
 	src/LayerComboBox.cpp \
 	src/LayerItemDelegate.cpp \
@@ -47,6 +48,7 @@ HEADERS += \
 	src/GraphicsPrimitive.h \
 	src/LabelLayerName.h \
 	src/Layer.h \
+	src/LayerColorPicker.h \
 	src/LayerItemDelegate.h \
 	src/LayerList.h \
 	src/LayerListView.h \

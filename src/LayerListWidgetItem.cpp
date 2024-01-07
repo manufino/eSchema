@@ -11,9 +11,9 @@ LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : Q
     ButtonLayerHide *lickableIconLabel = new ButtonLayerHide(layer, widget);
     layout->addWidget(lickableIconLabel);
 
-    ColorPicker *colorPicker = new ColorPicker(widget);
-    colorPicker->setColor(layer->color());
-    colorPicker->setFixedSize(25, 25);
+    LayerColorPicker *colorPicker = new LayerColorPicker(layer, widget);
+    //colorPicker->setColor(layer->color());
+    //colorPicker->setFixedSize(25, 25);
     layout->addWidget(colorPicker);
 
     LabelLayerName *label = new LabelLayerName(layer->name(), widget);
