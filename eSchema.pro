@@ -27,6 +27,7 @@ SOURCES += \
 	src/LayerItemDelegate.cpp \
 	src/LayerList.cpp \
 	src/LayerListView.cpp \
+	src/LayerListWidgetItem.cpp \
 	src/LayerToolBarWidget.cpp \
 	src/SettingsManager.cpp \
 	src/AboutDialog.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
 	src/LayerItemDelegate.h \
 	src/LayerList.h \
 	src/LayerListView.h \
+	src/LayerListWidgetItem.h \
 	src/LayerToolBarWidget.h \
 	src/LinkLabel.h \
 	src/LayerDialog.h \

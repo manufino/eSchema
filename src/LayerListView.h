@@ -14,6 +14,7 @@
 #include "LayerList.h"
 #include "ButtonLayerHide.h"
 #include "LabelLayerName.h"
+#include "LayerListWidgetItem.h"
 
 
 class LayerListView : public QListWidget {
