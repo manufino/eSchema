@@ -36,9 +36,7 @@ void ButtonLayerHide::mousePressEvent(QMouseEvent *event)
         return;
 
     if (event->button() == Qt::LeftButton)
-    {
         setStatus(!layerIsVisible);
-    }
 
     QLabel::mousePressEvent(event);
 }

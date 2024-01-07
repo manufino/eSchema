@@ -29,6 +29,9 @@ void LayerList::setMaster(Layer* layer)
     for (int i = 0; i < layerList->count(); i++)
     {
         Layer* currentLayer = (*layerList)[i];
+        // il layer master deve essere sempre visibile
+        if(currentLayer->isMaster())
+            currentLayer->setVisible(true);
         currentLayer->setMaster(currentLayer == layer);
     }
 }
@@ -38,6 +41,10 @@ void LayerList::setMaster(int index)
     for (int i = 0; i < layerList->count(); i++)
     {
         Layer* l = (*layerList)[i];
+
+        // il layer master deve essere sempre visibile
+        if(l->isMaster())
+            l->setVisible(true);
         l->setMaster(i == index);
     }
 }
@@ -57,5 +64,19 @@ void LayerList::setVisible(Layer* layer, bool visible)
             //emit layerListChanged(layerList);
             break;
         }
+    }
+}
+
+void LayerList::setAllVisibleOrHidden(bool visible)
+{
+    for (int i = 0; i < layerList->count(); i++)
+    {
+        Layer* currentLayer = (*layerList)[i];
+
+        // non permetto di nascondere il layer master
+        if(currentLayer->isMaster())
+            continue;
+
+        currentLayer->setVisible(visible);
     }
 }

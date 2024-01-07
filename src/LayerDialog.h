@@ -3,8 +3,8 @@
 
 #include <QDialog>
 
-//#include "Layer.h"
-
+#include "Layer.h"
+#include "LayerListView.h"
 
 namespace Ui {
 class LayerDialog;

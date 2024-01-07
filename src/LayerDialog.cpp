@@ -1,8 +1,6 @@
 #include "LayerDialog.h"
 #include "ui_LayerDialog.h"
 
-#include "LayerListView.h"
-
 LayerDialog::LayerDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LayerDialog)
@@ -40,12 +38,14 @@ void LayerDialog::levelDown()
 
 void LayerDialog::setAllVisible()
 {
-
+    LayerList::getInstance().setAllVisibleOrHidden(true);
+    ui->listWidget->updateList();
 }
 
 void LayerDialog::setAllHidden()
 {
-
+    LayerList::getInstance().setAllVisibleOrHidden(false);
+    ui->listWidget->updateList();
 }
 
 void LayerDialog::deleteCurrent()

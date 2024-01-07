@@ -25,6 +25,7 @@ public slots:
     void setMaster(Layer *layer);
     void setMaster(int index);
     void setVisible(Layer *layer, bool visible);
+    void setAllVisibleOrHidden(bool visible);
 
 signals:
     void layerListChanged(QList<Layer*> *layerList);
