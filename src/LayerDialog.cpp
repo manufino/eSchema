@@ -7,6 +7,13 @@ LayerDialog::LayerDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->btnAddNewLayer->setProperty("class", "layoutLayerListButton");
+    ui->btnDeleteLayer->setProperty("class", "layoutLayerListButton");
+    ui->btnLayerLevelDown->setProperty("class", "layoutLayerListButton");
+    ui->btnLayerLevelUp->setProperty("class", "layoutLayerListButton");
+    ui->btnSetAllVisible->setProperty("class", "layoutLayerListButton");
+    ui->btnSetAllHidden->setProperty("class", "layoutLayerListButton");
+
     connect(ui->btnAddNewLayer, &QPushButton::clicked,
             this, &LayerDialog::addNewLayer);
     connect(ui->btnDeleteLayer, &QPushButton::clicked,

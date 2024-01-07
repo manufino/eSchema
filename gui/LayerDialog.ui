@@ -29,11 +29,14 @@
    <string>&lt; Layer Manager &gt;</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../resources.qrc">
+   <iconset>
     <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
   </property>
   <property name="windowOpacity">
    <double>1.000000000000000</double>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -55,7 +58,7 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="layoutLayerList">
      <property name="spacing">
       <number>2</number>
      </property>
@@ -83,7 +86,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../resources.qrc">
+        <iconset>
          <normaloff>:/res/resources/remix/eye-line.png</normaloff>:/res/resources/remix/eye-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -118,7 +121,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../resources.qrc">
+        <iconset>
          <normaloff>:/res/resources/remix/eye-off-line.png</normaloff>:/res/resources/remix/eye-off-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -166,7 +169,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../resources.qrc">
+        <iconset>
          <normaloff>:/res/resources/remix/arrow-up-s-line.png</normaloff>:/res/resources/remix/arrow-up-s-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -201,7 +204,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../resources.qrc">
+        <iconset>
          <normaloff>:/res/resources/remix/arrow-down-s-line.png</normaloff>:/res/resources/remix/arrow-down-s-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -249,7 +252,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../resources.qrc">
+        <iconset>
          <normaloff>:/res/resources/remix/sticky-note-add-line.png</normaloff>:/res/resources/remix/sticky-note-add-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -284,7 +287,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../resources.qrc">
+        <iconset>
          <normaloff>:/res/resources/remix/delete-bin-2-line.png</normaloff>:/res/resources/remix/delete-bin-2-line.png</iconset>
        </property>
        <property name="iconSize">
@@ -316,8 +319,6 @@
   <tabstop>btnDeleteLayer</tabstop>
   <tabstop>btnSetAllVisible</tabstop>
  </tabstops>
- <resources>
-  <include location="../resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

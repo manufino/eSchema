@@ -359,7 +359,8 @@ LayerListView::item:hover {
 	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
 }
 
-#LayerDialog QPushButton {
+
+.layoutLayerListButton {
     border: 1px solid #8f8f91;
     border-radius: 3px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -367,9 +368,10 @@ LayerListView::item:hover {
 margin:1px;
 }
 
-#LayerDialog QPushButton:hover {
+.layoutLayerListButton:hover {
 	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(201, 255, 255, 239), stop:0.508772 rgba(197, 225, 255, 207), stop:0.997301 rgba(176, 255, 255, 236));
 }
+
 
 </string>
   </property>
@@ -592,7 +594,7 @@ margin:1px;
               <x>0</x>
               <y>0</y>
               <width>224</width>
-              <height>364</height>
+              <height>351</height>
              </rect>
             </property>
             <property name="minimumSize">
