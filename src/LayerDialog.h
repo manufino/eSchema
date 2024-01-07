@@ -26,6 +26,8 @@ public slots:
     void deleteCurrent();
     void addNewLayer();
 
+private:
+    bool layerIsSelected();
 
 
 private:

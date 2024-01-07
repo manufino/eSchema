@@ -20,9 +20,12 @@ public:
     void addLayer(Layer *layer);
     void addLayer(QString name, QColor color);
     Layer* getMaster();
+    void moveUp(Layer *layer);
+    void moveDown(Layer *layer);
 
 public slots:
     void setMaster(Layer *layer);
+    void setMaster(QString name);
     void setMaster(int index);
     void setVisible(Layer *layer, bool visible);
     void setAllVisibleOrHidden(bool visible);

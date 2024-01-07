@@ -22,7 +22,8 @@ public:
     LayerListView(QWidget *parent = nullptr);
     void addLayer(Layer *layer);
     void updateList();
-    void setAllVisibleOrHidden(bool isAllVisible);
+    Layer* getSelectedLayer();
+    void setSelectedLayer(Layer *layer);
 
 public slots:
     void addLayerList(QList<Layer*> *layerList);

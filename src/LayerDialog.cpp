@@ -28,12 +28,24 @@ LayerDialog::~LayerDialog()
 
 void LayerDialog::levelUp()
 {
-
+    if(layerIsSelected())
+    {
+        Layer *l = ui->listWidget->getSelectedLayer();
+        LayerList::getInstance().moveUp(l);
+        ui->listWidget->updateList();
+        ui->listWidget->setSelectedLayer(l);
+    }
 }
 
 void LayerDialog::levelDown()
 {
-
+    if(layerIsSelected())
+    {
+        Layer *l = ui->listWidget->getSelectedLayer();
+        LayerList::getInstance().moveDown(l);
+        ui->listWidget->updateList();
+        ui->listWidget->setSelectedLayer(l);
+    }
 }
 
 void LayerDialog::setAllVisible()
@@ -56,4 +68,11 @@ void LayerDialog::deleteCurrent()
 void LayerDialog::addNewLayer()
 {
 
+}
+
+bool LayerDialog::layerIsSelected()
+{
+    if(ui->listWidget->selectedItems().size() == 0)
+        return false;
+    else return true;
 }

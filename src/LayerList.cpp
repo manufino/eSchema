@@ -24,6 +24,26 @@ Layer* LayerList::getMaster()
     return nullptr;
 }
 
+void LayerList::moveUp(Layer *layer)
+{
+    int currentIndex = layerList->indexOf(layer);
+
+    if (currentIndex > 0) {
+        layerList->move(currentIndex, currentIndex - 1);
+        emit layerListChanged(layerList);
+    }
+}
+
+void LayerList::moveDown(Layer *layer)
+{
+    int currentIndex = layerList->indexOf(layer);
+
+    if (currentIndex < layerList->count() - 1) {
+        layerList->move(currentIndex, currentIndex + 1);
+        emit layerListChanged(layerList);
+    }
+}
+
 void LayerList::setMaster(Layer* layer)
 {
     for (int i = 0; i < layerList->count(); i++)
@@ -36,16 +56,30 @@ void LayerList::setMaster(Layer* layer)
     }
 }
 
+void LayerList::setMaster(QString name)
+{
+    for (int i = 0; i < layerList->count(); i++)
+    {
+        Layer* l = (*layerList)[i];
+
+        if(l->name() == name) {
+            l->setMaster(true);
+            l->setVisible(true);// il layer master deve essere sempre visibile
+        } else l->setMaster(false);
+    }
+}
+
 void LayerList::setMaster(int index)
 {
     for (int i = 0; i < layerList->count(); i++)
     {
         Layer* l = (*layerList)[i];
 
+        l->setMaster(i == index);
+
         // il layer master deve essere sempre visibile
         if(l->isMaster())
             l->setVisible(true);
-        l->setMaster(i == index);
     }
 }
 

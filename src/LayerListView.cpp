@@ -8,6 +8,7 @@ LayerListView::LayerListView(QWidget *parent) : QListWidget(parent)
 void LayerListView::addLayer(Layer *layer)
 {
     QListWidgetItem *item = new QListWidgetItem(this);
+    item->setData(Qt::UserRole+5, QVariant::fromValue(layer));
     item->setSizeHint(QSize(100, 40));
 
     QWidget *widget = new QWidget(this);
@@ -50,16 +51,40 @@ void LayerListView::updateList()
     addLayerList(LayerList::getInstance().getList());
 }
 
-void LayerListView::setAllVisibleOrHidden(bool isAllVisible)
-{
-    Q_UNUSED(isAllVisible);
-}
-
-
 void LayerListView::addLayerList(QList<Layer*> *layerList)
 {
     this->clear();
     for (Layer *layer : *layerList) {
         addLayer(layer);
     }
+}
+
+Layer* LayerListView::getSelectedLayer()
+{
+    if(selectedItems().size() == 0)
+        return nullptr;
+
+    QListWidgetItem *selectedItem = currentItem();
+
+    if (selectedItem != nullptr && selectedItem->data(Qt::UserRole+5).isValid()) {
+        return qvariant_cast<Layer*>(selectedItem->data(Qt::UserRole+5));
+    } else {
+        return nullptr; // Nessun layer selezionato o dati non validi
+    }
+}
+
+void LayerListView::setSelectedLayer(Layer *layer)
+{
+    for (int i = 0; i < count(); ++i) {
+        QListWidgetItem *item = this->item(i);
+        if (item != nullptr && item->data(Qt::UserRole+5).isValid()) {
+            Layer *currentLayer = qvariant_cast<Layer*>(item->data(Qt::UserRole+5));
+            if (currentLayer == layer) {
+                setCurrentItem(item); // Imposta l'elemento corrente sulla base del layer passato
+                return;
+            }
+        }
+    }
+    // Se il layer passato non è stato trovato, deseleziona tutti gli elementi
+    setCurrentItem(nullptr);
 }

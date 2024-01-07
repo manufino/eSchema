@@ -19,6 +19,7 @@ public:
     void addLayer(const QString& testo, const QColor& colore);
     void addLayerList(QList<Layer*> *list);
     void setMaster(Layer *layer);
+    void setAutoMaster();
 
 protected:
     void paintEvent(QPaintEvent *event) override;

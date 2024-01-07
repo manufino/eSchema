@@ -33,6 +33,6 @@ void LayerToolBarWidget::setList(QList<Layer*> *layerList)
 
 void LayerToolBarWidget::selectedChanged(int index)
 {
-    Q_UNUSED(index);
-    LayerList::getInstance().setMaster(ui->comboBox->currentIndex());
+    if(index >= 0 && ui->comboBox->count() > 0)
+        LayerList::getInstance().setMaster(ui->comboBox->currentData(Qt::DisplayRole).toString());
 }

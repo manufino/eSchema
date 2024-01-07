@@ -23,10 +23,20 @@ void LayerComboBox::addLayer(const QString& testo, const QColor& colore)
 
 void LayerComboBox::addLayerList(QList<Layer*> *list)
 {
+    // disattivo il segnale mentre carico la lista
+    disconnect(this, &QComboBox::currentIndexChanged,
+               this, &LayerComboBox::currentIndexChanged);
+
     clear();
     layerList = list;
     for(Layer *layer: *list)
         addLayer(layer->name(), QColor(layer->color()));
+
+    setAutoMaster(); // setto il master layer
+
+    // ri-attivo il segnale
+    connect(this, &QComboBox::currentIndexChanged,
+            this, &LayerComboBox::currentIndexChanged);
 }
 
 void LayerComboBox::setMaster(Layer *layer)
@@ -39,6 +49,16 @@ void LayerComboBox::setMaster(Layer *layer)
         }
     }
     setCurrentIndex(index);
+}
+
+void LayerComboBox::setAutoMaster()
+{
+    for (int i = 0; i < layerList->size(); ++i) {
+        if (layerList->at(i)->isMaster()) {
+            setCurrentIndex(i);
+            return;
+        }
+    }
 }
 
 void LayerComboBox::paintEvent(QPaintEvent* event)
