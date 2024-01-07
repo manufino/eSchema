@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    LayerList::getInstance().addLayer(Layer("Layer 0", QColor("black"), true));
+    LayerList::getInstance().addLayer(new Layer("Layer 0", QColor("black"), true));
     LayerList::getInstance().addLayer("Quote", QColor("cyan"));
     LayerList::getInstance().addLayer("Forature", QColor("red"));
     LayerList::getInstance().addLayer("Ingombro", QColor("blue"));

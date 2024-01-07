@@ -79,7 +79,3 @@ win32 {
 } else {
 	DEFINES += BUILDDATE=\\\"$$system(date '+%d/%m/%y')\\\"
 }
-
-DISTFILES += \
-	TODO.txt
-

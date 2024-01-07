@@ -16,7 +16,7 @@ void LayerListView::addLayer(Layer *layer)
     layout->setContentsMargins(2,0,4,0);
 
     // Clickable Icon
-    ButtonLayerHide *lickableIconLabel = new ButtonLayerHide(widget);
+    ButtonLayerHide *lickableIconLabel = new ButtonLayerHide(layer, widget);
 
     layout->addWidget(lickableIconLabel);
 
@@ -44,10 +44,22 @@ void LayerListView::addLayer(Layer *layer)
     setItemWidget(item, widget);
 }
 
-void LayerListView::addLayerList(QList<Layer> *layerList)
+void LayerListView::updateList()
 {
     this->clear();
-    for (Layer layer : *layerList) {
-        addLayer(&layer);
+    addLayerList(LayerList::getInstance().getList());
+}
+
+void LayerListView::setAllVisibleOrHidden(bool isAllVisible)
+{
+    Q_UNUSED(isAllVisible);
+}
+
+
+void LayerListView::addLayerList(QList<Layer*> *layerList)
+{
+    this->clear();
+    for (Layer *layer : *layerList) {
+        addLayer(layer);
     }
 }

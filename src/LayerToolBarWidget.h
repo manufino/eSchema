@@ -20,7 +20,7 @@ public:
 
 public slots:
     void setMaster(Layer *layer);
-    void setList(QList<Layer> *layerList);
+    void setList(QList<Layer*> *layerList);
 
 private slots:
     void selectedChanged(int index);

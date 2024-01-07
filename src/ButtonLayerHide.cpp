@@ -1,16 +1,18 @@
 #include "ButtonLayerHide.h"
 
-ButtonLayerHide::ButtonLayerHide(QWidget *parent)
+ButtonLayerHide::ButtonLayerHide(Layer * layer, QWidget *parent)
     : QLabel(parent)
 {
-    // Imposta l'immagine iniziale
+    this->layer = layer;
+
     images.append(QPixmap(":/res/resources/remix/eye-line.png"));
     images.append(QPixmap(":/res/resources/remix/eye-off-line.png"));
+    images.append(QPixmap(":/res/resources/remix/eye-fill.png"));
 
-    // setto una immagine iniziale,
-    // altrimenti non si visualizza nulla se non..
-    // viene specificato uno stato.
-    setStatus(true);
+    if(layer->isMaster())
+        setPixmap(images[2]);
+    else
+        setStatus(layer->isVisible());
 
     setMouseTracking(true);
     setCursor(Qt::PointingHandCursor);
@@ -25,14 +27,26 @@ void ButtonLayerHide::setStatus(bool status)
         setPixmap(images[1]);
 
     layerIsVisible = status;
+    LayerList::getInstance().setVisible(layer, layerIsVisible);
 }
 
 void ButtonLayerHide::mousePressEvent(QMouseEvent *event)
 {
+    if(layer->isMaster())
+        return;
+
     if (event->button() == Qt::LeftButton)
     {
         setStatus(!layerIsVisible);
     }
 
     QLabel::mousePressEvent(event);
+}
+
+void ButtonLayerHide::mouseMoveEvent(QMouseEvent *ev)
+{
+    Q_UNUSED(ev);
+    if(layer->isMaster())
+        setCursor(Qt::ArrowCursor);
+    else setCursor(Qt::PointingHandCursor);
 }

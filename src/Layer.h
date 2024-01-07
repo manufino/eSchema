@@ -10,7 +10,9 @@ class Layer
 public:
 
     Layer() = default;
-    Layer(QString name, QColor color = QColor("black"), bool isMaster=false, int level = 10) {
+    Layer(QString name, QColor color = QColor("black"),
+          bool isMaster=false, int level = 10)
+    {
         m_name = name;
         m_color = color;
         m_level = level;

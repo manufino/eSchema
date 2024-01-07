@@ -21,9 +21,14 @@ class LayerListView : public QListWidget {
 public:
     LayerListView(QWidget *parent = nullptr);
     void addLayer(Layer *layer);
+    void updateList();
+    void setAllVisibleOrHidden(bool isAllVisible);
 
 public slots:
-    void addLayerList(QList<Layer> *layerList);
+    void addLayerList(QList<Layer*> *layerList);
+
+private:
+
 };
 
 

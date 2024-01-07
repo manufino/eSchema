@@ -26,12 +26,13 @@ void LayerToolBarWidget::setMaster(Layer *layer)
     ui->comboBox->setMaster(layer);
 }
 
-void LayerToolBarWidget::setList(QList<Layer> *layerList)
+void LayerToolBarWidget::setList(QList<Layer*> *layerList)
 {
     ui->comboBox->addLayerList(layerList);
 }
 
 void LayerToolBarWidget::selectedChanged(int index)
 {
-    LayerList::getInstance().setMaster(index);
+    Q_UNUSED(index);
+    LayerList::getInstance().setMaster(ui->comboBox->currentIndex());
 }

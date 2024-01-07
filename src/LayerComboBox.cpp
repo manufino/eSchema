@@ -4,7 +4,7 @@ LayerComboBox::LayerComboBox(QWidget* parent)
     : QComboBox(parent)
 {
     setItemDelegate(new LayerItemDelegate(this));
-    QList<Layer> *la = LayerList::getInstance().getList();
+    QList<Layer*> *la = LayerList::getInstance().getList();
     addLayerList(la);
     connect(this, &QComboBox::currentIndexChanged,
     this, &LayerComboBox::currentIndexChanged);
@@ -21,19 +21,19 @@ void LayerComboBox::addLayer(const QString& testo, const QColor& colore)
         standardModel->insertRow(standardModel->rowCount(), item);
 }
 
-void LayerComboBox::addLayerList(QList<Layer> *list)
+void LayerComboBox::addLayerList(QList<Layer*> *list)
 {
     clear();
     layerList = list;
-    for(Layer layer: *list)
-        addLayer(layer.name(), QColor(layer.color()));
+    for(Layer *layer: *list)
+        addLayer(layer->name(), QColor(layer->color()));
 }
 
 void LayerComboBox::setMaster(Layer *layer)
 {
     int index = -1;
     for (int i = 0; i < layerList->size(); ++i) {
-        if (&layerList->at(i) == layer) {
+        if (layerList->at(i) == layer) {
             index = i;
             break;
         }
@@ -86,15 +86,15 @@ void LayerComboBox::currentIndexChanged(int index)
     emit layerSelectedChanged(currentIndex());
 }
 
-void LayerComboBox::layerListIsChanged(QList<Layer> *layerList)
+void LayerComboBox::layerListIsChanged(QList<Layer*> *layerList)
 {
     this->layerList = layerList;
 }
 
 bool LayerComboBox::layerNameIsUnique(QString name)
 {
-    for(Layer layer : *layerList)
-        if(layer.name() == name)
+    for(Layer *layer : *layerList)
+        if(layer->name() == name)
             return false;
 
     return true;
