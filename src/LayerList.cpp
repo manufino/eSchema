@@ -49,6 +49,17 @@ void LayerList::update()
     emit layerListChanged(layerList);
 }
 
+void LayerList::removeLayer(Layer *layer)
+{
+    int index = layerList->indexOf(layer);
+
+    if (index != -1) {
+        layerList->removeAt(index);
+        delete layer; // libero la memoria
+        emit layerListChanged(layerList);
+    }
+}
+
 void LayerList::setMaster(Layer* layer)
 {
     for (int i = 0; i < layerList->count(); i++)

@@ -23,6 +23,7 @@ public:
     void moveUp(Layer *layer);
     void moveDown(Layer *layer);
     void update();
+    void removeLayer(Layer *layer);
 
 public slots:
     void setMaster(Layer *layer);

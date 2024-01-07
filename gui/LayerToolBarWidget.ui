@@ -16,6 +16,12 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>180</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="font">
    <font>
     <family>Hack</family>
@@ -68,7 +74,14 @@
     </widget>
    </item>
    <item>
-    <widget class="LayerComboBox" name="comboBox"/>
+    <widget class="LayerComboBox" name="comboBox">
+     <property name="minimumSize">
+      <size>
+       <width>165</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
