@@ -8,15 +8,16 @@ LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : Q
     QHBoxLayout *layout = new QHBoxLayout(widget);
     layout->setContentsMargins(2, 0, 4, 0);
 
+    // mostra o dasconde il layer
     ButtonLayerHide *lickableIconLabel = new ButtonLayerHide(layer, widget);
     layout->addWidget(lickableIconLabel);
 
+    // colore del layer
     LayerColorPicker *colorPicker = new LayerColorPicker(layer, widget);
-    //colorPicker->setColor(layer->color());
-    //colorPicker->setFixedSize(25, 25);
     layout->addWidget(colorPicker);
 
-    LabelLayerName *label = new LabelLayerName(layer->name(), widget);
+    // nome del layer
+    LabelLayerName *label = new LabelLayerName(layer, widget);
     layout->addWidget(label);
 
     // solo nel layer master aggiungo l'icona

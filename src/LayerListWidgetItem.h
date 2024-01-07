@@ -7,7 +7,6 @@
 
 #include "Layer.h"
 #include "ButtonLayerHide.h"
-#include "ColorPicker.h"
 #include "LabelLayerName.h"
 #include "LayerColorPicker.h"
 

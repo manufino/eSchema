@@ -1,8 +1,11 @@
 #include "LabelLayerName.h"
 
-LabelLayerName::LabelLayerName(const QString &name, QWidget *parent) : QWidget(parent) {
+LabelLayerName::LabelLayerName(Layer *layer, QWidget *parent) : QWidget(parent)
+{
+    this->layer = layer;
+
     // Creazione di QLabel
-    label = new QLabel(name, this);
+    label = new QLabel(layer->name(), this);
     label->installEventFilter(this);
 
     // Creazione di QLineEdit
@@ -22,8 +25,10 @@ LabelLayerName::LabelLayerName(const QString &name, QWidget *parent) : QWidget(p
     connect(lineEdit, &QLineEdit::editingFinished, this, &LabelLayerName::lineEditEditingFinished);
 }
 
-bool LabelLayerName::eventFilter(QObject *obj, QEvent *event) {
-    if (obj == label && event->type() == QEvent::MouseButtonDblClick) {
+bool LabelLayerName::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == label && event->type() == QEvent::MouseButtonDblClick)
+    {
         // Doppio clic sulla QLabel
         lineEdit->setText(label->text());
         label->setVisible(false);
@@ -34,10 +39,13 @@ bool LabelLayerName::eventFilter(QObject *obj, QEvent *event) {
     return false;
 }
 
-void LabelLayerName::lineEditEditingFinished() {
+void LabelLayerName::lineEditEditingFinished()
+{
     // Chiamato quando l'editing della QLineEdit è terminato
     label->setText(lineEdit->text());
     label->setVisible(true);
+    layer->setName(lineEdit->text());
     lineEdit->setVisible(false);
+    LayerList::getInstance().update();
 }
 

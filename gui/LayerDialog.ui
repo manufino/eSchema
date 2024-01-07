@@ -73,6 +73,9 @@
          <height>30</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="toolTip">
         <string>Mostra tutti</string>
        </property>
@@ -104,6 +107,9 @@
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Nascondi tutti</string>
@@ -150,6 +156,9 @@
          <height>30</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="toolTip">
         <string>Sposta in alto</string>
        </property>
@@ -181,6 +190,9 @@
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Sposta in basso</string>
@@ -227,6 +239,9 @@
          <height>30</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="toolTip">
         <string>Aggiungi un layer</string>
        </property>
@@ -258,6 +273,9 @@
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Elimina selezionato</string>

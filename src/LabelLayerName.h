@@ -3,11 +3,13 @@
 
 #include <QtWidgets>
 #include <QObject>
+#include "Layer.h"
+#include "LayerList.h"
 
 class LabelLayerName : public QWidget {
     Q_OBJECT
 public:
-    LabelLayerName(const QString &name, QWidget *parent = nullptr);
+    LabelLayerName(Layer *layer, QWidget *parent = nullptr);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -18,6 +20,7 @@ private slots:
 private:
     QLabel *label;
     QLineEdit *lineEdit;
+    Layer *layer;
 };
 
 #endif // LABELLAYERNAME_H
