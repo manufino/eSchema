@@ -20,9 +20,8 @@ void LayerListView::updateList()
 void LayerListView::addLayerList(QList<Layer*> *layerList)
 {
     this->clear();
-    for (Layer *layer : *layerList) {
+    for (Layer *layer : *layerList)
         addLayer(layer);
-    }
 }
 
 Layer* LayerListView::getSelectedLayer()
@@ -33,11 +32,10 @@ Layer* LayerListView::getSelectedLayer()
 
     QListWidgetItem *selectedItem = currentItem();
 
-    if (selectedItem != nullptr && selectedItem->data(Qt::UserRole+5).isValid()) {
+    if (selectedItem != nullptr && selectedItem->data(Qt::UserRole+5).isValid())
         return qvariant_cast<Layer*>(selectedItem->data(Qt::UserRole+5));
-    } else {
-        return nullptr; // Nessun layer selezionato o dati non validi
-    }
+    else
+        return nullptr;
 }
 
 void LayerListView::setSelectedLayer(Layer *layer)

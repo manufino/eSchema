@@ -28,6 +28,5 @@ LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : Q
         nonClickableIconLabel->setFixedSize(28, 28);
         layout->addWidget(nonClickableIconLabel);
     }
-
     widget->setLayout(layout);
 }
