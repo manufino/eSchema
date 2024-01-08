@@ -1,5 +1,5 @@
-#ifndef BUTTONLAYERHIDE_H
-#define BUTTONLAYERHIDE_H
+#ifndef LAYERVISIBILITYBUTTON_H
+#define LAYERVISIBILITYBUTTON_H
 
 #include <QLabel>
 #include <QPixmap>
@@ -8,12 +8,12 @@
 #include "Layer.h"
 #include "LayerList.h"
 
-class ButtonLayerHide : public QLabel
+class LayerVisibilityButton : public QLabel
 {
     Q_OBJECT
 
 public:
-    explicit ButtonLayerHide(Layer * layer, QWidget *parent = nullptr);
+    explicit LayerVisibilityButton(Layer * layer, QWidget *parent = nullptr);
     void setStatus(bool status);
     bool getStatus() {return layerIsVisible;}
 
@@ -30,4 +30,4 @@ private:
     Layer *layer;
 };
 
-#endif // BUTTONLAYERHIDE_H
+#endif // LAYERVISIBILITYBUTTON_H

@@ -1,6 +1,6 @@
-#include "LabelLayerName.h"
+#include "LayerLabelName.h"
 
-LabelLayerName::LabelLayerName(Layer *layer, QWidget *parent) : QWidget(parent)
+LayerLabelName::LayerLabelName(Layer *layer, QWidget *parent) : QWidget(parent)
 {
     this->layer = layer;
 
@@ -22,16 +22,16 @@ LabelLayerName::LabelLayerName(Layer *layer, QWidget *parent) : QWidget(parent)
     layout->setStretch(1, 1);  // QLineEdit si espande
 
     setLayout(layout);
-    connect(lineEdit, &QLineEdit::editingFinished, this, &LabelLayerName::lineEditEditingFinished);
+    connect(lineEdit, &QLineEdit::editingFinished, this, &LayerLabelName::lineEditEditingFinished);
 }
 
-LabelLayerName::~LabelLayerName()
+LayerLabelName::~LayerLabelName()
 {
     delete lineEdit;
     delete label;
 }
 
-bool LabelLayerName::eventFilter(QObject *obj, QEvent *event)
+bool LayerLabelName::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == label && event->type() == QEvent::MouseButtonDblClick)
     {
@@ -45,7 +45,7 @@ bool LabelLayerName::eventFilter(QObject *obj, QEvent *event)
     return false;
 }
 
-void LabelLayerName::lineEditEditingFinished()
+void LayerLabelName::lineEditEditingFinished()
 {
     // Chiamato quando l'editing della QLineEdit è terminato
     label->setText(lineEdit->text());

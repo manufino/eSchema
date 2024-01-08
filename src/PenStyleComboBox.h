@@ -1,5 +1,5 @@
-#ifndef COMBOBOXPENSTYLE_H
-#define COMBOBOXPENSTYLE_H
+#ifndef PENSTYLECOMBOBOX_H
+#define PENSTYLECOMBOBOX_H
 
 #include <QWidget>
 #include <QComboBox>
@@ -28,13 +28,13 @@ public:
 };
 
 /****************************************/
-class ComboBoxPenStyle : public QComboBox
+class PenStyleComboBox : public QComboBox
 {
     Q_OBJECT
 
 public:
-    ComboBoxPenStyle(QWidget *parent = nullptr);
-    ~ComboBoxPenStyle();
+    PenStyleComboBox(QWidget *parent = nullptr);
+    ~PenStyleComboBox();
 
 public slots:
     void lineWidthChanged(qreal lineWidth);
@@ -51,4 +51,4 @@ private:
 };
 
 
-#endif // COMBOBOXPENSTYLE_H
+#endif // PENSTYLECOMBOBOX_H

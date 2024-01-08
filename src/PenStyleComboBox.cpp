@@ -1,4 +1,4 @@
-#include "ComboBoxPenStyle.h"
+#include "PenStyleComboBox.h"
 
 PenStyleDelegate::PenStyleDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
@@ -80,7 +80,7 @@ void PenStyleDelegate::drawItemText(QPainter *painter, const QRect &rect, int al
     Q_UNUSED(text);
 }
 
-ComboBoxPenStyle::ComboBoxPenStyle(QWidget *parent)
+PenStyleComboBox::PenStyleComboBox(QWidget *parent)
     : QComboBox(parent), lineWidth(1)
 {
     setView(new QListView());
@@ -93,16 +93,16 @@ ComboBoxPenStyle::ComboBoxPenStyle(QWidget *parent)
     view()->installEventFilter(new PenStyleDelegate(this));
 }
 
-ComboBoxPenStyle::~ComboBoxPenStyle()
+PenStyleComboBox::~PenStyleComboBox()
 {}
 
-void ComboBoxPenStyle::lineWidthChanged(qreal lineWidth)
+void PenStyleComboBox::lineWidthChanged(qreal lineWidth)
 {
     this->lineWidth = lineWidth;
     update();
 }
 
-void ComboBoxPenStyle::setupUi()
+void PenStyleComboBox::setupUi()
 {
     addItem("", QVariant(static_cast<int>(Qt::SolidLine)));
     addItem("", QVariant(static_cast<int>(Qt::DashLine)));
@@ -115,13 +115,13 @@ void ComboBoxPenStyle::setupUi()
     currentPen.setStyle(Qt::SolidLine);
 }
 
-void ComboBoxPenStyle::penStyleChanged(int index)
+void PenStyleComboBox::penStyleChanged(int index)
 {
     Qt::PenStyle style = static_cast<Qt::PenStyle>(itemData(index).toInt());
     currentPen.setStyle(style);
 }
 
-void ComboBoxPenStyle::paintEvent(QPaintEvent *event)
+void PenStyleComboBox::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 

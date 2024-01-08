@@ -84,7 +84,7 @@ void LayerDialog::addNewLayer()
 {
     QString ln = QString("%1").arg(ui->listWidget->count());
 
-    Layer *layer = new Layer("Nuovo layer " + ln, Utils::randomColor());
+    Layer *layer = new Layer("Nuovo layer " + ln, randomColor());
     LayerList::getInstance().addLayer(layer);
     ui->listWidget->updateList();
 }
@@ -94,4 +94,13 @@ bool LayerDialog::layerIsSelected()
     if(ui->listWidget->selectedItems().size() == 0)
         return false;
     else return true;
+}
+
+QColor LayerDialog::randomColor()
+{
+    int red = QRandomGenerator::global()->bounded(256);
+    int green = QRandomGenerator::global()->bounded(256);
+    int blue = QRandomGenerator::global()->bounded(256);
+
+    return QColor(red, green, blue);
 }

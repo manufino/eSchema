@@ -1,16 +1,16 @@
-#ifndef LABELLAYERNAME_H
-#define LABELLAYERNAME_H
+#ifndef LAYERLABELNAME_H
+#define LAYERLABELNAME_H
 
 #include <QtWidgets>
 #include <QObject>
 #include "Layer.h"
 #include "LayerList.h"
 
-class LabelLayerName : public QWidget {
+class LayerLabelName : public QWidget {
     Q_OBJECT
 public:
-    LabelLayerName(Layer *layer, QWidget *parent = nullptr);
-    ~LabelLayerName();
+    LayerLabelName(Layer *layer, QWidget *parent = nullptr);
+    ~LayerLabelName();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
@@ -24,4 +24,4 @@ private:
     Layer *layer;
 };
 
-#endif // LABELLAYERNAME_H
+#endif // LAYERLABELNAME_H

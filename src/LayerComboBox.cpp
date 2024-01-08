@@ -68,7 +68,7 @@ void LayerComboBox::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     QStyleOptionComboBox opt;
     initStyleOption(&opt);
-    //opt.rect = QRect(2, 2, width() - 22, 20);
+
     // Chiamiamo solo la parte di disegno della combobox che disegna il bordo, la freccia, ecc.
     style()->drawComplexControl(QStyle::CC_ComboBox, &opt, &painter, this);
 

@@ -13,13 +13,5 @@ namespace Utils {
         } else
             qDebug()<<"Tentativo di eliminare un puntatore nullo.";
     }
-
-    QColor randomColor() {
-        int red = QRandomGenerator::global()->bounded(256);
-        int green = QRandomGenerator::global()->bounded(256);
-        int blue = QRandomGenerator::global()->bounded(256);
-
-        return QColor(red, green, blue);
-    }
 }
 #endif // GLOBALUTILS_H

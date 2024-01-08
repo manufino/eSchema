@@ -5,7 +5,7 @@
 
 #include "Layer.h"
 #include "LayerListView.h"
-#include "GlobalUtils.h"
+
 
 namespace Ui {
 class LayerDialog;
@@ -29,6 +29,7 @@ public slots:
 
 private:
     bool layerIsSelected();
+    QColor randomColor();
 
 
 private:

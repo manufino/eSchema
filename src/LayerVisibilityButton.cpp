@@ -1,6 +1,6 @@
-#include "ButtonLayerHide.h"
+#include "LayerVisibilityButton.h"
 
-ButtonLayerHide::ButtonLayerHide(Layer * layer, QWidget *parent)
+LayerVisibilityButton::LayerVisibilityButton(Layer * layer, QWidget *parent)
     : QLabel(parent)
 {
     this->layer = layer;
@@ -19,7 +19,7 @@ ButtonLayerHide::ButtonLayerHide(Layer * layer, QWidget *parent)
     setText("");
 }
 
-void ButtonLayerHide::setStatus(bool status)
+void LayerVisibilityButton::setStatus(bool status)
 {
     if(status)
         setPixmap(images[0]);
@@ -30,7 +30,7 @@ void ButtonLayerHide::setStatus(bool status)
     LayerList::getInstance().setVisible(layer, layerIsVisible);
 }
 
-void ButtonLayerHide::mousePressEvent(QMouseEvent *event)
+void LayerVisibilityButton::mousePressEvent(QMouseEvent *event)
 {
     if(layer->isMaster())
         return;
@@ -41,7 +41,7 @@ void ButtonLayerHide::mousePressEvent(QMouseEvent *event)
     QLabel::mousePressEvent(event);
 }
 
-void ButtonLayerHide::mouseMoveEvent(QMouseEvent *ev)
+void LayerVisibilityButton::mouseMoveEvent(QMouseEvent *ev)
 {
     Q_UNUSED(ev);
     if(layer->isMaster())

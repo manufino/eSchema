@@ -9,7 +9,7 @@ LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : Q
     layout->setContentsMargins(2, 0, 4, 0);
 
     // mostra o dasconde il layer
-    ButtonLayerHide *lickableIconLabel = new ButtonLayerHide(layer, widget);
+    LayerVisibilityButton *lickableIconLabel = new LayerVisibilityButton(layer, widget);
     layout->addWidget(lickableIconLabel);
 
     // colore del layer
@@ -17,7 +17,7 @@ LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : Q
     layout->addWidget(colorPicker);
 
     // nome del layer
-    LabelLayerName *label = new LabelLayerName(layer, widget);
+    LayerLabelName *label = new LayerLabelName(layer, widget);
     layout->addWidget(label);
 
     // solo nel layer master aggiungo l'icona

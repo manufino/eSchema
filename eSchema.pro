@@ -17,19 +17,19 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
-	src/ButtonLayerHide.cpp \
 	src/ColorPicker.cpp \
-	src/ComboBoxPenStyle.cpp \
 	src/GraphicsPrimitive.cpp \
-	src/LabelLayerName.cpp \
 	src/LayerColorPicker.cpp \
 	src/LayerDialog.cpp \
 	src/LayerComboBox.cpp \
 	src/LayerItemDelegate.cpp \
+	src/LayerLabelName.cpp \
 	src/LayerList.cpp \
 	src/LayerListView.cpp \
 	src/LayerListWidgetItem.cpp \
 	src/LayerToolBarWidget.cpp \
+	src/LayerVisibilityButton.cpp \
+	src/PenStyleComboBox.cpp \
 	src/SettingsManager.cpp \
 	src/AboutDialog.cpp \
 	src/ShortcutsDialog.cpp \
@@ -42,21 +42,21 @@ SOURCES += \
 	src/ToolBarPrimitive.cpp
 
 HEADERS += \
-	src/ButtonLayerHide.h \
 	src/ColorPicker.h \
-	src/ComboBoxPenStyle.h \
 	src/GlobalUtils.h \
 	src/GraphicsPrimitive.h \
-	src/LabelLayerName.h \
 	src/Layer.h \
 	src/LayerColorPicker.h \
 	src/LayerItemDelegate.h \
+	src/LayerLabelName.h \
 	src/LayerList.h \
 	src/LayerListView.h \
 	src/LayerListWidgetItem.h \
 	src/LayerToolBarWidget.h \
+	src/LayerVisibilityButton.h \
 	src/LinkLabel.h \
 	src/LayerDialog.h \
+	src/PenStyleComboBox.h \
 	src/SettingsManager.h \
 	src/LayerComboBox.h \
 	src/AboutDialog.h \

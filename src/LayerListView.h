@@ -12,8 +12,8 @@
 #include "Layer.h"
 #include "ColorPicker.h"
 #include "LayerList.h"
-#include "ButtonLayerHide.h"
-#include "LabelLayerName.h"
+#include "LayerVisibilityButton.h"
+#include "LayerLabelName.h"
 #include "LayerListWidgetItem.h"
 
 
