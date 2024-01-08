@@ -25,6 +25,12 @@ LabelLayerName::LabelLayerName(Layer *layer, QWidget *parent) : QWidget(parent)
     connect(lineEdit, &QLineEdit::editingFinished, this, &LabelLayerName::lineEditEditingFinished);
 }
 
+LabelLayerName::~LabelLayerName()
+{
+    delete lineEdit;
+    delete label;
+}
+
 bool LabelLayerName::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == label && event->type() == QEvent::MouseButtonDblClick)

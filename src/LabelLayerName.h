@@ -10,6 +10,7 @@ class LabelLayerName : public QWidget {
     Q_OBJECT
 public:
     LabelLayerName(Layer *layer, QWidget *parent = nullptr);
+    ~LabelLayerName();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

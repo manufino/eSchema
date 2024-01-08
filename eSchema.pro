@@ -45,6 +45,7 @@ HEADERS += \
 	src/ButtonLayerHide.h \
 	src/ColorPicker.h \
 	src/ComboBoxPenStyle.h \
+	src/GlobalUtils.h \
 	src/GraphicsPrimitive.h \
 	src/LabelLayerName.h \
 	src/Layer.h \

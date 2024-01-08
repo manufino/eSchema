@@ -16,10 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));
 
     layWidget = new LayerToolBarWidget(this);
-    ui->toolBarTools->addWidget(layWidget);
+    ui->toolBarTools->addWidget(layWidget); // aggiungo la layer combobox alla toolbar
 
     scene = new Sheet();
-    scene->setSceneRect(0,0,5000,5000);
+    scene->setSceneRect(0,0,5000,5000); // fisso le dimensioni della scena
 
     ////
     QGraphicsRectItem *recti = new QGraphicsRectItem(100,100,100,100);
@@ -33,6 +33,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->graphicsView->setScene(scene);
 
+    setConnections();
+}
+
+MainWindow::~MainWindow()
+{
+    Utils::DeleteSafely(scene);
+    Utils::DeleteSafely(layWidget);
+    Utils::DeleteSafely(ui);
+}
+
+void MainWindow::setConnections()
+{
     connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::sceneMousePos);
     connect(ui->actionOptions, &QAction::triggered, this, &MainWindow::clickOptionAction);
     connect(ui->actionInformation, &QAction::triggered, this, &MainWindow::clickAboutAction);
@@ -42,39 +54,33 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
     connect(ui->DSpinBoxLineHeight, &QSpinBox::valueChanged, ui->cbPropLineStyle, &ComboBoxPenStyle::lineWidthChanged);
-/*connect(layWidget,
-    &LayerToolBarWidget::layerSelectedChanged,
-    &LayerList::getInstance(),
-    &LayerList::setMaster);*/
 
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
 }
 
 void MainWindow::clickOptionAction()
 {
     optionDialog = new OptionsDialog(this);
+    connect(optionDialog, &QDialog::finished, optionDialog, &QObject::deleteLater);
     optionDialog->show();
 }
 
 void MainWindow::clickAboutAction()
 {
     aboutDialog = new AboutDialog(this);
+    connect(aboutDialog, &QDialog::finished, aboutDialog, &QObject::deleteLater);
     aboutDialog->show();
 }
 
 void MainWindow::clickShortcutsAction()
 {
     shortcutsDialog = new ShortcutsDialog(this);
+    connect(shortcutsDialog, &QDialog::finished, shortcutsDialog, &QObject::deleteLater);
     shortcutsDialog->show();
 }
 
 void MainWindow::clickLayerManagerAction()
 {
     layerManager = new LayerDialog(this);
+    connect(layerManager, &QDialog::finished, layerManager, &QObject::deleteLater);
     layerManager->show();
 }
-
