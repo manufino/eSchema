@@ -18,9 +18,12 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
 	src/ColorPicker.cpp \
+	src/DialogAbout.cpp \
+	src/DialogLayerList.cpp \
+	src/DialogOptions.cpp \
+	src/DialogShortcuts.cpp \
 	src/GraphicsPrimitive.cpp \
 	src/LayerColorPicker.cpp \
-	src/LayerDialog.cpp \
 	src/LayerComboBox.cpp \
 	src/LayerItemDelegate.cpp \
 	src/LayerLabelName.cpp \
@@ -31,11 +34,8 @@ SOURCES += \
 	src/LayerVisibilityButton.cpp \
 	src/PenStyleComboBox.cpp \
 	src/SettingsManager.cpp \
-	src/AboutDialog.cpp \
-	src/ShortcutsDialog.cpp \
 	src/main.cpp \
 	src/MainWindow.cpp \
-	src/OptionsDialog.cpp \
 	src/Sheet.cpp \
 	src/SheetView.cpp \
     src/StatusBar.cpp \
@@ -43,6 +43,10 @@ SOURCES += \
 
 HEADERS += \
 	src/ColorPicker.h \
+	src/DialogAbout.h \
+	src/DialogLayerList.h \
+	src/DialogOptions.h \
+	src/DialogShortcuts.h \
 	src/GlobalUtils.h \
 	src/GraphicsPrimitive.h \
 	src/Layer.h \
@@ -55,26 +59,22 @@ HEADERS += \
 	src/LayerToolBarWidget.h \
 	src/LayerVisibilityButton.h \
 	src/LinkLabel.h \
-	src/LayerDialog.h \
 	src/PenStyleComboBox.h \
 	src/SettingsManager.h \
 	src/LayerComboBox.h \
-	src/AboutDialog.h \
 	src/MainWindow.h \
-    src/OptionsDialog.h \
     src/Sheet.h \
     src/SheetView.h \
-	src/ShortcutsDialog.h \
 	src/StatusBar.h \
 	src/ToolBarPrimitive.h
 
 FORMS += \
-	gui/LayerDialog.ui \
-	gui/AboutDialog.ui \
+	gui/DialogAbout.ui \
+	gui/DialogLayerList.ui \
+	gui/DialogOptions.ui \
+	gui/DialogShortcuts.ui \
     gui/MainWindow.ui \
-	gui/OptionsDialog.ui \
-	gui/LayerToolBarWidget.ui \
-	gui/ShortcutsDialog.ui
+	gui/LayerToolBarWidget.ui
 
 RESOURCES += resources.qrc
 

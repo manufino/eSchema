@@ -1,5 +1,5 @@
-#ifndef OPTIONSDIALOG_H
-#define OPTIONSDIALOG_H
+#ifndef DIALOGOPTIONS_H
+#define DIALOGOPTIONS_H
 
 #include <QDialog>
 #include <QMessageBox>
@@ -7,16 +7,16 @@
 #include "SettingsManager.h"
 
 namespace Ui {
-class OptionsDialog;
+class DialogOptions;
 }
 
-class OptionsDialog : public QDialog
+class DialogOptions : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit OptionsDialog(QWidget *parent = nullptr);
-    ~OptionsDialog();
+    explicit DialogOptions(QWidget *parent = nullptr);
+    ~DialogOptions();
 
 protected:
     void loadSettings();
@@ -29,7 +29,7 @@ public slots:
     void restore();
 
 private:
-    Ui::OptionsDialog *ui;
+    Ui::DialogOptions *ui;
 };
 
-#endif // OPTIONSDIALOG_H
+#endif // DIALOGOPTIONS_H

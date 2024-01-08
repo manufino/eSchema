@@ -1,9 +1,9 @@
-#include "LayerDialog.h"
-#include "ui_LayerDialog.h"
+#include "DialogLayerList.h"
+#include "ui_DialogLayerList.h"
 
-LayerDialog::LayerDialog(QWidget *parent) :
+DialogLayerList::DialogLayerList(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::LayerDialog)
+    ui(new Ui::DialogLayerList)
 {
     ui->setupUi(this);
 
@@ -15,25 +15,25 @@ LayerDialog::LayerDialog(QWidget *parent) :
     ui->btnSetAllHidden->setProperty("class", "layoutLayerListButton");
 
     connect(ui->btnAddNewLayer, &QPushButton::clicked,
-            this, &LayerDialog::addNewLayer);
+            this, &DialogLayerList::addNewLayer);
     connect(ui->btnDeleteLayer, &QPushButton::clicked,
-            this, &LayerDialog::deleteCurrent);
+            this, &DialogLayerList::deleteCurrent);
     connect(ui->btnLayerLevelUp, &QPushButton::clicked,
-            this, &LayerDialog::levelUp);
+            this, &DialogLayerList::levelUp);
     connect(ui->btnLayerLevelDown, &QPushButton::clicked,
-            this, &LayerDialog::levelDown);
+            this, &DialogLayerList::levelDown);
     connect(ui->btnSetAllVisible, &QPushButton::clicked,
-            this, &LayerDialog::setAllVisible);
+            this, &DialogLayerList::setAllVisible);
     connect(ui->btnSetAllHidden, &QPushButton::clicked,
-            this, &LayerDialog::setAllHidden);
+            this, &DialogLayerList::setAllHidden);
 }
 
-LayerDialog::~LayerDialog()
+DialogLayerList::~DialogLayerList()
 {
     delete ui;
 }
 
-void LayerDialog::levelUp()
+void DialogLayerList::levelUp()
 {
     if(layerIsSelected())
     {
@@ -44,7 +44,7 @@ void LayerDialog::levelUp()
     }
 }
 
-void LayerDialog::levelDown()
+void DialogLayerList::levelDown()
 {
     if(layerIsSelected())
     {
@@ -55,19 +55,19 @@ void LayerDialog::levelDown()
     }
 }
 
-void LayerDialog::setAllVisible()
+void DialogLayerList::setAllVisible()
 {
     LayerList::getInstance().setAllVisibleOrHidden(true);
     ui->listWidget->updateList();
 }
 
-void LayerDialog::setAllHidden()
+void DialogLayerList::setAllHidden()
 {
     LayerList::getInstance().setAllVisibleOrHidden(false);
     ui->listWidget->updateList();
 }
 
-void LayerDialog::deleteCurrent()
+void DialogLayerList::deleteCurrent()
 {
     if(layerIsSelected())
     {
@@ -80,7 +80,7 @@ void LayerDialog::deleteCurrent()
     }
 }
 
-void LayerDialog::addNewLayer()
+void DialogLayerList::addNewLayer()
 {
     QString ln = QString("%1").arg(ui->listWidget->count());
 
@@ -89,14 +89,14 @@ void LayerDialog::addNewLayer()
     ui->listWidget->updateList();
 }
 
-bool LayerDialog::layerIsSelected()
+bool DialogLayerList::layerIsSelected()
 {
     if(ui->listWidget->selectedItems().size() == 0)
         return false;
     else return true;
 }
 
-QColor LayerDialog::randomColor()
+QColor DialogLayerList::randomColor()
 {
     int red = QRandomGenerator::global()->bounded(256);
     int green = QRandomGenerator::global()->bounded(256);

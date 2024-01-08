@@ -1,5 +1,5 @@
-#ifndef LAYERDIALOG_H
-#define LAYERDIALOG_H
+#ifndef DIALOGLAYERLIST_H
+#define DIALOGLAYERLIST_H
 
 #include <QDialog>
 
@@ -8,16 +8,16 @@
 
 
 namespace Ui {
-class LayerDialog;
+class DialogLayerList;
 }
 
-class LayerDialog : public QDialog
+class DialogLayerList : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit LayerDialog(QWidget *parent = nullptr);
-    ~LayerDialog();
+    explicit DialogLayerList(QWidget *parent = nullptr);
+    ~DialogLayerList();
 
 public slots:
     void levelUp();
@@ -33,7 +33,7 @@ private:
 
 
 private:
-    Ui::LayerDialog *ui;
+    Ui::DialogLayerList *ui;
 };
 
-#endif // LAYERDIALOG_H
+#endif // DIALOGLAYERLIST_H

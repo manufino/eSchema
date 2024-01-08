@@ -1,27 +1,27 @@
-#include "OptionsDialog.h"
-#include "ui_OptionsDialog.h"
+#include "DialogOptions.h"
+#include "ui_DialogOptions.h"
 
-OptionsDialog::OptionsDialog(QWidget *parent) :
+DialogOptions::DialogOptions(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::OptionsDialog)
+    ui(new Ui::DialogOptions)
 {
     ui->setupUi(this);
     this->setModal(true);
 
-    connect(ui->btnOK, &QPushButton::clicked, this, &OptionsDialog::accept);
-    connect(ui->btnCancel, &QPushButton::clicked, this, &OptionsDialog::cancel);
-    connect(ui->btnApply, &QPushButton::clicked, this, &OptionsDialog::apply);
-    connect(ui->btnRestore, &QPushButton::clicked, this, &OptionsDialog::restore);
+    connect(ui->btnOK, &QPushButton::clicked, this, &DialogOptions::accept);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &DialogOptions::cancel);
+    connect(ui->btnApply, &QPushButton::clicked, this, &DialogOptions::apply);
+    connect(ui->btnRestore, &QPushButton::clicked, this, &DialogOptions::restore);
 
     loadSettings();
 }
 
-OptionsDialog::~OptionsDialog()
+DialogOptions::~DialogOptions()
 {
     delete ui;
 }
 
-void OptionsDialog::loadSettings()
+void DialogOptions::loadSettings()
 {
     QVariant val = SettingsManager::getInstance().loadSetting("grid_step");
     ui->spinGridStep->setValue(val.toInt());
@@ -54,7 +54,7 @@ void OptionsDialog::loadSettings()
     ui->cboxGridType->setCurrentText(val.toString());
 }
 
-void OptionsDialog::saveSettings()
+void DialogOptions::saveSettings()
 {
     SettingsManager::getInstance().saveSetting("grid_type", ui->cboxGridType->currentText());
     SettingsManager::getInstance().saveSetting("grid_step", ui->spinGridStep->value());
@@ -68,23 +68,23 @@ void OptionsDialog::saveSettings()
     SettingsManager::getInstance().saveSetting("mm_step", ui->doubleSpinStep_mm->value());
 }
 
-void OptionsDialog::accept()
+void DialogOptions::accept()
 {
     apply();
     close();
 }
 
-void OptionsDialog::cancel()
+void DialogOptions::cancel()
 {
     close();
 }
 
-void OptionsDialog::apply()
+void DialogOptions::apply()
 {
     saveSettings();
 }
 
-void OptionsDialog::restore()
+void DialogOptions::restore()
 {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Attenzione !",

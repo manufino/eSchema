@@ -8,15 +8,15 @@
 
 #include "SheetView.h"
 #include "Sheet.h"
-#include "OptionsDialog.h"
-#include "AboutDialog.h"
+#include "DialogOptions.h"
+#include "DialogAbout.h"
 #include "LayerComboBox.h"
 #include "SettingsManager.h"
 #include "Layer.h"
 #include "LayerList.h"
 #include "LayerToolBarWidget.h"
-#include "LayerDialog.h"
-#include "ShortcutsDialog.h"
+#include "DialogLayerList.h"
+#include "DialogShortcuts.h"
 #include "GlobalUtils.h"
 
 
@@ -44,10 +44,10 @@ private:
 private:
     Ui::MainWindow *ui;
     Sheet *scene;
-    OptionsDialog *optionDialog;
-    AboutDialog *aboutDialog;
-    LayerDialog *layerManager;
-    ShortcutsDialog *shortcutsDialog;
+    DialogOptions *optionDialog;
+    DialogAbout *aboutDialog;
+    DialogLayerList *layerManager;
+    DialogShortcuts *shortcutsDialog;
     LayerToolBarWidget *layWidget;
 
 };

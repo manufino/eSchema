@@ -1,9 +1,9 @@
-#include "AboutDialog.h"
-#include "ui_AboutDialog.h"
+#include "DialogAbout.h"
+#include "ui_DialogAbout.h"
 
-AboutDialog::AboutDialog(QWidget *parent) :
+DialogAbout::DialogAbout(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::AboutDialog)
+    ui(new Ui::DialogAbout)
 {
     ui->setupUi(this);
     this->setModal(true);
@@ -18,7 +18,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     ui->lblDaFont->setLink("dafont.com", QUrl("https://www.dafont.com/"));
 }
 
-AboutDialog::~AboutDialog()
+DialogAbout::~DialogAbout()
 {
     delete ui;
 }

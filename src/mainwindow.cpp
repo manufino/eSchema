@@ -59,28 +59,28 @@ void MainWindow::setConnections()
 
 void MainWindow::clickOptionAction()
 {
-    optionDialog = new OptionsDialog(this);
+    optionDialog = new DialogOptions(this);
     connect(optionDialog, &QDialog::finished, optionDialog, &QObject::deleteLater);
     optionDialog->show();
 }
 
 void MainWindow::clickAboutAction()
 {
-    aboutDialog = new AboutDialog(this);
+    aboutDialog = new DialogAbout(this);
     connect(aboutDialog, &QDialog::finished, aboutDialog, &QObject::deleteLater);
     aboutDialog->show();
 }
 
 void MainWindow::clickShortcutsAction()
 {
-    shortcutsDialog = new ShortcutsDialog(this);
+    shortcutsDialog = new DialogShortcuts(this);
     connect(shortcutsDialog, &QDialog::finished, shortcutsDialog, &QObject::deleteLater);
     shortcutsDialog->show();
 }
 
 void MainWindow::clickLayerManagerAction()
 {
-    layerManager = new LayerDialog(this);
+    layerManager = new DialogLayerList(this);
     connect(layerManager, &QDialog::finished, layerManager, &QObject::deleteLater);
     layerManager->show();
 }
