@@ -82,13 +82,9 @@ void LayerDialog::deleteCurrent()
 
 void LayerDialog::addNewLayer()
 {
-    int red = QRandomGenerator::global()->bounded(256);
-    int green = QRandomGenerator::global()->bounded(256);
-    int blue = QRandomGenerator::global()->bounded(256);
-
     QString ln = QString("%1").arg(ui->listWidget->count());
 
-    Layer *layer = new Layer("Nuovo layer " + ln, QColor(red, green, blue));
+    Layer *layer = new Layer("Nuovo layer " + ln, Utils::randomColor());
     LayerList::getInstance().addLayer(layer);
     ui->listWidget->updateList();
 }

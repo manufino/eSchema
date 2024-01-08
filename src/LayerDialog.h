@@ -2,10 +2,10 @@
 #define LAYERDIALOG_H
 
 #include <QDialog>
-#include <QRandomGenerator>
 
 #include "Layer.h"
 #include "LayerListView.h"
+#include "GlobalUtils.h"
 
 namespace Ui {
 class LayerDialog;
