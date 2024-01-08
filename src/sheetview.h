@@ -12,6 +12,7 @@
 
 #include "Sheet.h"
 #include "SettingsManager.h"
+#include "GlobalUtils.h"
 
 #define ZOOM_SCALE_MIN 0.3// Scala minima consentita
 #define ZOOM_SCALE_MAX 15.0// Scala massima consentita
@@ -50,16 +51,13 @@ signals:
     void mousePosChanged();
 
 private:
-    int m_originX, m_originY;
-    int gridSize, gridMarkSize, zoomLevel;
+    int m_originX, m_originY, gridSize, gridMarkSize, zoomLevel;
     float lineGridWidth, lineThickGridWidth;
     bool gridEnabled;
     QColor lineGridColor, lineThickGridColor, dotsGridColor, backgroundColor;
-    QPoint point;
+    QPoint point, origin, originSelection;
     QRubberBand *rubberBand;
-    QPoint origin;
-    QString gridType;
-    QPoint  originSelection;
+    Utils::GridType gridType;
 };
 
 #endif // SHEETVIEW_H

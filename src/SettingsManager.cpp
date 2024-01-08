@@ -38,7 +38,7 @@ void SettingsManager::restoreDefaultSettings()
     // GRIGLIA
     saveSetting("grid_step", 10);
     saveSetting("mm_step", 1.27);
-    saveSetting("grid_type", "LINEE+PUNTI");
+    saveSetting("grid_type", 0);
     saveSetting("grid_step_mark", 50);
     saveSetting("grid_line_width", 0.20);
     saveSetting("grid_line_mark_width", 0.20);

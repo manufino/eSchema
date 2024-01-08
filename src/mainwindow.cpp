@@ -7,10 +7,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     LayerList::getInstance().addLayer(new Layer("Layer 0", QColor("black"), true));
-    LayerList::getInstance().addLayer("Quote", QColor("cyan"));
-    LayerList::getInstance().addLayer("Forature", QColor("red"));
-    LayerList::getInstance().addLayer("Ingombro", QColor("blue"));
-    LayerList::getInstance().addLayer("ASSI", QColor("yellow"));
 
     ui->setupUi(this);
     setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));

@@ -51,12 +51,18 @@ void DialogOptions::loadSettings()
     ui->doubleSpinStep_mm->setValue(val.toDouble());
 
     val = SettingsManager::getInstance().loadSetting("grid_type");
-    ui->cboxGridType->setCurrentText(val.toString());
+    ui->cboxGridType->setCurrentIndex(val.toInt());
+
+    val = SettingsManager::getInstance().loadSetting("library_directory");
+    ui->txtLibPath->setText(val.toString());
+
+    val = SettingsManager::getInstance().loadSetting("stylesheet_directory");
+    ui->txtStylesheetPath->setText(val.toString());
 }
 
 void DialogOptions::saveSettings()
 {
-    SettingsManager::getInstance().saveSetting("grid_type", ui->cboxGridType->currentText());
+    SettingsManager::getInstance().saveSetting("grid_type", ui->cboxGridType->currentIndex());
     SettingsManager::getInstance().saveSetting("grid_step", ui->spinGridStep->value());
     SettingsManager::getInstance().saveSetting("grid_line_width", ui->doubleSpinGridLineWidth->value());
     SettingsManager::getInstance().saveSetting("grid_line_mark_width", ui->doubleSpinGridLineMarkWidth->value());
@@ -66,6 +72,8 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("background_color", ui->lblBackColor->getColor().name());
     SettingsManager::getInstance().saveSetting("grid_step_mark", ui->spinGridLineMarkStep->value());
     SettingsManager::getInstance().saveSetting("mm_step", ui->doubleSpinStep_mm->value());
+    SettingsManager::getInstance().saveSetting("library_directory", ui->txtLibPath->text());
+    SettingsManager::getInstance().saveSetting("stylesheet_directory", ui->txtStylesheetPath->text());
 }
 
 void DialogOptions::accept()

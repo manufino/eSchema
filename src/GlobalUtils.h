@@ -7,6 +7,12 @@
 
 class Utils {
 public:
+    typedef enum {
+        LinesAndDots,
+        Dots,
+        Lines
+    } GridType;
+
     static Utils& instance()
     {
         static Utils instance; // Garantisce l'istanza singola
@@ -28,8 +34,11 @@ public:
     template<typename T>
     void DeleteSafely(T*& ptr)
     {
-        if(ptr) {
-            delete ptr;
+        if (ptr) {
+            if constexpr (std::is_array_v<T>)
+                delete[] ptr;
+            else delete ptr;
+
             ptr = nullptr;
         } else
             qDebug() << "[DeleteSafely]: Attempting to delete a null pointer.";
