@@ -84,7 +84,7 @@ void DialogLayerList::addNewLayer()
 {
     QString ln = QString("%1").arg(ui->listWidget->count());
 
-    Layer *layer = new Layer("Nuovo layer " + ln, randomColor());
+    Layer *layer = new Layer("Nuovo layer " + ln);
     LayerList::getInstance().addLayer(layer);
     ui->listWidget->updateList();
 }

@@ -6,7 +6,6 @@
 #include "Layer.h"
 #include "LayerListView.h"
 
-
 namespace Ui {
 class DialogLayerList;
 }

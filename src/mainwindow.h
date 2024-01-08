@@ -43,12 +43,12 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    Sheet *scene;
+    Sheet *sheetScene;
     DialogOptions *optionDialog;
     DialogAbout *aboutDialog;
     DialogLayerList *layerManager;
     DialogShortcuts *shortcutsDialog;
-    LayerToolBarWidget *layWidget;
+    LayerToolBarWidget *layerToolBarWidget;
 
 };
 #endif // MAINWINDOW_H

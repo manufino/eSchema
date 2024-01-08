@@ -14,12 +14,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));
+    
+    layerToolBarWidget = new LayerToolBarWidget(this);
+    ui->toolBarTools->addWidget(layerToolBarWidget); // aggiungo la layer combobox alla toolbar
 
-    layWidget = new LayerToolBarWidget(this);
-    ui->toolBarTools->addWidget(layWidget); // aggiungo la layer combobox alla toolbar
-
-    scene = new Sheet();
-    scene->setSceneRect(0,0,5000,5000); // fisso le dimensioni della scena
+    sheetScene = new Sheet();
+    sheetScene->setSceneRect(0,0,5000,5000); // fisso le dimensioni della scena
 
     ////
     QGraphicsRectItem *recti = new QGraphicsRectItem(100,100,100,100);
@@ -27,20 +27,20 @@ MainWindow::MainWindow(QWidget *parent)
                 QGraphicsItem::ItemIsMovable |
                 QGraphicsItem::ItemSendsGeometryChanges);
     recti->setPen(QPen(QColor("red")));
-    scene->addItem(recti);
-    scene->addRect(10,10,100,100,QPen(QColor("black"), 2));
+    sheetScene->addItem(recti);
+    sheetScene->addRect(10,10,100,100,QPen(QColor("black"), 2));
     ////
 
-    ui->graphicsView->setScene(scene);
+    ui->graphicsView->setScene(sheetScene);
 
     setConnections();
 }
 
 MainWindow::~MainWindow()
 {
-    Utils::DeleteSafely(scene);
-    Utils::DeleteSafely(layWidget);
-    Utils::DeleteSafely(ui);
+    Utils::instance().DeleteSafely(sheetScene);
+    Utils::instance().DeleteSafely(layerToolBarWidget);
+    Utils::instance().DeleteSafely(ui);
 }
 
 void MainWindow::setConnections()
