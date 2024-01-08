@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));
     
     layerToolBarWidget = new LayerToolBarWidget(this);
-    ui->toolBarTools->addWidget(layerToolBarWidget); // aggiungo la layer combobox alla toolbar
+    ui->toolBarTools->addWidget(layerToolBarWidget); // aggiungo il layer combobox alla toolbar
 
     sheetScene = new Sheet();
     sheetScene->setSceneRect(0,0,5000,5000); // fisso le dimensioni della scena

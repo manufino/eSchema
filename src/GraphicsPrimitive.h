@@ -8,6 +8,21 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QApplication>
 
+#include "Sheet.h"
+#include "SettingsManager.h"
+
+
+typedef enum {
+    Line,
+    Rectangle,
+    Text,
+    Polyline,
+    Ellipse,
+    Bezier,
+    Spline,
+    Pad,
+    PartLib
+} PrimitiveTypes;
 
 class GraphicsPrimitive : public QObject, public QGraphicsItem
 {
@@ -18,25 +33,24 @@ public:
     explicit GraphicsPrimitive(QGraphicsItem *parent = nullptr);
     ~GraphicsPrimitive();
 
+    virtual QRectF boundingRect() const = 0;
+
 protected:
+    void keyPressEvent(QKeyEvent *event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     QVariant itemChange(GraphicsItemChange change,
                         const QVariant &value);
 
 signals:
 
 public slots:
-    // setta la dimensione della griglia
     void gridSizeChanged(int gridSize);
-
-    // attiva o disattiva il snap sulla griglia
     void snapEnableChanged(bool snap);
-
-    // setta lo stile della penna
     void penStyleIsChanged(Qt::PenStyle penStyle);
 
 
 private:
-    int gridSize;
+    int gridSize, penSize;
     Qt::PenStyle penStyle;
     bool snapEnable;
 };

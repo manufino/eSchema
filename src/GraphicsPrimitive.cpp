@@ -1,8 +1,5 @@
 #include "GraphicsPrimitive.h"
 
-#include "Sheet.h"
-#include "SettingsManager.h"
-
 GraphicsPrimitive::GraphicsPrimitive(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
     gridSize = SettingsManager::getInstance().loadSetting("grid_step").toInt();
@@ -17,9 +14,19 @@ GraphicsPrimitive::GraphicsPrimitive(QGraphicsItem *parent) : QGraphicsItem(pare
 GraphicsPrimitive::~GraphicsPrimitive()
 {}
 
+void GraphicsPrimitive::keyPressEvent(QKeyEvent *event)
+{
+
+}
+
+void GraphicsPrimitive::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+
+}
+
 QVariant GraphicsPrimitive::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    if (change == ItemPositionChange && scene()) {
+    if (change == ItemPositionChange && scene() && snapEnable) {
         QPointF newPos = value.toPointF();
         if(QApplication::mouseButtons() == Qt::LeftButton &&
                 qobject_cast<Sheet*> (scene())){

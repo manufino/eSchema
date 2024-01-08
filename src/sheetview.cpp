@@ -44,7 +44,7 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     painter->setPen(myPen);
     painter->drawRect(rect);
 
-    //if(gridType == "LINEE+PUNTI" || gridType == "LINEE")
+    // LINEE+PUNTI o LINEE
     if(gridType == Utils::GridType::LinesAndDots || gridType == Utils::GridType::Lines)
     {
         QVarLengthArray<QLineF, 100> lines;
@@ -69,7 +69,7 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
         painter->drawLines(thickLines.data(), thickLines.size());
     }
 
-    //if(gridType == "PUNTI" || gridType == "LINEE+PUNTI")
+    // PUNTI o LINEE+PUNTI
     if(gridType == Utils::GridType::Dots || gridType == Utils::GridType::LinesAndDots)
     {
         painter->setPen(dotsGridColor);
