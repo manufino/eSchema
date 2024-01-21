@@ -22,7 +22,9 @@ SOURCES += \
 	src/DialogLayerList.cpp \
 	src/DialogOptions.cpp \
 	src/DialogShortcuts.cpp \
+	src/GraphicsItemResizer.cpp \
 	src/GraphicsPrimitive.cpp \
+	src/HandlerStrategies.cpp \
 	src/LayerColorPicker.cpp \
 	src/LayerComboBox.cpp \
 	src/LayerItemDelegate.cpp \
@@ -32,7 +34,9 @@ SOURCES += \
 	src/LayerListWidgetItem.cpp \
 	src/LayerToolBarWidget.cpp \
 	src/LayerVisibilityButton.cpp \
+	src/ObjectProperties.cpp \
 	src/PenStyleComboBox.cpp \
+	src/ResizeHandleItem.cpp \
 	src/SettingsManager.cpp \
 	src/main.cpp \
 	src/MainWindow.cpp \
@@ -48,7 +52,9 @@ HEADERS += \
 	src/DialogOptions.h \
 	src/DialogShortcuts.h \
 	src/GlobalUtils.h \
+	src/GraphicsItemResizer.h \
 	src/GraphicsPrimitive.h \
+	src/HandlerStrategies.h \
 	src/Layer.h \
 	src/LayerColorPicker.h \
 	src/LayerItemDelegate.h \
@@ -59,7 +65,9 @@ HEADERS += \
 	src/LayerToolBarWidget.h \
 	src/LayerVisibilityButton.h \
 	src/LinkLabel.h \
+	src/ObjectProperties.h \
 	src/PenStyleComboBox.h \
+	src/ResizeHandleItem.h \
 	src/SettingsManager.h \
 	src/LayerComboBox.h \
 	src/MainWindow.h \

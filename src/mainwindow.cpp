@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-
+#include "GraphicsItemResizer.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,15 +17,35 @@ MainWindow::MainWindow(QWidget *parent)
     sheetScene = new Sheet();
     sheetScene->setSceneRect(0,0,5000,5000); // fisso le dimensioni della scena
 
-    ////
-    QGraphicsRectItem *recti = new QGraphicsRectItem(100,100,100,100);
-    recti->setFlags(QGraphicsItem::ItemIsSelectable |
-                QGraphicsItem::ItemIsMovable |
-                QGraphicsItem::ItemSendsGeometryChanges);
-    recti->setPen(QPen(QColor("red")));
-    sheetScene->addItem(recti);
-    sheetScene->addRect(10,10,100,100,QPen(QColor("black"), 2));
-    ////
+    QGraphicsRectItem *item = new QGraphicsRectItem(QRectF(0, 0, 100, 100));
+    item->setPos(100, 100);
+    item->setFlag(QGraphicsItem::ItemIsMovable);
+    item->setPen(QColor(102, 102, 102));
+    item->setBrush(QColor(158, 204, 255));
+    sheetScene->addItem(item);
+
+
+
+
+
+    GraphicsItemResizer *resizer = new GraphicsItemResizer(item);
+    resizer->setBrush(QColor(255, 0, 0));
+    resizer->setMinSize(QSizeF(10, 10));
+    resizer->setTargetSize(item->boundingRect().size());
+    resizer->setHandlersIgnoreTransformations(true);
+    QObject::connect(
+        resizer,
+        &GraphicsItemResizer::targetRectChanged,
+        [item](const QRectF & rect)
+        {
+            QPointF pos = item->pos();
+            item->setPos(pos + rect.topLeft());
+            QRectF old = item->rect();
+            item->setRect(QRectF(old.topLeft(), rect.size()));
+
+        }
+        );
+
 
     ui->graphicsView->setScene(sheetScene);
 

@@ -160,17 +160,18 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         {
             originSelection = event->pos();
 
-            rubberBand->setGeometry(QRect(originSelection, QSize()));
-            rubberBand->show();
+            //rubberBand->setGeometry(QRect(originSelection, QSize()));
+            //rubberBand->show();
         }
+    QGraphicsView::mousePressEvent(event);
 }
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
-    rubberBand->hide();
-    update();
-    scene()->update();
+    QGraphicsView::mouseReleaseEvent(event);
+   // rubberBand->hide();
+    //update();
+    //scene()->update();
 }
 
 void SheetView::loadSettings()

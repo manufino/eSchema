@@ -1,4 +1,5 @@
 #include "LayerComboBox.h"
+#include "qpainterpath.h"
 
 LayerComboBox::LayerComboBox(QWidget* parent)
     : QComboBox(parent)
@@ -74,10 +75,18 @@ void LayerComboBox::paintEvent(QPaintEvent* event)
 
     // Disegna il quadratino colorato
     if (currentIndex() >= 0 && currentIndex() < count()) {
+        painter.setRenderHint(QPainter::Antialiasing);
         QRect colorRect = QRect(5, 5, 20, 14);
         QColor colore = itemData(currentIndex(), Qt::UserRole + 1).value<QColor>();
         painter.fillRect(colorRect, colore);
-
+        /*
+        QPainterPath path;
+        path.addRoundedRect(colorRect, 4, 4);
+        QPen pen(colore, 10);
+        painter.setPen(pen);
+        painter.fillPath(path, colore);
+        painter.drawPath(path);
+        */
         QRect textRect = opt.rect.adjusted(28, 0, 0, 0);
         painter.setPen(opt.palette.color(QPalette::WindowText));
         painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, currentText());

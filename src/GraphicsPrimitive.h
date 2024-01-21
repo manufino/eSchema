@@ -8,21 +8,8 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QApplication>
 
-#include "Sheet.h"
-#include "SettingsManager.h"
+#include "Layer.h"
 
-
-typedef enum {
-    Line,
-    Rectangle,
-    Text,
-    Polyline,
-    Ellipse,
-    Bezier,
-    Spline,
-    Pad,
-    PartLib
-} PrimitiveTypes;
 
 class GraphicsPrimitive : public QObject, public QGraphicsItem
 {
@@ -30,29 +17,57 @@ class GraphicsPrimitive : public QObject, public QGraphicsItem
     Q_INTERFACES(QGraphicsItem)
 
 public:
-    explicit GraphicsPrimitive(QGraphicsItem *parent = nullptr);
+    typedef enum {
+        Line,
+        Rectangle,
+        Text,
+        Polyline,
+        Ellipse,
+        Bezier,
+        Spline,
+        Pad,
+        PartLib
+    } PrimitiveTypes;
+
+    explicit GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent = nullptr);
     ~GraphicsPrimitive();
+
+    PrimitiveTypes getPrimitiveType() { return primitiveType; }
+    QString name() const { return objName; }
+    QString value() const { return objValue; }
+    Layer *layer() { return objLayer; }
+    void setLayer(Layer *layer) { this->objLayer = layer; }
+    bool isFilled() const { return filled; }
+    bool isVisible() const { return visible; }
+    bool nameIsVisible() const { return showName; }
+    bool valueIsVisible() const { return showValue; }
+    QPen pen() const { return this->_pen; }
 
     virtual QRectF boundingRect() const = 0;
 
-protected:
-    void keyPressEvent(QKeyEvent *event);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    QVariant itemChange(GraphicsItemChange change,
-                        const QVariant &value);
-
 signals:
+    void propertiesChanged(GraphicsPrimitive *primitive);
 
 public slots:
-    void gridSizeChanged(int gridSize);
-    void snapEnableChanged(bool snap);
-    void penStyleIsChanged(Qt::PenStyle penStyle);
 
+    void penStyleIsChanged(Qt::PenStyle penStyle) { this->penStyle = penStyle; }
+    void setPenSize(int newPenSize) { penSize = newPenSize; }
+    void setIsFilled(bool isFilled) { filled = isFilled; }
+    void setNameVisible(bool visible) { showName = visible; }
+    void setValueVisible(bool visible) { showValue = visible; }
+    void setVisible(bool visible) { this->visible = visible; }
+    void setPen(QPen pen) { this->_pen = pen; }
 
-private:
-    int gridSize, penSize;
+protected:
     Qt::PenStyle penStyle;
-    bool snapEnable;
+    bool filled, showName, showValue, visible;
+    PrimitiveTypes primitiveType;
+    QString objName;
+    QString  objValue;
+    Layer *objLayer;
+    QPen _pen;
+    int penSize;
+
 };
 
 #endif // GRAPHICSPRIMITIVE_H

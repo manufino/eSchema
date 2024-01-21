@@ -32,8 +32,8 @@ void SettingsManager::restoreDefaultSettings()
     // GENERALE
     saveSetting("language", "it");
     saveSetting("gui_style", "light");
-    //saveSetting("stylesheet_path", "");
-    //saveSetting("lib_path", "");
+    saveSetting("stylesheet_path", "");
+    saveSetting("lib_path", "");
 
     // GRIGLIA
     saveSetting("grid_step", 10);
