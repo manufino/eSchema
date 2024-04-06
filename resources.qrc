@@ -124,5 +124,6 @@
         <file>resources/remix/arrow-right-s-line.png</file>
         <file>resources/remix/arrow-up-s-fill.png</file>
         <file>resources/remix/arrow-up-s-line.png</file>
+        <file>resources/splash.jpeg</file>
     </qresource>
 </RCC>

@@ -61,10 +61,10 @@ void StatusBar::sceneMousePos(QPointF point)
     double xmm = mm_step * (x/gridSize);
     double ymm = mm_step * (y/gridSize);
 
-    QString pos = QString("X %1 Y %2 (X %3mm Y %4mm)").arg(x).arg(y).arg(xmm).arg(ymm);
+    QString pos = QString("X %1 Y %2 (X %3mm Y %4mm)")
+                      .arg(x).arg(y).arg(xmm).arg(ymm);
     lblPos->setText(pos);
 }
-
 
 void StatusBar::zoomLevel(unsigned int level)
 {

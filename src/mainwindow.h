@@ -50,6 +50,5 @@ private:
     DialogLayerList *layerManager;
     DialogShortcuts *shortcutsDialog;
     LayerToolBarWidget *layerToolBarWidget;
-
 };
 #endif // MAINWINDOW_H

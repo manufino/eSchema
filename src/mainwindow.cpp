@@ -24,31 +24,26 @@ MainWindow::MainWindow(QWidget *parent)
     item->setBrush(QColor(158, 204, 255));
     sheetScene->addItem(item);
 
-
-
-
-
     GraphicsItemResizer *resizer = new GraphicsItemResizer(item);
     resizer->setBrush(QColor(255, 0, 0));
     resizer->setMinSize(QSizeF(10, 10));
     resizer->setTargetSize(item->boundingRect().size());
     resizer->setHandlersIgnoreTransformations(true);
+
     QObject::connect(
         resizer,
         &GraphicsItemResizer::targetRectChanged,
-        [item](const QRectF & rect)
+        [item, this](const QRectF & rect)
         {
             QPointF pos = item->pos();
             item->setPos(pos + rect.topLeft());
+
             QRectF old = item->rect();
             item->setRect(QRectF(old.topLeft(), rect.size()));
-
         }
         );
 
-
     ui->graphicsView->setScene(sheetScene);
-
     setConnections();
 }
 
@@ -70,7 +65,6 @@ void MainWindow::setConnections()
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
     connect(ui->DSpinBoxLineHeight, &QSpinBox::valueChanged, ui->cbPropLineStyle, &PenStyleComboBox::lineWidthChanged);
-
 }
 
 void MainWindow::clickOptionAction()
