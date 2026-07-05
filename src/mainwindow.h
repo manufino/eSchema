@@ -51,6 +51,7 @@ public slots:
     void clickCutAction();
     void clickCopyAction();
     void clickPasteAction();
+    void clickDuplicateAction();
     void clickSelectAllAction();
     void clickNewAction();
     void clickOpenAction();
@@ -64,6 +65,11 @@ private:
     // order), not QGraphicsScene::selectedItems()'s unspecified order - Copy
     // needs this so pasting reproduces a predictable, repeatable layout.
     QList<GraphicsPrimitive *> selectedPrimitivesInOrder() const;
+    // Parses `text` as FidoCadJ primitives and adds them to the sheet,
+    // offset by one grid step and selected - the shared tail end of both
+    // Paste and Duplicate (see pasteFromText()'s doc comment for why they
+    // share this instead of Duplicate routing through the clipboard).
+    void pasteFromText(const QString &text, const QString &undoLabel);
     bool saveToPath(const QString &filePath);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();

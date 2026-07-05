@@ -82,6 +82,7 @@ void MainWindow::setConnections()
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::clickCutAction);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::clickCopyAction);
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::clickPasteAction);
+    connect(ui->actionDuplicate, &QAction::triggered, this, &MainWindow::clickDuplicateAction);
     connect(ui->actionSelectAll, &QAction::triggered, this, &MainWindow::clickSelectAllAction);
     connect(ui->actionNewDraw, &QAction::triggered, this, &MainWindow::clickNewAction);
     connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
@@ -251,12 +252,13 @@ void MainWindow::clickCutAction()
         undo->endMacro();
 }
 
-void MainWindow::clickPasteAction()
+// Shared by Paste (parses clipboard text) and Duplicate (parses a freshly
+// serialized copy of the current selection without touching the system
+// clipboard at all - matching the visible result of the reference FidoCadJ
+// editor's Duplicate, which is copySelected()+paste() under the hood, but
+// without the side effect of clobbering whatever the user last copied).
+void MainWindow::pasteFromText(const QString &text, const QString &undoLabel)
 {
-    const QString text = QGuiApplication::clipboard()->text();
-    if (text.isEmpty())
-        return;
-
     const QList<GraphicsPrimitive *> pasted = FidoCadReader::parse(text, sheetScene);
     if (pasted.isEmpty())
         return;
@@ -274,7 +276,7 @@ void MainWindow::clickPasteAction()
     QUndoStack *undo = sheetScene->undoStack();
     const bool multiple = pasted.size() > 1;
     if (multiple)
-        undo->beginMacro(tr("Incolla"));
+        undo->beginMacro(undoLabel);
     for (GraphicsPrimitive *primitive : pasted) {
         primitive->translateControlPoints(offset);
         // push() calls redo() synchronously, which is what actually adds the
@@ -284,6 +286,22 @@ void MainWindow::clickPasteAction()
     }
     if (multiple)
         undo->endMacro();
+}
+
+void MainWindow::clickPasteAction()
+{
+    const QString text = QGuiApplication::clipboard()->text();
+    if (text.isEmpty())
+        return;
+    pasteFromText(text, tr("Incolla"));
+}
+
+void MainWindow::clickDuplicateAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+    pasteFromText(FidoCadWriter::writeSelection(selected), tr("Duplica"));
 }
 
 void MainWindow::updateWindowTitle()
