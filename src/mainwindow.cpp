@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QGuiApplication>
 #include <QClipboard>
+#include <QCloseEvent>
 
 namespace {
 // FidoCadJ's 16 default layers and colors (FIDOSPECS.md 3.1). Populating all
@@ -88,6 +89,10 @@ void MainWindow::setConnections()
     connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
+    // QWidget::close() reaches closeEvent(), which does the unsaved-changes
+    // check - so File > Close and the window's own titlebar X button behave
+    // identically instead of needing separate logic.
+    connect(ui->actionClose, &QAction::triggered, this, &QWidget::close);
 
     QUndoStack *undo = sheetScene->undoStack();
     connect(ui->actionUndo, &QAction::triggered, undo, &QUndoStack::undo);
@@ -325,12 +330,51 @@ bool MainWindow::saveToPath(const QString &filePath)
         QMessageBox::warning(this, tr("Errore"), tr("Impossibile salvare il file:\n%1").arg(error));
         return false;
     }
+    // Marks the undo stack's current position as "the saved state" - isClean()
+    // (used by confirmDiscardChanges()) reports true again until the next
+    // change, rather than staying permanently "dirty" after the first edit.
+    sheetScene->undoStack()->setClean();
     return true;
+}
+
+// If there are unsaved changes, asks whether to save them before whatever the
+// caller is about to do (close the app, discard the document for New/Open).
+// Returns false only when the user cancels - callers must abort in that case.
+bool MainWindow::confirmDiscardChanges()
+{
+    if (sheetScene->undoStack()->isClean())
+        return true;
+
+    const auto answer = QMessageBox::question(
+                this, tr("Modifiche non salvate"),
+                tr("Ci sono modifiche non salvate. Vuoi salvarle?"),
+                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+                QMessageBox::Save);
+
+    if (answer == QMessageBox::Cancel)
+        return false;
+    if (answer == QMessageBox::Discard)
+        return true;
+
+    clickSaveAction();
+    // clickSaveAction() falls back to Save As for a never-saved document; if
+    // the user then cancels that dialog, the stack is still dirty - treat
+    // that the same as cancelling here, rather than closing/discarding anyway.
+    return sheetScene->undoStack()->isClean();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (confirmDiscardChanges())
+        event->accept();
+    else
+        event->ignore();
 }
 
 void MainWindow::clickNewAction()
 {
     sheetScene->clearPrimitives();
+    sheetScene->undoStack()->setClean();
     setCurrentFilePath(QString());
 }
 
@@ -351,6 +395,7 @@ bool MainWindow::openFile(const QString &filePath)
         QMessageBox::warning(this, tr("Errore"), tr("Impossibile aprire il file:\n%1").arg(error));
         return false;
     }
+    sheetScene->undoStack()->setClean();
     setCurrentFilePath(filePath);
     return true;
 }

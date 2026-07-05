@@ -40,6 +40,13 @@ public:
     // returns false if the file can't be read.
     bool openFile(const QString &filePath);
 
+protected:
+    // Prompts to save unsaved changes (if any) before the window - and with
+    // it, the whole application, since this is the only top-level window -
+    // actually closes. Triggered both by File > Close and the window's own
+    // titlebar close button, since QWidget::close() reaches here either way.
+    void closeEvent(QCloseEvent *event) override;
+
 public slots:
     void clickOptionAction();
     void clickAboutAction();
@@ -73,6 +80,10 @@ private:
     bool saveToPath(const QString &filePath);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();
+    // Asks "save changes?" if the undo stack isn't clean. Returns true if the
+    // caller may proceed (nothing to save, changes were saved, or the user
+    // chose to discard them) and false if the user cancelled.
+    bool confirmDiscardChanges();
 
 private:
     Ui::MainWindow *ui;
