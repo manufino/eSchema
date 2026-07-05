@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QApplication>
+#include <QStringList>
 
 #include "Layer.h"
 
@@ -26,7 +27,10 @@ public:
         Bezier,
         Spline,
         Pad,
-        PartLib
+        PartLib,
+        Connection,
+        PcbTrack,
+        Image
     } PrimitiveTypes;
 
     explicit GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent = nullptr);
@@ -37,13 +41,67 @@ public:
     QString value() const { return objValue; }
     Layer *layer() { return objLayer; }
     void setLayer(Layer *layer) { this->objLayer = layer; }
+    // Index (0-15) of this primitive's layer in the global LayerList, clamped to a
+    // valid FidoCadJ layer range. Used only at FCD read/write time.
+    int layerIndex() const;
     bool isFilled() const { return filled; }
     bool isVisible() const { return visible; }
     bool nameIsVisible() const { return showName; }
     bool valueIsVisible() const { return showValue; }
     QPen pen() const { return this->_pen; }
 
+    void setName(const QString &name) { objName = name; }
+    void setValue(const QString &value) { objValue = value; }
+
+    // FidoCadJ FCJ arrow attributes. Only meaningful for the line-like primitives
+    // (LI/BE/CV/CP); the rest simply never read them.
+    bool arrowAtStart() const { return m_arrowAtStart; }
+    bool arrowAtEnd() const { return m_arrowAtEnd; }
+    void setArrowAtStart(bool on) { m_arrowAtStart = on; }
+    void setArrowAtEnd(bool on) { m_arrowAtEnd = on; }
+    bool arrowStyleLimiter() const { return m_arrowStyleLimiter; }
+    bool arrowStyleEmpty() const { return m_arrowStyleEmpty; }
+    void setArrowStyleLimiter(bool on) { m_arrowStyleLimiter = on; }
+    void setArrowStyleEmpty(bool on) { m_arrowStyleEmpty = on; }
+    qreal arrowLength() const { return m_arrowLength; }
+    qreal arrowHalfWidth() const { return m_arrowHalfWidth; }
+    void setArrowLength(qreal len) { m_arrowLength = len; }
+    void setArrowHalfWidth(qreal halfWidth) { m_arrowHalfWidth = halfWidth; }
+
     virtual QRectF boundingRect() const = 0;
+
+    // --- Control-point interface -------------------------------------------------
+    // Shared by both the interactive resize handles and the FidoCadJ reader/writer:
+    // every primitive exposes its geometry as an ordered list of scene-coordinate
+    // points, with no per-primitive-type resize code needed anywhere else.
+    virtual int controlPointCount() const = 0;
+    virtual QPointF controlPoint(int index) const = 0;
+    virtual void setControlPoint(int index, const QPointF &scenePos) = 0;
+
+    // Mirrors/rotates the primitive's control points around a pivot (scene coords).
+    // Default implementation applies the transform to every control point in turn;
+    // primitives with extra scalar orientation fields (e.g. PrimitiveMacro's
+    // orientation/mirror) override this to also update those fields.
+    virtual void mirror(Qt::Orientation axis, const QPointF &pivot);
+    virtual void rotate90(const QPointF &pivot);
+
+    // True when the primitive carries no visible information (degenerate geometry
+    // and no name/value label) and should be silently dropped on save, per the FCD
+    // spec's "do not serialize a primitive that carries no information" rule.
+    virtual bool isDegenerate() const = 0;
+
+    // The primitive's own FCD instruction line (its code + arguments), NOT
+    // including the trailing FCJ/TY follow-up lines - those are cross-cutting and
+    // are assembled by FidoCadWriter from the shared base-class attributes above.
+    virtual QStringList toTokens() const = 0;
+
+    // Whether this primitive type can carry FCJ arrow attributes (LI/BE/CV/CP) as
+    // opposed to only a dash style (RV/RP/EV/EP/PV/PP) or no FCJ at all.
+    virtual bool supportsArrows() const { return false; }
+
+    // Whether this primitive type can have an FCJ line at all (SA/PL/PA/MC/IM
+    // never do - their name/value TY lines follow the primitive directly).
+    virtual bool supportsFCJ() const { return true; }
 
 signals:
     void propertiesChanged(GraphicsPrimitive *primitive);
@@ -59,6 +117,11 @@ public slots:
     void setPen(QPen pen) { this->_pen = pen; }
 
 protected:
+    // itemChange() is overridden (in GraphicsPrimitive.cpp) to snap ItemPositionChange
+    // through SettingsManager's snap_enabled/snap_step, so every subclass gets
+    // grid-snapped dragging for free without repeating the logic.
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+
     Qt::PenStyle penStyle;
     bool filled, showName, showValue, visible;
     PrimitiveTypes primitiveType;
@@ -68,6 +131,12 @@ protected:
     QPen _pen;
     int penSize;
 
+    bool m_arrowAtStart = false;
+    bool m_arrowAtEnd = false;
+    bool m_arrowStyleLimiter = false;
+    bool m_arrowStyleEmpty = false;
+    qreal m_arrowLength = 3.0;
+    qreal m_arrowHalfWidth = 1.0;
 };
 
 #endif // GRAPHICSPRIMITIVE_H

@@ -24,6 +24,7 @@ SOURCES += \
 	src/DialogLayerList.cpp \
 	src/DialogOptions.cpp \
 	src/DialogShortcuts.cpp \
+	src/FidoCadTokenUtils.cpp \
 	src/GraphicsPrimitive.cpp \
 	src/LayerColorPicker.cpp \
 	src/LayerComboBox.cpp \
@@ -36,6 +37,18 @@ SOURCES += \
 	src/LayerVisibilityButton.cpp \
 	src/ObjectProperties.cpp \
 	src/PenStyleComboBox.cpp \
+	src/PrimitiveBezier.cpp \
+	src/PrimitiveComplexCurve.cpp \
+	src/PrimitiveConnection.cpp \
+	src/PrimitiveEllipse.cpp \
+	src/PrimitiveImage.cpp \
+	src/PrimitiveLine.cpp \
+	src/PrimitiveMacro.cpp \
+	src/PrimitivePad.cpp \
+	src/PrimitivePcbTrack.cpp \
+	src/PrimitivePolygon.cpp \
+	src/PrimitiveRectangle.cpp \
+	src/PrimitiveText.cpp \
 	src/SettingsManager.cpp \
 	src/main.cpp \
 	src/MainWindow.cpp \
@@ -50,6 +63,7 @@ HEADERS += \
 	src/DialogLayerList.h \
 	src/DialogOptions.h \
 	src/DialogShortcuts.h \
+	src/FidoCadTokenUtils.h \
 	src/GlobalUtils.h \
 	src/GraphicsPrimitive.h \
 	src/Layer.h \
@@ -64,6 +78,19 @@ HEADERS += \
 	src/LinkLabel.h \
 	src/ObjectProperties.h \
 	src/PenStyleComboBox.h \
+	src/PrimitiveArrowUtils.h \
+	src/PrimitiveBezier.h \
+	src/PrimitiveComplexCurve.h \
+	src/PrimitiveConnection.h \
+	src/PrimitiveEllipse.h \
+	src/PrimitiveImage.h \
+	src/PrimitiveLine.h \
+	src/PrimitiveMacro.h \
+	src/PrimitivePad.h \
+	src/PrimitivePcbTrack.h \
+	src/PrimitivePolygon.h \
+	src/PrimitiveRectangle.h \
+	src/PrimitiveText.h \
 	src/SettingsManager.h \
 	src/LayerComboBox.h \
 	src/MainWindow.h \
