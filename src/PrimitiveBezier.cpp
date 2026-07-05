@@ -15,7 +15,8 @@ QRectF PrimitiveBezier::boundingRect() const
     for (const QPointF &p : m_points)
         poly << mapFromScene(p);
     const qreal margin = penSize + 4;
-    return poly.boundingRect().adjusted(-margin, -margin, margin, margin);
+    return poly.boundingRect().adjusted(-margin, -margin, margin, margin)
+            .united(labelBoundingRect());
 }
 
 void PrimitiveBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -43,6 +44,8 @@ void PrimitiveBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     if (arrowAtEnd())
         PrimitiveArrowUtils::paintArrow(painter, p2, c2, arrowStyleLimiter(), arrowStyleEmpty(),
                                         arrowLength(), arrowHalfWidth());
+
+    paintLabels(painter);
 }
 
 QPointF PrimitiveBezier::controlPoint(int index) const

@@ -11,7 +11,8 @@ QRectF PrimitivePcbTrack::boundingRect() const
 {
     const qreal margin = m_width / 2.0 + 1;
     return QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized()
-            .adjusted(-margin, -margin, margin, margin);
+            .adjusted(-margin, -margin, margin, margin)
+            .united(labelBoundingRect());
 }
 
 void PrimitivePcbTrack::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -25,6 +26,8 @@ void PrimitivePcbTrack::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     painter->setPen(pen);
 
     painter->drawLine(mapFromScene(m_p1), mapFromScene(m_p2));
+
+    paintLabels(painter);
 }
 
 QPointF PrimitivePcbTrack::controlPoint(int index) const

@@ -1,6 +1,7 @@
 #include "PrimitivePad.h"
 #include "FidoCadTokenUtils.h"
 #include <QStyleOptionGraphicsItem>
+#include <QPainterPath>
 
 PrimitivePad::PrimitivePad(QGraphicsItem *parent)
     : GraphicsPrimitive(Pad, parent)
@@ -11,7 +12,8 @@ QRectF PrimitivePad::boundingRect() const
 {
     const qreal margin = 1;
     return QRectF(mapFromScene(m_pos) - QPointF(m_rx / 2, m_ry / 2), QSizeF(m_rx, m_ry))
-            .adjusted(-margin, -margin, margin, margin);
+            .adjusted(-margin, -margin, margin, margin)
+            .united(labelBoundingRect());
 }
 
 void PrimitivePad::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -23,29 +25,32 @@ void PrimitivePad::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     const QPointF center = mapFromScene(m_pos);
     const QRectF outer(center - QPointF(m_rx / 2, m_ry / 2), QSizeF(m_rx, m_ry));
 
-    painter->save();
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(color);
+    // Built as a single even-odd path (outer shape + inner hole) rather than
+    // drawing the hole with CompositionMode_Clear: clearing to transparent
+    // doesn't composite correctly over the view's opaque backing store (the
+    // "hole" came out solid black instead of see-through). The even-odd fill
+    // rule punches the hole directly, with no compositing involved.
+    QPainterPath path;
+    path.setFillRule(Qt::OddEvenFill);
     switch (m_style) {
     case Round:
-        painter->drawEllipse(outer);
+        path.addEllipse(outer);
         break;
     case Rectangular:
-        painter->drawRect(outer);
+        path.addRect(outer);
         break;
     case RoundedRectangular:
-        painter->drawRoundedRect(outer, outer.width() * 0.2, outer.height() * 0.2);
+        path.addRoundedRect(outer, outer.width() * 0.2, outer.height() * 0.2);
         break;
     }
+    if (m_ri > 0)
+        path.addEllipse(center, m_ri / 2, m_ri / 2);
 
-    // Punch the drill hole out of the copper pad by clearing (not drawing) the
-    // pixels underneath it, so it reads correctly regardless of the sheet's
-    // background color.
-    if (m_ri > 0) {
-        painter->setCompositionMode(QPainter::CompositionMode_Clear);
-        painter->drawEllipse(center, m_ri / 2, m_ri / 2);
-    }
-    painter->restore();
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(color);
+    painter->drawPath(path);
+
+    paintLabels(painter);
 }
 
 QPointF PrimitivePad::controlPoint(int) const

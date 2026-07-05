@@ -36,6 +36,9 @@ public:
     bool isDegenerate() const override { return false; } // a macro instance is always meaningful
     QStringList toTokens() const override;
     bool supportsFCJ() const override { return false; }
+    // Matches FIDOSPECS.md's worked example (11), where a macro's name/value
+    // labels sit further from the anchor than other primitives'.
+    QPointF labelOffset(int labelIndex) const override { return QPointF(10, labelIndex == 0 ? 5 : 10); }
 
 private:
     QPointF m_pos;

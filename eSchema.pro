@@ -24,7 +24,9 @@ SOURCES += \
 	src/DialogLayerList.cpp \
 	src/DialogOptions.cpp \
 	src/DialogShortcuts.cpp \
+	src/FidoCadReader.cpp \
 	src/FidoCadTokenUtils.cpp \
+	src/FidoCadWriter.cpp \
 	src/GraphicsPrimitive.cpp \
 	src/LayerColorPicker.cpp \
 	src/LayerComboBox.cpp \
@@ -66,7 +68,9 @@ HEADERS += \
 	src/DialogLayerList.h \
 	src/DialogOptions.h \
 	src/DialogShortcuts.h \
+	src/FidoCadReader.h \
 	src/FidoCadTokenUtils.h \
+	src/FidoCadWriter.h \
 	src/GlobalUtils.h \
 	src/GraphicsPrimitive.h \
 	src/Layer.h \

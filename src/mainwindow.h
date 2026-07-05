@@ -35,6 +35,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    // Loads a .fcd file, e.g. one passed on the command line (matching
+    // FidoCadJ's "eschema file.fcd" behaviour). Shows an error dialog and
+    // returns false if the file can't be read.
+    bool openFile(const QString &filePath);
+
 public slots:
     void clickOptionAction();
     void clickAboutAction();
@@ -44,10 +49,17 @@ public slots:
     void clickRotateAction();
     void clickDeleteAction();
     void clickSelectAllAction();
+    void clickNewAction();
+    void clickOpenAction();
+    void clickSaveAction();
+    void clickSaveAsAction();
 
 private:
     void setConnections();
     GraphicsPrimitive *firstSelectedPrimitive() const;
+    bool saveToPath(const QString &filePath);
+    void setCurrentFilePath(const QString &filePath);
+    void updateWindowTitle();
 
 private:
     Ui::MainWindow *ui;
@@ -59,5 +71,6 @@ private:
     LayerToolBarWidget *layerToolBarWidget;
     PrimitivePlacementController *placementController;
     SelectionHandleController *selectionHandleController;
+    QString currentFilePath; // empty = new/unsaved drawing
 };
 #endif // MAINWINDOW_H

@@ -10,7 +10,8 @@ PrimitiveConnection::PrimitiveConnection(QGraphicsItem *parent)
 QRectF PrimitiveConnection::boundingRect() const
 {
     const qreal r = m_diameter / 2.0 + 1;
-    return QRectF(mapFromScene(m_pos) - QPointF(r, r), QSizeF(2 * r, 2 * r));
+    return QRectF(mapFromScene(m_pos) - QPointF(r, r), QSizeF(2 * r, 2 * r))
+            .united(labelBoundingRect());
 }
 
 void PrimitiveConnection::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -24,6 +25,8 @@ void PrimitiveConnection::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     const qreal r = m_diameter / 2.0;
     painter->drawEllipse(mapFromScene(m_pos), r, r);
+
+    paintLabels(painter);
 }
 
 QPointF PrimitiveConnection::controlPoint(int) const

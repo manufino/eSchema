@@ -16,7 +16,8 @@ PrimitiveMacro::PrimitiveMacro(QGraphicsItem *parent)
 QRectF PrimitiveMacro::boundingRect() const
 {
     const qreal half = PlaceholderSize / 2;
-    return QRectF(mapFromScene(m_pos) - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize));
+    return QRectF(mapFromScene(m_pos) - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize))
+            .united(labelBoundingRect());
 }
 
 void PrimitiveMacro::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -34,6 +35,8 @@ void PrimitiveMacro::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
     const QRectF box(center - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize));
     painter->drawRect(box);
     painter->drawText(box, Qt::AlignCenter | Qt::TextWordWrap, m_macroName);
+
+    paintLabels(painter);
 }
 
 QPointF PrimitiveMacro::controlPoint(int) const

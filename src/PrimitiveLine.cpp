@@ -12,7 +12,8 @@ QRectF PrimitiveLine::boundingRect() const
 {
     const qreal margin = penSize + 4; // room for the pen width and any arrowhead
     return QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized()
-            .adjusted(-margin, -margin, margin, margin);
+            .adjusted(-margin, -margin, margin, margin)
+            .united(labelBoundingRect());
 }
 
 void PrimitiveLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -35,6 +36,8 @@ void PrimitiveLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
     if (arrowAtEnd())
         PrimitiveArrowUtils::paintArrow(painter, p2, p1, arrowStyleLimiter(), arrowStyleEmpty(),
                                         arrowLength(), arrowHalfWidth());
+
+    paintLabels(painter);
 }
 
 QPointF PrimitiveLine::controlPoint(int index) const

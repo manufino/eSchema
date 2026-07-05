@@ -1628,7 +1628,7 @@ margin:1px;
     <string>Rectangle</string>
    </property>
    <property name="shortcut">
-    <string>Q</string>
+    <string>G</string>
    </property>
   </action>
   <action name="actionPolygon">
@@ -1645,6 +1645,9 @@ margin:1px;
    <property name="toolTip">
     <string>Polygon</string>
    </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
   </action>
   <action name="actionEllipse">
    <property name="checkable">
@@ -1659,6 +1662,9 @@ margin:1px;
    </property>
    <property name="toolTip">
     <string>Ellipse</string>
+   </property>
+   <property name="shortcut">
+    <string>E</string>
    </property>
   </action>
   <action name="actionSelect">
@@ -1678,6 +1684,9 @@ margin:1px;
    <property name="toolTip">
     <string>Select</string>
    </property>
+   <property name="shortcut">
+    <string>A</string>
+   </property>
   </action>
   <action name="actionBezier">
    <property name="checkable">
@@ -1692,6 +1701,9 @@ margin:1px;
    </property>
    <property name="toolTip">
     <string>Bezier</string>
+   </property>
+   <property name="shortcut">
+    <string>B</string>
    </property>
   </action>
   <action name="actionCurve">
@@ -1708,6 +1720,9 @@ margin:1px;
    <property name="toolTip">
     <string>Curve</string>
    </property>
+   <property name="shortcut">
+    <string>O</string>
+   </property>
   </action>
   <action name="actionText">
    <property name="checkable">
@@ -1723,6 +1738,9 @@ margin:1px;
    <property name="toolTip">
     <string>Text</string>
    </property>
+   <property name="shortcut">
+    <string>T</string>
+   </property>
   </action>
   <action name="actionConnection">
    <property name="checkable">
@@ -1737,6 +1755,9 @@ margin:1px;
    </property>
    <property name="toolTip">
     <string>Connection</string>
+   </property>
+   <property name="shortcut">
+    <string>C</string>
    </property>
   </action>
   <action name="actionSidebar">

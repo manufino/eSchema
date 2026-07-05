@@ -18,7 +18,8 @@ void PrimitiveImage::setImageData(const QString &mimeSubtype, const QString &bas
 
 QRectF PrimitiveImage::boundingRect() const
 {
-    return QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized();
+    return QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized()
+            .united(labelBoundingRect());
 }
 
 void PrimitiveImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -33,6 +34,8 @@ void PrimitiveImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
     painter->drawPixmap(QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized(), m_pixmap,
                          m_pixmap.rect());
     painter->restore();
+
+    paintLabels(painter);
 }
 
 QPointF PrimitiveImage::controlPoint(int index) const

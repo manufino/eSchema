@@ -38,5 +38,11 @@ int main(int argc, char *argv[])
     w.show();
     splash.finish(&w);
 
+    // "eschema drawing.fcd" opens that file directly, matching FidoCadJ's
+    // command-line behaviour.
+    const QStringList args = a.arguments();
+    if (args.size() > 1)
+        w.openFile(args.at(1));
+
     return a.exec();
 }

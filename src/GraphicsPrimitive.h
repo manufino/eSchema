@@ -37,7 +37,7 @@ public:
     explicit GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent = nullptr);
     ~GraphicsPrimitive();
 
-    PrimitiveTypes getPrimitiveType() { return primitiveType; }
+    PrimitiveTypes getPrimitiveType() const { return primitiveType; }
     QString name() const { return objName; }
     QString value() const { return objValue; }
     Layer *layer() { return objLayer; }
@@ -50,6 +50,11 @@ public:
     bool nameIsVisible() const { return showName; }
     bool valueIsVisible() const { return showValue; }
     QPen pen() const { return this->_pen; }
+    // The dash style/width actually used by paint() (constructed fresh from
+    // these each call) - needed by FidoCadWriter, which isn't a subclass and
+    // so can't reach the protected fields directly.
+    Qt::PenStyle lineStyle() const { return penStyle; }
+    int lineWidth() const { return penSize; }
 
     void setName(const QString &name) { objName = name; }
     void setValue(const QString &value) { objValue = value; }
@@ -112,6 +117,26 @@ public:
     // Whether this primitive type can have an FCJ line at all (SA/PL/PA/MC/IM
     // never do - their name/value TY lines follow the primitive directly).
     virtual bool supportsFCJ() const { return true; }
+
+    // Position of the name (index 0) / value (index 1) label, relative to
+    // controlPoint(0). Shared by FidoCadWriter (to place the TY label lines)
+    // and paintLabels() below (to draw them on screen) so both agree. Chosen
+    // to exactly match FIDOSPECS.md's worked example (11); PrimitiveMacro
+    // overrides with a wider offset to match that same example.
+    virtual QPointF labelOffset(int labelIndex) const { return QPointF(5, labelIndex == 0 ? 5 : 10); }
+
+    // Extra area needed for the name/value label text, in the same
+    // (item-local, effectively scene-equal since pos() is pinned at origin)
+    // coordinates as controlPoint(). Empty when there's nothing to draw.
+    // Every concrete primitive's boundingRect() must union this in, or the
+    // label can be clipped/left un-invalidated when it moves.
+    QRectF labelBoundingRect() const;
+
+protected:
+    // Draws name()/value() near controlPoint(0) if set and visible. Every
+    // concrete primitive calls this at the end of its own paint() - centralized
+    // here since any primitive type can carry a label, not just some.
+    void paintLabels(QPainter *painter) const;
 
 signals:
     void propertiesChanged(GraphicsPrimitive *primitive);

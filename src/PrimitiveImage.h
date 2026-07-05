@@ -6,7 +6,11 @@
 
 // FCD "IM" - an embedded raster image occupying a bounding box, storing the
 // original file bytes as base64 so the drawing round-trips on its own
-// (FIDOSPECS.md 5.12). No FCJ; name/value TY labels may follow directly.
+// (FIDOSPECS.md 5.12). Unlike FIDOSPECS.md's summary table, the real
+// reference FidoCadJ parser does give IM an FCJ line (dash style is
+// meaningless for an image but the hasText flag still gates its name/value
+// TY labels) - confirmed by reading ParserActions.java - so this uses the
+// base class's default supportsFCJ()==true rather than overriding it.
 class PrimitiveImage : public GraphicsPrimitive
 {
 public:
@@ -31,7 +35,6 @@ public:
 
     bool isDegenerate() const override;
     QStringList toTokens() const override;
-    bool supportsFCJ() const override { return false; }
 
 private:
     QPointF m_p1, m_p2;

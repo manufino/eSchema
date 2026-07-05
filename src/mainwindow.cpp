@@ -1,15 +1,39 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "FidoCadReader.h"
+#include "FidoCadWriter.h"
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QMessageBox>
+
+namespace {
+// FidoCadJ's 16 default layers and colors (FIDOSPECS.md 3.1). Populating all
+// of them (rather than just a single master layer) at startup matters for
+// FidoCadJ round-trip fidelity: opening a file that references layer index 2
+// must land on that layer, not silently collapse to layer 0 for want of one
+// existing.
+void createDefaultLayers()
+{
+    static const QColor colors[16] = {
+        QColor(0, 0, 0),        QColor(0, 0, 128),      QColor(255, 0, 0),      QColor(0, 128, 128),
+        QColor(255, 200, 0),    QColor(127, 255, 0),    QColor(0, 255, 255),    QColor(0, 128, 0),
+        QColor(154, 205, 50),   QColor(255, 20, 147),   QColor(181, 155, 12),   QColor(1, 128, 255),
+        QColor(225, 225, 225, 242), QColor(162, 162, 162, 230), QColor(95, 95, 95, 230), QColor(0, 0, 0)
+    };
+    for (int i = 0; i < 16; ++i)
+        LayerList::getInstance().addLayer(new Layer(QString("Layer %1").arg(i), colors[i], i == 0));
+}
+} // namespace
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    LayerList::getInstance().addLayer(new Layer("Layer 0", QColor("black"), true));
+    createDefaultLayers();
 
     ui->setupUi(this);
-    setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  Nuovo disegno* (non salvato)"));
-    
+    updateWindowTitle();
+
     layerToolBarWidget = new LayerToolBarWidget(this);
     ui->toolBarTools->addWidget(layerToolBarWidget); // aggiungo il layer combobox alla toolbar
 
@@ -50,6 +74,10 @@ void MainWindow::setConnections()
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::clickDeleteAction);
     connect(ui->actionSelectAll, &QAction::triggered, this, &MainWindow::clickSelectAllAction);
+    connect(ui->actionNewDraw, &QAction::triggered, this, &MainWindow::clickNewAction);
+    connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
+    connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
 }
 
 void MainWindow::clickOptionAction()
@@ -134,4 +162,77 @@ void MainWindow::clickSelectAllAction()
 {
     for (QGraphicsItem *item : sheetScene->items())
         item->setSelected(true);
+}
+
+void MainWindow::updateWindowTitle()
+{
+    const QString name = currentFilePath.isEmpty()
+            ? tr("Nuovo disegno* (non salvato)")
+            : QFileInfo(currentFilePath).fileName();
+    setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  ") + name);
+}
+
+void MainWindow::setCurrentFilePath(const QString &filePath)
+{
+    currentFilePath = filePath;
+    updateWindowTitle();
+}
+
+bool MainWindow::saveToPath(const QString &filePath)
+{
+    QString error;
+    if (!FidoCadWriter::writeFile(sheetScene, filePath, &error)) {
+        QMessageBox::warning(this, tr("Errore"), tr("Impossibile salvare il file:\n%1").arg(error));
+        return false;
+    }
+    return true;
+}
+
+void MainWindow::clickNewAction()
+{
+    sheetScene->clearPrimitives();
+    setCurrentFilePath(QString());
+}
+
+void MainWindow::clickOpenAction()
+{
+    const QString path = QFileDialog::getOpenFileName(this, tr("Apri disegno"), QString(),
+                                                        tr("FidoCadJ (*.fcd)"));
+    if (path.isEmpty())
+        return;
+
+    openFile(path);
+}
+
+bool MainWindow::openFile(const QString &filePath)
+{
+    QString error;
+    if (!FidoCadReader::readFile(filePath, sheetScene, &error)) {
+        QMessageBox::warning(this, tr("Errore"), tr("Impossibile aprire il file:\n%1").arg(error));
+        return false;
+    }
+    setCurrentFilePath(filePath);
+    return true;
+}
+
+void MainWindow::clickSaveAction()
+{
+    if (currentFilePath.isEmpty()) {
+        clickSaveAsAction();
+        return;
+    }
+    saveToPath(currentFilePath);
+}
+
+void MainWindow::clickSaveAsAction()
+{
+    QString path = QFileDialog::getSaveFileName(this, tr("Salva disegno con nome"), QString(),
+                                                 tr("FidoCadJ (*.fcd)"));
+    if (path.isEmpty())
+        return;
+    if (!path.endsWith(QStringLiteral(".fcd"), Qt::CaseInsensitive))
+        path += QStringLiteral(".fcd");
+
+    if (saveToPath(path))
+        setCurrentFilePath(path);
 }

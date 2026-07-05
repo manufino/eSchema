@@ -140,6 +140,13 @@ void PrimitivePlacementController::finishPlacement()
         else
             static_cast<PrimitiveComplexCurve *>(m_activePrimitive)->removeLastVertex();
     }
+    // Select the just-finished primitive so its resize handles appear
+    // immediately, without an extra click - and only it, so drawing several
+    // primitives in a row doesn't pile up a multi-selection.
+    if (m_activePrimitive) {
+        m_sheet->clearSelection();
+        m_activePrimitive->setSelected(true);
+    }
     m_activePrimitive = nullptr;
     m_pointsPlaced = 0;
     m_activeTool = Tool::Select;

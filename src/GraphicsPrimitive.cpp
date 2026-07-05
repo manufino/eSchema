@@ -73,6 +73,46 @@ void GraphicsPrimitive::translateControlPoints(const QPointF &delta)
         setControlPoint(i, controlPoint(i) + delta);
 }
 
+QRectF GraphicsPrimitive::labelBoundingRect() const
+{
+    const bool drawName = showName && !objName.isEmpty();
+    const bool drawValue = showValue && !objValue.isEmpty();
+    // Guards primitives that can transiently have zero control points while
+    // still being placed (e.g. a polygon before its first vertex is clicked).
+    if ((!drawName && !drawValue) || controlPointCount() == 0)
+        return QRectF();
+
+    const QPointF anchor = controlPoint(0);
+    const QSizeF approxTextSize(60, 12); // generous estimate, avoids measuring text per call
+    QRectF rect;
+    if (drawName)
+        rect = rect.united(QRectF(anchor + labelOffset(0), approxTextSize));
+    if (drawValue)
+        rect = rect.united(QRectF(anchor + labelOffset(1), approxTextSize));
+    return rect;
+}
+
+void GraphicsPrimitive::paintLabels(QPainter *painter) const
+{
+    const bool drawName = showName && !objName.isEmpty();
+    const bool drawValue = showValue && !objValue.isEmpty();
+    if ((!drawName && !drawValue) || controlPointCount() == 0)
+        return;
+
+    painter->save();
+    painter->setPen(objLayer ? objLayer->color() : QColor(Qt::black));
+    QFont font(QStringLiteral("Courier New"));
+    font.setPointSizeF(3.0);
+    painter->setFont(font);
+
+    const QPointF anchor = mapFromScene(controlPoint(0));
+    if (drawName)
+        painter->drawText(anchor + labelOffset(0), objName);
+    if (drawValue)
+        painter->drawText(anchor + labelOffset(1), objValue);
+    painter->restore();
+}
+
 void GraphicsPrimitive::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     m_dragAnchor = Utils::instance().snapToGrid(event->scenePos());
