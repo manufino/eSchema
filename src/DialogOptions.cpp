@@ -58,6 +58,12 @@ void DialogOptions::loadSettings()
 
     val = SettingsManager::getInstance().loadSetting("stylesheet_directory");
     ui->txtStylesheetPath->setText(val.toString());
+
+    val = SettingsManager::getInstance().loadSetting("snap_enabled");
+    ui->chkSnapEnabled->setChecked(val.toBool());
+
+    val = SettingsManager::getInstance().loadSetting("snap_step");
+    ui->spinSnapStep->setValue(val.toInt());
 }
 
 void DialogOptions::saveSettings()
@@ -74,6 +80,8 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("mm_step", ui->doubleSpinStep_mm->value());
     SettingsManager::getInstance().saveSetting("library_directory", ui->txtLibPath->text());
     SettingsManager::getInstance().saveSetting("stylesheet_directory", ui->txtStylesheetPath->text());
+    SettingsManager::getInstance().saveSetting("snap_enabled", ui->chkSnapEnabled->isChecked());
+    SettingsManager::getInstance().saveSetting("snap_step", ui->spinSnapStep->value());
 }
 
 void DialogOptions::accept()

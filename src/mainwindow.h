@@ -18,6 +18,7 @@
 #include "DialogLayerList.h"
 #include "DialogShortcuts.h"
 #include "GlobalUtils.h"
+#include "PrimitivePlacementController.h"
 
 
 
@@ -50,5 +51,6 @@ private:
     DialogLayerList *layerManager;
     DialogShortcuts *shortcutsDialog;
     LayerToolBarWidget *layerToolBarWidget;
+    PrimitivePlacementController *placementController;
 };
 #endif // MAINWINDOW_H

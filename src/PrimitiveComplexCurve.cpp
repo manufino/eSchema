@@ -90,6 +90,14 @@ void PrimitiveComplexCurve::appendVertex(const QPointF &scenePos)
     m_vertices.append(scenePos);
 }
 
+void PrimitiveComplexCurve::removeLastVertex()
+{
+    if (m_vertices.isEmpty())
+        return;
+    prepareGeometryChange();
+    m_vertices.removeLast();
+}
+
 bool PrimitiveComplexCurve::isDegenerate() const
 {
     return m_vertices.size() < 2 && objName.isEmpty() && objValue.isEmpty();

@@ -43,6 +43,13 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("grid_line_width", 0.20);
     saveSetting("grid_line_mark_width", 0.20);
 
+    // SNAP - defaults to the same spacing as the visible grid (grid_step) so
+    // clicks visibly snap to grid intersections. Any multiple of 1 keeps
+    // coordinates integers, satisfying FidoCadJ's grid-unit requirement
+    // (FIDOSPECS.md 3), so this can be changed independently of grid_step.
+    saveSetting("snap_enabled", true);
+    saveSetting("snap_step", 10);
+
     // COLORI
     saveSetting("background_color", QColor("white").name());
     saveSetting("grid_dot_color", QColor("blue").name());

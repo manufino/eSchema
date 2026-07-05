@@ -23,6 +23,7 @@ public:
     void setControlPoint(int index, const QPointF &scenePos) override;
 
     void appendVertex(const QPointF &scenePos);
+    void removeLastVertex();
     int vertexCount() const { return m_vertices.size(); }
 
     bool isClosed() const { return m_closed; }

@@ -108,6 +108,13 @@ QSize LayerComboBox::sizeHint() const
     return hint;
 }
 
+Layer *LayerComboBox::selectedLayer() const
+{
+    if (!layerList || currentIndex() < 0 || currentIndex() >= layerList->size())
+        return nullptr;
+    return layerList->at(currentIndex());
+}
+
 void LayerComboBox::currentIndexChanged(int index)
 {
     Q_UNUSED(index);

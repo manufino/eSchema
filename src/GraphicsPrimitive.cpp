@@ -1,7 +1,7 @@
 #include "GraphicsPrimitive.h"
 #include "SettingsManager.h"
 #include "LayerList.h"
-#include <cmath>
+#include "GlobalUtils.h"
 
 GraphicsPrimitive::GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent) : QGraphicsItem(parent)
 {
@@ -67,18 +67,8 @@ void GraphicsPrimitive::rotate90(const QPointF &pivot)
 
 QVariant GraphicsPrimitive::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    if (change == ItemPositionChange && scene()) {
-        QVariant enabledVal = SettingsManager::getInstance().loadSetting("snap_enabled");
-        // Default to snap-enabled when the setting has never been written yet.
-        const bool snapEnabled = enabledVal.isValid() ? enabledVal.toBool() : true;
-        if (snapEnabled) {
-            QVariant stepVal = SettingsManager::getInstance().loadSetting("snap_step");
-            const int step = stepVal.isValid() && stepVal.toInt() > 0 ? stepVal.toInt() : 1;
-            QPointF newPos = value.toPointF();
-            newPos.setX(std::round(newPos.x() / step) * step);
-            newPos.setY(std::round(newPos.y() / step) * step);
-            return newPos;
-        }
-    }
+    if (change == ItemPositionChange && scene())
+        return Utils::instance().snapToGrid(value.toPointF());
+
     return QGraphicsItem::itemChange(change, value);
 }

@@ -47,6 +47,14 @@ void PrimitivePolygon::appendVertex(const QPointF &scenePos)
     m_vertices.append(scenePos);
 }
 
+void PrimitivePolygon::removeLastVertex()
+{
+    if (m_vertices.isEmpty())
+        return;
+    prepareGeometryChange();
+    m_vertices.removeLast();
+}
+
 bool PrimitivePolygon::isDegenerate() const
 {
     return m_vertices.size() < 2 && objName.isEmpty() && objValue.isEmpty();

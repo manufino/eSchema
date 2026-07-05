@@ -20,6 +20,7 @@ public:
     void addLayerList(QList<Layer*> *list);
     void setMaster(Layer *layer);
     void setAutoMaster();
+    Layer *selectedLayer() const;
 
 protected:
     void paintEvent(QPaintEvent *event) override;

@@ -22,6 +22,7 @@ public:
 
     // Used while interactively placing the polygon (one click = one vertex).
     void appendVertex(const QPointF &scenePos);
+    void removeLastVertex();
     int vertexCount() const { return m_vertices.size(); }
 
     bool isDegenerate() const override;

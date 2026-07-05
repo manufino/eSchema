@@ -46,6 +46,7 @@ SOURCES += \
 	src/PrimitiveMacro.cpp \
 	src/PrimitivePad.cpp \
 	src/PrimitivePcbTrack.cpp \
+	src/PrimitivePlacementController.cpp \
 	src/PrimitivePolygon.cpp \
 	src/PrimitiveRectangle.cpp \
 	src/PrimitiveText.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
 	src/PrimitiveMacro.h \
 	src/PrimitivePad.h \
 	src/PrimitivePcbTrack.h \
+	src/PrimitivePlacementController.h \
 	src/PrimitivePolygon.h \
 	src/PrimitiveRectangle.h \
 	src/PrimitiveText.h \

@@ -17,6 +17,12 @@ MainWindow::MainWindow(QWidget *parent)
     sheetScene->setSceneRect(0,0,5000,5000); // fisso le dimensioni della scena
 
     ui->graphicsView->setScene(sheetScene);
+
+    placementController = new PrimitivePlacementController(ui->graphicsView, sheetScene,
+                                                             ui->toolBarPrimitive, ui->cbPropLayer,
+                                                             ui->checkBox, this);
+    ui->graphicsView->setPlacementController(placementController);
+
     setConnections();
 }
 

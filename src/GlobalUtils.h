@@ -4,6 +4,10 @@
 #include <QDebug>
 #include <QRandomGenerator>
 #include <QColor>
+#include <QPointF>
+#include <QVariant>
+#include <cmath>
+#include "SettingsManager.h"
 
 class Utils {
 public:
@@ -26,6 +30,26 @@ public:
         int blue = QRandomGenerator::global()->bounded(256);
 
         return QColor(red, green, blue);
+    }
+
+    // Rounds a scene position to the nearest multiple of the configured snap
+    // step ("snap_step" setting), or returns it unchanged when "snap_enabled"
+    // is off. Shared by GraphicsPrimitive::itemChange (move) and
+    // SheetView::snapToGrid (placement) so the rule lives in exactly one place.
+    QPointF snapToGrid(const QPointF &pos)
+    {
+        QVariant enabledVal = SettingsManager::getInstance().loadSetting("snap_enabled");
+        const bool snapEnabled = enabledVal.isValid() ? enabledVal.toBool() : true;
+        if (!snapEnabled)
+            return pos;
+
+        QVariant stepVal = SettingsManager::getInstance().loadSetting("snap_step");
+        // Falls back to 10 (matching the default visible grid spacing) rather
+        // than 1, so snapping is actually visible at the default zoom instead
+        // of rounding to an imperceptibly fine 1-unit grid.
+        const int step = stepVal.isValid() && stepVal.toInt() > 0 ? stepVal.toInt() : 10;
+
+        return QPointF(std::round(pos.x() / step) * step, std::round(pos.y() / step) * step);
     }
 
     /**

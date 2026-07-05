@@ -1,4 +1,5 @@
 #include "SheetView.h"
+#include "PrimitivePlacementController.h"
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -141,6 +142,13 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     } else {
         setCursor(Qt::ArrowCursor);
     }
+
+    if (m_placementController && m_placementController->isPlacementToolActive()) {
+        m_placementController->handleMouseMove(snapToGrid(mapToScene(event->pos())));
+        emit mouseMoved(relativeOrigin);
+        return;
+    }
+
     if (rubberBand->isVisible())
         rubberBand->setGeometry(QRect(originSelection, event->pos()).normalized());
     emit mouseMoved(relativeOrigin);
@@ -149,6 +157,12 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
 
 void SheetView::mousePressEvent(QMouseEvent *event)
 {
+    if (event->button() == Qt::LeftButton && m_placementController
+            && m_placementController->isPlacementToolActive()) {
+        m_placementController->handleMousePress(snapToGrid(mapToScene(event->pos())));
+        return;
+    }
+
     if (event->button() == Qt::MiddleButton)
     {
         // Store original position.
@@ -168,10 +182,35 @@ void SheetView::mousePressEvent(QMouseEvent *event)
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
 {
+    if (m_placementController && m_placementController->isPlacementToolActive())
+        return;
+
     QGraphicsView::mouseReleaseEvent(event);
    // rubberBand->hide();
     //update();
     //scene()->update();
+}
+
+void SheetView::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton && m_placementController
+            && m_placementController->handleMouseDoubleClick(snapToGrid(mapToScene(event->pos()))))
+        return;
+
+    QGraphicsView::mouseDoubleClickEvent(event);
+}
+
+void SheetView::keyPressEvent(QKeyEvent *event)
+{
+    if (m_placementController && m_placementController->handleKeyPress(event))
+        return;
+
+    QGraphicsView::keyPressEvent(event);
+}
+
+QPointF SheetView::snapToGrid(const QPointF &scenePos) const
+{
+    return Utils::instance().snapToGrid(scenePos);
 }
 
 void SheetView::loadSettings()
