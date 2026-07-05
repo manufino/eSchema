@@ -15,15 +15,17 @@ class GraphicsPrimitive;
 // Drives interactive primitive *creation*. Reads which drawing tool is checked
 // on the toolbar and turns a sequence of scene clicks into a new primitive
 // added to the Sheet. One click-driven state machine handles both
-// fixed-point-count tools (line/rectangle/ellipse/bezier/connection/text) and
-// variable-vertex tools (polygon/complex curve) uniformly, via
-// GraphicsPrimitive's control-point interface.
+// fixed-point-count tools (line/rectangle/ellipse/bezier/connection/text/
+// pcbtrack/pad) and variable-vertex tools (polygon/complex curve) uniformly,
+// via GraphicsPrimitive's control-point interface.
 //
 // Note: only the primitive types that already have a toolbar action are
 // creatable interactively (Line, Rectangle, Polygon, Ellipse, Bezier, Curve,
-// Text, Connection). PcbTrack/Pad/Macro/Image have no toolbar entry point yet,
-// so they remain data-model-only until drawn via a future toolbar addition or
-// read from a FidoCadJ file.
+// Text, Connection, PcbTrack, Pad). Macro/Image have no toolbar entry point
+// (matching the reference FidoCadJ editor, which places them from the macro
+// library panel / an "insert image" dialog rather than a keyboard-shortcut
+// drawing tool), so they remain data-model-only until read from a FidoCadJ
+// file.
 class PrimitivePlacementController : public QObject
 {
     Q_OBJECT
@@ -44,7 +46,8 @@ public:
     bool handleKeyPress(QKeyEvent *event);
 
 private:
-    enum class Tool { Select, Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Text, Connection };
+    enum class Tool { Select, Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Text, Connection,
+                      PcbTrack, Pad };
 
     Tool currentTool() const;
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count
@@ -52,6 +55,13 @@ private:
     void finishPlacement();
     void cancelPlacement();
     bool isVariableVertexTool(Tool tool) const;
+    // Programmatically switches the toolbar back to the Select tool, exactly
+    // as if the user had clicked/pressed its shortcut - so Esc while mid-
+    // placement (see handleKeyPress()) doesn't just discard the in-progress
+    // primitive but actually leaves drawing mode, matching the reference
+    // FidoCadJ editor (PopUpMenu's Escape binding goes to the same
+    // "selection" action as pressing A).
+    void switchToolBarToSelectTool();
 
     SheetView *m_view;
     Sheet *m_sheet;

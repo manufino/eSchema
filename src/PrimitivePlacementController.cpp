@@ -11,6 +11,8 @@
 #include "PrimitiveComplexCurve.h"
 #include "PrimitiveConnection.h"
 #include "PrimitiveText.h"
+#include "PrimitivePcbTrack.h"
+#include "PrimitivePad.h"
 #include "CreatePrimitiveCommand.h"
 #include <QAction>
 #include <QCheckBox>
@@ -42,6 +44,8 @@ PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() c
     if (name == QStringLiteral("actionCurve")) return Tool::Curve;
     if (name == QStringLiteral("actionText")) return Tool::Text;
     if (name == QStringLiteral("actionConnection")) return Tool::Connection;
+    if (name == QStringLiteral("actionPcbTrack")) return Tool::PcbTrack;
+    if (name == QStringLiteral("actionPad")) return Tool::Pad;
     return Tool::Select;
 }
 
@@ -59,6 +63,8 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::Bezier: return 4;
     case Tool::Connection: return 1;
     case Tool::Text: return 1;
+    case Tool::PcbTrack: return 2;
+    case Tool::Pad: return 1;
     case Tool::Polygon: return -1;
     case Tool::Curve: return -1;
     case Tool::Select: return 0;
@@ -83,6 +89,8 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
     case Tool::Ellipse: m_activePrimitive = new PrimitiveEllipse(); break;
     case Tool::Bezier: m_activePrimitive = new PrimitiveBezier(); break;
     case Tool::Connection: m_activePrimitive = new PrimitiveConnection(); break;
+    case Tool::PcbTrack: m_activePrimitive = new PrimitivePcbTrack(); break;
+    case Tool::Pad: m_activePrimitive = new PrimitivePad(); break;
     case Tool::Polygon: m_activePrimitive = new PrimitivePolygon(); break;
     case Tool::Curve: m_activePrimitive = new PrimitiveComplexCurve(); break;
     case Tool::Text: {
@@ -164,6 +172,24 @@ void PrimitivePlacementController::cancelPlacement()
     m_activePrimitive = nullptr;
     m_pointsPlaced = 0;
     m_activeTool = Tool::Select;
+    switchToolBarToSelectTool();
+}
+
+void PrimitivePlacementController::switchToolBarToSelectTool()
+{
+    if (!m_toolBar)
+        return;
+    for (QAction *action : m_toolBar->actions()) {
+        if (action->objectName() == QStringLiteral("actionSelect")) {
+            // trigger(), not setChecked() - it needs to emit triggered() so
+            // ToolBarPrimitive's actionTriggered handler runs and actually
+            // unchecks the drawing tool that was active (currentTool() reads
+            // back from the toolbar's checked action, not from m_activeTool).
+            if (!action->isChecked())
+                action->trigger();
+            return;
+        }
+    }
 }
 
 bool PrimitivePlacementController::handleMousePress(const QPointF &scenePos)
