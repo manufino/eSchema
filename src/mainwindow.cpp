@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
                                                              ui->checkBox, this);
     ui->graphicsView->setPlacementController(placementController);
 
+    selectionHandleController = new SelectionHandleController(sheetScene, this);
+
     setConnections();
 }
 
@@ -44,6 +46,10 @@ void MainWindow::setConnections()
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
     connect(ui->DSpinBoxLineHeight, &QSpinBox::valueChanged, ui->cbPropLineStyle, &PenStyleComboBox::lineWidthChanged);
+    connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);
+    connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
+    connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::clickDeleteAction);
+    connect(ui->actionSelectAll, &QAction::triggered, this, &MainWindow::clickSelectAllAction);
 }
 
 void MainWindow::clickOptionAction()
@@ -72,4 +78,60 @@ void MainWindow::clickLayerManagerAction()
     layerManager = new DialogLayerList(this);
     connect(layerManager, &QDialog::finished, layerManager, &QObject::deleteLater);
     layerManager->show();
+}
+
+// Mirror/Rotate/Delete/SelectAll all operate on the current scene selection.
+// Mirror and Rotate pivot around controlPoint(0) of the first selected
+// primitive in document order - matching the reference FidoCadJ editor
+// (EditorActions.rotateAllSelected/mirrorAllSelected pivot on
+// getFirstSelectedPrimitive().getFirstPoint()), rather than e.g. the
+// selection's bounding-box center.
+GraphicsPrimitive *MainWindow::firstSelectedPrimitive() const
+{
+    for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
+        if (primitive->isSelected())
+            return primitive;
+    }
+    return nullptr;
+}
+
+void MainWindow::clickMirrorAction()
+{
+    GraphicsPrimitive *pivotPrimitive = firstSelectedPrimitive();
+    if (!pivotPrimitive)
+        return;
+    const QPointF pivot = pivotPrimitive->controlPoint(0);
+
+    for (QGraphicsItem *item : sheetScene->selectedItems()) {
+        if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
+            primitive->mirror(Qt::Horizontal, pivot);
+    }
+}
+
+void MainWindow::clickRotateAction()
+{
+    GraphicsPrimitive *pivotPrimitive = firstSelectedPrimitive();
+    if (!pivotPrimitive)
+        return;
+    const QPointF pivot = pivotPrimitive->controlPoint(0);
+
+    for (QGraphicsItem *item : sheetScene->selectedItems()) {
+        if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
+            primitive->rotate90(pivot);
+    }
+}
+
+void MainWindow::clickDeleteAction()
+{
+    const QList<QGraphicsItem *> selected = sheetScene->selectedItems();
+    for (QGraphicsItem *item : selected) {
+        if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
+            sheetScene->removePrimitive(primitive);
+    }
+}
+
+void MainWindow::clickSelectAllAction()
+{
+    for (QGraphicsItem *item : sheetScene->items())
+        item->setSelected(true);
 }

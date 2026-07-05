@@ -24,6 +24,13 @@ public:
     QPointF controlPoint(int index) const override;
     void setControlPoint(int index, const QPointF &scenePos) override;
 
+    // A text's own reading direction/orientation is a scalar field, not
+    // something derived from moving its single anchor point - like
+    // PrimitiveMacro, mirror/rotate must additionally update that field
+    // (matches FidoCadJ's PrimitiveAdvText.rotatePrimitive/mirrorPrimitive).
+    void mirror(Qt::Orientation axis, const QPointF &pivot) override;
+    void rotate90(const QPointF &pivot) override;
+
     QString text() const { return m_text; }
     void setText(const QString &text) { m_text = text; }
     int sizeY() const { return m_sizeY; }

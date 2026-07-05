@@ -1,7 +1,7 @@
 #include "GraphicsPrimitive.h"
-#include "SettingsManager.h"
 #include "LayerList.h"
 #include "GlobalUtils.h"
+#include <QGraphicsScene>
 
 GraphicsPrimitive::GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent) : QGraphicsItem(parent)
 {
@@ -21,9 +21,10 @@ GraphicsPrimitive::GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem
     // primitive should belong to until the user assigns a different one.
     objLayer = LayerList::getInstance().getMaster();
 
-    setFlags(QGraphicsItem::ItemIsSelectable |
-            QGraphicsItem::ItemIsMovable |
-            QGraphicsItem::ItemSendsGeometryChanges);
+    // Deliberately NOT ItemIsMovable - dragging is implemented manually in
+    // mousePressEvent/mouseMoveEvent below (see the comment on those overrides
+    // in the header for why).
+    setFlags(QGraphicsItem::ItemIsSelectable);
 }
 
 GraphicsPrimitive::~GraphicsPrimitive()
@@ -65,10 +66,42 @@ void GraphicsPrimitive::rotate90(const QPointF &pivot)
     }
 }
 
-QVariant GraphicsPrimitive::itemChange(GraphicsItemChange change, const QVariant &value)
+void GraphicsPrimitive::translateControlPoints(const QPointF &delta)
 {
-    if (change == ItemPositionChange && scene())
-        return Utils::instance().snapToGrid(value.toPointF());
+    const int count = controlPointCount();
+    for (int i = 0; i < count; ++i)
+        setControlPoint(i, controlPoint(i) + delta);
+}
 
-    return QGraphicsItem::itemChange(change, value);
+void GraphicsPrimitive::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    m_dragAnchor = Utils::instance().snapToGrid(event->scenePos());
+    // Still needed for click-to-select behaviour (ItemIsSelectable).
+    QGraphicsItem::mousePressEvent(event);
+}
+
+void GraphicsPrimitive::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (!(event->buttons() & Qt::LeftButton) || !scene()) {
+        QGraphicsItem::mouseMoveEvent(event);
+        return;
+    }
+
+    const QPointF newAnchor = Utils::instance().snapToGrid(event->scenePos());
+    const QPointF delta = newAnchor - m_dragAnchor;
+    if (delta.isNull())
+        return;
+    m_dragAnchor = newAnchor;
+
+    // Move every selected primitive together, not just the one under the
+    // cursor, so dragging any one item of a multi-selection moves the group.
+    const QList<QGraphicsItem *> selected = scene()->selectedItems();
+    if (isSelected() && selected.size() > 1) {
+        for (QGraphicsItem *item : selected) {
+            if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
+                primitive->translateControlPoints(delta);
+        }
+    } else {
+        translateControlPoints(delta);
+    }
 }

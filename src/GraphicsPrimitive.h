@@ -6,6 +6,7 @@
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QGraphicsSceneMouseEvent>
 #include <QApplication>
 #include <QStringList>
 
@@ -85,6 +86,15 @@ public:
     virtual void mirror(Qt::Orientation axis, const QPointF &pivot);
     virtual void rotate90(const QPointF &pivot);
 
+    // Shifts every control point by `delta`. Used by itemChange() to implement
+    // dragging: the item's own pos() is kept pinned at (0,0) forever, and
+    // moves are applied directly to the control points instead. This keeps
+    // the control points the single source of truth for geometry - if a drag
+    // instead changed pos() (QGraphicsItem's default behaviour), the control
+    // points would go stale relative to the item's new local origin, silently
+    // desyncing resize handles, mirror/rotate, and FidoCadJ serialization.
+    void translateControlPoints(const QPointF &delta);
+
     // True when the primitive carries no visible information (degenerate geometry
     // and no name/value label) and should be silently dropped on save, per the FCD
     // spec's "do not serialize a primitive that carries no information" rule.
@@ -117,10 +127,14 @@ public slots:
     void setPen(QPen pen) { this->_pen = pen; }
 
 protected:
-    // itemChange() is overridden (in GraphicsPrimitive.cpp) to snap ItemPositionChange
-    // through SettingsManager's snap_enabled/snap_step, so every subclass gets
-    // grid-snapped dragging for free without repeating the logic.
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    // Dragging is implemented manually (mousePressEvent/mouseMoveEvent) rather
+    // than via QGraphicsItem's built-in ItemIsMovable + itemChange interception:
+    // that mechanism computes movement through the item's own transform, which
+    // does not compose well with control points stored in absolute scene
+    // coordinates (position deltas came out inconsistent/erratic under zoom).
+    // Reading event->scenePos() directly sidesteps that entirely.
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
     Qt::PenStyle penStyle;
     bool filled, showName, showValue, visible;
@@ -130,6 +144,8 @@ protected:
     Layer *objLayer;
     QPen _pen;
     int penSize;
+
+    QPointF m_dragAnchor; // last mouse scene position seen during an active drag
 
     bool m_arrowAtStart = false;
     bool m_arrowAtEnd = false;

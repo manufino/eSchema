@@ -49,6 +49,18 @@ void PrimitiveText::setControlPoint(int, const QPointF &scenePos)
     m_pos = scenePos;
 }
 
+void PrimitiveText::mirror(Qt::Orientation axis, const QPointF &pivot)
+{
+    GraphicsPrimitive::mirror(axis, pivot); // moves the anchor point
+    m_styleFlags ^= Mirrored;
+}
+
+void PrimitiveText::rotate90(const QPointF &pivot)
+{
+    GraphicsPrimitive::rotate90(pivot); // moves the anchor point
+    m_orientationDeg = (m_orientationDeg + 90) % 360;
+}
+
 QStringList PrimitiveText::toTokens() const
 {
     using namespace FidoCadTokenUtils;

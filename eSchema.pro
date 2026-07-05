@@ -45,11 +45,13 @@ SOURCES += \
 	src/PrimitiveLine.cpp \
 	src/PrimitiveMacro.cpp \
 	src/PrimitivePad.cpp \
+	src/PrimitiveHandleItem.cpp \
 	src/PrimitivePcbTrack.cpp \
 	src/PrimitivePlacementController.cpp \
 	src/PrimitivePolygon.cpp \
 	src/PrimitiveRectangle.cpp \
 	src/PrimitiveText.cpp \
+	src/SelectionHandleController.cpp \
 	src/SettingsManager.cpp \
 	src/main.cpp \
 	src/MainWindow.cpp \
@@ -84,6 +86,7 @@ HEADERS += \
 	src/PrimitiveComplexCurve.h \
 	src/PrimitiveConnection.h \
 	src/PrimitiveEllipse.h \
+	src/PrimitiveHandleItem.h \
 	src/PrimitiveImage.h \
 	src/PrimitiveLine.h \
 	src/PrimitiveMacro.h \
@@ -93,6 +96,7 @@ HEADERS += \
 	src/PrimitivePolygon.h \
 	src/PrimitiveRectangle.h \
 	src/PrimitiveText.h \
+	src/SelectionHandleController.h \
 	src/SettingsManager.h \
 	src/LayerComboBox.h \
 	src/MainWindow.h \

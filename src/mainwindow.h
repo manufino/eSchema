@@ -19,6 +19,7 @@
 #include "DialogShortcuts.h"
 #include "GlobalUtils.h"
 #include "PrimitivePlacementController.h"
+#include "SelectionHandleController.h"
 
 
 
@@ -39,9 +40,14 @@ public slots:
     void clickAboutAction();
     void clickShortcutsAction();
     void clickLayerManagerAction();
+    void clickMirrorAction();
+    void clickRotateAction();
+    void clickDeleteAction();
+    void clickSelectAllAction();
 
 private:
     void setConnections();
+    GraphicsPrimitive *firstSelectedPrimitive() const;
 
 private:
     Ui::MainWindow *ui;
@@ -52,5 +58,6 @@ private:
     DialogShortcuts *shortcutsDialog;
     LayerToolBarWidget *layerToolBarWidget;
     PrimitivePlacementController *placementController;
+    SelectionHandleController *selectionHandleController;
 };
 #endif // MAINWINDOW_H
