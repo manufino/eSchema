@@ -187,12 +187,14 @@ QString labelText(const QStringList &tokens, int firstTextTokenIndex)
                                                  : tokens.mid(firstTextTokenIndex).join(QLatin1Char(' '));
 }
 
-} // namespace
-
-void read(const QString &text, Sheet *sheet)
+// Shared by read() (which replaces the whole document) and parse() (which
+// hands the caller a standalone list to merge into an existing document, e.g.
+// for Paste) - both walk the same line-by-line state machine, differing only
+// in whether an FJC line's document-wide settings (connection diameter/line
+// widths) get applied to `sheet`.
+QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool applyDocumentConfig)
 {
-    sheet->clearPrimitives();
-
+    QList<GraphicsPrimitive *> result;
     GraphicsPrimitive *pending = nullptr;
     int macroCounter = 0; // 2 = next TY is the name, 1 = next TY is the value
 
@@ -200,7 +202,7 @@ void read(const QString &text, Sheet *sheet)
         if (!pending)
             return;
         if (!pending->isDegenerate())
-            sheet->addPrimitive(pending);
+            result.append(pending);
         else
             delete pending;
         pending = nullptr;
@@ -227,7 +229,7 @@ void read(const QString &text, Sheet *sheet)
             // et al. Other sub-codes (L/N/IMG - per-layer color/name overrides,
             // background image placement) are recognized-but-ignored for this
             // pass, matching the spec's "unknown sub-codes are ignored" rule.
-            if (tokens.size() >= 3) {
+            if (applyDocumentConfig && tokens.size() >= 3) {
                 const qreal value = tokens.at(2).toDouble();
                 if (value > 0) {
                     if (tokens.at(1) == QStringLiteral("C"))
@@ -282,7 +284,7 @@ void read(const QString &text, Sheet *sheet)
             if (textPrimitive->isDegenerate())
                 delete textPrimitive;
             else
-                sheet->addPrimitive(textPrimitive);
+                result.append(textPrimitive);
             continue;
         }
 
@@ -304,6 +306,21 @@ void read(const QString &text, Sheet *sheet)
     }
 
     commitPending();
+    return result;
+}
+
+} // namespace
+
+void read(const QString &text, Sheet *sheet)
+{
+    sheet->clearPrimitives();
+    for (GraphicsPrimitive *primitive : parseLines(text, sheet, /*applyDocumentConfig=*/true))
+        sheet->addPrimitive(primitive);
+}
+
+QList<GraphicsPrimitive *> parse(const QString &text, Sheet *contextSheet)
+{
+    return parseLines(text, contextSheet, /*applyDocumentConfig=*/false);
 }
 
 bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage)

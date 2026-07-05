@@ -2,8 +2,10 @@
 #define FIDOCADREADER_H
 
 #include <QString>
+#include <QList>
 
 class Sheet;
+class GraphicsPrimitive;
 
 // Parses FidoCadJ (.fcd) text into a Sheet (FIDOSPECS.md 4-7). Per the format's
 // robustness contract, malformed or unrecognized lines are skipped rather than
@@ -16,6 +18,14 @@ void read(const QString &text, Sheet *sheet);
 // Reads from disk. Returns false and sets *errorMessage if the file can't be
 // opened; parsing itself (via read()) never fails.
 bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage = nullptr);
+
+// Parses `text` into standalone primitives without touching any sheet - used
+// by Paste, which must add the result to the existing document (via an undo
+// command) rather than replacing it the way read() does. `contextSheet` is
+// read-only here, supplying only the connection diameter a bare "SA" line
+// should default to; an FJC line in `text` (which a Copy never produces) is
+// parsed but has nowhere to be stored and is simply discarded.
+QList<GraphicsPrimitive *> parse(const QString &text, Sheet *contextSheet);
 
 } // namespace FidoCadReader
 

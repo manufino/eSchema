@@ -48,6 +48,9 @@ public slots:
     void clickMirrorAction();
     void clickRotateAction();
     void clickDeleteAction();
+    void clickCutAction();
+    void clickCopyAction();
+    void clickPasteAction();
     void clickSelectAllAction();
     void clickNewAction();
     void clickOpenAction();
@@ -57,6 +60,10 @@ public slots:
 private:
     void setConnections();
     GraphicsPrimitive *firstSelectedPrimitive() const;
+    // Selected primitives in stable document order (sheet->primitives()
+    // order), not QGraphicsScene::selectedItems()'s unspecified order - Copy
+    // needs this so pasting reproduces a predictable, repeatable layout.
+    QList<GraphicsPrimitive *> selectedPrimitivesInOrder() const;
     bool saveToPath(const QString &filePath);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();

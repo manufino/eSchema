@@ -90,6 +90,14 @@ QString write(const Sheet *sheet)
     return lines.join(QLatin1Char('\n'));
 }
 
+QString writeSelection(const QList<GraphicsPrimitive *> &primitives)
+{
+    QStringList lines;
+    for (const GraphicsPrimitive *primitive : primitives)
+        writePrimitive(lines, primitive);
+    return lines.join(QLatin1Char('\n'));
+}
+
 bool writeFile(const Sheet *sheet, const QString &filePath, QString *errorMessage)
 {
     // No QIODevice::Text: that flag makes Qt translate '\n' to the platform

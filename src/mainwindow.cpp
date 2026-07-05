@@ -5,9 +5,12 @@
 #include "MirrorPrimitiveCommand.h"
 #include "RotatePrimitiveCommand.h"
 #include "DeletePrimitiveCommand.h"
+#include "CreatePrimitiveCommand.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QGuiApplication>
+#include <QClipboard>
 
 namespace {
 // FidoCadJ's 16 default layers and colors (FIDOSPECS.md 3.1). Populating all
@@ -76,6 +79,9 @@ void MainWindow::setConnections()
     connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::clickDeleteAction);
+    connect(ui->actionCut, &QAction::triggered, this, &MainWindow::clickCutAction);
+    connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::clickCopyAction);
+    connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::clickPasteAction);
     connect(ui->actionSelectAll, &QAction::triggered, this, &MainWindow::clickSelectAllAction);
     connect(ui->actionNewDraw, &QAction::triggered, this, &MainWindow::clickNewAction);
     connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
@@ -203,6 +209,81 @@ void MainWindow::clickSelectAllAction()
 {
     for (QGraphicsItem *item : sheetScene->items())
         item->setSelected(true);
+}
+
+QList<GraphicsPrimitive *> MainWindow::selectedPrimitivesInOrder() const
+{
+    QList<GraphicsPrimitive *> result;
+    for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
+        if (primitive->isSelected())
+            result.append(primitive);
+    }
+    return result;
+}
+
+// Copy/Cut put the selection on the system clipboard as FidoCadJ text
+// (FidoCadWriter::writeSelection()) - matching the reference FidoCadJ editor,
+// which copies as text rather than an app-private format, so a paste can also
+// land in a plain text editor (and, conversely, so hand-written FCD snippets
+// can be pasted straight into the drawing).
+void MainWindow::clickCopyAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+    QGuiApplication::clipboard()->setText(FidoCadWriter::writeSelection(selected));
+}
+
+void MainWindow::clickCutAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+    QGuiApplication::clipboard()->setText(FidoCadWriter::writeSelection(selected));
+
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = selected.size() > 1;
+    if (multiple)
+        undo->beginMacro(tr("Taglia"));
+    for (GraphicsPrimitive *primitive : selected)
+        undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+    if (multiple)
+        undo->endMacro();
+}
+
+void MainWindow::clickPasteAction()
+{
+    const QString text = QGuiApplication::clipboard()->text();
+    if (text.isEmpty())
+        return;
+
+    const QList<GraphicsPrimitive *> pasted = FidoCadReader::parse(text, sheetScene);
+    if (pasted.isEmpty())
+        return;
+
+    // Offset by one grid step and select the result, matching the reference
+    // FidoCadJ editor's paste (CopyPasteActions.paste() shifts by the current
+    // grid step; PopUpMenu's Paste handler passes that grid step in) - so the
+    // pasted copy is visibly distinct from what was copied and immediately
+    // ready to drag into place.
+    const QVariant stepVal = SettingsManager::getInstance().loadSetting("snap_step");
+    const int step = stepVal.isValid() && stepVal.toInt() > 0 ? stepVal.toInt() : 10;
+    const QPointF offset(step, step);
+
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = pasted.size() > 1;
+    if (multiple)
+        undo->beginMacro(tr("Incolla"));
+    for (GraphicsPrimitive *primitive : pasted) {
+        primitive->translateControlPoints(offset);
+        // push() calls redo() synchronously, which is what actually adds the
+        // primitive to the scene - only safe to select it afterwards.
+        undo->push(new CreatePrimitiveCommand(sheetScene, primitive));
+        primitive->setSelected(true);
+    }
+    if (multiple)
+        undo->endMacro();
 }
 
 void MainWindow::updateWindowTitle()
