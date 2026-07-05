@@ -1356,6 +1356,9 @@ margin:1px;
    <property name="text">
     <string>Nuovo disegno</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="actionOpenFile">
    <property name="enabled">
@@ -1367,6 +1370,9 @@ margin:1px;
    </property>
    <property name="text">
     <string>Apri un file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionSave">
@@ -1380,6 +1386,9 @@ margin:1px;
    <property name="text">
     <string>Salva</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionSaveAs">
    <property name="enabled">
@@ -1392,6 +1401,9 @@ margin:1px;
    <property name="text">
     <string>Salva con nome</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
   </action>
   <action name="actionPrint">
    <property name="icon">
@@ -1401,6 +1413,9 @@ margin:1px;
    <property name="text">
     <string>Stampa</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
   </action>
   <action name="actionClose">
    <property name="icon">
@@ -1409,6 +1424,9 @@ margin:1px;
    </property>
    <property name="text">
     <string>Chiudi</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="actionUndo">
@@ -1452,6 +1470,9 @@ margin:1px;
    <property name="text">
     <string>Taglia</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="actionCopy">
    <property name="enabled">
@@ -1463,6 +1484,9 @@ margin:1px;
    </property>
    <property name="text">
     <string>Copia</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
    </property>
   </action>
   <action name="actionPaste">
@@ -1476,6 +1500,9 @@ margin:1px;
    <property name="text">
     <string>Incolla</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
   </action>
   <action name="actionDuplicate">
    <property name="enabled">
@@ -1487,6 +1514,9 @@ margin:1px;
    </property>
    <property name="text">
     <string>Duplica</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionRotate">
@@ -1500,6 +1530,9 @@ margin:1px;
    <property name="text">
     <string>Ruota</string>
    </property>
+   <property name="shortcut">
+    <string>R</string>
+   </property>
   </action>
   <action name="actionMirror">
    <property name="enabled">
@@ -1512,6 +1545,9 @@ margin:1px;
    <property name="text">
     <string>Specchia</string>
    </property>
+   <property name="shortcut">
+    <string>S</string>
+   </property>
   </action>
   <action name="actionSelectAll">
    <property name="enabled">
@@ -1523,6 +1559,9 @@ margin:1px;
    </property>
    <property name="text">
     <string>Seleziona tutto</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionDelete">
@@ -1879,6 +1918,9 @@ margin:1px;
    </property>
    <property name="toolTip">
     <string>Gestione layer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actionToolBarBaseVisible">
