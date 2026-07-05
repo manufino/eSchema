@@ -4,7 +4,6 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QWheelEvent>
-#include <QRubberBand>
 #include <QMouseEvent>
 #include <QGraphicsRectItem>
 #include <QColor>
@@ -70,8 +69,7 @@ private:
     float lineGridWidth, lineThickGridWidth;
     bool gridEnabled;
     QColor lineGridColor, lineThickGridColor, dotsGridColor, backgroundColor;
-    QPoint point, origin, originSelection;
-    QRubberBand *rubberBand;
+    QPoint point;
     Utils::GridType gridType;
     PrimitivePlacementController *m_placementController = nullptr;
 };

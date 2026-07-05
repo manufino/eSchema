@@ -1420,6 +1420,9 @@ margin:1px;
    <property name="text">
     <string>Annulla</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
   </action>
   <action name="actionRestore">
    <property name="enabled">
@@ -1431,6 +1434,9 @@ margin:1px;
    </property>
    <property name="text">
     <string>Ripristina</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
    </property>
   </action>
   <action name="actionCut">

@@ -11,6 +11,7 @@
 #include "PrimitiveComplexCurve.h"
 #include "PrimitiveConnection.h"
 #include "PrimitiveText.h"
+#include "CreatePrimitiveCommand.h"
 #include <QAction>
 #include <QCheckBox>
 #include <QKeyEvent>
@@ -146,6 +147,10 @@ void PrimitivePlacementController::finishPlacement()
     if (m_activePrimitive) {
         m_sheet->clearSelection();
         m_activePrimitive->setSelected(true);
+        // The primitive is already in the sheet (added back in
+        // startPlacement()) - push() calling redo() once more is a harmless
+        // no-op (Sheet::addPrimitive() is idempotent).
+        m_sheet->undoStack()->push(new CreatePrimitiveCommand(m_sheet, m_activePrimitive));
     }
     m_activePrimitive = nullptr;
     m_pointsPlaced = 0;

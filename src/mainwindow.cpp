@@ -2,6 +2,9 @@
 #include "ui_MainWindow.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
+#include "MirrorPrimitiveCommand.h"
+#include "RotatePrimitiveCommand.h"
+#include "DeletePrimitiveCommand.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -78,6 +81,20 @@ void MainWindow::setConnections()
     connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
+
+    QUndoStack *undo = sheetScene->undoStack();
+    connect(ui->actionUndo, &QAction::triggered, undo, &QUndoStack::undo);
+    connect(ui->actionRestore, &QAction::triggered, undo, &QUndoStack::redo);
+    connect(undo, &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+    connect(undo, &QUndoStack::canRedoChanged, ui->actionRestore, &QAction::setEnabled);
+    connect(undo, &QUndoStack::undoTextChanged, this, [this](const QString &text) {
+        ui->actionUndo->setText(text.isEmpty() ? tr("Annulla") : tr("Annulla: %1").arg(text));
+    });
+    connect(undo, &QUndoStack::redoTextChanged, this, [this](const QString &text) {
+        ui->actionRestore->setText(text.isEmpty() ? tr("Ripristina") : tr("Ripristina: %1").arg(text));
+    });
+    ui->actionUndo->setEnabled(undo->canUndo());
+    ui->actionRestore->setEnabled(undo->canRedo());
 }
 
 void MainWindow::clickOptionAction()
@@ -123,6 +140,10 @@ GraphicsPrimitive *MainWindow::firstSelectedPrimitive() const
     return nullptr;
 }
 
+// Mirror/Rotate/Delete are never applied directly here - each pushes an undo
+// command instead, whose redo() (auto-invoked once by QUndoStack::push()) is
+// the sole place the actual mutation happens. Multiple selected primitives
+// are wrapped in a macro so they undo/redo together as one step.
 void MainWindow::clickMirrorAction()
 {
     GraphicsPrimitive *pivotPrimitive = firstSelectedPrimitive();
@@ -130,10 +151,17 @@ void MainWindow::clickMirrorAction()
         return;
     const QPointF pivot = pivotPrimitive->controlPoint(0);
 
-    for (QGraphicsItem *item : sheetScene->selectedItems()) {
+    const QList<QGraphicsItem *> selected = sheetScene->selectedItems();
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = selected.size() > 1;
+    if (multiple)
+        undo->beginMacro(tr("Specchia"));
+    for (QGraphicsItem *item : selected) {
         if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
-            primitive->mirror(Qt::Horizontal, pivot);
+            undo->push(new MirrorPrimitiveCommand(primitive, Qt::Horizontal, pivot));
     }
+    if (multiple)
+        undo->endMacro();
 }
 
 void MainWindow::clickRotateAction()
@@ -143,19 +171,32 @@ void MainWindow::clickRotateAction()
         return;
     const QPointF pivot = pivotPrimitive->controlPoint(0);
 
-    for (QGraphicsItem *item : sheetScene->selectedItems()) {
+    const QList<QGraphicsItem *> selected = sheetScene->selectedItems();
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = selected.size() > 1;
+    if (multiple)
+        undo->beginMacro(tr("Ruota"));
+    for (QGraphicsItem *item : selected) {
         if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
-            primitive->rotate90(pivot);
+            undo->push(new RotatePrimitiveCommand(primitive, pivot));
     }
+    if (multiple)
+        undo->endMacro();
 }
 
 void MainWindow::clickDeleteAction()
 {
     const QList<QGraphicsItem *> selected = sheetScene->selectedItems();
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = selected.size() > 1;
+    if (multiple)
+        undo->beginMacro(tr("Elimina"));
     for (QGraphicsItem *item : selected) {
         if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
-            sheetScene->removePrimitive(primitive);
+            undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
     }
+    if (multiple)
+        undo->endMacro();
 }
 
 void MainWindow::clickSelectAllAction()

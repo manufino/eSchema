@@ -9,6 +9,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QApplication>
 #include <QStringList>
+#include <QVector>
+#include <QHash>
 
 #include "Layer.h"
 
@@ -100,6 +102,14 @@ public:
     // desyncing resize handles, mirror/rotate, and FidoCadJ serialization.
     void translateControlPoints(const QPointF &delta);
 
+    // Snapshot/restore of every control point, in order. Used by the undo
+    // commands for move/resize: both capture an absolute "before" and "after"
+    // snapshot and replay one or the other via restoreControlPoints(), rather
+    // than reapplying a relative delta - safe to call again even if the drag
+    // that originally produced the "after" state already applied it live.
+    QVector<QPointF> controlPointSnapshot() const;
+    void restoreControlPoints(const QVector<QPointF> &points);
+
     // True when the primitive carries no visible information (degenerate geometry
     // and no name/value label) and should be silently dropped on save, per the FCD
     // spec's "do not serialize a primitive that carries no information" rule.
@@ -160,6 +170,7 @@ protected:
     // Reading event->scenePos() directly sidesteps that entirely.
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
     Qt::PenStyle penStyle;
     bool filled, showName, showValue, visible;
@@ -171,6 +182,10 @@ protected:
     int penSize;
 
     QPointF m_dragAnchor; // last mouse scene position seen during an active drag
+    // Control-point snapshots (per moved primitive - a multi-selection drag
+    // moves them all) as they were at mousePress, so mouseReleaseEvent can
+    // push one undo-able MovePrimitiveCommand per primitive that actually moved.
+    QHash<GraphicsPrimitive *, QVector<QPointF>> m_dragStartSnapshots;
 
     bool m_arrowAtStart = false;
     bool m_arrowAtEnd = false;

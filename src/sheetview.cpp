@@ -7,8 +7,6 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
      * ma sara' da salvare nel file dei settings.*/
     gridEnabled=true;
 
-    rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
-
     zoomLevel=100;
 
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
@@ -20,6 +18,12 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
     setRenderHint(QPainter::Antialiasing); //TODO: da valutare
     setTransformationAnchor(QGraphicsView::NoAnchor);
+    // Native rubber-band selection: clicking empty canvas and dragging draws
+    // the selection rectangle and selects the primitives it touches. Clicking
+    // directly on a primitive still reaches its own mousePressEvent first
+    // (GraphicsPrimitive's manual drag handling), so this only kicks in over
+    // empty space.
+    setDragMode(QGraphicsView::RubberBandDrag);
 }
 
 void SheetView::setGrid(int size, QColor clr)
@@ -149,8 +153,6 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
-    if (rubberBand->isVisible())
-        rubberBand->setGeometry(QRect(originSelection, event->pos()).normalized());
     emit mouseMoved(relativeOrigin);
     QGraphicsView::mouseMoveEvent(event);
 }
@@ -169,14 +171,6 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         m_originX = event->position().x();
         m_originY = event->position().y();
     }
-    else
-        if(event->button() == Qt::LeftButton)
-        {
-            originSelection = event->pos();
-
-            //rubberBand->setGeometry(QRect(originSelection, QSize()));
-            //rubberBand->show();
-        }
     QGraphicsView::mousePressEvent(event);
 }
 
@@ -186,9 +180,6 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
         return;
 
     QGraphicsView::mouseReleaseEvent(event);
-   // rubberBand->hide();
-    //update();
-    //scene()->update();
 }
 
 void SheetView::mouseDoubleClickEvent(QMouseEvent *event)

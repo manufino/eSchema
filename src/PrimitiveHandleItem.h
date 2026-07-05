@@ -30,12 +30,14 @@ protected:
     // scale while dragging under zoom. Reading event->scenePos() directly avoids it.
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     static constexpr qreal HalfSize = 4.0; // screen pixels - ItemIgnoresTransformations keeps this constant at any zoom
 
     GraphicsPrimitive *m_target;
     int m_index;
+    QPointF m_dragStartPos; // target's control point value at mousePress, for undo
 };
 
 #endif // PRIMITIVEHANDLEITEM_H

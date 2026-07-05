@@ -20,6 +20,8 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
 	src/ColorPicker.cpp \
+	src/CreatePrimitiveCommand.cpp \
+	src/DeletePrimitiveCommand.cpp \
 	src/DialogAbout.cpp \
 	src/DialogLayerList.cpp \
 	src/DialogOptions.cpp \
@@ -28,6 +30,8 @@ SOURCES += \
 	src/FidoCadTokenUtils.cpp \
 	src/FidoCadWriter.cpp \
 	src/GraphicsPrimitive.cpp \
+	src/MirrorPrimitiveCommand.cpp \
+	src/MovePrimitiveCommand.cpp \
 	src/LayerColorPicker.cpp \
 	src/LayerComboBox.cpp \
 	src/LayerItemDelegate.cpp \
@@ -53,6 +57,8 @@ SOURCES += \
 	src/PrimitivePolygon.cpp \
 	src/PrimitiveRectangle.cpp \
 	src/PrimitiveText.cpp \
+	src/ResizePrimitiveCommand.cpp \
+	src/RotatePrimitiveCommand.cpp \
 	src/SelectionHandleController.cpp \
 	src/SettingsManager.cpp \
 	src/main.cpp \
@@ -64,6 +70,8 @@ SOURCES += \
 
 HEADERS += \
 	src/ColorPicker.h \
+	src/CreatePrimitiveCommand.h \
+	src/DeletePrimitiveCommand.h \
 	src/DialogAbout.h \
 	src/DialogLayerList.h \
 	src/DialogOptions.h \
@@ -100,6 +108,10 @@ HEADERS += \
 	src/PrimitivePolygon.h \
 	src/PrimitiveRectangle.h \
 	src/PrimitiveText.h \
+	src/ResizePrimitiveCommand.h \
+	src/RotatePrimitiveCommand.h \
+	src/MirrorPrimitiveCommand.h \
+	src/MovePrimitiveCommand.h \
 	src/SelectionHandleController.h \
 	src/SettingsManager.h \
 	src/LayerComboBox.h \

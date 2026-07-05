@@ -1,6 +1,8 @@
 #include "PrimitiveHandleItem.h"
 #include "GraphicsPrimitive.h"
 #include "GlobalUtils.h"
+#include "Sheet.h"
+#include "ResizePrimitiveCommand.h"
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
@@ -29,6 +31,7 @@ void PrimitiveHandleItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 void PrimitiveHandleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    m_dragStartPos = m_target->controlPoint(m_index);
     event->accept(); // must accept to keep receiving move/release events
 }
 
@@ -37,4 +40,14 @@ void PrimitiveHandleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     const QPointF snapped = Utils::instance().snapToGrid(event->scenePos());
     setPos(snapped);
     m_target->setControlPoint(m_index, snapped);
+}
+
+void PrimitiveHandleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
+{
+    const QPointF after = m_target->controlPoint(m_index);
+    if (after == m_dragStartPos)
+        return; // plain click, nothing to undo
+
+    if (auto *sheet = qobject_cast<Sheet *>(m_target->scene()))
+        sheet->undoStack()->push(new ResizePrimitiveCommand(m_target, m_index, m_dragStartPos, after));
 }

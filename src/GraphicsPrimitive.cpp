@@ -1,6 +1,8 @@
 #include "GraphicsPrimitive.h"
 #include "LayerList.h"
 #include "GlobalUtils.h"
+#include "Sheet.h"
+#include "MovePrimitiveCommand.h"
 #include <QGraphicsScene>
 
 GraphicsPrimitive::GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent) : QGraphicsItem(parent)
@@ -73,6 +75,22 @@ void GraphicsPrimitive::translateControlPoints(const QPointF &delta)
         setControlPoint(i, controlPoint(i) + delta);
 }
 
+QVector<QPointF> GraphicsPrimitive::controlPointSnapshot() const
+{
+    const int count = controlPointCount();
+    QVector<QPointF> points;
+    points.reserve(count);
+    for (int i = 0; i < count; ++i)
+        points.append(controlPoint(i));
+    return points;
+}
+
+void GraphicsPrimitive::restoreControlPoints(const QVector<QPointF> &points)
+{
+    for (int i = 0; i < points.size(); ++i)
+        setControlPoint(i, points.at(i));
+}
+
 QRectF GraphicsPrimitive::labelBoundingRect() const
 {
     const bool drawName = showName && !objName.isEmpty();
@@ -116,6 +134,19 @@ void GraphicsPrimitive::paintLabels(QPainter *painter) const
 void GraphicsPrimitive::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     m_dragAnchor = Utils::instance().snapToGrid(event->scenePos());
+
+    // Snapshot every primitive this drag might move (itself, plus any
+    // co-selected siblings), so mouseReleaseEvent can push one undo-able
+    // MovePrimitiveCommand per primitive that actually ends up moving.
+    m_dragStartSnapshots.clear();
+    m_dragStartSnapshots.insert(this, controlPointSnapshot());
+    if (scene() && isSelected()) {
+        for (QGraphicsItem *item : scene()->selectedItems()) {
+            if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item); primitive && primitive != this)
+                m_dragStartSnapshots.insert(primitive, primitive->controlPointSnapshot());
+        }
+    }
+
     // Still needed for click-to-select behaviour (ItemIsSelectable).
     QGraphicsItem::mousePressEvent(event);
 }
@@ -144,4 +175,27 @@ void GraphicsPrimitive::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     } else {
         translateControlPoints(delta);
     }
+}
+
+void GraphicsPrimitive::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsItem::mouseReleaseEvent(event);
+
+    if (m_dragStartSnapshots.isEmpty())
+        return;
+
+    auto *sheet = qobject_cast<Sheet *>(scene());
+    if (sheet) {
+        const bool multiple = m_dragStartSnapshots.size() > 1;
+        if (multiple)
+            sheet->undoStack()->beginMacro(tr("Sposta"));
+        for (auto it = m_dragStartSnapshots.constBegin(); it != m_dragStartSnapshots.constEnd(); ++it) {
+            const QVector<QPointF> after = it.key()->controlPointSnapshot();
+            if (after != it.value())
+                sheet->undoStack()->push(new MovePrimitiveCommand(it.key(), it.value(), after));
+        }
+        if (multiple)
+            sheet->undoStack()->endMacro();
+    }
+    m_dragStartSnapshots.clear();
 }
