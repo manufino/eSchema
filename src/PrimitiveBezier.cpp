@@ -24,7 +24,7 @@ void PrimitiveBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     if (!isVisible())
         return;
 
-    QPen pen(objLayer ? objLayer->color() : QColor(Qt::black));
+    QPen pen(drawColor());
     pen.setStyle(penStyle);
     pen.setWidthF(penSize);
     painter->setPen(pen);

@@ -142,6 +142,17 @@ public:
     // label can be clipped/left un-invalidated when it moves.
     QRectF labelBoundingRect() const;
 
+    // The color a primitive should actually draw itself with: its assigned
+    // layer's color, blended toward green when selected. Qt draws no default
+    // visual difference for a selected QGraphicsItem unless paint() does
+    // something itself, so every concrete primitive calls this instead of
+    // reading layer()->color() directly - otherwise rubber-band-selecting
+    // several primitives at once produces no visible feedback at all, since
+    // only a single selection gets resize handles. Matches the reference
+    // FidoCadJ editor (GraphicPrimitive.selectLayer()/activateSelectColor(),
+    // which blends 60% toward green rather than drawing a separate outline).
+    QColor drawColor() const;
+
 protected:
     // Draws name()/value() near controlPoint(0) if set and visible. Every
     // concrete primitive calls this at the end of its own paint() - centralized

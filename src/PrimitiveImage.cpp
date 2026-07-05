@@ -35,6 +35,17 @@ void PrimitiveImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
                          m_pixmap.rect());
     painter->restore();
 
+    // An image has no layer color to blend when selected (unlike every other
+    // primitive) - draw an outline instead, so it isn't the one primitive
+    // type with no selection feedback at all.
+    if (isSelected()) {
+        painter->save();
+        painter->setPen(QPen(drawColor(), 0, Qt::DashLine));
+        painter->setBrush(Qt::NoBrush);
+        painter->drawRect(QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized());
+        painter->restore();
+    }
+
     paintLabels(painter);
 }
 

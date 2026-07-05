@@ -54,7 +54,7 @@ void PrimitiveComplexCurve::paint(QPainter *painter, const QStyleOptionGraphicsI
     if (!isVisible() || m_vertices.size() < 2)
         return;
 
-    QPen pen(objLayer ? objLayer->color() : QColor(Qt::black));
+    QPen pen(drawColor());
     pen.setStyle(penStyle);
     pen.setWidthF(penSize);
     painter->setPen(pen);

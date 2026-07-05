@@ -19,7 +19,7 @@ void PrimitiveConnection::paint(QPainter *painter, const QStyleOptionGraphicsIte
     if (!isVisible())
         return;
 
-    const QColor color = objLayer ? objLayer->color() : QColor(Qt::black);
+    const QColor color = drawColor();
     painter->setPen(Qt::NoPen);
     painter->setBrush(color);
 

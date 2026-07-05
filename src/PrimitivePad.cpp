@@ -21,7 +21,7 @@ void PrimitivePad::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     if (!isVisible())
         return;
 
-    const QColor color = objLayer ? objLayer->color() : QColor(Qt::black);
+    const QColor color = drawColor();
     const QPointF center = mapFromScene(m_pos);
     const QRectF outer(center - QPointF(m_rx / 2, m_ry / 2), QSizeF(m_rx, m_ry));
 

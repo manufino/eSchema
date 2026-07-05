@@ -27,7 +27,7 @@ void PrimitiveText::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
     font.setBold(m_styleFlags & Bold);
     font.setItalic(m_styleFlags & Italic);
     painter->setFont(font);
-    painter->setPen(objLayer ? objLayer->color() : QColor(Qt::black));
+    painter->setPen(drawColor());
 
     painter->save();
     painter->translate(mapFromScene(m_pos));

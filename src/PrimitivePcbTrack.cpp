@@ -20,7 +20,7 @@ void PrimitivePcbTrack::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     if (!isVisible())
         return;
 
-    QPen pen(objLayer ? objLayer->color() : QColor(Qt::black));
+    QPen pen(drawColor());
     pen.setWidthF(m_width);
     pen.setCapStyle(Qt::RoundCap); // PCB tracks have rounded ends, like real copper
     painter->setPen(pen);

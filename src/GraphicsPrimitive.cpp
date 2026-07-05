@@ -91,6 +91,21 @@ void GraphicsPrimitive::restoreControlPoints(const QVector<QPointF> &points)
         setControlPoint(i, points.at(i));
 }
 
+QColor GraphicsPrimitive::drawColor() const
+{
+    const QColor base = objLayer ? objLayer->color() : QColor(Qt::black);
+    if (!isSelected())
+        return base;
+
+    // Blend 60% toward green, same factor as FidoCadJ's activateSelectColor().
+    const QColor green(Qt::green);
+    const qreal t = 0.6;
+    return QColor(qRound(green.red() * t + base.red() * (1 - t)),
+                  qRound(green.green() * t + base.green() * (1 - t)),
+                  qRound(green.blue() * t + base.blue() * (1 - t)),
+                  base.alpha());
+}
+
 QRectF GraphicsPrimitive::labelBoundingRect() const
 {
     const bool drawName = showName && !objName.isEmpty();
@@ -118,7 +133,7 @@ void GraphicsPrimitive::paintLabels(QPainter *painter) const
         return;
 
     painter->save();
-    painter->setPen(objLayer ? objLayer->color() : QColor(Qt::black));
+    painter->setPen(drawColor());
     QFont font(QStringLiteral("Courier New"));
     font.setPointSizeF(3.0);
     painter->setFont(font);

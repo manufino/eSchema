@@ -25,7 +25,7 @@ void PrimitiveMacro::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
     if (!isVisible())
         return;
 
-    QPen pen(objLayer ? objLayer->color() : QColor(Qt::black));
+    QPen pen(drawColor());
     pen.setStyle(Qt::DashLine);
     painter->setPen(pen);
     painter->setBrush(Qt::NoBrush);
