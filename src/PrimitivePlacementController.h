@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QPointF>
+#include <QString>
 
 class Sheet;
 class SheetView;
@@ -38,13 +39,14 @@ class GraphicsPrimitive;
 // pcbtrack/pad) and variable-vertex tools (polygon/complex curve) uniformly,
 // via GraphicsPrimitive's control-point interface.
 //
-// Note: only the primitive types that already have a toolbar action are
-// creatable interactively (Line, Rectangle, Polygon, Ellipse, Bezier, Curve,
-// Text, Connection, PcbTrack, Pad). Macro/Image have no toolbar entry point
-// (matching the reference FidoCadJ editor, which places them from the macro
-// library panel / an "insert image" dialog rather than a keyboard-shortcut
-// drawing tool), so they remain data-model-only until read from a FidoCadJ
-// file.
+// Note: every primitive type that has a toolbar action is creatable
+// interactively (Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Text,
+// Connection, PcbTrack, Pad). Image has no placement tool at all (matching
+// the reference FidoCadJ editor, which places it from an "insert image"
+// dialog), so it remains data-model-only until read from a FidoCadJ file.
+// Macro has no toolbar action either - it's armed from the macro library
+// panel instead (see armMacroPlacement()) - but is otherwise placed through
+// the very same one-click state machine as Connection/Pad/Text.
 class PrimitivePlacementController : public QObject
 {
     Q_OBJECT
@@ -53,8 +55,9 @@ public:
                                  LayerComboBox *layerCombo, QCheckBox *fillCheckBox,
                                  QObject *parent = nullptr);
 
-    // True when a placement tool (anything but "Select") is checked - SheetView
-    // uses this to skip its normal selection/pan handling while placing.
+    // True when a placement tool (anything but "Select") is checked, or a
+    // macro is armed - SheetView uses this to skip its normal
+    // selection/pan handling while placing.
     bool isPlacementToolActive() const;
 
     // Called by SheetView from its own mouse event overrides with an
@@ -69,9 +72,17 @@ public:
     bool handleMouseRightClick();
     bool handleKeyPress(QKeyEvent *event);
 
+    // Arms a single macro instance for placement: the next click on the
+    // sheet drops it there (like Connection/Pad/Text - a single-click tool,
+    // no chaining), after which placement returns to Select, exactly as any
+    // other one-click tool already does. Called from the library panel
+    // instead of a toolbar action, since macros have no fixed toolbar slot.
+    // Cancels whatever toolbar-driven placement was in progress, if any.
+    void armMacroPlacement(const QString &macroKey);
+
 private:
     enum class Tool { Select, Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Text, Connection,
-                      PcbTrack, Pad };
+                      PcbTrack, Pad, Macro };
 
     Tool currentTool() const;
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count
@@ -115,6 +126,10 @@ private:
     GraphicsPrimitive *m_activePrimitive = nullptr;
     Tool m_activeTool = Tool::Select;
     int m_pointsPlaced = 0;
+    // Set by armMacroPlacement(), consumed by the next startPlacement() -
+    // empty means no macro is armed. Kept separate from m_activeTool/
+    // currentTool() because there's no toolbar action driving it.
+    QString m_armedMacroKey;
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H

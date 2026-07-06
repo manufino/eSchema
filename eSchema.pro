@@ -41,6 +41,7 @@ SOURCES += \
 	src/LayerListWidgetItem.cpp \
 	src/LayerToolBarWidget.cpp \
 	src/LayerVisibilityButton.cpp \
+	src/LibraryManager.cpp \
 	src/ObjectProperties.cpp \
 	src/PenStyleComboBox.cpp \
 	src/PrimitiveBezier.cpp \
@@ -90,7 +91,9 @@ HEADERS += \
 	src/LayerListWidgetItem.h \
 	src/LayerToolBarWidget.h \
 	src/LayerVisibilityButton.h \
+	src/LibraryManager.h \
 	src/LinkLabel.h \
+	src/MacroDescriptor.h \
 	src/ObjectProperties.h \
 	src/PenStyleComboBox.h \
 	src/PrimitiveArrowUtils.h \
@@ -136,4 +139,27 @@ win32 {
 	DEFINES += BUILDDATE=\\\"$$system('echo %date%')\\\"
 } else {
 	DEFINES += BUILDDATE=\\\"$$system(date '+%d/%m/%y')\\\"
+}
+
+# Copies the FidoCadJ macro libraries next to the built executable after every
+# link, so LibraryManager (which resolves "lib/" relative to
+# QCoreApplication::applicationDirPath()) finds them without needing an
+# absolute path or Qt resource embedding - matching the reference FidoCadJ
+# editor's own external DIR_LIBS convention, which lets users drop in their
+# own .fcl files without rebuilding. The win32-g++ mkspec puts the actual
+# executable one level below $$OUT_PWD, in "release/" or "debug/" depending on
+# CONFIG - copying into both keeps this correct regardless of which variant
+# was just built.
+win32 {
+	# QMAKE_POST_LINK runs under whatever shell "make" resolves (sh.exe from
+	# Git for Windows here, not cmd) - $$system_path() (unlike $$shell_path())
+	# always yields a native "C:\..." path regardless of that shell, which the
+	# native xcopy.exe binary needs. The flags use double slashes (//s //y //i,
+	# not /s /y /i) because MSYS2/Git-Bash's sh auto-translates any argument
+	# starting with a single "/" into a bogus Windows path before xcopy ever
+	# sees it - "//" is MSYS's documented escape to suppress that conversion.
+	QMAKE_POST_LINK += $$quote(xcopy //s //y //i \"$$system_path($$PWD/lib)\" \"$$system_path($$OUT_PWD/release/lib)\" $$escape_expand(\\n\\t))
+	QMAKE_POST_LINK += $$quote(xcopy //s //y //i \"$$system_path($$PWD/lib)\" \"$$system_path($$OUT_PWD/debug/lib)\" $$escape_expand(\\n\\t))
+} else {
+	QMAKE_POST_LINK += $$quote(mkdir -p \"$$OUT_PWD/lib\" && cp -r \"$$PWD/lib/.\" \"$$OUT_PWD/lib\" $$escape_expand(\\n\\t))
 }

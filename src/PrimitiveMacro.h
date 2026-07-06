@@ -21,6 +21,7 @@
 #define PRIMITIVEMACRO_H
 
 #include "GraphicsPrimitive.h"
+#include <QTransform>
 
 // FCD "MC" - an instance of a library macro (FIDOSPECS.md 5.10). Per current
 // project scope this is round-tripped as raw data only: the macro key,
@@ -60,6 +61,16 @@ public:
     QPointF labelOffset(int labelIndex) const override { return QPointF(10, labelIndex == 0 ? 5 : 10); }
 
 private:
+    // Builds the QTransform that places the macro's local (100,100)-centered
+    // body at its final position/orientation/mirror - shared by paint() and
+    // boundingRect() so both agree. Matches the reference FidoCadJ editor's
+    // MapCoordinates.mapXr()/mapYr() when isMacro is set: local point p maps
+    // to translate(m_pos) * [mirror: scale(-1,1)] * rotate(90*orientation) *
+    // translate(-100,-100) * p (mirror is a horizontal flip applied *after*
+    // rotation, not before - Java's mapXr() mirror-cases only negate the
+    // already-rotated X, mapYr() ignores the mirror flag entirely).
+    QTransform placementTransform() const;
+
     QPointF m_pos;
     int m_orientation = 0; // 0-3, each step = 90 degrees
     bool m_mirrored = false;

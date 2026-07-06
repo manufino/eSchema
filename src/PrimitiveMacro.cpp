@@ -19,11 +19,13 @@
 
 #include "PrimitiveMacro.h"
 #include "FidoCadTokenUtils.h"
+#include "LibraryManager.h"
 #include <QStyleOptionGraphicsItem>
 
 namespace {
-// No library is loaded, so a placeholder box is drawn instead of the real macro
-// body - just big enough to show the key text.
+// Drawn instead of the real macro body when the key isn't found in any
+// loaded library (e.g. a custom part not yet supported) - just big enough to
+// show the key text.
 constexpr qreal PlaceholderSize = 40.0;
 }
 
@@ -32,28 +34,61 @@ PrimitiveMacro::PrimitiveMacro(QGraphicsItem *parent)
 {
 }
 
-QRectF PrimitiveMacro::boundingRect() const
+QTransform PrimitiveMacro::placementTransform() const
 {
-    const qreal half = PlaceholderSize / 2;
-    return QRectF(mapFromScene(m_pos) - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize))
-            .united(labelBoundingRect());
+    const QPointF anchor = mapFromScene(m_pos);
+    QTransform transform;
+    transform.translate(anchor.x(), anchor.y());
+    if (m_mirrored)
+        transform.scale(-1, 1);
+    transform.rotate(90.0 * m_orientation);
+    transform.translate(-100.0, -100.0);
+    return transform;
 }
 
-void PrimitiveMacro::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+QRectF PrimitiveMacro::boundingRect() const
+{
+    const QList<GraphicsPrimitive *> &body = LibraryManager::getInstance().expandedBody(m_macroName);
+    if (body.isEmpty()) {
+        const qreal half = PlaceholderSize / 2;
+        return QRectF(mapFromScene(m_pos) - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize))
+                .united(labelBoundingRect());
+    }
+
+    const QTransform transform = placementTransform();
+    QRectF bounds;
+    for (GraphicsPrimitive *primitive : body)
+        bounds = bounds.united(transform.mapRect(primitive->boundingRect()));
+    return bounds.united(labelBoundingRect());
+}
+
+void PrimitiveMacro::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (!isVisible())
         return;
 
-    QPen pen(drawColor());
-    pen.setStyle(Qt::DashLine);
-    painter->setPen(pen);
-    painter->setBrush(Qt::NoBrush);
+    const QList<GraphicsPrimitive *> &body = LibraryManager::getInstance().expandedBody(m_macroName);
+    if (body.isEmpty()) {
+        QPen pen(drawColor());
+        pen.setStyle(Qt::DashLine);
+        painter->setPen(pen);
+        painter->setBrush(Qt::NoBrush);
 
-    const QPointF center = mapFromScene(m_pos);
-    const qreal half = PlaceholderSize / 2;
-    const QRectF box(center - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize));
-    painter->drawRect(box);
-    painter->drawText(box, Qt::AlignCenter | Qt::TextWordWrap, m_macroName);
+        const QPointF center = mapFromScene(m_pos);
+        const qreal half = PlaceholderSize / 2;
+        const QRectF box(center - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize));
+        painter->drawRect(box);
+        painter->drawText(box, Qt::AlignCenter | Qt::TextWordWrap, m_macroName);
+    } else {
+        // The body primitives are never added to a Sheet, so their own
+        // mapFromScene() is the identity - painting them under this extra
+        // transform is what actually places/orients/mirrors them.
+        painter->save();
+        painter->setTransform(placementTransform(), true);
+        for (GraphicsPrimitive *primitive : body)
+            primitive->paint(painter, option, widget);
+        painter->restore();
+    }
 
     paintLabels(painter);
 }

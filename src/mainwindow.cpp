@@ -26,6 +26,7 @@
 #include "DeletePrimitiveCommand.h"
 #include "CreatePrimitiveCommand.h"
 #include "MovePrimitiveCommand.h"
+#include "LibraryManager.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -35,6 +36,8 @@
 #include <QPrinter>
 #include <QPrintPreviewDialog>
 #include <QPainter>
+#include <QListWidget>
+#include <QFont>
 #include <algorithm>
 #include <limits>
 
@@ -80,6 +83,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setPlacementController(placementController);
 
     selectionHandleController = new SelectionHandleController(sheetScene, this);
+
+    LibraryManager::getInstance().loadLibraries();
+    buildLibraryPanel();
 
     setConnections();
 }
@@ -141,6 +147,80 @@ void MainWindow::setConnections()
     });
     ui->actionUndo->setEnabled(undo->canUndo());
     ui->actionRestore->setEnabled(undo->canRedo());
+
+    connect(ui->txtSearch, &QLineEdit::textChanged, this, &MainWindow::filterLibraryPanel);
+}
+
+void MainWindow::buildLibraryPanel()
+{
+    while (ui->toolBoxLib->count() > 0) {
+        QWidget *page = ui->toolBoxLib->widget(0);
+        ui->toolBoxLib->removeItem(0);
+        delete page;
+    }
+
+    for (const MacroLibrary &library : LibraryManager::getInstance().libraries()) {
+        auto *list = new QListWidget(ui->toolBoxLib);
+        list->setViewMode(QListView::IconMode);
+        list->setIconSize(QSize(40, 40));
+        list->setGridSize(QSize(72, 76));
+        list->setResizeMode(QListView::Adjust);
+        list->setMovement(QListView::Static);
+        list->setWordWrap(true);
+        list->setSpacing(2);
+        list->setUniformItemSizes(true);
+
+        for (const QString &category : library.categoryOrder) {
+            auto *header = new QListWidgetItem(category);
+            header->setFlags(Qt::NoItemFlags);
+            QFont headerFont = header->font();
+            headerFont.setBold(true);
+            header->setFont(headerFont);
+            list->addItem(header);
+
+            for (const MacroDescriptor &descriptor : library.macrosByCategory.value(category)) {
+                auto *item = new QListWidgetItem(LibraryManager::getInstance().icon(descriptor.key, 40),
+                                                  descriptor.name);
+                item->setData(Qt::UserRole, descriptor.key);
+                item->setToolTip(descriptor.name);
+                list->addItem(item);
+            }
+        }
+
+        connect(list, &QListWidget::itemClicked, this, &MainWindow::clickLibraryMacroItem);
+
+        const QString label = !library.displayName.isEmpty() ? library.displayName
+                : (library.filename.isEmpty() ? tr("Standard") : library.filename);
+        ui->toolBoxLib->addItem(list, label);
+    }
+}
+
+void MainWindow::filterLibraryPanel(const QString &text)
+{
+    for (int page = 0; page < ui->toolBoxLib->count(); ++page) {
+        auto *list = qobject_cast<QListWidget *>(ui->toolBoxLib->widget(page));
+        if (!list)
+            continue;
+
+        bool pageHasMatch = false;
+        for (int i = 0; i < list->count(); ++i) {
+            QListWidgetItem *item = list->item(i);
+            if (item->data(Qt::UserRole).toString().isEmpty())
+                continue; // category header - never filtered on its own
+            const bool matches = text.isEmpty() || item->text().contains(text, Qt::CaseInsensitive);
+            item->setHidden(!matches);
+            pageHasMatch = pageHasMatch || matches;
+        }
+        if (!text.isEmpty() && pageHasMatch)
+            ui->toolBoxLib->setCurrentIndex(page); // jump to the first library with a match
+    }
+}
+
+void MainWindow::clickLibraryMacroItem(QListWidgetItem *item)
+{
+    const QString key = item->data(Qt::UserRole).toString();
+    if (!key.isEmpty())
+        placementController->armMacroPlacement(key);
 }
 
 void MainWindow::clickOptionAction()

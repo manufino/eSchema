@@ -32,6 +32,7 @@
 #include "PrimitiveText.h"
 #include "PrimitivePcbTrack.h"
 #include "PrimitivePad.h"
+#include "PrimitiveMacro.h"
 #include "CreatePrimitiveCommand.h"
 #include <QAction>
 #include <QCheckBox>
@@ -70,7 +71,7 @@ PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() c
 
 bool PrimitivePlacementController::isPlacementToolActive() const
 {
-    return m_activePrimitive != nullptr || currentTool() != Tool::Select;
+    return m_activePrimitive != nullptr || currentTool() != Tool::Select || !m_armedMacroKey.isEmpty();
 }
 
 int PrimitivePlacementController::requiredPointCount(Tool tool) const
@@ -84,6 +85,7 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::Text: return 1;
     case Tool::PcbTrack: return 2;
     case Tool::Pad: return 1;
+    case Tool::Macro: return 1;
     case Tool::Polygon: return -1;
     case Tool::Curve: return -1;
     case Tool::Select: return 0;
@@ -114,6 +116,7 @@ GraphicsPrimitive *PrimitivePlacementController::createPrimitiveForTool(Tool too
     case Tool::Polygon: return new PrimitivePolygon();
     case Tool::Curve: return new PrimitiveComplexCurve();
     case Tool::Text: return new PrimitiveText(); // caller sets its text content
+    case Tool::Macro: return new PrimitiveMacro(); // caller sets its macro key
     case Tool::Select: return nullptr;
     }
     return nullptr;
@@ -129,6 +132,24 @@ void PrimitivePlacementController::applyDefaults(GraphicsPrimitive *primitive) c
 
 void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
 {
+    // An explicit toolbar tool always takes priority over an armed macro -
+    // e.g. the user armed a macro from the library panel, then changed their
+    // mind and picked "Line" from the toolbar instead.
+    if (currentTool() != Tool::Select)
+        m_armedMacroKey.clear();
+
+    if (!m_armedMacroKey.isEmpty()) {
+        m_activeTool = Tool::Macro;
+        auto *macro = static_cast<PrimitiveMacro *>(createPrimitiveForTool(Tool::Macro));
+        macro->setMacroName(m_armedMacroKey);
+        m_activePrimitive = macro;
+        m_pointsPlaced = 1;
+        m_activePrimitive->setControlPoint(0, scenePos);
+        m_sheet->addPrimitive(m_activePrimitive);
+        finishPlacement();
+        return;
+    }
+
     m_activeTool = currentTool();
     if (m_activeTool == Tool::Select)
         return;
@@ -210,9 +231,18 @@ void PrimitivePlacementController::finishPlacement()
     m_activePrimitive = nullptr;
     m_pointsPlaced = 0;
     m_activeTool = Tool::Select;
+    m_armedMacroKey.clear();
 
     if (shouldChain)
         startChainedSegment(finishedTool, chainStart);
+}
+
+void PrimitivePlacementController::armMacroPlacement(const QString &macroKey)
+{
+    if (m_activePrimitive)
+        cancelPlacement();
+    switchToolBarToSelectTool();
+    m_armedMacroKey = macroKey;
 }
 
 void PrimitivePlacementController::startChainedSegment(Tool tool, const QPointF &startPoint)
@@ -333,8 +363,16 @@ bool PrimitivePlacementController::handleMouseDoubleClick(const QPointF &scenePo
 
 bool PrimitivePlacementController::handleKeyPress(QKeyEvent *event)
 {
-    if (!m_activePrimitive)
+    if (!m_activePrimitive) {
+        // A macro can be armed (from the library panel) before any click has
+        // started an m_activePrimitive - Escape should still drop it.
+        if (event->key() == Qt::Key_Escape && !m_armedMacroKey.isEmpty()) {
+            m_armedMacroKey.clear();
+            switchToolBarToSelectTool();
+            return true;
+        }
         return false;
+    }
 
     if (event->key() == Qt::Key_Escape) {
         cancelPlacement();
