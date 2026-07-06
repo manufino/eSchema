@@ -32,6 +32,9 @@
 #include <QGuiApplication>
 #include <QClipboard>
 #include <QCloseEvent>
+#include <QPrinter>
+#include <QPrintPreviewDialog>
+#include <QPainter>
 #include <algorithm>
 #include <limits>
 
@@ -119,6 +122,7 @@ void MainWindow::setConnections()
     connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
+    connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::clickPrintAction);
     // QWidget::close() reaches closeEvent(), which does the unsaved-changes
     // check - so File > Close and the window's own titlebar X button behave
     // identically instead of needing separate logic.
@@ -647,4 +651,52 @@ void MainWindow::clickSaveAsAction()
 
     if (saveToPath(path))
         setCurrentFilePath(path);
+}
+
+void MainWindow::clickPrintAction()
+{
+    if (sheetScene->itemsBoundingRect().isEmpty()) {
+        QMessageBox::information(this, tr("Stampa"), tr("Il disegno e' vuoto."));
+        return;
+    }
+
+    // Selection highlighting (the selected-primitive green blend) and resize
+    // handles are editor chrome, not part of the drawing - hide them for the
+    // whole preview/print session by clearing the selection up front (rather
+    // than per-repaint in renderForPrint(), which would flicker the handles
+    // in the editor view every time the preview repaints) and restore it once
+    // the dialog closes.
+    const QList<QGraphicsItem *> previousSelection = sheetScene->selectedItems();
+    sheetScene->clearSelection();
+
+    QPrinter printer(QPrinter::HighResolution);
+    QPrintPreviewDialog preview(&printer, this);
+    preview.setWindowTitle(tr("Anteprima di stampa"));
+    connect(&preview, &QPrintPreviewDialog::paintRequested, this, &MainWindow::renderForPrint);
+    preview.exec();
+
+    for (QGraphicsItem *item : previousSelection)
+        item->setSelected(true);
+}
+
+void MainWindow::renderForPrint(QPrinter *printer)
+{
+    const QRectF sourceRect = sheetScene->itemsBoundingRect();
+    if (sourceRect.isEmpty())
+        return;
+
+    const QRect targetRect = printer->pageLayout().paintRectPixels(printer->resolution());
+
+    // Fit the drawing within the printable area, preserving aspect ratio and
+    // centering it - a schematic's shape rarely matches the page's, and
+    // stretching it unevenly would distort right angles and text.
+    const qreal scale = qMin(targetRect.width() / sourceRect.width(),
+                              targetRect.height() / sourceRect.height());
+    const QSizeF scaledSize = sourceRect.size() * scale;
+    const QRectF centeredTarget(targetRect.left() + (targetRect.width() - scaledSize.width()) / 2.0,
+                                 targetRect.top() + (targetRect.height() - scaledSize.height()) / 2.0,
+                                 scaledSize.width(), scaledSize.height());
+
+    QPainter painter(printer);
+    sheetScene->render(&painter, centeredTarget, sourceRect);
 }

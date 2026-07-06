@@ -45,6 +45,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+class QPrinter;
 
 class MainWindow : public QMainWindow
 {
@@ -91,8 +92,12 @@ public slots:
     void clickOpenAction();
     void clickSaveAction();
     void clickSaveAsAction();
+    void clickPrintAction();
 
 private:
+    // Renders the drawing onto the printer/preview page, scaled (preserving
+    // aspect ratio) to fit within the printable area and centered on it.
+    void renderForPrint(QPrinter *printer);
     void setConnections();
     GraphicsPrimitive *firstSelectedPrimitive() const;
     // Selected primitives in stable document order (sheet->primitives()
