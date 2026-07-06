@@ -79,6 +79,14 @@ public slots:
     void clickPasteAction();
     void clickDuplicateAction();
     void clickSelectAllAction();
+    void clickAlignLeftAction();
+    void clickAlignRightAction();
+    void clickAlignTopAction();
+    void clickAlignBottomAction();
+    void clickAlignCenterHorizontalAction();
+    void clickAlignCenterVerticalAction();
+    void clickDistributeHorizontalAction();
+    void clickDistributeVerticalAction();
     void clickNewAction();
     void clickOpenAction();
     void clickSaveAction();
@@ -96,6 +104,11 @@ private:
     // Paste and Duplicate (see pasteFromText()'s doc comment for why they
     // share this instead of Duplicate routing through the clipboard).
     void pasteFromText(const QString &text, const QString &undoLabel);
+    // Shared tail end of every align/distribute action: applies each
+    // primitive's computed delta (skipping no-ops) as an undoable
+    // MovePrimitiveCommand, macro-grouped so the whole alignment undoes in
+    // one step.
+    void moveSelectedPrimitives(const QHash<GraphicsPrimitive *, QPointF> &deltas, const QString &undoLabel);
     bool saveToPath(const QString &filePath);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();

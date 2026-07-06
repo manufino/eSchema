@@ -25,12 +25,15 @@
 #include "RotatePrimitiveCommand.h"
 #include "DeletePrimitiveCommand.h"
 #include "CreatePrimitiveCommand.h"
+#include "MovePrimitiveCommand.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QGuiApplication>
 #include <QClipboard>
 #include <QCloseEvent>
+#include <algorithm>
+#include <limits>
 
 namespace {
 // FidoCadJ's 16 default layers and colors (FIDOSPECS.md 3.1). Populating all
@@ -104,6 +107,14 @@ void MainWindow::setConnections()
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::clickPasteAction);
     connect(ui->actionDuplicate, &QAction::triggered, this, &MainWindow::clickDuplicateAction);
     connect(ui->actionSelectAll, &QAction::triggered, this, &MainWindow::clickSelectAllAction);
+    connect(ui->actionAlignLeft, &QAction::triggered, this, &MainWindow::clickAlignLeftAction);
+    connect(ui->actionAlignRight, &QAction::triggered, this, &MainWindow::clickAlignRightAction);
+    connect(ui->actionAlignTop, &QAction::triggered, this, &MainWindow::clickAlignTopAction);
+    connect(ui->actionAlignBottom, &QAction::triggered, this, &MainWindow::clickAlignBottomAction);
+    connect(ui->actionAlignCenterHorizontal, &QAction::triggered, this, &MainWindow::clickAlignCenterHorizontalAction);
+    connect(ui->actionAlignCenterVertical, &QAction::triggered, this, &MainWindow::clickAlignCenterVerticalAction);
+    connect(ui->actionDistributeHorizontal, &QAction::triggered, this, &MainWindow::clickDistributeHorizontalAction);
+    connect(ui->actionDistributeVertical, &QAction::triggered, this, &MainWindow::clickDistributeVerticalAction);
     connect(ui->actionNewDraw, &QAction::triggered, this, &MainWindow::clickNewAction);
     connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
@@ -234,6 +245,203 @@ void MainWindow::clickSelectAllAction()
 {
     for (QGraphicsItem *item : sheetScene->items())
         item->setSelected(true);
+}
+
+// Applies each primitive's computed delta as an undoable MovePrimitiveCommand
+// (skipping primitives whose delta is a no-op), matching the reference
+// FidoCadJ editor's align/distribute (EditorActions.java), which likewise
+// moves each affected primitive and saves one undo state per operation.
+void MainWindow::moveSelectedPrimitives(const QHash<GraphicsPrimitive *, QPointF> &deltas, const QString &undoLabel)
+{
+    QList<GraphicsPrimitive *> toMove;
+    for (auto it = deltas.constBegin(); it != deltas.constEnd(); ++it) {
+        if (!it.value().isNull())
+            toMove.append(it.key());
+    }
+    if (toMove.isEmpty())
+        return;
+
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = toMove.size() > 1;
+    if (multiple)
+        undo->beginMacro(undoLabel);
+    for (GraphicsPrimitive *primitive : toMove) {
+        const QVector<QPointF> before = primitive->controlPointSnapshot();
+        primitive->translateControlPoints(deltas.value(primitive));
+        undo->push(new MovePrimitiveCommand(primitive, before, primitive->controlPointSnapshot()));
+    }
+    if (multiple)
+        undo->endMacro();
+}
+
+// Align/distribute operate on each primitive's own bounding box (in scene
+// coordinates, since pos() is always pinned at the origin - see
+// GraphicsPrimitive's header comment), mirroring the reference FidoCadJ
+// editor's per-primitive getPosition()/getSize() - but computed as a proper
+// min/max reduction rather than replicating a latent bug in FidoCadJ's own
+// getSize() that mishandles primitives with more than 2 control points
+// (polygons, complex curves, macros).
+void MainWindow::clickAlignLeftAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() < 2)
+        return;
+
+    qreal leftmost = std::numeric_limits<qreal>::max();
+    for (GraphicsPrimitive *primitive : selected)
+        leftmost = qMin(leftmost, primitive->boundingRect().left());
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (GraphicsPrimitive *primitive : selected)
+        deltas.insert(primitive, QPointF(leftmost - primitive->boundingRect().left(), 0));
+    moveSelectedPrimitives(deltas, tr("Allinea a sinistra"));
+}
+
+void MainWindow::clickAlignRightAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() < 2)
+        return;
+
+    qreal rightmost = std::numeric_limits<qreal>::lowest();
+    for (GraphicsPrimitive *primitive : selected)
+        rightmost = qMax(rightmost, primitive->boundingRect().right());
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (GraphicsPrimitive *primitive : selected)
+        deltas.insert(primitive, QPointF(rightmost - primitive->boundingRect().right(), 0));
+    moveSelectedPrimitives(deltas, tr("Allinea a destra"));
+}
+
+void MainWindow::clickAlignTopAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() < 2)
+        return;
+
+    qreal topmost = std::numeric_limits<qreal>::max();
+    for (GraphicsPrimitive *primitive : selected)
+        topmost = qMin(topmost, primitive->boundingRect().top());
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (GraphicsPrimitive *primitive : selected)
+        deltas.insert(primitive, QPointF(0, topmost - primitive->boundingRect().top()));
+    moveSelectedPrimitives(deltas, tr("Allinea in alto"));
+}
+
+void MainWindow::clickAlignBottomAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() < 2)
+        return;
+
+    qreal bottommost = std::numeric_limits<qreal>::lowest();
+    for (GraphicsPrimitive *primitive : selected)
+        bottommost = qMax(bottommost, primitive->boundingRect().bottom());
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (GraphicsPrimitive *primitive : selected)
+        deltas.insert(primitive, QPointF(0, bottommost - primitive->boundingRect().bottom()));
+    moveSelectedPrimitives(deltas, tr("Allinea in basso"));
+}
+
+// Aligns every selected primitive's own vertical center to a shared
+// horizontal line (the selection's overall vertical midpoint) - named after
+// FidoCadJ's alignHorizontalCenterSelected, which centers things relative to
+// a horizontal centerline (what other tools often call "align middle").
+void MainWindow::clickAlignCenterHorizontalAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() < 2)
+        return;
+
+    qreal topmost = std::numeric_limits<qreal>::max();
+    qreal bottommost = std::numeric_limits<qreal>::lowest();
+    for (GraphicsPrimitive *primitive : selected) {
+        const QRectF rect = primitive->boundingRect();
+        topmost = qMin(topmost, rect.top());
+        bottommost = qMax(bottommost, rect.bottom());
+    }
+    const qreal verticalCenter = (topmost + bottommost) / 2.0;
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (GraphicsPrimitive *primitive : selected)
+        deltas.insert(primitive, QPointF(0, verticalCenter - primitive->boundingRect().center().y()));
+    moveSelectedPrimitives(deltas, tr("Allinea al centro orizzontale"));
+}
+
+// Aligns every selected primitive's own horizontal center to a shared
+// vertical line - FidoCadJ's alignVerticalCenterSelected ("align center" in
+// more common CAD/DTP terminology).
+void MainWindow::clickAlignCenterVerticalAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() < 2)
+        return;
+
+    qreal leftmost = std::numeric_limits<qreal>::max();
+    qreal rightmost = std::numeric_limits<qreal>::lowest();
+    for (GraphicsPrimitive *primitive : selected) {
+        const QRectF rect = primitive->boundingRect();
+        leftmost = qMin(leftmost, rect.left());
+        rightmost = qMax(rightmost, rect.right());
+    }
+    const qreal horizontalCenter = (leftmost + rightmost) / 2.0;
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (GraphicsPrimitive *primitive : selected)
+        deltas.insert(primitive, QPointF(horizontalCenter - primitive->boundingRect().center().x(), 0));
+    moveSelectedPrimitives(deltas, tr("Allinea al centro verticale"));
+}
+
+// Distributes selected primitives evenly by their left edges, keeping the
+// leftmost and rightmost primitives fixed - matching FidoCadJ's
+// distributeHorizontallySelected() exactly, including its >=3 requirement
+// (with only 2 selected there's nothing "in between" to redistribute).
+void MainWindow::clickDistributeHorizontalAction()
+{
+    QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() < 3)
+        return;
+
+    std::sort(selected.begin(), selected.end(), [](GraphicsPrimitive *a, GraphicsPrimitive *b) {
+        return a->boundingRect().left() < b->boundingRect().left();
+    });
+
+    const qreal leftmostX = selected.first()->boundingRect().left();
+    const qreal rightmostX = selected.last()->boundingRect().left();
+    const qreal spacing = (rightmostX - leftmostX) / (selected.size() - 1);
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (int i = 1; i < selected.size() - 1; ++i) {
+        GraphicsPrimitive *primitive = selected.at(i);
+        const qreal targetX = leftmostX + i * spacing;
+        deltas.insert(primitive, QPointF(targetX - primitive->boundingRect().left(), 0));
+    }
+    moveSelectedPrimitives(deltas, tr("Distribuisci orizzontalmente"));
+}
+
+void MainWindow::clickDistributeVerticalAction()
+{
+    QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() < 3)
+        return;
+
+    std::sort(selected.begin(), selected.end(), [](GraphicsPrimitive *a, GraphicsPrimitive *b) {
+        return a->boundingRect().top() < b->boundingRect().top();
+    });
+
+    const qreal topmostY = selected.first()->boundingRect().top();
+    const qreal bottommostY = selected.last()->boundingRect().top();
+    const qreal spacing = (bottommostY - topmostY) / (selected.size() - 1);
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (int i = 1; i < selected.size() - 1; ++i) {
+        GraphicsPrimitive *primitive = selected.at(i);
+        const qreal targetY = topmostY + i * spacing;
+        deltas.insert(primitive, QPointF(0, targetY - primitive->boundingRect().top()));
+    }
+    moveSelectedPrimitives(deltas, tr("Distribuisci verticalmente"));
 }
 
 QList<GraphicsPrimitive *> MainWindow::selectedPrimitivesInOrder() const

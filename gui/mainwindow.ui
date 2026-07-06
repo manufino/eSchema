@@ -1212,6 +1212,16 @@ margin:1px;
     <addaction name="actionRotate"/>
     <addaction name="actionMirror"/>
     <addaction name="separator"/>
+    <addaction name="actionAlignLeft"/>
+    <addaction name="actionAlignRight"/>
+    <addaction name="actionAlignTop"/>
+    <addaction name="actionAlignBottom"/>
+    <addaction name="actionAlignCenterHorizontal"/>
+    <addaction name="actionAlignCenterVertical"/>
+    <addaction name="separator"/>
+    <addaction name="actionDistributeHorizontal"/>
+    <addaction name="actionDistributeVertical"/>
+    <addaction name="separator"/>
     <addaction name="actionAddPart"/>
     <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
@@ -1547,6 +1557,78 @@ margin:1px;
    </property>
    <property name="shortcut">
     <string>S</string>
+   </property>
+  </action>
+  <action name="actionAlignLeft">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/align/align_left.png</normaloff>:/res/resources/align/align_left.png</iconset>
+   </property>
+   <property name="text">
+    <string>Allinea a sinistra</string>
+   </property>
+  </action>
+  <action name="actionAlignRight">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/align/align_right.png</normaloff>:/res/resources/align/align_right.png</iconset>
+   </property>
+   <property name="text">
+    <string>Allinea a destra</string>
+   </property>
+  </action>
+  <action name="actionAlignTop">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/align/align_top.png</normaloff>:/res/resources/align/align_top.png</iconset>
+   </property>
+   <property name="text">
+    <string>Allinea in alto</string>
+   </property>
+  </action>
+  <action name="actionAlignBottom">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/align/align_bottom.png</normaloff>:/res/resources/align/align_bottom.png</iconset>
+   </property>
+   <property name="text">
+    <string>Allinea in basso</string>
+   </property>
+  </action>
+  <action name="actionAlignCenterHorizontal">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/align/align_horizontal_center.png</normaloff>:/res/resources/align/align_horizontal_center.png</iconset>
+   </property>
+   <property name="text">
+    <string>Allinea al centro orizzontale</string>
+   </property>
+  </action>
+  <action name="actionAlignCenterVertical">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/align/align_vertical_center.png</normaloff>:/res/resources/align/align_vertical_center.png</iconset>
+   </property>
+   <property name="text">
+    <string>Allinea al centro verticale</string>
+   </property>
+  </action>
+  <action name="actionDistributeHorizontal">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/align/distribute_horizontal.png</normaloff>:/res/resources/align/distribute_horizontal.png</iconset>
+   </property>
+   <property name="text">
+    <string>Distribuisci orizzontalmente</string>
+   </property>
+  </action>
+  <action name="actionDistributeVertical">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/align/distribute_vertical.png</normaloff>:/res/resources/align/distribute_vertical.png</iconset>
+   </property>
+   <property name="text">
+    <string>Distribuisci verticalmente</string>
    </property>
   </action>
   <action name="actionSelectAll">

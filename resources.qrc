@@ -125,5 +125,13 @@
         <file>resources/remix/arrow-up-s-fill.png</file>
         <file>resources/remix/arrow-up-s-line.png</file>
         <file>resources/splash.jpeg</file>
+        <file>resources/align/align_left.png</file>
+        <file>resources/align/align_right.png</file>
+        <file>resources/align/align_top.png</file>
+        <file>resources/align/align_bottom.png</file>
+        <file>resources/align/align_horizontal_center.png</file>
+        <file>resources/align/align_vertical_center.png</file>
+        <file>resources/align/distribute_horizontal.png</file>
+        <file>resources/align/distribute_vertical.png</file>
     </qresource>
 </RCC>
