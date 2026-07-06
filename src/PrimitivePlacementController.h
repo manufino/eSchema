@@ -62,6 +62,11 @@ public:
     bool handleMousePress(const QPointF &scenePos);
     bool handleMouseMove(const QPointF &scenePos);
     bool handleMouseDoubleClick(const QPointF &scenePos);
+    // Right-click ends a Line/PCB-track chain (see isChainableTool()'s doc
+    // comment) without leaving the tool. Returns false (unconsumed) for
+    // every other tool/state, matching FidoCadJ where right-click has no
+    // effect outside of ending that specific chain.
+    bool handleMouseRightClick();
     bool handleKeyPress(QKeyEvent *event);
 
 private:
@@ -74,6 +79,25 @@ private:
     void finishPlacement();
     void cancelPlacement();
     bool isVariableVertexTool(Tool tool) const;
+    // Line and PCB track are the only two FidoCadJ tools that "chain":
+    // finishing one segment immediately begins the next one from the same
+    // endpoint, with no extra click needed for its first point - matching
+    // ElementsEdtActions.addLine()/addPCBLine() in the reference FidoCadJ
+    // editor, which reuse xpoly[1]/ypoly[1] from the point just placed
+    // instead of resetting clickNumber to 0. Every other multi-click tool
+    // (Bezier, Polygon, Complex curve, Rectangle, Ellipse) ends cleanly and
+    // requires a fresh, independent click sequence for its next instance.
+    bool isChainableTool(Tool tool) const;
+    // Shared primitive-construction step behind both startPlacement() (first
+    // segment/shape of a tool) and startChainedSegment() (every subsequent
+    // chained Line/PCB-track segment) - so layer/fill defaults are applied
+    // identically either way.
+    GraphicsPrimitive *createPrimitiveForTool(Tool tool) const;
+    void applyDefaults(GraphicsPrimitive *primitive) const;
+    // Begins the next chained segment right where the previous one ended -
+    // no click consumed, just a live "point 1" preview like any other
+    // in-progress placement.
+    void startChainedSegment(Tool tool, const QPointF &startPoint);
     // Programmatically switches the toolbar back to the Select tool, exactly
     // as if the user had clicked/pressed its shortcut - so Esc while mid-
     // placement (see handleKeyPress()) doesn't just discard the in-progress

@@ -184,6 +184,13 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         return;
     }
 
+    // Right-click ends a Line/PCB-track chain (matching FidoCadJ) without
+    // otherwise opening the default context menu behaviour.
+    if (event->button() == Qt::RightButton && m_placementController
+            && m_placementController->handleMouseRightClick()) {
+        return;
+    }
+
     if (event->button() == Qt::MiddleButton)
     {
         // Store original position.

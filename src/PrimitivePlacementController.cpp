@@ -96,40 +96,57 @@ bool PrimitivePlacementController::isVariableVertexTool(Tool tool) const
     return tool == Tool::Polygon || tool == Tool::Curve;
 }
 
+bool PrimitivePlacementController::isChainableTool(Tool tool) const
+{
+    return tool == Tool::Line || tool == Tool::PcbTrack;
+}
+
+GraphicsPrimitive *PrimitivePlacementController::createPrimitiveForTool(Tool tool) const
+{
+    switch (tool) {
+    case Tool::Line: return new PrimitiveLine();
+    case Tool::Rectangle: return new PrimitiveRectangle();
+    case Tool::Ellipse: return new PrimitiveEllipse();
+    case Tool::Bezier: return new PrimitiveBezier();
+    case Tool::Connection: return new PrimitiveConnection();
+    case Tool::PcbTrack: return new PrimitivePcbTrack();
+    case Tool::Pad: return new PrimitivePad();
+    case Tool::Polygon: return new PrimitivePolygon();
+    case Tool::Curve: return new PrimitiveComplexCurve();
+    case Tool::Text: return new PrimitiveText(); // caller sets its text content
+    case Tool::Select: return nullptr;
+    }
+    return nullptr;
+}
+
+void PrimitivePlacementController::applyDefaults(GraphicsPrimitive *primitive) const
+{
+    if (m_layerCombo && m_layerCombo->selectedLayer())
+        primitive->setLayer(m_layerCombo->selectedLayer());
+    if (m_fillCheckBox)
+        primitive->setIsFilled(m_fillCheckBox->isChecked());
+}
+
 void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
 {
     m_activeTool = currentTool();
     if (m_activeTool == Tool::Select)
         return;
 
-    switch (m_activeTool) {
-    case Tool::Line: m_activePrimitive = new PrimitiveLine(); break;
-    case Tool::Rectangle: m_activePrimitive = new PrimitiveRectangle(); break;
-    case Tool::Ellipse: m_activePrimitive = new PrimitiveEllipse(); break;
-    case Tool::Bezier: m_activePrimitive = new PrimitiveBezier(); break;
-    case Tool::Connection: m_activePrimitive = new PrimitiveConnection(); break;
-    case Tool::PcbTrack: m_activePrimitive = new PrimitivePcbTrack(); break;
-    case Tool::Pad: m_activePrimitive = new PrimitivePad(); break;
-    case Tool::Polygon: m_activePrimitive = new PrimitivePolygon(); break;
-    case Tool::Curve: m_activePrimitive = new PrimitiveComplexCurve(); break;
-    case Tool::Text: {
+    if (m_activeTool == Tool::Text) {
         const QString text = QInputDialog::getText(m_view, tr("Testo"), tr("Contenuto:"));
         if (text.isEmpty()) {
             m_activeTool = Tool::Select;
             return; // user cancelled - nothing to place
         }
-        auto *primitiveText = new PrimitiveText();
+        auto *primitiveText = static_cast<PrimitiveText *>(createPrimitiveForTool(Tool::Text));
         primitiveText->setText(text);
         m_activePrimitive = primitiveText;
-        break;
-    }
-    case Tool::Select: return;
+    } else {
+        m_activePrimitive = createPrimitiveForTool(m_activeTool);
     }
 
-    if (m_layerCombo && m_layerCombo->selectedLayer())
-        m_activePrimitive->setLayer(m_layerCombo->selectedLayer());
-    if (m_fillCheckBox)
-        m_activePrimitive->setIsFilled(m_fillCheckBox->isChecked());
+    applyDefaults(m_activePrimitive);
 
     m_pointsPlaced = 1;
 
@@ -168,20 +185,45 @@ void PrimitivePlacementController::finishPlacement()
         else
             static_cast<PrimitiveComplexCurve *>(m_activePrimitive)->removeLastVertex();
     }
+
+    GraphicsPrimitive *finished = m_activePrimitive;
+    const Tool finishedTool = m_activeTool;
+    // Line/PCB-track chaining needs the endpoint just placed - grab it before
+    // finished's ownership/selection state changes below.
+    const bool shouldChain = finished && isChainableTool(finishedTool);
+    const QPointF chainStart = shouldChain
+            ? finished->controlPoint(finished->controlPointCount() - 1)
+            : QPointF();
+
     // Select the just-finished primitive so its resize handles appear
     // immediately, without an extra click - and only it, so drawing several
     // primitives in a row doesn't pile up a multi-selection.
-    if (m_activePrimitive) {
+    if (finished) {
         m_sheet->clearSelection();
-        m_activePrimitive->setSelected(true);
+        finished->setSelected(true);
         // The primitive is already in the sheet (added back in
         // startPlacement()) - push() calling redo() once more is a harmless
         // no-op (Sheet::addPrimitive() is idempotent).
-        m_sheet->undoStack()->push(new CreatePrimitiveCommand(m_sheet, m_activePrimitive));
+        m_sheet->undoStack()->push(new CreatePrimitiveCommand(m_sheet, finished));
     }
+
     m_activePrimitive = nullptr;
     m_pointsPlaced = 0;
     m_activeTool = Tool::Select;
+
+    if (shouldChain)
+        startChainedSegment(finishedTool, chainStart);
+}
+
+void PrimitivePlacementController::startChainedSegment(Tool tool, const QPointF &startPoint)
+{
+    m_activeTool = tool;
+    m_activePrimitive = createPrimitiveForTool(tool);
+    applyDefaults(m_activePrimitive);
+    m_activePrimitive->setControlPoint(0, startPoint);
+    m_activePrimitive->setControlPoint(1, startPoint);
+    m_pointsPlaced = 1;
+    m_sheet->addPrimitive(m_activePrimitive);
 }
 
 void PrimitivePlacementController::cancelPlacement()
@@ -192,6 +234,22 @@ void PrimitivePlacementController::cancelPlacement()
     m_pointsPlaced = 0;
     m_activeTool = Tool::Select;
     switchToolBarToSelectTool();
+}
+
+bool PrimitivePlacementController::handleMouseRightClick()
+{
+    if (!m_activePrimitive || !isChainableTool(m_activeTool))
+        return false;
+
+    // Ends the chain (discarding the not-yet-placed next segment) without
+    // leaving the tool - matching FidoCadJ, where right-click resets
+    // clickNumber to 0 but leaves actionSelected on LINE/PCB_LINE, ready for
+    // a fresh, independent segment. That's different from Escape, which
+    // leaves drawing mode entirely.
+    m_sheet->removePrimitive(m_activePrimitive);
+    m_activePrimitive = nullptr;
+    m_pointsPlaced = 0;
+    return true;
 }
 
 void PrimitivePlacementController::switchToolBarToSelectTool()
