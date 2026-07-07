@@ -67,7 +67,19 @@ public:
     // unrecognized key. The returned primitives are owned by LibraryManager:
     // never delete them, and never add them to a Sheet - PrimitiveMacro reads
     // them read-only and places them itself via a QPainter transform.
-    const QList<GraphicsPrimitive *> &expandedBody(const QString &key);
+    //
+    // Returned BY VALUE, not by reference: a macro's body can itself contain
+    // "MC" lines referencing other macros (e.g. IHRAM/elettrotecnica bodies
+    // routinely delegate to bare FCDstdlib keys for shared sub-symbols like
+    // ground/ports), so painting one macro's body recursively calls this
+    // same function again for each nested one, inserting new entries into
+    // m_expandedBodies *while a caller may still be iterating a previous
+    // result*. QHash::insert() can rehash and invalidate every existing
+    // reference into the table, so a caller holding a reference from an
+    // earlier call would silently start iterating freed/moved memory -
+    // returning a copy (cheap: it's just a QList of pointers) sidesteps that
+    // entirely.
+    QList<GraphicsPrimitive *> expandedBody(const QString &key);
 
     // A small preview icon for the macro's body, fitted and centered within
     // a size x size square. Cached forever per (key, size).

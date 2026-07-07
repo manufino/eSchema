@@ -155,10 +155,8 @@ const MacroDescriptor *LibraryManager::macro(const QString &key) const
     return it == m_macrosByKey.constEnd() ? nullptr : &it.value();
 }
 
-const QList<GraphicsPrimitive *> &LibraryManager::expandedBody(const QString &key)
+QList<GraphicsPrimitive *> LibraryManager::expandedBody(const QString &key)
 {
-    static const QList<GraphicsPrimitive *> empty;
-
     const QString normalizedKey = key.trimmed().toLower();
     auto it = m_expandedBodies.constFind(normalizedKey);
     if (it != m_expandedBodies.constEnd())
@@ -166,9 +164,11 @@ const QList<GraphicsPrimitive *> &LibraryManager::expandedBody(const QString &ke
 
     const MacroDescriptor *descriptor = macro(normalizedKey);
     if (!descriptor)
-        return empty; // unrecognized macro - PrimitiveMacro falls back to a placeholder box
+        return {}; // unrecognized macro - PrimitiveMacro falls back to a placeholder box
 
-    return m_expandedBodies.insert(normalizedKey, FidoCadReader::parse(descriptor->body, parseContext())).value();
+    QList<GraphicsPrimitive *> parsed = FidoCadReader::parse(descriptor->body, parseContext());
+    m_expandedBodies.insert(normalizedKey, parsed);
+    return parsed;
 }
 
 QPixmap LibraryManager::icon(const QString &key, int size)
@@ -182,7 +182,7 @@ QPixmap LibraryManager::icon(const QString &key, int size)
     QPixmap pixmap(size, size);
     pixmap.fill(Qt::transparent);
 
-    const QList<GraphicsPrimitive *> &body = expandedBody(normalizedKey);
+    const QList<GraphicsPrimitive *> body = expandedBody(normalizedKey);
     if (!body.isEmpty()) {
         QRectF bounds;
         for (GraphicsPrimitive *primitive : body)

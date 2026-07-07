@@ -48,7 +48,7 @@ QTransform PrimitiveMacro::placementTransform() const
 
 QRectF PrimitiveMacro::boundingRect() const
 {
-    const QList<GraphicsPrimitive *> &body = LibraryManager::getInstance().expandedBody(m_macroName);
+    const QList<GraphicsPrimitive *> body = LibraryManager::getInstance().expandedBody(m_macroName);
     if (body.isEmpty()) {
         const qreal half = PlaceholderSize / 2;
         return QRectF(mapFromScene(m_pos) - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize))
@@ -67,7 +67,7 @@ void PrimitiveMacro::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     if (!isVisible())
         return;
 
-    const QList<GraphicsPrimitive *> &body = LibraryManager::getInstance().expandedBody(m_macroName);
+    const QList<GraphicsPrimitive *> body = LibraryManager::getInstance().expandedBody(m_macroName);
     if (body.isEmpty()) {
         QPen pen(drawColor());
         pen.setStyle(Qt::DashLine);
