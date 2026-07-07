@@ -71,11 +71,20 @@ public:
     bool nameIsVisible() const { return showName; }
     bool valueIsVisible() const { return showValue; }
     QPen pen() const { return this->_pen; }
-    // The dash style/width actually used by paint() (constructed fresh from
-    // these each call) - needed by FidoCadWriter, which isn't a subclass and
-    // so can't reach the protected fields directly.
+    // The dash style actually used by paint() - needed by FidoCadWriter,
+    // which isn't a subclass and so can't reach the protected field directly.
     Qt::PenStyle lineStyle() const { return penStyle; }
-    qreal lineWidth() const { return penSize; }
+
+    // The stroke width every line-like primitive (Line/Bezier/Rectangle/
+    // Ellipse/Polygon/ComplexCurve) actually draws with: read live from the
+    // owning Sheet's document-wide default every time, rather than storing
+    // one independently per primitive. Matches the reference FidoCadJ
+    // editor, where line width is a single shared value (Globals.lineWidth)
+    // consulted at draw time - never a per-primitive property - so the whole
+    // document always renders at one consistent width. Falls back to the
+    // spec's compiled-in default (0.5) for a primitive not attached to any
+    // Sheet, e.g. a macro-library body prototype.
+    qreal effectiveLineWidth() const;
 
     void setName(const QString &name) { objName = name; }
     void setValue(const QString &value) { objValue = value; }
@@ -184,7 +193,6 @@ signals:
 public slots:
 
     void penStyleIsChanged(Qt::PenStyle penStyle) { this->penStyle = penStyle; }
-    void setPenSize(qreal newPenSize) { penSize = newPenSize; }
     void setIsFilled(bool isFilled) { filled = isFilled; }
     void setNameVisible(bool visible) { showName = visible; }
     void setValueVisible(bool visible) { showValue = visible; }
@@ -209,7 +217,6 @@ protected:
     QString  objValue;
     Layer *objLayer;
     QPen _pen;
-    qreal penSize;
 
     QPointF m_dragAnchor; // last mouse scene position seen during an active drag
     // Control-point snapshots (per moved primitive - a multi-selection drag

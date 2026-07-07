@@ -63,7 +63,7 @@ QPainterPath PrimitiveComplexCurve::buildSplinePath() const
 
 QRectF PrimitiveComplexCurve::boundingRect() const
 {
-    const qreal margin = penSize + 4;
+    const qreal margin = effectiveLineWidth() + 4;
     return buildSplinePath().boundingRect().adjusted(-margin, -margin, margin, margin)
             .united(labelBoundingRect());
 }
@@ -75,7 +75,7 @@ void PrimitiveComplexCurve::paint(QPainter *painter, const QStyleOptionGraphicsI
 
     QPen pen(drawColor());
     pen.setStyle(penStyle);
-    pen.setWidthF(penSize);
+    pen.setWidthF(effectiveLineWidth());
     painter->setPen(pen);
     painter->setBrush(isFilled() && m_closed ? QBrush(pen.color()) : QBrush(Qt::NoBrush));
 

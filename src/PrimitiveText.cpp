@@ -53,7 +53,14 @@ void PrimitiveText::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
     painter->rotate(-m_orientationDeg); // FCD orientation is counter-clockwise
     if (m_styleFlags & Mirrored)
         painter->scale(-1, 1);
-    painter->drawText(QPointF(0, 0), m_text);
+    // FIDOSPECS anchors a text primitive at the TOP of its bounding box
+    // (matches PrimitiveAdvText.java, which tracks the text's extent
+    // downward from its anchor by the font ascent), but QPainter::drawText()
+    // anchors a point at the BASELINE - without this offset every text
+    // primitive rendered one font-ascent too high compared to the reference
+    // editor, most noticeable on the small, tightly-packed pin/value labels
+    // inside macro bodies.
+    painter->drawText(QPointF(0, QFontMetricsF(font).ascent()), m_text);
     painter->restore();
 }
 

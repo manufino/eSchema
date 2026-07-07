@@ -128,11 +128,6 @@ void PrimitivePlacementController::applyDefaults(GraphicsPrimitive *primitive) c
         primitive->setLayer(m_layerCombo->selectedLayer());
     if (m_fillCheckBox)
         primitive->setIsFilled(m_fillCheckBox->isChecked());
-    // Matches the document's FJC "A" line width (FidoCadReader applies the
-    // same default when reading a file) - without this, an interactively
-    // drawn primitive would keep GraphicsPrimitive's constructor fallback
-    // instead of the current document's actual default.
-    primitive->setPenSize(m_sheet->lineWidth());
 }
 
 void PrimitivePlacementController::startPlacement(const QPointF &scenePos)

@@ -58,12 +58,15 @@ QStringList tokenize(const QString &line)
 
 // Builds the primitive for a geometry line (LI/BE/RV/RP/EV/EP/PV/PP/CV/CP/
 // SA/PL/PA/MC/IM). Returns nullptr for an unrecognized or too-short line - the
-// caller skips it, per FIDOSPECS.md 4's robustness contract. `sheet` supplies
-// the document-wide default line width (FIDOSPECS.md 7's "FJC A") for every
-// primitive type that draws with it - matching the reference FidoCadJ editor,
-// where LI/BE/RV/RP/EV/EP/PV/PP/CV/CP all stroke at the same shared
-// Globals.lineWidth rather than carrying their own width token (unlike PL/PA,
-// which are unaffected here since they parse an explicit width of their own).
+// caller skips it, per FIDOSPECS.md 4's robustness contract.
+//
+// LI/BE/RV/RP/EV/EP/PV/PP/CV/CP never store their own line width - they
+// stroke at whatever GraphicsPrimitive::effectiveLineWidth() resolves to at
+// paint time (the owning Sheet's single document-wide default), matching the
+// reference FidoCadJ editor, where line width is one shared value
+// (Globals.lineWidth) read at draw time rather than a per-primitive
+// property - so nothing needs setting here (unlike PL/PA, which carry an
+// explicit width token of their own and are unaffected).
 //
 // The trailing layer token is OPTIONAL on every one of these (confirmed
 // against the reference editor's own parseTokens() for each primitive, e.g.
@@ -74,7 +77,7 @@ QStringList tokenize(const QString &line)
 // already tolerates a missing token via QList::value() (empty string ->
 // toInt()==0 -> layer 0), so the fix is simply not rejecting the line for
 // being one token short.
-GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens, Sheet *sheet)
+GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens)
 {
     auto num = [&](int i) { return tokens.value(i).toDouble(); };
     auto layerAt = [&](int i) { return layerFromIndex(tokens.value(i).toInt()); };
@@ -85,7 +88,6 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         p->setControlPoint(0, QPointF(num(1), num(2)));
         p->setControlPoint(1, QPointF(num(3), num(4)));
         p->setLayer(layerAt(5));
-        p->setPenSize(sheet->lineWidth());
         return p;
     }
     if (code == QStringLiteral("BE")) {
@@ -96,7 +98,6 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         p->setControlPoint(2, QPointF(num(5), num(6)));
         p->setControlPoint(3, QPointF(num(7), num(8)));
         p->setLayer(layerAt(9));
-        p->setPenSize(sheet->lineWidth());
         return p;
     }
     if (code == QStringLiteral("RV") || code == QStringLiteral("RP")) {
@@ -106,7 +107,6 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         p->setControlPoint(0, QPointF(num(1), num(2)));
         p->setControlPoint(1, QPointF(num(3), num(4)));
         p->setLayer(layerAt(5));
-        p->setPenSize(sheet->lineWidth());
         return p;
     }
     if (code == QStringLiteral("EV") || code == QStringLiteral("EP")) {
@@ -116,7 +116,6 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         p->setControlPoint(0, QPointF(num(1), num(2)));
         p->setControlPoint(1, QPointF(num(3), num(4)));
         p->setLayer(layerAt(5));
-        p->setPenSize(sheet->lineWidth());
         return p;
     }
     if (code == QStringLiteral("PV") || code == QStringLiteral("PP")) {
@@ -132,7 +131,6 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         for (int i = 0; i < vertexCount; ++i)
             p->appendVertex(QPointF(num(1 + i * 2), num(2 + i * 2)));
         p->setLayer(hasLayer ? layerAt(1 + vertexCount * 2) : layerFromIndex(0));
-        p->setPenSize(sheet->lineWidth());
         return p;
     }
     if (code == QStringLiteral("CV") || code == QStringLiteral("CP")) {
@@ -148,7 +146,6 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         for (int i = 0; i < vertexCount; ++i)
             p->appendVertex(QPointF(num(2 + i * 2), num(3 + i * 2)));
         p->setLayer(hasLayer ? layerAt(2 + vertexCount * 2) : layerFromIndex(0));
-        p->setPenSize(sheet->lineWidth());
         return p;
     }
     if (code == QStringLiteral("SA")) {
@@ -339,7 +336,7 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
 
         // A new primitive line: the previous one's FCJ/TY window is closed.
         commitPending();
-        GraphicsPrimitive *primitive = buildPrimitive(code, tokens, sheet);
+        GraphicsPrimitive *primitive = buildPrimitive(code, tokens);
         if (!primitive)
             continue; // unrecognized/malformed line - skip (robustness contract)
 

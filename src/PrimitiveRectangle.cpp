@@ -28,7 +28,7 @@ PrimitiveRectangle::PrimitiveRectangle(QGraphicsItem *parent)
 
 QRectF PrimitiveRectangle::boundingRect() const
 {
-    const qreal margin = penSize + 2;
+    const qreal margin = effectiveLineWidth() + 2;
     return QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized()
             .adjusted(-margin, -margin, margin, margin)
             .united(labelBoundingRect());
@@ -41,7 +41,7 @@ void PrimitiveRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem
 
     QPen pen(drawColor());
     pen.setStyle(penStyle);
-    pen.setWidthF(penSize);
+    pen.setWidthF(effectiveLineWidth());
     painter->setPen(pen);
     painter->setBrush(isFilled() ? QBrush(pen.color()) : QBrush(Qt::NoBrush));
 

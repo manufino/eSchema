@@ -31,7 +31,7 @@ QRectF PrimitivePolygon::boundingRect() const
     QPolygonF poly;
     for (const QPointF &p : m_vertices)
         poly << mapFromScene(p);
-    const qreal margin = penSize + 2;
+    const qreal margin = effectiveLineWidth() + 2;
     return poly.boundingRect().adjusted(-margin, -margin, margin, margin)
             .united(labelBoundingRect());
 }
@@ -43,7 +43,7 @@ void PrimitivePolygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
     QPen pen(drawColor());
     pen.setStyle(penStyle);
-    pen.setWidthF(penSize);
+    pen.setWidthF(effectiveLineWidth());
     painter->setPen(pen);
     painter->setBrush(isFilled() ? QBrush(pen.color()) : QBrush(Qt::NoBrush));
 

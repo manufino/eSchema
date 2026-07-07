@@ -33,7 +33,7 @@ QRectF PrimitiveBezier::boundingRect() const
     QPolygonF poly;
     for (const QPointF &p : m_points)
         poly << mapFromScene(p);
-    const qreal margin = penSize + 4;
+    const qreal margin = effectiveLineWidth() + 4;
     return poly.boundingRect().adjusted(-margin, -margin, margin, margin)
             .united(labelBoundingRect());
 }
@@ -45,7 +45,7 @@ void PrimitiveBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
     QPen pen(drawColor());
     pen.setStyle(penStyle);
-    pen.setWidthF(penSize);
+    pen.setWidthF(effectiveLineWidth());
     painter->setPen(pen);
 
     const QPointF p1 = mapFromScene(m_points[0]);
