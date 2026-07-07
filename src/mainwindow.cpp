@@ -27,6 +27,7 @@
 #include "CreatePrimitiveCommand.h"
 #include "MovePrimitiveCommand.h"
 #include "LibraryManager.h"
+#include "PrimitiveMacro.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -129,6 +130,7 @@ void MainWindow::setConnections()
     connect(ui->DSpinBoxLineHeight, &QSpinBox::valueChanged, ui->cbPropLineStyle, &PenStyleComboBox::lineWidthChanged);
     connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
+    connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::clickDeleteAction);
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::clickCutAction);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::clickCopyAction);
@@ -356,6 +358,34 @@ void MainWindow::clickRotateAction()
     }
     if (multiple)
         undo->endMacro();
+}
+
+void MainWindow::clickConvertMacroToPrimitivesAction()
+{
+    QList<PrimitiveMacro *> macros;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+        if (auto *macro = dynamic_cast<PrimitiveMacro *>(primitive))
+            macros.append(macro);
+    }
+    if (macros.isEmpty())
+        return;
+
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    // Always grouped, even for a single macro: converting one already means
+    // one delete plus N creates, and all of it must undo as one step.
+    undo->beginMacro(tr("Converti macro in primitive"));
+    for (PrimitiveMacro *macro : macros) {
+        const QList<GraphicsPrimitive *> expanded = macro->convertToPrimitives(sheetScene);
+        for (GraphicsPrimitive *primitive : expanded) {
+            // push() calls redo() synchronously, which is what actually adds
+            // the primitive to the scene - only safe to select it afterwards.
+            undo->push(new CreatePrimitiveCommand(sheetScene, primitive));
+            primitive->setSelected(true);
+        }
+        undo->push(new DeletePrimitiveCommand(sheetScene, macro));
+    }
+    undo->endMacro();
 }
 
 void MainWindow::clickDeleteAction()

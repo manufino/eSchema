@@ -22,13 +22,15 @@
 
 #include "GraphicsPrimitive.h"
 #include <QTransform>
+#include <QList>
 
-// FCD "MC" - an instance of a library macro (FIDOSPECS.md 5.10). Per current
-// project scope this is round-tripped as raw data only: the macro key,
-// position, orientation and mirror flag are preserved exactly, but the macro
-// body is not loaded/expanded from any .fcl library, so it paints as a dashed
-// placeholder box labeled with its key. Expanding real library macros is a
-// separate future task.
+class Sheet;
+
+// FCD "MC" - an instance of a library macro (FIDOSPECS.md 5.10). The macro
+// key, position, orientation and mirror flag are the only state stored here;
+// the actual body is looked up from LibraryManager and expanded/placed at
+// paint time (see placementTransform()), or unrecognized keys fall back to a
+// dashed placeholder box labeled with the key.
 class PrimitiveMacro : public GraphicsPrimitive
 {
 public:
@@ -59,6 +61,20 @@ public:
     // Matches FIDOSPECS.md's worked example (11), where a macro's name/value
     // labels sit further from the anchor than other primitives'.
     QPointF labelOffset(int labelIndex) const override { return QPointF(10, labelIndex == 0 ? 5 : 10); }
+
+    // Expands this one macro instance into standalone, independent
+    // primitives in final scene coordinates - "Converti macro in primitive"
+    // (Edit menu). The result is a fresh, exclusively-owned copy (re-parsed
+    // from the library body text, not the same objects LibraryManager
+    // caches for painting), not yet added to any Sheet - the caller decides
+    // how, typically one CreatePrimitiveCommand per primitive. If the body
+    // itself contains a nested "MC" line, it becomes another (still
+    // unexpanded) PrimitiveMacro at the correct final position/orientation -
+    // run this again on it to flatten further. name()/value(), when set, are
+    // preserved as a standalone text primitive each (matching where
+    // paintLabels() would have drawn them) rather than silently discarded.
+    // Returns an empty list for an unrecognized macro key.
+    QList<GraphicsPrimitive *> convertToPrimitives(Sheet *contextSheet) const;
 
 private:
     // Builds the QTransform that places the macro's local (100,100)-centered

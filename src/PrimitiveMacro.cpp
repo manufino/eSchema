@@ -20,6 +20,8 @@
 #include "PrimitiveMacro.h"
 #include "FidoCadTokenUtils.h"
 #include "LibraryManager.h"
+#include "FidoCadReader.h"
+#include "PrimitiveText.h"
 #include <QStyleOptionGraphicsItem>
 
 namespace {
@@ -114,6 +116,43 @@ void PrimitiveMacro::rotate90(const QPointF &)
 {
     prepareGeometryChange();
     m_orientation = (m_orientation + 1) % 4;
+}
+
+QList<GraphicsPrimitive *> PrimitiveMacro::convertToPrimitives(Sheet *contextSheet) const
+{
+    const MacroDescriptor *descriptor = LibraryManager::getInstance().macro(m_macroName);
+    if (!descriptor)
+        return {};
+
+    // A fresh, independent parse (not LibraryManager::expandedBody()'s
+    // shared/cached prototypes - those must never be mutated or handed to a
+    // Sheet, see its own doc comment) so the result is safe to own and edit
+    // from here on.
+    QList<GraphicsPrimitive *> result = FidoCadReader::parse(descriptor->body, contextSheet);
+
+    const QTransform transform = placementTransform();
+    for (GraphicsPrimitive *primitive : result) {
+        const int count = primitive->controlPointCount();
+        for (int i = 0; i < count; ++i)
+            primitive->setControlPoint(i, transform.map(primitive->controlPoint(i)));
+    }
+
+    if (!name().isEmpty()) {
+        auto *nameText = new PrimitiveText();
+        nameText->setLayer(objLayer);
+        nameText->setControlPoint(0, m_pos + labelOffset(0));
+        nameText->setText(name());
+        result.append(nameText);
+    }
+    if (!value().isEmpty()) {
+        auto *valueText = new PrimitiveText();
+        valueText->setLayer(objLayer);
+        valueText->setControlPoint(0, m_pos + labelOffset(1));
+        valueText->setText(value());
+        result.append(valueText);
+    }
+
+    return result;
 }
 
 QStringList PrimitiveMacro::toTokens() const

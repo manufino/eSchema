@@ -1005,6 +1005,8 @@ margin:1px;
     <addaction name="actionRotate"/>
     <addaction name="actionMirror"/>
     <addaction name="separator"/>
+    <addaction name="actionConvertMacroToPrimitives"/>
+    <addaction name="separator"/>
     <addaction name="actionAlignLeft"/>
     <addaction name="actionAlignRight"/>
     <addaction name="actionAlignTop"/>
@@ -1350,6 +1352,15 @@ margin:1px;
    </property>
    <property name="shortcut">
     <string>S</string>
+   </property>
+  </action>
+  <action name="actionConvertMacroToPrimitives">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Converti macro in primitive</string>
    </property>
   </action>
   <action name="actionAlignLeft">

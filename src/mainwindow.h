@@ -75,6 +75,7 @@ public slots:
     void clickLayerManagerAction();
     void clickMirrorAction();
     void clickRotateAction();
+    void clickConvertMacroToPrimitivesAction();
     void clickDeleteAction();
     void clickCutAction();
     void clickCopyAction();
