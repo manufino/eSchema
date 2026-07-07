@@ -177,7 +177,11 @@ void MainWindow::buildLibraryPanel()
             QFont categoryFont = categoryItem->font(0);
             categoryFont.setBold(true);
             categoryItem->setFont(0, categoryFont);
-            categoryItem->setExpanded(true);
+            // Collapsed by default: several libraries here have 15-24
+            // categories (PCB Footprints, IHRAM, Simboli Elettrotecnica) -
+            // expanding all of them at once overflows the panel so badly
+            // that only the first one or two categories are ever visible,
+            // making a perfectly complete library look empty/broken.
 
             for (const MacroDescriptor &descriptor : library.macrosByCategory.value(category)) {
                 auto *item = new QTreeWidgetItem(categoryItem, QStringList(descriptor.name));
@@ -213,6 +217,11 @@ void MainWindow::filterLibraryPanel(const QString &text)
                 categoryHasMatch = categoryHasMatch || matches;
             }
             categoryItem->setHidden(!categoryHasMatch);
+            // Categories are collapsed by default (see buildLibraryPanel()) -
+            // while actively searching, expand every category with a match
+            // so its children are actually visible instead of just present-
+            // but-collapsed; collapse back down once the search is cleared.
+            categoryItem->setExpanded(!text.isEmpty() && categoryHasMatch);
             pageHasMatch = pageHasMatch || categoryHasMatch;
         }
         if (!text.isEmpty() && pageHasMatch)
