@@ -46,7 +46,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 class QPrinter;
-class QListWidgetItem;
+class QTreeWidgetItem;
 
 class MainWindow : public QMainWindow
 {
@@ -101,18 +101,19 @@ private:
     void renderForPrint(QPrinter *printer);
     void setConnections();
     // Fills ui->toolBoxLib with one page per loaded macro library, each a
-    // QListWidget of icon+name items grouped by category - built once at
-    // startup from LibraryManager, which has already scanned the "lib"
-    // directory next to the executable by the time this runs.
+    // QTreeWidget grouping macro icon+name leaves under their category node
+    // - built once at startup from LibraryManager, which has already scanned
+    // the "lib" directory next to the executable by the time this runs.
     void buildLibraryPanel();
-    // Hides macro items in every library page whose name doesn't contain
-    // `text`, and jumps to the first page with a surviving match - wired to
-    // ui->txtSearch.
+    // Hides macro leaves in every library page whose name doesn't contain
+    // `text` (hiding a now-empty category node too), and jumps to the first
+    // page with a surviving match - wired to ui->txtSearch.
     void filterLibraryPanel(const QString &text);
     // Arms the clicked macro for placement (see
     // PrimitivePlacementController::armMacroPlacement()) - the next click on
-    // the sheet drops an instance of it there.
-    void clickLibraryMacroItem(QListWidgetItem *item);
+    // the sheet drops an instance of it there. Category nodes carry no key
+    // and are ignored.
+    void clickLibraryMacroItem(QTreeWidgetItem *item);
     GraphicsPrimitive *firstSelectedPrimitive() const;
     // Selected primitives in stable document order (sheet->primitives()
     // order), not QGraphicsScene::selectedItems()'s unspecified order - Copy

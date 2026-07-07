@@ -36,7 +36,7 @@
 #include <QPrinter>
 #include <QPrintPreviewDialog>
 #include <QPainter>
-#include <QListWidget>
+#include <QTreeWidget>
 #include <QFont>
 #include <algorithm>
 #include <limits>
@@ -160,65 +160,69 @@ void MainWindow::buildLibraryPanel()
     }
 
     for (const MacroLibrary &library : LibraryManager::getInstance().libraries()) {
-        auto *list = new QListWidget(ui->toolBoxLib);
-        list->setViewMode(QListView::IconMode);
-        list->setIconSize(QSize(40, 40));
-        list->setGridSize(QSize(72, 76));
-        list->setResizeMode(QListView::Adjust);
-        list->setMovement(QListView::Static);
-        list->setWordWrap(true);
-        list->setSpacing(2);
-        list->setUniformItemSizes(true);
+        // A tree (library page -> category node -> macro leaf) instead of a
+        // flat icon list, so a library's categories - the second grouping
+        // level the .fcl format itself defines via "{...}" lines - actually
+        // read as sections instead of being just another same-sized cell in
+        // an icon grid.
+        auto *tree = new QTreeWidget(ui->toolBoxLib);
+        tree->setHeaderHidden(true);
+        tree->setIconSize(QSize(32, 32));
+        tree->setIndentation(12);
+        tree->setUniformRowHeights(true);
 
         for (const QString &category : library.categoryOrder) {
-            auto *header = new QListWidgetItem(category);
-            header->setFlags(Qt::NoItemFlags);
-            QFont headerFont = header->font();
-            headerFont.setBold(true);
-            header->setFont(headerFont);
-            list->addItem(header);
+            auto *categoryItem = new QTreeWidgetItem(tree, QStringList(category));
+            categoryItem->setFlags(Qt::ItemIsEnabled);
+            QFont categoryFont = categoryItem->font(0);
+            categoryFont.setBold(true);
+            categoryItem->setFont(0, categoryFont);
+            categoryItem->setExpanded(true);
 
             for (const MacroDescriptor &descriptor : library.macrosByCategory.value(category)) {
-                auto *item = new QListWidgetItem(LibraryManager::getInstance().icon(descriptor.key, 40),
-                                                  descriptor.name);
-                item->setData(Qt::UserRole, descriptor.key);
-                item->setToolTip(descriptor.name);
-                list->addItem(item);
+                auto *item = new QTreeWidgetItem(categoryItem, QStringList(descriptor.name));
+                item->setIcon(0, LibraryManager::getInstance().icon(descriptor.key, 32));
+                item->setData(0, Qt::UserRole, descriptor.key);
+                item->setToolTip(0, descriptor.name);
             }
         }
 
-        connect(list, &QListWidget::itemClicked, this, &MainWindow::clickLibraryMacroItem);
+        connect(tree, &QTreeWidget::itemClicked, this, &MainWindow::clickLibraryMacroItem);
 
         const QString label = !library.displayName.isEmpty() ? library.displayName
                 : (library.filename.isEmpty() ? tr("Standard") : library.filename);
-        ui->toolBoxLib->addItem(list, label);
+        ui->toolBoxLib->addItem(tree, label);
     }
 }
 
 void MainWindow::filterLibraryPanel(const QString &text)
 {
     for (int page = 0; page < ui->toolBoxLib->count(); ++page) {
-        auto *list = qobject_cast<QListWidget *>(ui->toolBoxLib->widget(page));
-        if (!list)
+        auto *tree = qobject_cast<QTreeWidget *>(ui->toolBoxLib->widget(page));
+        if (!tree)
             continue;
 
         bool pageHasMatch = false;
-        for (int i = 0; i < list->count(); ++i) {
-            QListWidgetItem *item = list->item(i);
-            if (item->data(Qt::UserRole).toString().isEmpty())
-                continue; // category header - never filtered on its own
-            const bool matches = text.isEmpty() || item->text().contains(text, Qt::CaseInsensitive);
-            item->setHidden(!matches);
-            pageHasMatch = pageHasMatch || matches;
+        for (int c = 0; c < tree->topLevelItemCount(); ++c) {
+            QTreeWidgetItem *categoryItem = tree->topLevelItem(c);
+            bool categoryHasMatch = false;
+            for (int m = 0; m < categoryItem->childCount(); ++m) {
+                QTreeWidgetItem *macroItem = categoryItem->child(m);
+                const bool matches = text.isEmpty() || macroItem->text(0).contains(text, Qt::CaseInsensitive);
+                macroItem->setHidden(!matches);
+                categoryHasMatch = categoryHasMatch || matches;
+            }
+            categoryItem->setHidden(!categoryHasMatch);
+            pageHasMatch = pageHasMatch || categoryHasMatch;
         }
         if (!text.isEmpty() && pageHasMatch)
             ui->toolBoxLib->setCurrentIndex(page); // jump to the first library with a match
     }
 }
 
-void MainWindow::clickLibraryMacroItem(QListWidgetItem *item)
+void MainWindow::clickLibraryMacroItem(QTreeWidgetItem *item)
 {
-    const QString key = item->data(Qt::UserRole).toString();
+    const QString key = item->data(0, Qt::UserRole).toString();
     if (!key.isEmpty())
         placementController->armMacroPlacement(key);
 }

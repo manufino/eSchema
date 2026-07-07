@@ -35,7 +35,11 @@ GraphicsPrimitive::GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem
     showName = true;
     showValue = true;
     visible = true;
-    penSize = 1;
+    // Matches the reference FidoCadJ editor's own compiled-in default
+    // (Globals.lineWidthDefault) and Sheet::lineWidth()'s default - readers/
+    // placement code override this from the document's actual FJC "A" value,
+    // this is just the fallback for a primitive that predates either.
+    penSize = 0.5;
     _pen = QPen(Qt::black);
     // objLayer was previously left uninitialized (garbage pointer) - every new
     // primitive now defaults to the master layer, matching what a freshly drawn

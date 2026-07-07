@@ -75,7 +75,7 @@ public:
     // these each call) - needed by FidoCadWriter, which isn't a subclass and
     // so can't reach the protected fields directly.
     Qt::PenStyle lineStyle() const { return penStyle; }
-    int lineWidth() const { return penSize; }
+    qreal lineWidth() const { return penSize; }
 
     void setName(const QString &name) { objName = name; }
     void setValue(const QString &value) { objValue = value; }
@@ -184,7 +184,7 @@ signals:
 public slots:
 
     void penStyleIsChanged(Qt::PenStyle penStyle) { this->penStyle = penStyle; }
-    void setPenSize(int newPenSize) { penSize = newPenSize; }
+    void setPenSize(qreal newPenSize) { penSize = newPenSize; }
     void setIsFilled(bool isFilled) { filled = isFilled; }
     void setNameVisible(bool visible) { showName = visible; }
     void setValueVisible(bool visible) { showValue = visible; }
@@ -209,7 +209,7 @@ protected:
     QString  objValue;
     Layer *objLayer;
     QPen _pen;
-    int penSize;
+    qreal penSize;
 
     QPointF m_dragAnchor; // last mouse scene position seen during an active drag
     // Control-point snapshots (per moved primitive - a multi-selection drag
