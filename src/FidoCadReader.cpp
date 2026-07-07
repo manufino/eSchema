@@ -64,13 +64,23 @@ QStringList tokenize(const QString &line)
 // where LI/BE/RV/RP/EV/EP/PV/PP/CV/CP all stroke at the same shared
 // Globals.lineWidth rather than carrying their own width token (unlike PL/PA,
 // which are unaffected here since they parse an explicit width of their own).
+//
+// The trailing layer token is OPTIONAL on every one of these (confirmed
+// against the reference editor's own parseTokens() for each primitive, e.g.
+// PrimitiveLine.java only requires nn>=5 for "LI x1 y1 x2 y2" and reads
+// tokens[5] as the layer only "if(nn>5)") - macro library bodies routinely
+// omit it, since a symbol's internal geometry is conventionally on layer 0
+// regardless of which layer the macro instance itself ends up on. layerAt()
+// already tolerates a missing token via QList::value() (empty string ->
+// toInt()==0 -> layer 0), so the fix is simply not rejecting the line for
+// being one token short.
 GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens, Sheet *sheet)
 {
     auto num = [&](int i) { return tokens.value(i).toDouble(); };
     auto layerAt = [&](int i) { return layerFromIndex(tokens.value(i).toInt()); };
 
     if (code == QStringLiteral("LI")) {
-        if (tokens.size() < 6) return nullptr;
+        if (tokens.size() < 5) return nullptr;
         auto *p = new PrimitiveLine();
         p->setControlPoint(0, QPointF(num(1), num(2)));
         p->setControlPoint(1, QPointF(num(3), num(4)));
@@ -79,7 +89,7 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         return p;
     }
     if (code == QStringLiteral("BE")) {
-        if (tokens.size() < 10) return nullptr;
+        if (tokens.size() < 9) return nullptr;
         auto *p = new PrimitiveBezier();
         p->setControlPoint(0, QPointF(num(1), num(2)));
         p->setControlPoint(1, QPointF(num(3), num(4)));
@@ -90,7 +100,7 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         return p;
     }
     if (code == QStringLiteral("RV") || code == QStringLiteral("RP")) {
-        if (tokens.size() < 6) return nullptr;
+        if (tokens.size() < 5) return nullptr;
         auto *p = new PrimitiveRectangle();
         p->setIsFilled(code == QStringLiteral("RP"));
         p->setControlPoint(0, QPointF(num(1), num(2)));
@@ -100,7 +110,7 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         return p;
     }
     if (code == QStringLiteral("EV") || code == QStringLiteral("EP")) {
-        if (tokens.size() < 6) return nullptr;
+        if (tokens.size() < 5) return nullptr;
         auto *p = new PrimitiveEllipse();
         p->setIsFilled(code == QStringLiteral("EP"));
         p->setControlPoint(0, QPointF(num(1), num(2)));
@@ -110,25 +120,34 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         return p;
     }
     if (code == QStringLiteral("PV") || code == QStringLiteral("PP")) {
-        if (tokens.size() < 7) return nullptr;
+        if (tokens.size() < 5) return nullptr;
         auto *p = new PrimitivePolygon();
         p->setIsFilled(code == QStringLiteral("PP"));
-        const int vertexCount = qMin((tokens.size() - 2) / 2, int(PrimitivePolygon::MaxVertices));
+        // Vertices always come in (x,y) pairs, so the token count after the
+        // code is even with no layer, odd with one - matching
+        // PrimitivePolygon.java's own self-adjusting "while(j<nn-1)" parity.
+        const bool hasLayer = (tokens.size() - 1) % 2 != 0;
+        const int coordTokens = tokens.size() - 1 - (hasLayer ? 1 : 0);
+        const int vertexCount = qMin(coordTokens / 2, int(PrimitivePolygon::MaxVertices));
         for (int i = 0; i < vertexCount; ++i)
             p->appendVertex(QPointF(num(1 + i * 2), num(2 + i * 2)));
-        p->setLayer(layerAt(1 + vertexCount * 2));
+        p->setLayer(hasLayer ? layerAt(1 + vertexCount * 2) : layerFromIndex(0));
         p->setPenSize(sheet->lineWidth());
         return p;
     }
     if (code == QStringLiteral("CV") || code == QStringLiteral("CP")) {
-        if (tokens.size() < 8) return nullptr;
+        if (tokens.size() < 6) return nullptr;
         auto *p = new PrimitiveComplexCurve();
         p->setIsFilled(code == QStringLiteral("CP"));
         p->setClosed(tokens.value(1).toInt() != 0);
-        const int vertexCount = qMin((tokens.size() - 3) / 2, int(PrimitiveComplexCurve::MaxVertices));
+        // Same parity logic as PV/PP, offset by one extra token for the
+        // leading "closed" flag.
+        const bool hasLayer = (tokens.size() - 2) % 2 != 0;
+        const int coordTokens = tokens.size() - 2 - (hasLayer ? 1 : 0);
+        const int vertexCount = qMin(coordTokens / 2, int(PrimitiveComplexCurve::MaxVertices));
         for (int i = 0; i < vertexCount; ++i)
             p->appendVertex(QPointF(num(2 + i * 2), num(3 + i * 2)));
-        p->setLayer(layerAt(2 + vertexCount * 2));
+        p->setLayer(hasLayer ? layerAt(2 + vertexCount * 2) : layerFromIndex(0));
         p->setPenSize(sheet->lineWidth());
         return p;
     }
@@ -140,7 +159,7 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         return p;
     }
     if (code == QStringLiteral("PL")) {
-        if (tokens.size() < 7) return nullptr;
+        if (tokens.size() < 6) return nullptr;
         auto *p = new PrimitivePcbTrack();
         p->setControlPoint(0, QPointF(num(1), num(2)));
         p->setControlPoint(1, QPointF(num(3), num(4)));
@@ -149,7 +168,7 @@ GraphicsPrimitive *buildPrimitive(const QString &code, const QStringList &tokens
         return p;
     }
     if (code == QStringLiteral("PA")) {
-        if (tokens.size() < 8) return nullptr;
+        if (tokens.size() < 7) return nullptr;
         auto *p = new PrimitivePad();
         p->setControlPoint(0, QPointF(num(1), num(2)));
         p->setOuterSize(num(3), num(4));
