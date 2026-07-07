@@ -84,11 +84,21 @@ void PrimitiveMacro::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     } else {
         // The body primitives are never added to a Sheet, so their own
         // mapFromScene() is the identity - painting them under this extra
-        // transform is what actually places/orients/mirrors them.
+        // transform is what actually places/orients/mirrors them. They are
+        // also shared across every instance of this same macro
+        // (LibraryManager's cache), so their selected state is force-set for
+        // this one paint call and cleared again immediately after - matches
+        // the reference FidoCadJ editor (PrimitiveMacro.drawMacroContents()'s
+        // own SelectionActions(macro).setSelectionAll(isSelected())) and
+        // never leaves a lingering "selected" flag that could bleed into
+        // another instance's paint or a library-panel icon render.
         painter->save();
         painter->setTransform(placementTransform(), true);
-        for (GraphicsPrimitive *primitive : body)
+        for (GraphicsPrimitive *primitive : body) {
+            primitive->setSelected(isSelected());
             primitive->paint(painter, option, widget);
+            primitive->setSelected(false);
+        }
         painter->restore();
     }
 

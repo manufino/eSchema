@@ -222,6 +222,15 @@ void SheetView::keyPressEvent(QKeyEvent *event)
     if (m_placementController && m_placementController->handleKeyPress(event))
         return;
 
+    // Not mid-placement (that case is handled above) - Escape here just
+    // clears whatever is currently selected, matching the reference
+    // FidoCadJ editor's Escape binding (PopUpMenu ties it to the same
+    // "selection" action that also clears the current selection).
+    if (event->key() == Qt::Key_Escape && scene()) {
+        scene()->clearSelection();
+        return;
+    }
+
     QGraphicsView::keyPressEvent(event);
 }
 
