@@ -184,7 +184,11 @@ void MainWindow::buildLibraryPanel()
         tree->setHeaderHidden(true);
         tree->setIconSize(iconQSize);
         tree->setIndentation(12);
-        tree->setUniformRowHeights(true);
+        // NOT uniform: category rows (text-only) and macro rows (icon-sized,
+        // which the user can set anywhere from 16 to 128px) are genuinely
+        // different heights - forcing a single shared height was clipping/
+        // overlapping the icons once they got larger than whatever height
+        // Qt had cached from the first (short, text-only) row it measured.
 
         for (const QString &category : library.categoryOrder) {
             auto *categoryItem = new QTreeWidgetItem(tree, QStringList(category));
@@ -203,6 +207,10 @@ void MainWindow::buildLibraryPanel()
                 item->setIcon(0, LibraryManager::getInstance().icon(descriptor.key, iconSize));
                 item->setData(0, Qt::UserRole, descriptor.key);
                 item->setToolTip(0, descriptor.name);
+                // An explicit size hint, not just the icon size passed to the
+                // tree above: some styles' default item delegate doesn't
+                // reliably grow the row to fit a large icon on its own.
+                item->setSizeHint(0, QSize(iconSize + 24, iconSize + 4));
             }
         }
 
