@@ -53,6 +53,7 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("gui_style", "light");
     saveSetting("stylesheet_path", "");
     saveSetting("lib_path", "");
+    saveSetting("macro_icon_size", 32);
 
     // GRIGLIA
     saveSetting("grid_step", 10);

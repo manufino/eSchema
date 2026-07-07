@@ -86,6 +86,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     LibraryManager::getInstance().loadLibraries();
     buildLibraryPanel();
+    // Rebuilds the panel (cheap: icons are cached per key+size in
+    // LibraryManager, so only an actual macro_icon_size change re-renders
+    // anything) whenever any option changes - matches SheetView's own
+    // settingChanged() convention of reacting broadly rather than filtering
+    // for the one setting it cares about.
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, &MainWindow::buildLibraryPanel);
 
     setConnections();
 }
@@ -159,6 +166,14 @@ void MainWindow::buildLibraryPanel()
         delete page;
     }
 
+    // Falls back to the compiled-in default (matches SettingsManager::
+    // restoreDefaultSettings()) rather than the 0 QSettings::value() would
+    // return for a settings file saved before this option existed.
+    int iconSize = SettingsManager::getInstance().loadSetting("macro_icon_size").toInt();
+    if (iconSize <= 0)
+        iconSize = 32;
+    const QSize iconQSize(iconSize, iconSize);
+
     for (const MacroLibrary &library : LibraryManager::getInstance().libraries()) {
         // A tree (library page -> category node -> macro leaf) instead of a
         // flat icon list, so a library's categories - the second grouping
@@ -167,7 +182,7 @@ void MainWindow::buildLibraryPanel()
         // an icon grid.
         auto *tree = new QTreeWidget(ui->toolBoxLib);
         tree->setHeaderHidden(true);
-        tree->setIconSize(QSize(32, 32));
+        tree->setIconSize(iconQSize);
         tree->setIndentation(12);
         tree->setUniformRowHeights(true);
 
@@ -185,7 +200,7 @@ void MainWindow::buildLibraryPanel()
 
             for (const MacroDescriptor &descriptor : library.macrosByCategory.value(category)) {
                 auto *item = new QTreeWidgetItem(categoryItem, QStringList(descriptor.name));
-                item->setIcon(0, LibraryManager::getInstance().icon(descriptor.key, 32));
+                item->setIcon(0, LibraryManager::getInstance().icon(descriptor.key, iconSize));
                 item->setData(0, Qt::UserRole, descriptor.key);
                 item->setToolTip(0, descriptor.name);
             }

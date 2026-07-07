@@ -83,6 +83,9 @@ void DialogOptions::loadSettings()
 
     val = SettingsManager::getInstance().loadSetting("snap_step");
     ui->spinSnapStep->setValue(val.toInt());
+
+    val = SettingsManager::getInstance().loadSetting("macro_icon_size");
+    ui->spinMacroIconSize->setValue(val.toInt() > 0 ? val.toInt() : 32);
 }
 
 void DialogOptions::saveSettings()
@@ -101,6 +104,7 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("stylesheet_directory", ui->txtStylesheetPath->text());
     SettingsManager::getInstance().saveSetting("snap_enabled", ui->chkSnapEnabled->isChecked());
     SettingsManager::getInstance().saveSetting("snap_step", ui->spinSnapStep->value());
+    SettingsManager::getInstance().saveSetting("macro_icon_size", ui->spinMacroIconSize->value());
 }
 
 void DialogOptions::accept()
