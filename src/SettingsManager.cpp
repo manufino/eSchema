@@ -54,6 +54,13 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("stylesheet_path", "");
     saveSetting("lib_path", "");
     saveSetting("macro_icon_size", 32);
+    // Matches the reference FidoCadJ editor's own compiled-in default
+    // (Globals.lineWidthDefault) - the single width every schematic
+    // primitive (Line/Bezier/Rectangle/Ellipse/Polygon/ComplexCurve) draws
+    // with, including inside macro bodies (GraphicsPrimitive::
+    // effectiveLineWidth()). PL/PA (PCB track/pad) are unaffected - they
+    // carry their own explicit width/size token per FIDOSPECS.
+    saveSetting("line_width", 0.5);
 
     // GRIGLIA
     saveSetting("grid_step", 10);

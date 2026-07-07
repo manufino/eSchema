@@ -21,6 +21,7 @@
 #include "LayerList.h"
 #include "GlobalUtils.h"
 #include "Sheet.h"
+#include "SettingsManager.h"
 #include "MovePrimitiveCommand.h"
 #include <QGraphicsScene>
 
@@ -54,7 +55,12 @@ qreal GraphicsPrimitive::effectiveLineWidth() const
 {
     if (auto *sheet = qobject_cast<Sheet *>(scene()))
         return sheet->lineWidth();
-    return 0.5; // not attached to a Sheet (e.g. a macro-library body prototype)
+    // Not attached to a Sheet (e.g. a macro-library body prototype, painted
+    // directly by PrimitiveMacro rather than living in a real document) -
+    // reads the same "line_width" option live, so macro bodies stay in sync
+    // with the user's configured default exactly like every other primitive.
+    const qreal fromSettings = SettingsManager::getInstance().loadSetting("line_width").toDouble();
+    return fromSettings > 0 ? fromSettings : 0.5;
 }
 
 int GraphicsPrimitive::layerIndex() const

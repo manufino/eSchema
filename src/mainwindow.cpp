@@ -93,6 +93,18 @@ MainWindow::MainWindow(QWidget *parent)
     // for the one setting it cares about.
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &MainWindow::buildLibraryPanel);
+    // Syncs the open document's own line width too, not just new ones -
+    // every primitive already reads Sheet::lineWidth() live at paint time
+    // (GraphicsPrimitive::effectiveLineWidth()), so this takes effect
+    // instantly, matching the reference FidoCadJ editor's own single shared
+    // Globals.lineWidth (there is no isolated "per-document" copy there
+    // either - loading a file with its own "FJC A" mutates that very same
+    // global for the rest of the session).
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged, this, [this]() {
+        const qreal value = SettingsManager::getInstance().loadSetting("line_width").toDouble();
+        sheetScene->setLineWidth(value > 0 ? value : 0.5);
+        sheetScene->update();
+    });
 
     setConnections();
 }

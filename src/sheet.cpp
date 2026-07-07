@@ -18,10 +18,24 @@
  */
 
 #include "Sheet.h"
+#include "SettingsManager.h"
+
+namespace {
+// Falls back to the compiled-in spec default (matches
+// GraphicsPrimitive::effectiveLineWidth()'s own fallback) rather than the 0
+// QSettings::value() would return for a settings file saved before the
+// "line_width" option existed.
+qreal defaultLineWidthSetting()
+{
+    const qreal value = SettingsManager::getInstance().loadSetting("line_width").toDouble();
+    return value > 0 ? value : 0.5;
+}
+}
 
 Sheet::Sheet(QObject *parent) :
     QGraphicsScene(parent)
 {
+    m_lineWidth = defaultLineWidthSetting();
 }
 
 void Sheet::addPrimitive(GraphicsPrimitive *primitive)
@@ -54,6 +68,6 @@ void Sheet::clearPrimitives()
     m_primitives.clear();
     m_undoStack.clear();
     m_connectionDiameter = 2.0;
-    m_lineWidth = 0.5;
+    m_lineWidth = defaultLineWidthSetting();
     m_lineWidthCircles = 0.35;
 }
