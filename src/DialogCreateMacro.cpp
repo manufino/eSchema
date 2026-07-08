@@ -20,6 +20,16 @@
 #include "DialogCreateMacro.h"
 #include "ui_DialogCreateMacro.h"
 #include "LibraryManager.h"
+#include <QInputDialog>
+
+namespace {
+// Always the combo's last entry - picking it prompts for a new library name
+// instead of naming an existing one.
+QString newLibrarySentinel()
+{
+    return QObject::tr("Nuova libreria...");
+}
+}
 
 DialogCreateMacro::DialogCreateMacro(QWidget *parent)
     : QDialog(parent), ui(new Ui::DialogCreateMacro)
@@ -28,19 +38,16 @@ DialogCreateMacro::DialogCreateMacro(QWidget *parent)
     setModal(true);
 
     ui->cboxLibrary->addItems(LibraryManager::getInstance().userLibraryDisplayNames());
-    ui->cboxLibrary->setCurrentIndex(-1);
+    ui->cboxLibrary->addItem(newLibrarySentinel());
+    ui->cboxLibrary->setCurrentIndex(-1); // force an explicit choice
 
+    connect(ui->cboxLibrary, &QComboBox::activated, this, &DialogCreateMacro::handleLibrarySelected);
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &DialogCreateMacro::validateAndAccept);
 }
 
 DialogCreateMacro::~DialogCreateMacro()
 {
     delete ui;
-}
-
-QString DialogCreateMacro::key() const
-{
-    return ui->txtKey->text().trimmed();
 }
 
 QString DialogCreateMacro::macroName() const
@@ -77,21 +84,36 @@ QString DialogCreateMacro::libraryFilename() const
     return sanitized;
 }
 
+void DialogCreateMacro::handleLibrarySelected(int index)
+{
+    if (index != ui->cboxLibrary->count() - 1) {
+        m_previousLibraryIndex = index;
+        return;
+    }
+
+    const QString name = QInputDialog::getText(this, tr("Nuova libreria"),
+                                                 tr("Nome della nuova libreria:")).trimmed();
+    if (name.isEmpty()) {
+        ui->cboxLibrary->setCurrentIndex(m_previousLibraryIndex);
+        return;
+    }
+
+    const int insertAt = ui->cboxLibrary->count() - 1; // just before the sentinel
+    ui->cboxLibrary->insertItem(insertAt, name);
+    ui->cboxLibrary->setCurrentIndex(insertAt);
+    m_previousLibraryIndex = insertAt;
+}
+
 void DialogCreateMacro::validateAndAccept()
 {
     ui->labelError->clear();
 
-    const QString k = key();
-    if (k.isEmpty() || k.contains(QLatin1Char('[')) || k.contains(QLatin1Char(']'))
-            || k.contains(QLatin1Char(' '))) {
-        ui->labelError->setText(tr("La chiave è obbligatoria e non può contenere spazi o parentesi quadre."));
-        return;
-    }
     if (macroName().isEmpty()) {
         ui->labelError->setText(tr("Il nome è obbligatorio."));
         return;
     }
-    if (libraryDisplayName().isEmpty()) {
+    const QString display = libraryDisplayName();
+    if (display.isEmpty()) {
         ui->labelError->setText(tr("Seleziona o crea una libreria."));
         return;
     }
@@ -102,11 +124,6 @@ void DialogCreateMacro::validateAndAccept()
     }
     if (LibraryManager::getInstance().isStandardLibraryFilename(filename)) {
         ui->labelError->setText(tr("Non è possibile salvare in una libreria standard."));
-        return;
-    }
-    const QString fullKey = (filename + QLatin1Char('.') + k).toLower();
-    if (LibraryManager::getInstance().macro(fullKey)) {
-        ui->labelError->setText(tr("Esiste già una macro con questa chiave in questa libreria."));
         return;
     }
 

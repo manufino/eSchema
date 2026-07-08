@@ -32,61 +32,47 @@
       <number>8</number>
      </property>
      <item row="0" column="0">
-      <widget class="QLabel" name="labelKey">
-       <property name="text">
-        <string>Chiave</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="txtKey">
-       <property name="toolTip">
-        <string>Identificativo univoco della macro all'interno della libreria (es. R100). Nessuno spazio o parentesi quadra.</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
       <widget class="QLabel" name="labelName">
        <property name="text">
         <string>Nome</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="0" column="1">
       <widget class="QLineEdit" name="txtName">
        <property name="toolTip">
         <string>Nome mostrato nel pannello librerie (es. Resistore 100 ohm).</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="labelCategory">
        <property name="text">
         <string>Categoria</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="1" column="1">
       <widget class="QLineEdit" name="txtCategory">
        <property name="toolTip">
         <string>Gruppo sotto cui la macro comparirà nel pannello librerie (es. Resistori).</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="labelLibrary">
        <property name="text">
         <string>Libreria</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="2" column="1">
       <widget class="QComboBox" name="cboxLibrary">
        <property name="editable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="toolTip">
-        <string>Solo librerie utente (non standard). Scrivi un nome nuovo per crearne una.</string>
+        <string>Solo librerie utente (non standard). Scegli "Nuova libreria..." per crearne una.</string>
        </property>
       </widget>
      </item>

@@ -40,6 +40,7 @@
 #include <QPainter>
 #include <QTreeWidget>
 #include <QFont>
+#include <QRandomGenerator>
 #include <algorithm>
 #include <limits>
 
@@ -443,10 +444,24 @@ void MainWindow::clickCreateMacroAction()
     const QString body = FidoCadWriter::writeSelection(clones);
     qDeleteAll(clones);
 
+    // The key is never user-chosen - generated the same way the reference
+    // FidoCadJ editor's own LibraryModel.createRandomMacroKey() does (a
+    // short random number), retried against a collision the same way it
+    // does too (up to 20 attempts, though a collision is astronomically
+    // unlikely here).
+    const QString libraryFilename = dialog.libraryFilename();
+    QString key;
+    for (int attempt = 0; attempt < 20; ++attempt) {
+        key = QString::number(QRandomGenerator::global()->bounded(100000000));
+        const QString fullKey = (libraryFilename + QLatin1Char('.') + key).toLower();
+        if (!LibraryManager::getInstance().macro(fullKey))
+            break;
+    }
+
     QString errorMessage;
     const bool ok = LibraryManager::getInstance().addUserMacro(
-                dialog.libraryFilename(), dialog.libraryDisplayName(),
-                dialog.key(), dialog.macroName(), dialog.category(), body, &errorMessage);
+                libraryFilename, dialog.libraryDisplayName(),
+                key, dialog.macroName(), dialog.category(), body, &errorMessage);
     if (!ok)
         QMessageBox::warning(this, tr("Crea macro"), errorMessage);
 }
