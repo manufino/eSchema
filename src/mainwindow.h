@@ -96,6 +96,10 @@ public slots:
     void clickSaveAction();
     void clickSaveAsAction();
     void clickPrintAction();
+    // Builds and execs the right-click menu at `globalPos` - wired to
+    // SheetView::contextMenuRequested(), which has already adjusted the
+    // selection (if needed) by the time this runs.
+    void showCanvasContextMenu(const QPoint &globalPos);
 
 private:
     // Renders the drawing onto the printer/preview page, scaled (preserving
@@ -125,6 +129,14 @@ private:
     // signals blocked, since this reflects the selection rather than being
     // an edit itself.
     void updatePropertiesPanel();
+    // Enables/disables every selection-dependent Edit action (Delete/Cut/
+    // Copy/Duplicate/Mirror/Rotate/Convert macro/Create macro/Align/
+    // Distribute/Paste/Select all) by the current selection's size and
+    // content - shared by the menu bar's own Modifica menu (whose actions
+    // this directly sets) and the right-click context menu, which reuses
+    // those same QAction objects rather than keeping a second copy of this
+    // logic in sync.
+    void updateEditActionsState();
     GraphicsPrimitive *firstSelectedPrimitive() const;
     // Selected primitives in stable document order (sheet->primitives()
     // order), not QGraphicsScene::selectedItems()'s unspecified order - Copy

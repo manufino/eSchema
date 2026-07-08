@@ -42,6 +42,7 @@
 #include <QPainter>
 #include <QTreeWidget>
 #include <QFont>
+#include <QMenu>
 #include <QRandomGenerator>
 #include <algorithm>
 #include <limits>
@@ -139,13 +140,14 @@ void MainWindow::setConnections()
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
     connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
     connect(ui->actionCreateMacro, &QAction::triggered, this, &MainWindow::clickCreateMacroAction);
-    // Only meaningful with something selected - matches the request that
-    // this specific action (unlike the rest of the Edit menu, which just
-    // silently no-ops on an empty selection) actually reflect that state.
-    connect(sheetScene, &QGraphicsScene::selectionChanged, this, [this]() {
-        ui->actionCreateMacro->setEnabled(!sheetScene->selectedItems().isEmpty());
-    });
-    ui->actionCreateMacro->setEnabled(false);
+    // Keeps every selection/clipboard-dependent Edit action's enabled state
+    // current - both for the menu bar and the right-click context menu,
+    // which reuses these same QAction objects (see showCanvasContextMenu()).
+    connect(sheetScene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateEditActionsState);
+    connect(QGuiApplication::clipboard(), &QClipboard::dataChanged, this, &MainWindow::updateEditActionsState);
+    updateEditActionsState();
+
+    connect(ui->graphicsView, &SheetView::contextMenuRequested, this, &MainWindow::showCanvasContextMenu);
 
     // Proprietà panel: reflects the selection, and each field applies its
     // edit back to every selected primitive when the user actually changes
@@ -361,6 +363,79 @@ void MainWindow::clickLayerManagerAction()
 // (EditorActions.rotateAllSelected/mirrorAllSelected pivot on
 // getFirstSelectedPrimitive().getFirstPoint()), rather than e.g. the
 // selection's bounding-box center.
+void MainWindow::updateEditActionsState()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    const bool hasSelection = !selected.isEmpty();
+
+    bool hasMacro = false;
+    for (GraphicsPrimitive *primitive : selected) {
+        if (primitive->getPrimitiveType() == GraphicsPrimitive::PartLib) {
+            hasMacro = true;
+            break;
+        }
+    }
+
+    ui->actionCut->setEnabled(hasSelection);
+    ui->actionCopy->setEnabled(hasSelection);
+    ui->actionDuplicate->setEnabled(hasSelection);
+    ui->actionDelete->setEnabled(hasSelection);
+    ui->actionMirror->setEnabled(hasSelection);
+    ui->actionRotate->setEnabled(hasSelection);
+    ui->actionCreateMacro->setEnabled(hasSelection);
+    ui->actionConvertMacroToPrimitives->setEnabled(hasMacro);
+
+    ui->actionPaste->setEnabled(!QGuiApplication::clipboard()->text().isEmpty());
+
+    const bool hasAtLeastTwo = selected.size() >= 2;
+    ui->actionAlignLeft->setEnabled(hasAtLeastTwo);
+    ui->actionAlignRight->setEnabled(hasAtLeastTwo);
+    ui->actionAlignTop->setEnabled(hasAtLeastTwo);
+    ui->actionAlignBottom->setEnabled(hasAtLeastTwo);
+    ui->actionAlignCenterHorizontal->setEnabled(hasAtLeastTwo);
+    ui->actionAlignCenterVertical->setEnabled(hasAtLeastTwo);
+
+    const bool hasAtLeastThree = selected.size() >= 3;
+    ui->actionDistributeHorizontal->setEnabled(hasAtLeastThree);
+    ui->actionDistributeVertical->setEnabled(hasAtLeastThree);
+}
+
+// Reuses the very same ui->action* objects the Modifica menu bar entry is
+// built from (rather than a second, parallel set wired to the same slots),
+// so this menu's content, enabled state, shortcuts and icons can never drift
+// out of sync with the menu bar - see updateEditActionsState().
+void MainWindow::showCanvasContextMenu(const QPoint &globalPos)
+{
+    QMenu menu(this);
+    menu.addAction(ui->actionUndo);
+    menu.addAction(ui->actionRestore);
+    menu.addSeparator();
+    menu.addAction(ui->actionCut);
+    menu.addAction(ui->actionCopy);
+    menu.addAction(ui->actionPaste);
+    menu.addAction(ui->actionDuplicate);
+    menu.addAction(ui->actionDelete);
+    menu.addSeparator();
+    menu.addAction(ui->actionRotate);
+    menu.addAction(ui->actionMirror);
+    menu.addSeparator();
+    menu.addAction(ui->actionConvertMacroToPrimitives);
+    menu.addAction(ui->actionCreateMacro);
+    menu.addSeparator();
+    menu.addAction(ui->actionAlignLeft);
+    menu.addAction(ui->actionAlignRight);
+    menu.addAction(ui->actionAlignTop);
+    menu.addAction(ui->actionAlignBottom);
+    menu.addAction(ui->actionAlignCenterHorizontal);
+    menu.addAction(ui->actionAlignCenterVertical);
+    menu.addSeparator();
+    menu.addAction(ui->actionDistributeHorizontal);
+    menu.addAction(ui->actionDistributeVertical);
+    menu.addSeparator();
+    menu.addAction(ui->actionSelectAll);
+    menu.exec(globalPos);
+}
+
 GraphicsPrimitive *MainWindow::firstSelectedPrimitive() const
 {
     for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
