@@ -171,7 +171,7 @@
          <item row="9" column="1">
           <widget class="QLabel" name="label_18">
            <property name="text">
-            <string>Spessore linea primitive</string>
+            <string>Spessore linea disegno</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
