@@ -35,6 +35,7 @@ public:
     explicit PrimitiveComplexCurve(QGraphicsItem *parent = nullptr);
 
     QRectF boundingRect() const override;
+    QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     int controlPointCount() const override { return m_vertices.size(); }

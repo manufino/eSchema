@@ -24,6 +24,7 @@
 #include "SettingsManager.h"
 #include "MovePrimitiveCommand.h"
 #include <QGraphicsScene>
+#include <QPainterPathStroker>
 
 GraphicsPrimitive::GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent) : QGraphicsItem(parent)
 {
@@ -61,6 +62,31 @@ qreal GraphicsPrimitive::effectiveLineWidth() const
     // with the user's configured default exactly like every other primitive.
     const qreal fromSettings = SettingsManager::getInstance().loadSetting("line_width").toDouble();
     return fromSettings > 0 ? fromSettings : 0.5;
+}
+
+qreal GraphicsPrimitive::selectionTolerance() const
+{
+    const qreal value = SettingsManager::getInstance().loadSetting("selection_tolerance").toDouble();
+    return value > 0 ? value : 3.0;
+}
+
+QPainterPath GraphicsPrimitive::strokeOutline(const QPainterPath &path, qreal strokeWidth) const
+{
+    QPainterPathStroker stroker;
+    stroker.setWidth(qMax(strokeWidth, 0.0) + 2 * selectionTolerance());
+    stroker.setCapStyle(Qt::RoundCap);
+    stroker.setJoinStyle(Qt::RoundJoin);
+    return stroker.createStroke(path);
+}
+
+QPainterPath GraphicsPrimitive::withLabelArea(const QPainterPath &path) const
+{
+    const QRectF labelRect = labelBoundingRect();
+    if (labelRect.isEmpty())
+        return path;
+    QPainterPath labelPath;
+    labelPath.addRect(labelRect);
+    return path.united(labelPath);
 }
 
 int GraphicsPrimitive::layerIndex() const

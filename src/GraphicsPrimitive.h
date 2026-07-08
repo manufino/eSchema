@@ -30,6 +30,7 @@
 #include <QStringList>
 #include <QVector>
 #include <QHash>
+#include <QPainterPath>
 
 #include "Layer.h"
 
@@ -89,6 +90,14 @@ public:
     // spec's compiled-in default (0.5) for a primitive not attached to any
     // Sheet, e.g. a macro-library body prototype.
     qreal effectiveLineWidth() const;
+
+    // Extra hit-test padding (scene units), read live from the "Tolleranza
+    // selezione" option, same live-settings pattern as effectiveLineWidth().
+    // Added on top of the actual drawn stroke width by every concrete
+    // primitive's shape() override, so click/rubber-band selection only
+    // responds near what's actually drawn rather than anywhere inside the
+    // (often much larger) bounding rect - see strokeOutline() below.
+    qreal selectionTolerance() const;
 
     // prepareGeometryChange() before the assignment matters here (unlike
     // setLayer()) because the label text is part of boundingRect() via
@@ -223,6 +232,19 @@ protected:
     // concrete primitive calls this at the end of its own paint() - centralized
     // here since any primitive type can carry a label, not just some.
     void paintLabels(QPainter *painter) const;
+
+    // Turns a bare geometry path (a line/curve/outline with no area of its
+    // own) into a hit-test region: a stroke of `strokeWidth` plus
+    // 2*selectionTolerance() of padding on each side. Shared by every
+    // concrete primitive's shape() override - see selectionTolerance().
+    QPainterPath strokeOutline(const QPainterPath &path, qreal strokeWidth) const;
+
+    // Unions the name/value label's on-screen area into a shape() path, so
+    // clicking directly on a drawn label (which can sit well outside the
+    // primitive's own stroked geometry) still selects the primitive it
+    // belongs to - matches boundingRect(), which every concrete primitive
+    // already unions labelBoundingRect() into for the same reason.
+    QPainterPath withLabelArea(const QPainterPath &path) const;
 
 signals:
     void propertiesChanged(GraphicsPrimitive *primitive);

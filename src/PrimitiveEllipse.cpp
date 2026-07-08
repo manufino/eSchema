@@ -20,6 +20,7 @@
 #include "PrimitiveEllipse.h"
 #include "FidoCadTokenUtils.h"
 #include <QStyleOptionGraphicsItem>
+#include <QPainterPath>
 
 PrimitiveEllipse::PrimitiveEllipse(QGraphicsItem *parent)
     : GraphicsPrimitive(Ellipse, parent)
@@ -32,6 +33,16 @@ QRectF PrimitiveEllipse::boundingRect() const
     return QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized()
             .adjusted(-margin, -margin, margin, margin)
             .united(labelBoundingRect());
+}
+
+QPainterPath PrimitiveEllipse::shape() const
+{
+    QPainterPath path;
+    path.addEllipse(QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized());
+    const QPainterPath outline = strokeOutline(path, effectiveLineWidth());
+    if (isFilled())
+        return withLabelArea(path.united(outline));
+    return withLabelArea(outline);
 }
 
 void PrimitiveEllipse::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

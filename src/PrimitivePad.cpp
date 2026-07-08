@@ -35,20 +35,18 @@ QRectF PrimitivePad::boundingRect() const
             .united(labelBoundingRect());
 }
 
-void PrimitivePad::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+// Built as a single even-odd path (outer shape + inner hole) rather than
+// drawing the hole with CompositionMode_Clear: clearing to transparent
+// doesn't composite correctly over the view's opaque backing store (the
+// "hole" came out solid black instead of see-through). The even-odd fill
+// rule punches the hole directly, with no compositing involved. Shared by
+// paint() and shape() - the hole is not drawn, so it must not be selectable
+// either.
+QPainterPath PrimitivePad::buildPath() const
 {
-    if (!isVisible())
-        return;
-
-    const QColor color = drawColor();
     const QPointF center = mapFromScene(m_pos);
     const QRectF outer(center - QPointF(m_rx / 2, m_ry / 2), QSizeF(m_rx, m_ry));
 
-    // Built as a single even-odd path (outer shape + inner hole) rather than
-    // drawing the hole with CompositionMode_Clear: clearing to transparent
-    // doesn't composite correctly over the view's opaque backing store (the
-    // "hole" came out solid black instead of see-through). The even-odd fill
-    // rule punches the hole directly, with no compositing involved.
     QPainterPath path;
     path.setFillRule(Qt::OddEvenFill);
     switch (m_style) {
@@ -64,10 +62,23 @@ void PrimitivePad::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     }
     if (m_ri > 0)
         path.addEllipse(center, m_ri / 2, m_ri / 2);
+    return path;
+}
+
+QPainterPath PrimitivePad::shape() const
+{
+    const QPainterPath path = buildPath();
+    return withLabelArea(path.united(strokeOutline(path, 0)));
+}
+
+void PrimitivePad::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{
+    if (!isVisible())
+        return;
 
     painter->setPen(Qt::NoPen);
-    painter->setBrush(color);
-    painter->drawPath(path);
+    painter->setBrush(drawColor());
+    painter->drawPath(buildPath());
 
     paintLabels(painter);
 }

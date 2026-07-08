@@ -38,6 +38,13 @@ QRectF PrimitiveBezier::boundingRect() const
             .united(labelBoundingRect());
 }
 
+QPainterPath PrimitiveBezier::shape() const
+{
+    QPainterPath path(mapFromScene(m_points[0]));
+    path.cubicTo(mapFromScene(m_points[1]), mapFromScene(m_points[2]), mapFromScene(m_points[3]));
+    return withLabelArea(strokeOutline(path, effectiveLineWidth()));
+}
+
 void PrimitiveBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     if (!isVisible())

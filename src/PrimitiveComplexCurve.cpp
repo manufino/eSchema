@@ -68,6 +68,15 @@ QRectF PrimitiveComplexCurve::boundingRect() const
             .united(labelBoundingRect());
 }
 
+QPainterPath PrimitiveComplexCurve::shape() const
+{
+    const QPainterPath path = buildSplinePath();
+    const QPainterPath outline = strokeOutline(path, effectiveLineWidth());
+    if (isFilled() && m_closed)
+        return withLabelArea(path.united(outline));
+    return withLabelArea(outline);
+}
+
 void PrimitiveComplexCurve::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     if (!isVisible() || m_vertices.size() < 2)

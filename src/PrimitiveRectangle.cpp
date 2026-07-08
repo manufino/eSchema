@@ -20,6 +20,7 @@
 #include "PrimitiveRectangle.h"
 #include "FidoCadTokenUtils.h"
 #include <QStyleOptionGraphicsItem>
+#include <QPainterPath>
 
 PrimitiveRectangle::PrimitiveRectangle(QGraphicsItem *parent)
     : GraphicsPrimitive(Rectangle, parent)
@@ -32,6 +33,16 @@ QRectF PrimitiveRectangle::boundingRect() const
     return QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized()
             .adjusted(-margin, -margin, margin, margin)
             .united(labelBoundingRect());
+}
+
+QPainterPath PrimitiveRectangle::shape() const
+{
+    QPainterPath path;
+    path.addRect(QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized());
+    const QPainterPath outline = strokeOutline(path, effectiveLineWidth());
+    if (isFilled())
+        return withLabelArea(path.united(outline));
+    return withLabelArea(outline);
 }
 
 void PrimitiveRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

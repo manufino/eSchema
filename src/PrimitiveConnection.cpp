@@ -20,6 +20,7 @@
 #include "PrimitiveConnection.h"
 #include "FidoCadTokenUtils.h"
 #include <QStyleOptionGraphicsItem>
+#include <QPainterPath>
 
 PrimitiveConnection::PrimitiveConnection(QGraphicsItem *parent)
     : GraphicsPrimitive(Connection, parent)
@@ -31,6 +32,14 @@ QRectF PrimitiveConnection::boundingRect() const
     const qreal r = m_diameter / 2.0 + 1;
     return QRectF(mapFromScene(m_pos) - QPointF(r, r), QSizeF(2 * r, 2 * r))
             .united(labelBoundingRect());
+}
+
+QPainterPath PrimitiveConnection::shape() const
+{
+    QPainterPath path;
+    const qreal r = m_diameter / 2.0;
+    path.addEllipse(mapFromScene(m_pos), r, r);
+    return withLabelArea(path.united(strokeOutline(path, 0)));
 }
 
 void PrimitiveConnection::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

@@ -35,6 +35,13 @@ QRectF PrimitiveLine::boundingRect() const
             .united(labelBoundingRect());
 }
 
+QPainterPath PrimitiveLine::shape() const
+{
+    QPainterPath path(mapFromScene(m_p1));
+    path.lineTo(mapFromScene(m_p2));
+    return withLabelArea(strokeOutline(path, effectiveLineWidth()));
+}
+
 void PrimitiveLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     if (!isVisible())

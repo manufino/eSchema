@@ -61,6 +61,13 @@ void SettingsManager::restoreDefaultSettings()
     // effectiveLineWidth()). PL/PA (PCB track/pad) are unaffected - they
     // carry their own explicit width/size token per FIDOSPECS.
     saveSetting("line_width", 0.5);
+    // Extra hit-test padding (scene units) added around a primitive's actual
+    // drawn geometry for click/rubber-band selection - see
+    // GraphicsPrimitive::selectionTolerance(). Without this, Qt's default
+    // shape() (a plain bounding rect) made every primitive selectable
+    // anywhere inside its bounding box, including empty space far from what
+    // was actually drawn.
+    saveSetting("selection_tolerance", 3.0);
 
     // GRIGLIA
     saveSetting("grid_step", 10);

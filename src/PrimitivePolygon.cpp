@@ -20,6 +20,7 @@
 #include "PrimitivePolygon.h"
 #include "FidoCadTokenUtils.h"
 #include <QStyleOptionGraphicsItem>
+#include <QPainterPath>
 
 PrimitivePolygon::PrimitivePolygon(QGraphicsItem *parent)
     : GraphicsPrimitive(Polyline, parent)
@@ -34,6 +35,23 @@ QRectF PrimitivePolygon::boundingRect() const
     const qreal margin = effectiveLineWidth() + 2;
     return poly.boundingRect().adjusted(-margin, -margin, margin, margin)
             .united(labelBoundingRect());
+}
+
+QPainterPath PrimitivePolygon::shape() const
+{
+    if (m_vertices.size() < 2)
+        return QPainterPath();
+
+    QPolygonF poly;
+    for (const QPointF &p : m_vertices)
+        poly << mapFromScene(p);
+    QPainterPath path;
+    path.addPolygon(poly);
+    path.closeSubpath();
+    const QPainterPath outline = strokeOutline(path, effectiveLineWidth());
+    if (isFilled())
+        return withLabelArea(path.united(outline));
+    return withLabelArea(outline);
 }
 
 void PrimitivePolygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

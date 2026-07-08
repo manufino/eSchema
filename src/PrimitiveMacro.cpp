@@ -64,6 +64,27 @@ QRectF PrimitiveMacro::boundingRect() const
     return bounds.united(labelBoundingRect());
 }
 
+QPainterPath PrimitiveMacro::shape() const
+{
+    const QList<GraphicsPrimitive *> body = LibraryManager::getInstance().expandedBody(m_macroName);
+    QPainterPath path;
+    if (body.isEmpty()) {
+        const QPointF center = mapFromScene(m_pos);
+        const qreal half = PlaceholderSize / 2;
+        path.addRect(QRectF(center - QPointF(half, half), QSizeF(PlaceholderSize, PlaceholderSize)));
+        return withLabelArea(path);
+    }
+
+    // Union of every body primitive's own shape (each already accounts for
+    // its own stroke width/fill/tolerance), mapped through the same
+    // transform used to paint them - a macro is only "hit" where one of its
+    // actual parts is drawn, exactly like a non-macro primitive.
+    const QTransform transform = placementTransform();
+    for (GraphicsPrimitive *primitive : body)
+        path.addPath(transform.map(primitive->shape()));
+    return withLabelArea(path);
+}
+
 void PrimitiveMacro::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (!isVisible())

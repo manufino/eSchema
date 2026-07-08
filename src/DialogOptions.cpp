@@ -89,6 +89,9 @@ void DialogOptions::loadSettings()
 
     val = SettingsManager::getInstance().loadSetting("line_width");
     ui->spinLineWidth->setValue(val.toDouble() > 0 ? val.toDouble() : 0.5);
+
+    val = SettingsManager::getInstance().loadSetting("selection_tolerance");
+    ui->spinSelectionTolerance->setValue(val.toDouble() > 0 ? val.toDouble() : 3.0);
 }
 
 void DialogOptions::saveSettings()
@@ -109,6 +112,7 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("snap_step", ui->spinSnapStep->value());
     SettingsManager::getInstance().saveSetting("macro_icon_size", ui->spinMacroIconSize->value());
     SettingsManager::getInstance().saveSetting("line_width", ui->spinLineWidth->value());
+    SettingsManager::getInstance().saveSetting("selection_tolerance", ui->spinSelectionTolerance->value());
 }
 
 void DialogOptions::accept()

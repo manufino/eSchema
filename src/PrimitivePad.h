@@ -33,6 +33,7 @@ public:
     explicit PrimitivePad(QGraphicsItem *parent = nullptr);
 
     QRectF boundingRect() const override;
+    QPainterPath shape() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     int controlPointCount() const override { return 1; }
@@ -52,6 +53,8 @@ public:
     bool supportsFCJ() const override { return false; }
 
 private:
+    QPainterPath buildPath() const;
+
     QPointF m_pos;
     qreal m_rx = 10.0, m_ry = 10.0, m_ri = 5.0;
     Style m_style = Round;
