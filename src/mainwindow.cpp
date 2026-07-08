@@ -75,6 +75,23 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     updateWindowTitle();
 
+    // Librerie/Proprietà are QDockWidgets (freely movable/floatable/dockable
+    // to any edge, matching the reference FidoCadJ editor's own dockable
+    // panels), each exposing its own show/hide toggle here rather than the
+    // single "Barra laterale" action that used to hide both at once when
+    // they were still one fixed sidebar.
+    ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockProperties->toggleViewAction());
+    ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockLibraries->toggleViewAction());
+    // Restores whatever dock/toolbar arrangement (position, size, floating,
+    // tabbing) was in effect when the window was last closed - see
+    // closeEvent(), which is what actually saves it. Silently does nothing
+    // on the very first run (no saved state yet) or if the saved layout no
+    // longer matches the current set of dock widgets, leaving the .ui's own
+    // default arrangement in place.
+    const QByteArray dockState = SettingsManager::getInstance().loadSetting("window_dock_state").toByteArray();
+    if (!dockState.isEmpty())
+        restoreState(dockState);
+
     layerToolBarWidget = new LayerToolBarWidget(this);
     ui->toolBarTools->addWidget(layerToolBarWidget); // aggiungo il layer combobox alla toolbar
 
@@ -1022,10 +1039,15 @@ bool MainWindow::confirmDiscardChanges()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (confirmDiscardChanges())
+    if (confirmDiscardChanges()) {
+        // Persists the current dock/toolbar arrangement (Librerie/Proprietà
+        // position, size, floating, tabbing) so it's restored exactly as
+        // left on the next launch - see the constructor's restoreState().
+        SettingsManager::getInstance().saveSetting("window_dock_state", saveState());
         event->accept();
-    else
+    } else {
         event->ignore();
+    }
 }
 
 void MainWindow::clickNewAction()
