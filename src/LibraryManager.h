@@ -85,6 +85,36 @@ public:
     // a size x size square. Cached forever per (key, size).
     QPixmap icon(const QString &key, int size);
 
+    // True for FidoCadJ's own 5 standard libraries (the unprefixed original
+    // FidoCAD library, stored with filename=="", plus pcb/ihram/
+    // elettrotecnica/ey_libraries) - these ship with eSchema and are never
+    // written to. Also usable on a filename that isn't loaded yet, to reject
+    // creating a *new* library under one of these reserved names.
+    bool isStandardLibraryFilename(const QString &filename) const;
+    // Display names of every loaded library that isn't standard - "Crea
+    // macro dalla selezione"'s save-target picker only ever offers these.
+    QStringList userLibraryDisplayNames() const;
+    // The real filename (prefix) of the user library whose display name is
+    // exactly `displayName`, or empty if none matches (including if
+    // `displayName` names a standard library instead).
+    QString userLibraryFilename(const QString &displayName) const;
+
+    // Appends one new macro to a user library's ".fcl" file (creating the
+    // file, with a "[FIDOLIB libraryDisplayName]" header, if
+    // `libraryFilename` doesn't exist yet on disk) and registers it in
+    // memory immediately - no reload needed for it to show up in the
+    // library panel or resolve when placed. `body` is the macro's FCD lines
+    // (LI/EV/...), already in the library's local (100,100)-anchored
+    // coordinate space and newline-joined, matching MacroDescriptor::body.
+    // Fails (returning false and, if given, an explanatory *errorMessage)
+    // without writing anything if `libraryFilename` is a standard library,
+    // `key` is empty/malformed, or the resulting key is already used -
+    // matching the checks DialogCreateMacro itself already runs, kept here
+    // too since this is a public entry point on its own.
+    bool addUserMacro(const QString &libraryFilename, const QString &libraryDisplayName,
+                       const QString &key, const QString &name, const QString &category,
+                       const QString &body, QString *errorMessage = nullptr);
+
 signals:
     void librariesReloaded();
 

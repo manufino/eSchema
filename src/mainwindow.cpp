@@ -28,6 +28,7 @@
 #include "MovePrimitiveCommand.h"
 #include "LibraryManager.h"
 #include "PrimitiveMacro.h"
+#include "DialogCreateMacro.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -94,6 +95,10 @@ MainWindow::MainWindow(QWidget *parent)
     // for the one setting it cares about.
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &MainWindow::buildLibraryPanel);
+    // Same rebuild whenever LibraryManager's own data changes (e.g. a new
+    // user macro was just saved via "Crea macro dalla selezione").
+    connect(&LibraryManager::getInstance(), &LibraryManager::librariesReloaded,
+            this, &MainWindow::buildLibraryPanel);
     // Syncs the open document's own line width too, not just new ones -
     // every primitive already reads Sheet::lineWidth() live at paint time
     // (GraphicsPrimitive::effectiveLineWidth()), so this takes effect
@@ -131,6 +136,14 @@ void MainWindow::setConnections()
     connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
     connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
+    connect(ui->actionCreateMacro, &QAction::triggered, this, &MainWindow::clickCreateMacroAction);
+    // Only meaningful with something selected - matches the request that
+    // this specific action (unlike the rest of the Edit menu, which just
+    // silently no-ops on an empty selection) actually reflect that state.
+    connect(sheetScene, &QGraphicsScene::selectionChanged, this, [this]() {
+        ui->actionCreateMacro->setEnabled(!sheetScene->selectedItems().isEmpty());
+    });
+    ui->actionCreateMacro->setEnabled(false);
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::clickDeleteAction);
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::clickCutAction);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::clickCopyAction);
@@ -386,6 +399,56 @@ void MainWindow::clickConvertMacroToPrimitivesAction()
         undo->push(new DeletePrimitiveCommand(sheetScene, macro));
     }
     undo->endMacro();
+}
+
+void MainWindow::clickCreateMacroAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+
+    DialogCreateMacro dialog(this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+
+    // A fresh, independent parse of the selection (never the live canvas
+    // primitives themselves) so its control points can be freely offset
+    // below without touching what's actually on screen - same round-trip
+    // Duplicate/Paste already rely on.
+    const QString serialized = FidoCadWriter::writeSelection(selected);
+    QList<GraphicsPrimitive *> clones = FidoCadReader::parse(serialized, sheetScene);
+    if (clones.isEmpty())
+        return;
+
+    // Anchors the macro at the selection's top-left corner: every clone is
+    // shifted so that corner lands exactly on the library format's
+    // conventional (100,100) macro origin, matching how every shipped
+    // library symbol is itself laid out.
+    QRectF bounds;
+    bool first = true;
+    for (GraphicsPrimitive *clone : clones) {
+        for (int i = 0; i < clone->controlPointCount(); ++i) {
+            const QPointF point = clone->controlPoint(i);
+            if (first) {
+                bounds = QRectF(point, QSizeF(0, 0));
+                first = false;
+            } else {
+                bounds = bounds.united(QRectF(point, QSizeF(0, 0)));
+            }
+        }
+    }
+    const QPointF offset = QPointF(100, 100) - bounds.topLeft();
+    for (GraphicsPrimitive *clone : clones)
+        clone->translateControlPoints(offset);
+    const QString body = FidoCadWriter::writeSelection(clones);
+    qDeleteAll(clones);
+
+    QString errorMessage;
+    const bool ok = LibraryManager::getInstance().addUserMacro(
+                dialog.libraryFilename(), dialog.libraryDisplayName(),
+                dialog.key(), dialog.macroName(), dialog.category(), body, &errorMessage);
+    if (!ok)
+        QMessageBox::warning(this, tr("Crea macro"), errorMessage);
 }
 
 void MainWindow::clickDeleteAction()

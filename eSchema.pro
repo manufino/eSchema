@@ -23,6 +23,7 @@ SOURCES += \
 	src/CreatePrimitiveCommand.cpp \
 	src/DeletePrimitiveCommand.cpp \
 	src/DialogAbout.cpp \
+	src/DialogCreateMacro.cpp \
 	src/DialogLayerList.cpp \
 	src/DialogOptions.cpp \
 	src/DialogShortcuts.cpp \
@@ -74,6 +75,7 @@ HEADERS += \
 	src/CreatePrimitiveCommand.h \
 	src/DeletePrimitiveCommand.h \
 	src/DialogAbout.h \
+	src/DialogCreateMacro.h \
 	src/DialogLayerList.h \
 	src/DialogOptions.h \
 	src/DialogShortcuts.h \
@@ -126,6 +128,7 @@ HEADERS += \
 
 FORMS += \
 	gui/DialogAbout.ui \
+	gui/DialogCreateMacro.ui \
 	gui/DialogLayerList.ui \
 	gui/DialogOptions.ui \
 	gui/DialogShortcuts.ui \

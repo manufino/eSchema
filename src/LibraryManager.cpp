@@ -30,6 +30,20 @@
 #include <QPainter>
 #include <utility>
 
+namespace {
+// FidoCadJ's own 5 standard libraries (LibUtils.isStdLib()'s extensions
+// list, plus the original unprefixed FidoCAD library itself) - reserved
+// filenames a user library may never be created or written under.
+bool isReservedStandardName(const QString &filename)
+{
+    static const QStringList reserved = {
+        QStringLiteral("fcdstdlib"), QStringLiteral("pcb"), QStringLiteral("ihram"),
+        QStringLiteral("elettrotecnica"), QStringLiteral("ey_libraries")
+    };
+    return reserved.contains(filename.trimmed().toLower());
+}
+}
+
 LibraryManager &LibraryManager::getInstance()
 {
     static LibraryManager instance;
@@ -204,4 +218,114 @@ QPixmap LibraryManager::icon(const QString &key, int size)
 
     m_iconCache.insert(cacheKey, pixmap);
     return pixmap;
+}
+
+bool LibraryManager::isStandardLibraryFilename(const QString &filename) const
+{
+    // The original FidoCAD standard library is stored with an empty
+    // filename/prefix once loaded (see loadLibraryFile()); a *candidate* new
+    // library named e.g. "FCDstdlib" (not yet loaded, so not empty yet) is
+    // caught by the reserved-names list instead.
+    const QString trimmed = filename.trimmed();
+    return trimmed.isEmpty() || isReservedStandardName(trimmed);
+}
+
+QStringList LibraryManager::userLibraryDisplayNames() const
+{
+    QStringList names;
+    for (const MacroLibrary &library : m_libraries) {
+        if (!isStandardLibraryFilename(library.filename))
+            names.append(library.displayName.isEmpty() ? library.filename : library.displayName);
+    }
+    return names;
+}
+
+QString LibraryManager::userLibraryFilename(const QString &displayName) const
+{
+    for (const MacroLibrary &library : m_libraries) {
+        if (isStandardLibraryFilename(library.filename))
+            continue;
+        const QString shown = library.displayName.isEmpty() ? library.filename : library.displayName;
+        if (shown.compare(displayName.trimmed(), Qt::CaseSensitive) == 0)
+            return library.filename;
+    }
+    return QString();
+}
+
+bool LibraryManager::addUserMacro(const QString &libraryFilename, const QString &libraryDisplayName,
+                                   const QString &key, const QString &name, const QString &category,
+                                   const QString &body, QString *errorMessage)
+{
+    auto fail = [errorMessage](const QString &message) {
+        if (errorMessage)
+            *errorMessage = message;
+        return false;
+    };
+
+    const QString trimmedFilename = libraryFilename.trimmed();
+    if (trimmedFilename.isEmpty())
+        return fail(QObject::tr("Nome libreria mancante."));
+    if (isStandardLibraryFilename(trimmedFilename))
+        return fail(QObject::tr("Non è possibile salvare in una libreria standard."));
+
+    const QString trimmedKey = key.trimmed();
+    if (trimmedKey.isEmpty() || trimmedKey.contains(QLatin1Char('[')) || trimmedKey.contains(QLatin1Char(']'))
+            || trimmedKey.contains(QLatin1Char(' ')))
+        return fail(QObject::tr("Chiave macro non valida."));
+
+    const QString fullKey = (trimmedFilename + QLatin1Char('.') + trimmedKey).toLower();
+    if (m_macrosByKey.contains(fullKey))
+        return fail(QObject::tr("Esiste già una macro con questa chiave in questa libreria."));
+
+    const QDir libDir(QCoreApplication::applicationDirPath() + QStringLiteral("/lib"));
+    const QString filePath = libDir.filePath(trimmedFilename + QStringLiteral(".fcl"));
+    const bool isNewFile = !QFile::exists(filePath);
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::Append | QIODevice::Text))
+        return fail(QObject::tr("Impossibile scrivere il file %1").arg(filePath));
+
+    const QString displayName = libraryDisplayName.trimmed().isEmpty() ? trimmedFilename
+                                                                        : libraryDisplayName.trimmed();
+    QTextStream out(&file);
+    if (isNewFile)
+        out << "[FIDOLIB " << displayName << "]\n\n";
+    out << '{' << category << "}\n";
+    out << '[' << trimmedKey << ' ' << name << "]\n";
+    out << body;
+    if (!body.endsWith(QLatin1Char('\n')))
+        out << '\n';
+    file.close();
+
+    // Registers the new macro in memory immediately, rather than requiring
+    // loadLibraries() to be called again - matches every other mutation in
+    // this class (e.g. a freshly-placed macro resolves without a restart).
+    MacroDescriptor descriptor;
+    descriptor.key = fullKey;
+    descriptor.name = name;
+    descriptor.category = category;
+    descriptor.filename = trimmedFilename;
+    descriptor.body = body;
+
+    MacroLibrary *library = nullptr;
+    for (MacroLibrary &candidate : m_libraries) {
+        if (candidate.filename.compare(trimmedFilename, Qt::CaseInsensitive) == 0) {
+            library = &candidate;
+            break;
+        }
+    }
+    if (!library) {
+        m_libraries.append(MacroLibrary());
+        library = &m_libraries.last();
+        library->filename = trimmedFilename;
+        library->displayName = displayName;
+    }
+    descriptor.library = library->displayName;
+    if (!library->macrosByCategory.contains(category))
+        library->categoryOrder.append(category);
+    library->macrosByCategory[category].append(descriptor);
+    m_macrosByKey.insert(fullKey, descriptor);
+
+    emit librariesReloaded();
+    return true;
 }

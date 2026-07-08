@@ -76,6 +76,7 @@ public slots:
     void clickMirrorAction();
     void clickRotateAction();
     void clickConvertMacroToPrimitivesAction();
+    void clickCreateMacroAction();
     void clickDeleteAction();
     void clickCutAction();
     void clickCopyAction();
