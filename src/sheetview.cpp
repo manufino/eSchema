@@ -217,6 +217,23 @@ void SheetView::mouseDoubleClickEvent(QMouseEvent *event)
     QGraphicsView::mouseDoubleClickEvent(event);
 }
 
+void SheetView::contextMenuEvent(QContextMenuEvent *event)
+{
+    // A placement tool being active means the user is mid-draw - right-click
+    // there already means "finish/cancel this chain" (see mousePressEvent
+    // above), not "show me a selection menu".
+    if (m_placementController && m_placementController->isPlacementToolActive())
+        return;
+
+    if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(itemAt(event->pos()))) {
+        if (!primitive->isSelected()) {
+            scene()->clearSelection();
+            primitive->setSelected(true);
+        }
+    }
+    emit contextMenuRequested(event->globalPos());
+}
+
 void SheetView::keyPressEvent(QKeyEvent *event)
 {
     if (m_placementController && m_placementController->handleKeyPress(event))

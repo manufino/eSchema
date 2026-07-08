@@ -27,6 +27,7 @@
 #include <QGraphicsRectItem>
 #include <QColor>
 #include <QEvent>
+#include <QContextMenuEvent>
 
 #include "Sheet.h"
 #include "SettingsManager.h"
@@ -65,6 +66,12 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
+    // Right-clicking a not-yet-selected primitive replaces the selection with
+    // just that one (so the menu MainWindow builds in response to
+    // contextMenuRequested() applies to what was actually clicked) before
+    // MainWindow is asked to show it; right-clicking one already part of a
+    // multi-selection, or empty canvas, leaves the current selection as-is.
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
     void loadSettings();
@@ -82,6 +89,10 @@ signals:
     void mouseMoved(QPointF point);
     void zoomScaleIsChanged(unsigned int level);
     void mousePosChanged();
+    // MainWindow builds and execs the actual QMenu (it owns the ui->action*
+    // objects the menu reuses) - SheetView only decides where/on-what the
+    // click landed.
+    void contextMenuRequested(const QPoint &globalPos);
 
 private:
     int m_originX, m_originY, gridSize, gridMarkSize, zoomLevel;
