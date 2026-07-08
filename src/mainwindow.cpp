@@ -135,7 +135,6 @@ void MainWindow::setConnections()
     connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::adjustView);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
-    connect(ui->DSpinBoxLineHeight, &QSpinBox::valueChanged, ui->cbPropLineStyle, &PenStyleComboBox::lineWidthChanged);
     connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
     connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
@@ -382,55 +381,66 @@ void MainWindow::updatePropertiesPanel()
     const QSignalBlocker blockStyle(ui->cbPropLineStyle);
     const QSignalBlocker blockFont(ui->fontComboBox);
 
+    auto showRow = [](QWidget *label, QWidget *field, bool visible) {
+        label->setVisible(visible);
+        field->setVisible(visible);
+    };
+
     if (!primitive) {
-        // Nome/Valore are genuinely per-instance data, unlike the other
-        // fields here (Layer/Riempimento/Stile linea/Font testo), which
-        // double as "next primitive" defaults for PrimitivePlacementController
-        // even with nothing selected - so only these two get cleared/disabled.
+        // Nothing selected - the whole panel goes blank, matching the
+        // request that it not double as a "next primitive" defaults editor.
+        showRow(ui->label_2, ui->lineEdit, false);
+        showRow(ui->label_3, ui->lineEdit_2, false);
+        showRow(ui->label_4, ui->cbPropLayer, false);
+        showRow(ui->label_6, ui->checkBox, false);
+        showRow(ui->label_7, ui->cbPropLineStyle, false);
+        showRow(ui->label_8, ui->fontComboBox, false);
         ui->lineEdit->clear();
         ui->lineEdit_2->clear();
-        ui->lineEdit->setEnabled(false);
-        ui->lineEdit_2->setEnabled(false);
         return;
     }
 
-    ui->lineEdit->setEnabled(true);
-    ui->lineEdit_2->setEnabled(true);
+    // Nome/Valore apply to every primitive type (FIDOSPECS.md 6.1-6.3: every
+    // primitive can carry a name/value TY label, one way or another).
+    showRow(ui->label_2, ui->lineEdit, true);
+    showRow(ui->label_3, ui->lineEdit_2, true);
     ui->lineEdit->setText(primitive->name());
     ui->lineEdit_2->setText(primitive->value());
 
     // FCD macros ("MC") have no layer token at all (FIDOSPECS.md 5.10 - they
-    // are always logically on layer 0) - editing it here would silently have
-    // no effect on the saved file, so it's disabled rather than misleading.
+    // are always logically on layer 0) - showing an editable layer field
+    // that silently has no effect on the saved file would be misleading.
     const bool hasLayer = primitive->getPrimitiveType() != GraphicsPrimitive::PartLib;
-    ui->cbPropLayer->setEnabled(hasLayer);
+    showRow(ui->label_4, ui->cbPropLayer, hasLayer);
     if (hasLayer && primitive->layer())
         ui->cbPropLayer->setMaster(primitive->layer());
 
+    bool hasFill = false;
+    bool hasLineStyle = false;
     switch (primitive->getPrimitiveType()) {
     case GraphicsPrimitive::Rectangle:
     case GraphicsPrimitive::Ellipse:
     case GraphicsPrimitive::Polyline:
     case GraphicsPrimitive::Spline:
-        ui->checkBox->setEnabled(true);
-        ui->checkBox->setChecked(primitive->isFilled());
-        ui->cbPropLineStyle->setEnabled(true);
-        ui->cbPropLineStyle->setCurrentPenStyle(primitive->lineStyle());
+        hasFill = true;
+        hasLineStyle = true;
         break;
     case GraphicsPrimitive::Line:
     case GraphicsPrimitive::Bezier:
-        ui->checkBox->setEnabled(false);
-        ui->cbPropLineStyle->setEnabled(true);
-        ui->cbPropLineStyle->setCurrentPenStyle(primitive->lineStyle());
+        hasLineStyle = true;
         break;
     default:
-        ui->checkBox->setEnabled(false);
-        ui->cbPropLineStyle->setEnabled(false);
         break;
     }
+    showRow(ui->label_6, ui->checkBox, hasFill);
+    if (hasFill)
+        ui->checkBox->setChecked(primitive->isFilled());
+    showRow(ui->label_7, ui->cbPropLineStyle, hasLineStyle);
+    if (hasLineStyle)
+        ui->cbPropLineStyle->setCurrentPenStyle(primitive->lineStyle());
 
     const bool isText = primitive->getPrimitiveType() == GraphicsPrimitive::Text;
-    ui->fontComboBox->setEnabled(isText);
+    showRow(ui->label_8, ui->fontComboBox, isText);
     if (isText)
         ui->fontComboBox->setCurrentFont(QFont(static_cast<PrimitiveText *>(primitive)->fontName()));
 }
