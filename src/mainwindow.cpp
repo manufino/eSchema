@@ -75,11 +75,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     updateWindowTitle();
 
+    // Lets a dock area itself be split further (side by side, stacked, or a
+    // mix), not just hold a single row/column of docks - without this, two
+    // docks in the same area can only stack or tab, never sit side by side,
+    // which is what "completely configurable, like professional drawing
+    // apps" actually requires.
+    setDockNestingEnabled(true);
+
     // Librerie/Proprietà are QDockWidgets (freely movable/floatable/dockable
-    // to any edge, matching the reference FidoCadJ editor's own dockable
-    // panels), each exposing its own show/hide toggle here rather than the
-    // single "Barra laterale" action that used to hide both at once when
-    // they were still one fixed sidebar.
+    // to any edge - or split side by side, or tabbed together - matching the
+    // reference FidoCadJ editor's own dockable panels), each exposing its
+    // own show/hide toggle here rather than the single "Barra laterale"
+    // action that used to hide both at once when they were still one fixed
+    // sidebar.
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockProperties->toggleViewAction());
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockLibraries->toggleViewAction());
     // Restores whatever dock/toolbar arrangement (position, size, floating,
