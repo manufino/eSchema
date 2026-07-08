@@ -60,7 +60,11 @@ public:
     int styleFlags() const { return m_styleFlags; }
     void setStyleFlags(int flags) { m_styleFlags = flags; }
     QString fontName() const { return m_fontName; }
-    void setFontName(const QString &font) { m_fontName = font; }
+    // prepareGeometryChange()/update() matter here (unlike the other setters
+    // in this class, currently only called at parse/creation time) because
+    // this is the one the properties panel wires to a live selection - a
+    // font change can resize the text's boundingRect().
+    void setFontName(const QString &font) { prepareGeometryChange(); m_fontName = font; update(); }
 
     bool isDegenerate() const override { return m_text.isEmpty(); }
     QStringList toTokens() const override;

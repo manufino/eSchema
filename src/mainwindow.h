@@ -116,6 +116,15 @@ private:
     // the sheet drops an instance of it there. Category nodes carry no key
     // and are ignored.
     void clickLibraryMacroItem(QTreeWidgetItem *item);
+    // Syncs the Proprietà panel to the current selection: populates every
+    // field from the first selected primitive (a representative value for a
+    // mixed-type multi-selection) and enables/disables each one by whether
+    // that primitive type actually uses it (e.g. "Riempimento" only applies
+    // to closed shapes, "Font testo" only to text) - wired to
+    // sheetScene's selectionChanged(). Widgets are updated with their
+    // signals blocked, since this reflects the selection rather than being
+    // an edit itself.
+    void updatePropertiesPanel();
     GraphicsPrimitive *firstSelectedPrimitive() const;
     // Selected primitives in stable document order (sheet->primitives()
     // order), not QGraphicsScene::selectedItems()'s unspecified order - Copy

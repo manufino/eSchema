@@ -28,8 +28,10 @@
 #include "MovePrimitiveCommand.h"
 #include "LibraryManager.h"
 #include "PrimitiveMacro.h"
+#include "PrimitiveText.h"
 #include "DialogCreateMacro.h"
 #include <QFileDialog>
+#include <QSignalBlocker>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QGuiApplication>
@@ -145,6 +147,45 @@ void MainWindow::setConnections()
         ui->actionCreateMacro->setEnabled(!sheetScene->selectedItems().isEmpty());
     });
     ui->actionCreateMacro->setEnabled(false);
+
+    // Proprietà panel: reflects the selection, and each field applies its
+    // edit back to every selected primitive when the user actually changes
+    // it (editingFinished()/activated()-style signals, not textChanged() -
+    // so partially-typed text or a value the sync itself just set doesn't
+    // get pushed back out on every keystroke).
+    connect(sheetScene, &QGraphicsScene::selectionChanged, this, &MainWindow::updatePropertiesPanel);
+    updatePropertiesPanel();
+    connect(ui->lineEdit, &QLineEdit::editingFinished, this, [this]() {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder())
+            primitive->setName(ui->lineEdit->text());
+    });
+    connect(ui->lineEdit_2, &QLineEdit::editingFinished, this, [this]() {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder())
+            primitive->setValue(ui->lineEdit_2->text());
+    });
+    connect(ui->cbPropLayer, &LayerComboBox::layerSelectedChanged, this, [this]() {
+        Layer *layer = ui->cbPropLayer->selectedLayer();
+        if (!layer)
+            return;
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder())
+            primitive->setLayer(layer);
+    });
+    connect(ui->checkBox, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder())
+            primitive->setIsFilled(checked);
+    });
+    connect(ui->cbPropLineStyle, &QComboBox::activated, this, [this]() {
+        const Qt::PenStyle style = ui->cbPropLineStyle->currentPenStyle();
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder())
+            primitive->penStyleIsChanged(style);
+    });
+    connect(ui->fontComboBox, &QFontComboBox::currentFontChanged, this, [this](const QFont &font) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Text)
+                static_cast<PrimitiveText *>(primitive)->setFontName(font.family());
+        }
+    });
+
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::clickDeleteAction);
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::clickCutAction);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::clickCopyAction);
@@ -328,6 +369,70 @@ GraphicsPrimitive *MainWindow::firstSelectedPrimitive() const
             return primitive;
     }
     return nullptr;
+}
+
+void MainWindow::updatePropertiesPanel()
+{
+    GraphicsPrimitive *primitive = firstSelectedPrimitive();
+
+    const QSignalBlocker blockName(ui->lineEdit);
+    const QSignalBlocker blockValue(ui->lineEdit_2);
+    const QSignalBlocker blockLayer(ui->cbPropLayer);
+    const QSignalBlocker blockFill(ui->checkBox);
+    const QSignalBlocker blockStyle(ui->cbPropLineStyle);
+    const QSignalBlocker blockFont(ui->fontComboBox);
+
+    if (!primitive) {
+        // Nome/Valore are genuinely per-instance data, unlike the other
+        // fields here (Layer/Riempimento/Stile linea/Font testo), which
+        // double as "next primitive" defaults for PrimitivePlacementController
+        // even with nothing selected - so only these two get cleared/disabled.
+        ui->lineEdit->clear();
+        ui->lineEdit_2->clear();
+        ui->lineEdit->setEnabled(false);
+        ui->lineEdit_2->setEnabled(false);
+        return;
+    }
+
+    ui->lineEdit->setEnabled(true);
+    ui->lineEdit_2->setEnabled(true);
+    ui->lineEdit->setText(primitive->name());
+    ui->lineEdit_2->setText(primitive->value());
+
+    // FCD macros ("MC") have no layer token at all (FIDOSPECS.md 5.10 - they
+    // are always logically on layer 0) - editing it here would silently have
+    // no effect on the saved file, so it's disabled rather than misleading.
+    const bool hasLayer = primitive->getPrimitiveType() != GraphicsPrimitive::PartLib;
+    ui->cbPropLayer->setEnabled(hasLayer);
+    if (hasLayer && primitive->layer())
+        ui->cbPropLayer->setMaster(primitive->layer());
+
+    switch (primitive->getPrimitiveType()) {
+    case GraphicsPrimitive::Rectangle:
+    case GraphicsPrimitive::Ellipse:
+    case GraphicsPrimitive::Polyline:
+    case GraphicsPrimitive::Spline:
+        ui->checkBox->setEnabled(true);
+        ui->checkBox->setChecked(primitive->isFilled());
+        ui->cbPropLineStyle->setEnabled(true);
+        ui->cbPropLineStyle->setCurrentPenStyle(primitive->lineStyle());
+        break;
+    case GraphicsPrimitive::Line:
+    case GraphicsPrimitive::Bezier:
+        ui->checkBox->setEnabled(false);
+        ui->cbPropLineStyle->setEnabled(true);
+        ui->cbPropLineStyle->setCurrentPenStyle(primitive->lineStyle());
+        break;
+    default:
+        ui->checkBox->setEnabled(false);
+        ui->cbPropLineStyle->setEnabled(false);
+        break;
+    }
+
+    const bool isText = primitive->getPrimitiveType() == GraphicsPrimitive::Text;
+    ui->fontComboBox->setEnabled(isText);
+    if (isText)
+        ui->fontComboBox->setCurrentFont(QFont(static_cast<PrimitiveText *>(primitive)->fontName()));
 }
 
 // Mirror/Rotate/Delete are never applied directly here - each pushes an undo

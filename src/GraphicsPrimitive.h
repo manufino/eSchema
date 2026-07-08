@@ -62,7 +62,11 @@ public:
     QString name() const { return objName; }
     QString value() const { return objValue; }
     Layer *layer() { return objLayer; }
-    void setLayer(Layer *layer) { this->objLayer = layer; }
+    // update() (not just the assignment) matters as soon as anything can
+    // call this on an already-visible primitive - e.g. the properties panel
+    // editing an existing selection - rather than only at
+    // creation/parse-time, before the first paint.
+    void setLayer(Layer *layer) { this->objLayer = layer; update(); }
     // Index (0-15) of this primitive's layer in the global LayerList, clamped to a
     // valid FidoCadJ layer range. Used only at FCD read/write time.
     int layerIndex() const;
@@ -86,8 +90,12 @@ public:
     // Sheet, e.g. a macro-library body prototype.
     qreal effectiveLineWidth() const;
 
-    void setName(const QString &name) { objName = name; }
-    void setValue(const QString &value) { objValue = value; }
+    // prepareGeometryChange() before the assignment matters here (unlike
+    // setLayer()) because the label text is part of boundingRect() via
+    // labelBoundingRect() - skipping it risks stale un-invalidated regions
+    // when a name/value edit grows or shrinks the label.
+    void setName(const QString &name) { prepareGeometryChange(); objName = name; update(); }
+    void setValue(const QString &value) { prepareGeometryChange(); objValue = value; update(); }
 
     // FidoCadJ FCJ arrow attributes. Only meaningful for the line-like primitives
     // (LI/BE/CV/CP); the rest simply never read them.
@@ -192,8 +200,8 @@ signals:
 
 public slots:
 
-    void penStyleIsChanged(Qt::PenStyle penStyle) { this->penStyle = penStyle; }
-    void setIsFilled(bool isFilled) { filled = isFilled; }
+    void penStyleIsChanged(Qt::PenStyle penStyle) { this->penStyle = penStyle; update(); }
+    void setIsFilled(bool isFilled) { filled = isFilled; update(); }
     void setNameVisible(bool visible) { showName = visible; }
     void setValueVisible(bool visible) { showValue = visible; }
     void setVisible(bool visible) { this->visible = visible; }
