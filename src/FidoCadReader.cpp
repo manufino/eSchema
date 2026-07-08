@@ -296,13 +296,23 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
         }
 
         if (code == QStringLiteral("TY") || code == QStringLiteral("TE")) {
+            // The attached label's own x/y (tokens 1/2) are its real,
+            // possibly user-dragged position (FidoCadWriter now writes
+            // exactly this, not a recomputed offset) - read it back instead
+            // of always re-deriving controlPoint(0) + labelOffset(), or a
+            // previously-moved label would snap back to the default on
+            // every reopen.
             if (code == QStringLiteral("TY") && macroCounter == 2) {
                 pending->setName(labelText(tokens, 9));
+                if (tokens.size() > 2)
+                    pending->setNameLabelPos(QPointF(tokens.at(1).toDouble(), tokens.at(2).toDouble()));
                 macroCounter = 1;
                 continue;
             }
             if (code == QStringLiteral("TY") && macroCounter == 1) {
                 pending->setValue(labelText(tokens, 9));
+                if (tokens.size() > 2)
+                    pending->setValueLabelPos(QPointF(tokens.at(1).toDouble(), tokens.at(2).toDouble()));
                 macroCounter = 0;
                 commitPending();
                 continue;

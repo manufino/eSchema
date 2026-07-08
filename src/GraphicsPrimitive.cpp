@@ -104,22 +104,99 @@ void GraphicsPrimitive::translateControlPoints(const QPointF &delta)
     const int count = controlPointCount();
     for (int i = 0; i < count; ++i)
         setControlPoint(i, controlPoint(i) + delta);
+    // Kept in sync unconditionally (not just while shown), so re-enabling
+    // showName/showValue later doesn't reveal a label stranded at a stale
+    // pre-move position.
+    setNameLabelPos(nameLabelPos() + delta);
+    setValueLabelPos(valueLabelPos() + delta);
+}
+
+QPointF GraphicsPrimitive::nameLabelPos() const
+{
+    if (!m_nameLabelPosSet) {
+        m_nameLabelPos = controlPoint(0) + labelOffset(0);
+        m_nameLabelPosSet = true;
+    }
+    return m_nameLabelPos;
+}
+
+QPointF GraphicsPrimitive::valueLabelPos() const
+{
+    if (!m_valueLabelPosSet) {
+        m_valueLabelPos = controlPoint(0) + labelOffset(1);
+        m_valueLabelPosSet = true;
+    }
+    return m_valueLabelPos;
+}
+
+void GraphicsPrimitive::setNameLabelPos(const QPointF &pos)
+{
+    prepareGeometryChange();
+    m_nameLabelPos = pos;
+    m_nameLabelPosSet = true;
+    update();
+}
+
+void GraphicsPrimitive::setValueLabelPos(const QPointF &pos)
+{
+    prepareGeometryChange();
+    m_valueLabelPos = pos;
+    m_valueLabelPosSet = true;
+    update();
+}
+
+int GraphicsPrimitive::totalPointCount() const
+{
+    int extra = 0;
+    if (showName && !objName.isEmpty())
+        ++extra;
+    if (showValue && !objValue.isEmpty())
+        ++extra;
+    return controlPointCount() + extra;
+}
+
+QPointF GraphicsPrimitive::pointAt(int index) const
+{
+    const int n = controlPointCount();
+    if (index < n)
+        return controlPoint(index);
+    if (showName && !objName.isEmpty())
+        return index == n ? nameLabelPos() : valueLabelPos();
+    return valueLabelPos(); // only the value label occupies index n here
+}
+
+void GraphicsPrimitive::setPointAt(int index, const QPointF &pos)
+{
+    const int n = controlPointCount();
+    if (index < n) {
+        setControlPoint(index, pos);
+        return;
+    }
+    if (showName && !objName.isEmpty()) {
+        if (index == n) {
+            setNameLabelPos(pos);
+            return;
+        }
+        setValueLabelPos(pos);
+        return;
+    }
+    setValueLabelPos(pos);
 }
 
 QVector<QPointF> GraphicsPrimitive::controlPointSnapshot() const
 {
-    const int count = controlPointCount();
+    const int count = totalPointCount();
     QVector<QPointF> points;
     points.reserve(count);
     for (int i = 0; i < count; ++i)
-        points.append(controlPoint(i));
+        points.append(pointAt(i));
     return points;
 }
 
 void GraphicsPrimitive::restoreControlPoints(const QVector<QPointF> &points)
 {
     for (int i = 0; i < points.size(); ++i)
-        setControlPoint(i, points.at(i));
+        setPointAt(i, points.at(i));
 }
 
 QColor GraphicsPrimitive::drawColor() const
@@ -146,13 +223,12 @@ QRectF GraphicsPrimitive::labelBoundingRect() const
     if ((!drawName && !drawValue) || controlPointCount() == 0)
         return QRectF();
 
-    const QPointF anchor = controlPoint(0);
     const QSizeF approxTextSize(60, 12); // generous estimate, avoids measuring text per call
     QRectF rect;
     if (drawName)
-        rect = rect.united(QRectF(anchor + labelOffset(0), approxTextSize));
+        rect = rect.united(QRectF(mapFromScene(nameLabelPos()), approxTextSize));
     if (drawValue)
-        rect = rect.united(QRectF(anchor + labelOffset(1), approxTextSize));
+        rect = rect.united(QRectF(mapFromScene(valueLabelPos()), approxTextSize));
     return rect;
 }
 
@@ -169,11 +245,10 @@ void GraphicsPrimitive::paintLabels(QPainter *painter) const
     font.setPointSizeF(3.0);
     painter->setFont(font);
 
-    const QPointF anchor = mapFromScene(controlPoint(0));
     if (drawName)
-        painter->drawText(anchor + labelOffset(0), objName);
+        painter->drawText(mapFromScene(nameLabelPos()), objName);
     if (drawValue)
-        painter->drawText(anchor + labelOffset(1), objValue);
+        painter->drawText(mapFromScene(valueLabelPos()), objValue);
     painter->restore();
 }
 

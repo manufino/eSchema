@@ -31,7 +31,7 @@ PrimitiveHandleItem::PrimitiveHandleItem(GraphicsPrimitive *target, int controlP
     // Deliberately NOT ItemIsMovable - dragging is manual (see header comment).
     setFlags(ItemIgnoresTransformations);
     setZValue(1000); // always drawn on top of ordinary primitives
-    setPos(target->controlPoint(controlPointIndex));
+    setPos(target->pointAt(controlPointIndex));
 }
 
 QRectF PrimitiveHandleItem::boundingRect() const
@@ -50,7 +50,7 @@ void PrimitiveHandleItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 void PrimitiveHandleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    m_dragStartPos = m_target->controlPoint(m_index);
+    m_dragStartPos = m_target->pointAt(m_index);
     event->accept(); // must accept to keep receiving move/release events
 }
 
@@ -58,12 +58,12 @@ void PrimitiveHandleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     const QPointF snapped = Utils::instance().snapToGrid(event->scenePos());
     setPos(snapped);
-    m_target->setControlPoint(m_index, snapped);
+    m_target->setPointAt(m_index, snapped);
 }
 
 void PrimitiveHandleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
-    const QPointF after = m_target->controlPoint(m_index);
+    const QPointF after = m_target->pointAt(m_index);
     if (after == m_dragStartPos)
         return; // plain click, nothing to undo
 

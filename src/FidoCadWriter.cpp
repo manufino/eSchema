@@ -31,7 +31,10 @@ namespace {
 QString buildLabelLine(const GraphicsPrimitive *primitive, const QString &text, int labelIndex)
 {
     using namespace FidoCadTokenUtils;
-    const QPointF pos = primitive->controlPoint(0) + primitive->labelOffset(labelIndex);
+    // The label's actual (possibly user-dragged) position, not a recomputed
+    // fixed offset - matches whatever FidoCadReader will read back on the
+    // next open, so a moved label round-trips instead of snapping back.
+    const QPointF pos = labelIndex == 0 ? primitive->nameLabelPos() : primitive->valueLabelPos();
     QStringList tokens {
         QStringLiteral("TY"),
         roundIntelligently(pos.x()), roundIntelligently(pos.y()),

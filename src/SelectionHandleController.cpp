@@ -42,7 +42,7 @@ void SelectionHandleController::onSelectionChanged()
     if (!primitive)
         return;
 
-    const int count = primitive->controlPointCount();
+    const int count = primitive->totalPointCount();
     for (int i = 0; i < count; ++i) {
         auto *handle = new PrimitiveHandleItem(primitive, i);
         m_sheet->addItem(handle);
@@ -53,7 +53,7 @@ void SelectionHandleController::onSelectionChanged()
 void SelectionHandleController::refreshHandlePositions()
 {
     for (PrimitiveHandleItem *handle : std::as_const(m_handles))
-        handle->setPos(handle->target()->controlPoint(handle->controlPointIndex()));
+        handle->setPos(handle->target()->pointAt(handle->controlPointIndex()));
 }
 
 void SelectionHandleController::clearHandles()

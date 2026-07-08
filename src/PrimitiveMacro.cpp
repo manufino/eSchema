@@ -150,14 +150,18 @@ QList<GraphicsPrimitive *> PrimitiveMacro::convertToPrimitives(Sheet *contextShe
     if (!name().isEmpty()) {
         auto *nameText = new PrimitiveText();
         nameText->setLayer(objLayer);
-        nameText->setControlPoint(0, m_pos + labelOffset(0));
+        // The label's actual current position, which may have been dragged
+        // away from the default labelOffset() - not recomputing it here
+        // keeps the exploded result visually identical to the macro it
+        // replaced.
+        nameText->setControlPoint(0, nameLabelPos());
         nameText->setText(name());
         result.append(nameText);
     }
     if (!value().isEmpty()) {
         auto *valueText = new PrimitiveText();
         valueText->setLayer(objLayer);
-        valueText->setControlPoint(0, m_pos + labelOffset(1));
+        valueText->setControlPoint(0, valueLabelPos());
         valueText->setText(value());
         result.append(valueText);
     }

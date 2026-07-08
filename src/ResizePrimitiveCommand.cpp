@@ -30,10 +30,10 @@ ResizePrimitiveCommand::ResizePrimitiveCommand(GraphicsPrimitive *primitive, int
 
 void ResizePrimitiveCommand::undo()
 {
-    m_primitive->setControlPoint(m_index, m_before);
+    m_primitive->setPointAt(m_index, m_before);
 }
 
 void ResizePrimitiveCommand::redo()
 {
-    m_primitive->setControlPoint(m_index, m_after);
+    m_primitive->setPointAt(m_index, m_after);
 }

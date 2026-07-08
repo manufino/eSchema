@@ -25,12 +25,14 @@
 
 class GraphicsPrimitive;
 
-// A small fixed-screen-size grip square representing one control point of the
-// selected primitive. Dragging it writes straight back into the primitive's
-// control point (through the same grid-snap rule as everything else) - this
-// item has no geometry of its own beyond drawing the grip and forwarding
-// drags, so one generic class drives resize for every primitive type instead
-// of needing a per-primitive resize strategy.
+// A small fixed-screen-size grip square representing one point of the
+// selected primitive - one of its own control points, or (at the indices
+// past controlPointCount(), see GraphicsPrimitive::pointAt()) its name/value
+// label position. Dragging it writes straight back into that point (through
+// the same grid-snap rule as everything else) - this item has no geometry
+// of its own beyond drawing the grip and forwarding drags, so one generic
+// class drives resize (and label repositioning) for every primitive type
+// instead of needing a per-primitive resize strategy.
 class PrimitiveHandleItem : public QGraphicsItem
 {
 public:

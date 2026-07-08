@@ -143,8 +143,37 @@ public:
     // snapshot and replay one or the other via restoreControlPoints(), rather
     // than reapplying a relative delta - safe to call again even if the drag
     // that originally produced the "after" state already applied it live.
+    // Also includes the name/value label positions below (whichever are
+    // currently shown), so a move/resize undo restores those too.
     QVector<QPointF> controlPointSnapshot() const;
     void restoreControlPoints(const QVector<QPointF> &points);
+
+    // Absolute scene position of the name/value label, independent of
+    // controlPoint(0) once explicitly moved - matches the reference
+    // FidoCadJ editor, where these are extra "virtual points" alongside a
+    // primitive's own geometry (e.g. PrimitiveMacro.getNameVirtualPointNumber()/
+    // getValueVirtualPointNumber()), draggable on their own rather than being
+    // pinned at a fixed offset forever. Lazily defaults to
+    // controlPoint(0) + labelOffset(idx) the first time it's read, so an
+    // never-customized label still lands exactly where it always used to.
+    QPointF nameLabelPos() const;
+    QPointF valueLabelPos() const;
+    void setNameLabelPos(const QPointF &pos);
+    void setValueLabelPos(const QPointF &pos);
+
+    // Every control point, plus the name/value label position(s) above -
+    // only for whichever of the two is currently shown (showName/showValue
+    // and non-empty), in that order, at the indices right after
+    // controlPointCount(). This is what PrimitiveHandleItem/
+    // SelectionHandleController/ResizePrimitiveCommand actually address, so
+    // a label gets its own drag handle - independently movable, yet still
+    // shifting together with the primitive via translateControlPoints()
+    // since it's stored as an absolute position - without any of the
+    // concrete primitive classes needing their own control-point interface
+    // touched at all.
+    int totalPointCount() const;
+    QPointF pointAt(int index) const;
+    void setPointAt(int index, const QPointF &pos);
 
     // True when the primitive carries no visible information (degenerate geometry
     // and no name/value label) and should be silently dropped on save, per the FCD
@@ -238,6 +267,15 @@ protected:
     bool m_arrowStyleEmpty = false;
     qreal m_arrowLength = 3.0;
     qreal m_arrowHalfWidth = 1.0;
+
+    // mutable: nameLabelPos()/valueLabelPos() are const but lazily compute
+    // and cache their default the first time they're read (see their doc
+    // comment above) - a primitive whose label was never dragged still
+    // needs somewhere to remember "not customized yet, use the default".
+    mutable QPointF m_nameLabelPos;
+    mutable QPointF m_valueLabelPos;
+    mutable bool m_nameLabelPosSet = false;
+    mutable bool m_valueLabelPosSet = false;
 };
 
 #endif // GRAPHICSPRIMITIVE_H
