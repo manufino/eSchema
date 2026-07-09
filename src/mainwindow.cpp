@@ -29,6 +29,7 @@
 #include "LibraryManager.h"
 #include "PrimitiveMacro.h"
 #include "PrimitiveText.h"
+#include "PrimitiveImage.h"
 #include "DialogCreateMacro.h"
 #include <QFileDialog>
 #include <QSignalBlocker>
@@ -216,6 +217,12 @@ void MainWindow::setConnections()
         for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
             if (primitive->getPrimitiveType() == GraphicsPrimitive::Text)
                 static_cast<PrimitiveText *>(primitive)->setFontName(font.family());
+        }
+    });
+    connect(ui->dspinOpacity, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Image)
+                static_cast<PrimitiveImage *>(primitive)->setOpacity(value);
         }
     });
 
@@ -633,6 +640,7 @@ void MainWindow::updatePropertiesPanel()
     const QSignalBlocker blockFill(ui->checkBox);
     const QSignalBlocker blockStyle(ui->cbPropLineStyle);
     const QSignalBlocker blockFont(ui->fontComboBox);
+    const QSignalBlocker blockOpacity(ui->dspinOpacity);
 
     auto showRow = [](QWidget *label, QWidget *field, bool visible) {
         label->setVisible(visible);
@@ -648,6 +656,7 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->label_6, ui->checkBox, false);
         showRow(ui->label_7, ui->cbPropLineStyle, false);
         showRow(ui->label_8, ui->fontComboBox, false);
+        showRow(ui->label_9, ui->dspinOpacity, false);
         ui->lineEdit->clear();
         ui->lineEdit_2->clear();
         return;
@@ -696,6 +705,11 @@ void MainWindow::updatePropertiesPanel()
     showRow(ui->label_8, ui->fontComboBox, isText);
     if (isText)
         ui->fontComboBox->setCurrentFont(QFont(static_cast<PrimitiveText *>(primitive)->fontName()));
+
+    const bool isImage = primitive->getPrimitiveType() == GraphicsPrimitive::Image;
+    showRow(ui->label_9, ui->dspinOpacity, isImage);
+    if (isImage)
+        ui->dspinOpacity->setValue(static_cast<PrimitiveImage *>(primitive)->opacity());
 }
 
 // Mirror/Rotate/Delete are never applied directly here - each pushes an undo

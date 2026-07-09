@@ -92,7 +92,7 @@ private slots:
 
 private:
     enum class Tool { Select, Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Text, Connection,
-                      PcbTrack, Pad, Macro };
+                      PcbTrack, Pad, Macro, Image };
 
     Tool currentTool() const;
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count

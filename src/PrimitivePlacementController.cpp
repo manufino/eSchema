@@ -33,11 +33,16 @@
 #include "PrimitivePcbTrack.h"
 #include "PrimitivePad.h"
 #include "PrimitiveMacro.h"
+#include "PrimitiveImage.h"
 #include "CreatePrimitiveCommand.h"
 #include <QAction>
 #include <QCheckBox>
 #include <QKeyEvent>
 #include <QInputDialog>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QFile>
+#include <QMessageBox>
 
 PrimitivePlacementController::PrimitivePlacementController(SheetView *view, Sheet *sheet,
                                                              ToolBarPrimitive *toolBar,
@@ -70,6 +75,7 @@ PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() c
     if (name == QStringLiteral("actionConnection")) return Tool::Connection;
     if (name == QStringLiteral("actionPcbTrack")) return Tool::PcbTrack;
     if (name == QStringLiteral("actionPad")) return Tool::Pad;
+    if (name == QStringLiteral("actionImage")) return Tool::Image;
     return Tool::Select;
 }
 
@@ -90,6 +96,7 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::PcbTrack: return 2;
     case Tool::Pad: return 1;
     case Tool::Macro: return 1;
+    case Tool::Image: return 2; // click-drag a box, like Rectangle
     case Tool::Polygon: return -1;
     case Tool::Curve: return -1;
     case Tool::Select: return 0;
@@ -121,6 +128,7 @@ GraphicsPrimitive *PrimitivePlacementController::createPrimitiveForTool(Tool too
     case Tool::Curve: return new PrimitiveComplexCurve();
     case Tool::Text: return new PrimitiveText(); // caller sets its text content
     case Tool::Macro: return new PrimitiveMacro(); // caller sets its macro key
+    case Tool::Image: return new PrimitiveImage(); // caller sets its image data
     case Tool::Select: return nullptr;
     }
     return nullptr;
@@ -167,6 +175,36 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         auto *primitiveText = static_cast<PrimitiveText *>(createPrimitiveForTool(Tool::Text));
         primitiveText->setText(text);
         m_activePrimitive = primitiveText;
+    } else if (m_activeTool == Tool::Image) {
+        // Picks the file first, then the click(-drag) just placed becomes the
+        // box the image is fitted into - the same order the Text tool asks
+        // for its content before the click places it.
+        const QString path = QFileDialog::getOpenFileName(
+                    m_view, tr("Inserisci immagine"), QString(),
+                    tr("Immagini (*.png *.jpg *.jpeg *.bmp *.gif)"));
+        if (path.isEmpty()) {
+            m_activeTool = Tool::Select;
+            return; // user cancelled - nothing to place
+        }
+
+        QFile file(path);
+        if (!file.open(QIODevice::ReadOnly)) {
+            QMessageBox::warning(m_view, tr("Inserisci immagine"),
+                                  tr("Impossibile leggere il file:\n%1").arg(path));
+            m_activeTool = Tool::Select;
+            return;
+        }
+        const QByteArray data = file.readAll();
+
+        // FIDOSPECS.md 5.12's mime subtype, not a full "image/..." string -
+        // ".jpg" is the common file extension but "jpeg" is the real subtype.
+        QString mimeSubtype = QFileInfo(path).suffix().toLower();
+        if (mimeSubtype == QStringLiteral("jpg"))
+            mimeSubtype = QStringLiteral("jpeg");
+
+        auto *primitiveImage = static_cast<PrimitiveImage *>(createPrimitiveForTool(Tool::Image));
+        primitiveImage->setImageData(mimeSubtype, QString::fromLatin1(data.toBase64()));
+        m_activePrimitive = primitiveImage;
     } else {
         m_activePrimitive = createPrimitiveForTool(m_activeTool);
     }

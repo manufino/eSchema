@@ -43,7 +43,7 @@ public:
     void setControlPoint(int index, const QPointF &scenePos) override;
 
     qreal opacity() const { return m_opacity; }
-    void setOpacity(qreal opacity) { m_opacity = opacity; }
+    void setOpacity(qreal opacity) { m_opacity = opacity; update(); }
     int hue() const { return m_hue; }
     void setHue(int hue) { m_hue = hue; }
     QString mimeSubtype() const { return m_mimeSubtype; }
