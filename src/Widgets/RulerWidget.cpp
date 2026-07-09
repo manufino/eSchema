@@ -25,10 +25,7 @@
 namespace {
 // Thickness of the ruler band, in pixels - kept in sync with the fixed size
 // given to the corner widget the two rulers meet at in MainWindow.ui.
-constexpr int kBreadth = 22;
-// Roughly how many pixels should separate two labelled (major) ticks -
-// niceStep() picks a scene-unit step that gets as close to this as possible.
-constexpr int kTargetLabelSpacingPx = 60;
+constexpr int kBreadth = 14;
 }
 
 RulerWidget::RulerWidget(QWidget *parent) : QWidget(parent)
@@ -40,6 +37,15 @@ RulerWidget::RulerWidget(QWidget *parent) : QWidget(parent)
 void RulerWidget::setOrientation(Qt::Orientation orientation)
 {
     m_orientation = orientation;
+    // Clears whatever fixed-size constraint the *other* orientation left
+    // behind - setFixedHeight()/setFixedWidth() below only ever constrain
+    // one axis, but each also implicitly sets that axis's min *and* max, so
+    // switching orientation without resetting first left the previous
+    // orientation's fixed axis still capping this one (the vertical ruler
+    // ended up capped to the horizontal ruler's fixed height, rendering as a
+    // short, squashed box instead of spanning the drawing area's height).
+    setMinimumSize(0, 0);
+    setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
     if (m_orientation == Qt::Horizontal) {
         setFixedHeight(kBreadth);
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -67,31 +73,18 @@ void RulerWidget::setViewTransform(qreal origin, qreal scale)
     update();
 }
 
+void RulerWidget::setGridSteps(qreal minorStep, qreal majorStep)
+{
+    m_minorStep = qMax(minorStep, 0.0001);
+    m_majorStep = qMax(majorStep, m_minorStep);
+    update();
+}
+
 void RulerWidget::setMarkerPosition(qreal scenePos, bool visible)
 {
     m_markerPos = scenePos;
     m_markerVisible = visible;
     update();
-}
-
-qreal RulerWidget::niceStep(qreal targetPixels) const
-{
-    const qreal rawStep = targetPixels / m_scale;
-    const qreal exponent = std::floor(std::log10(rawStep));
-    const qreal base = std::pow(10.0, exponent);
-    const qreal fraction = rawStep / base;
-
-    qreal niceFraction;
-    if (fraction < 1.5)
-        niceFraction = 1.0;
-    else if (fraction < 3.0)
-        niceFraction = 2.0;
-    else if (fraction < 7.0)
-        niceFraction = 5.0;
-    else
-        niceFraction = 10.0;
-
-    return niceFraction * base;
 }
 
 void RulerWidget::paintEvent(QPaintEvent *)
@@ -111,17 +104,19 @@ void RulerWidget::paintEvent(QPaintEvent *)
     if (length <= 0 || breadth <= 0)
         return;
 
-    const qreal majorStep = niceStep(kTargetLabelSpacingPx);
-    const qreal minorStep = majorStep / 5.0;
+    // Below roughly this many pixels apart, minor ticks (but not the major
+    // ones, which always follow the grid's own mark spacing) are skipped so
+    // a heavily zoomed-out view doesn't turn the ruler into a solid smear.
+    const bool drawMinorTicks = m_minorStep * m_scale >= 3.0;
 
     // First minorStep-aligned scene coordinate visible at pixel 0.
-    const qreal firstScene = std::floor((-m_origin / m_scale) / minorStep) * minorStep;
+    const qreal firstScene = std::floor((-m_origin / m_scale) / m_minorStep) * m_minorStep;
 
     QFont font = painter.font();
-    font.setPixelSize(qMax(8, breadth / 2));
+    font.setPixelSize(qMax(7, breadth - 6));
     painter.setFont(font);
 
-    for (qreal sceneVal = firstScene; ; sceneVal += minorStep) {
+    for (qreal sceneVal = firstScene; ; sceneVal += m_minorStep) {
         const qreal px = m_origin + sceneVal * m_scale;
         if (px > length + 1)
             break;
@@ -129,16 +124,18 @@ void RulerWidget::paintEvent(QPaintEvent *)
             continue;
 
         // A small epsilon absorbs float drift accumulated over many
-        // += minorStep steps, which would otherwise make the comparison
-        // against majorStep miss ticks that should count as "major".
-        const qreal majorRatio = sceneVal / majorStep;
+        // += m_minorStep steps, which would otherwise make the comparison
+        // against m_majorStep miss ticks that should count as "major".
+        const qreal majorRatio = sceneVal / m_majorStep;
         const bool isMajor = std::abs(majorRatio - std::round(majorRatio)) < 1e-6;
 
-        const int tickLen = isMajor ? breadth : breadth / 2;
-        if (horizontal)
-            painter.drawLine(QPointF(px, breadth - tickLen), QPointF(px, breadth));
-        else
-            painter.drawLine(QPointF(breadth - tickLen, px), QPointF(breadth, px));
+        if (isMajor || drawMinorTicks) {
+            const int tickLen = isMajor ? breadth : breadth / 2;
+            if (horizontal)
+                painter.drawLine(QPointF(px, breadth - tickLen), QPointF(px, breadth));
+            else
+                painter.drawLine(QPointF(breadth - tickLen, px), QPointF(breadth, px));
+        }
 
         if (isMajor) {
             const QString label = QString::number(qRound(sceneVal));

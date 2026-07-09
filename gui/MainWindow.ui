@@ -396,14 +396,14 @@ margin:1px;
      <widget class="QWidget" name="rulerCorner">
       <property name="minimumSize">
        <size>
-        <width>22</width>
-        <height>22</height>
+        <width>14</width>
+        <height>14</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>22</width>
-        <height>22</height>
+        <width>14</width>
+        <height>14</height>
        </size>
       </property>
      </widget>

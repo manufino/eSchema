@@ -59,6 +59,13 @@ public:
     // default step of 1 guarantees integer coordinates (FIDOSPECS.md 3).
     QPointF snapToGrid(const QPointF &scenePos) const;
 
+    // Scene-unit spacing between consecutive minor/major grid lines, exactly
+    // as drawn by drawBackground() - RulerWidget reads these so its ticks
+    // land on the same lines as the visible grid instead of using an
+    // independently chosen spacing.
+    qreal minorGridStep() const { return qMax(1, gridSize); }
+    qreal majorGridStep() const { return qMax(1, gridMarkSize / 10) * qMax(1, gridSize); }
+
 protected:
     void drawBackground (QPainter* painter, const QRectF &rect);
     void wheelEvent(QWheelEvent *event);

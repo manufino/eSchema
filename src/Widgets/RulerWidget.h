@@ -46,6 +46,11 @@ public slots:
     // whole linear mapping needed to place ticks, since SheetView never
     // rotates its transform - only pans and zooms.
     void setViewTransform(qreal origin, qreal scale);
+    // Scene-unit spacing between minor and major ticks - passed in from
+    // SheetView::minorGridStep()/majorGridStep() so the ruler's ticks land
+    // exactly on the same lines as the visible drawing grid, rather than
+    // using an independently chosen spacing.
+    void setGridSteps(qreal minorStep, qreal majorStep);
     // Scene-coordinate position (along this ruler's axis) of the mouse -
     // ignored (marker hidden) once the mouse leaves the drawing view.
     void setMarkerPosition(qreal scenePos, bool visible);
@@ -54,14 +59,11 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    // Picks a "nice" tick spacing (1/2/5 x 10^n scene units) so major ticks
-    // land roughly targetPixels apart on screen regardless of zoom level -
-    // the same adaptive-step approach most CAD/graphics app rulers use.
-    qreal niceStep(qreal targetPixels) const;
-
     Qt::Orientation m_orientation = Qt::Horizontal;
     qreal m_origin = 0.0;
     qreal m_scale = 1.0;
+    qreal m_minorStep = 10.0;
+    qreal m_majorStep = 50.0;
     qreal m_markerPos = 0.0;
     bool m_markerVisible = false;
 };

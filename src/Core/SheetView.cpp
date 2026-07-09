@@ -68,8 +68,8 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     // zero below. gridMarkSize is normally clamped to >= 10, same reasoning:
     // markStep collapsing to 0 would turn the thick-line loops below into an
     // infinite loop (the step never advances x/y past rect.right()/bottom()).
-    const int step = qMax(1, gridSize);
-    const int markStep = qMax(1, gridMarkSize / 10) * step;
+    const int step = minorGridStep();
+    const int markStep = majorGridStep();
 
     // Floors toward negative infinity regardless of sign - rect.left()/top()
     // can be negative (e.g. after panning past the scene's own origin with
@@ -327,6 +327,9 @@ void SheetView::settingChanged()
 {
     loadSettings();
     update();
+    // Grid step/mark settings may have just changed - the rulers' tick
+    // spacing is derived from them, so nudge MainWindow to re-read it.
+    emit viewTransformChanged();
 }
 
 void SheetView::adjustView()

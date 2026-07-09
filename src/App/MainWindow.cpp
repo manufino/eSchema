@@ -337,6 +337,11 @@ void MainWindow::updateRulers()
     const QTransform transform = ui->graphicsView->transform();
     ui->rulerHorizontal->setViewTransform(originPx.x(), transform.m11());
     ui->rulerVertical->setViewTransform(originPx.y(), transform.m22());
+
+    const qreal minorStep = ui->graphicsView->minorGridStep();
+    const qreal majorStep = ui->graphicsView->majorGridStep();
+    ui->rulerHorizontal->setGridSteps(minorStep, majorStep);
+    ui->rulerVertical->setGridSteps(minorStep, majorStep);
 }
 
 void MainWindow::updateRulersVisibility()
