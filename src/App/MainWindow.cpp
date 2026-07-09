@@ -176,6 +176,14 @@ void MainWindow::setConnections()
     });
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &MainWindow::updateRulersVisibility);
+    connect(sheetScene, &Sheet::primitivesChanged, this, [this]() {
+        int macroCount = 0;
+        for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::PartLib)
+                ++macroCount;
+        }
+        ui->statusbar->primitiveCounts(sheetScene->primitives().size(), macroCount);
+    });
     connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::adjustView);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);

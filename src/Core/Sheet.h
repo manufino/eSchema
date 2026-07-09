@@ -67,6 +67,12 @@ public:
     qreal lineWidthCircles() const { return m_lineWidthCircles; }
     void setLineWidthCircles(qreal width) { m_lineWidthCircles = width; }
 
+signals:
+    // Fired whenever m_primitives changes (add/remove/clear) - drives the
+    // status bar's live primitive/macro counters rather than those polling
+    // primitives() on some timer.
+    void primitivesChanged();
+
 protected:
     // Repaints every pad's hole on top of everything else painted this
     // frame. QGraphicsScene paints items strictly in z/insertion order, so

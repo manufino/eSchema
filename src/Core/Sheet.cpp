@@ -46,6 +46,7 @@ void Sheet::addPrimitive(GraphicsPrimitive *primitive)
         return; // already added - see the idempotency note in Sheet.h
     addItem(primitive);
     m_primitives.append(primitive);
+    emit primitivesChanged();
 }
 
 void Sheet::takePrimitive(GraphicsPrimitive *primitive)
@@ -54,6 +55,7 @@ void Sheet::takePrimitive(GraphicsPrimitive *primitive)
         return; // already removed - see the idempotency note in Sheet.h
     removeItem(primitive);
     m_primitives.removeOne(primitive);
+    emit primitivesChanged();
 }
 
 void Sheet::removePrimitive(GraphicsPrimitive *primitive)
@@ -72,6 +74,7 @@ void Sheet::clearPrimitives()
     m_connectionDiameter = 2.0;
     m_lineWidth = defaultLineWidthSetting();
     m_lineWidthCircles = 0.35;
+    emit primitivesChanged();
 }
 
 void Sheet::drawForeground(QPainter *painter, const QRectF &)

@@ -56,6 +56,8 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     });
 
     lblZoomLevel->setText("Zoom 7%");
+    lblPrimitiveCount->setText("Primitive 0  Macro 0");
+    lblPrimitiveCount->setMinimumWidth(150);
 
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &StatusBar::settingChanged);
@@ -75,6 +77,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     btnSnapGrid->setChecked(snapEnabled.isValid() ? snapEnabled.toBool() : true);
 
     this->addPermanentWidget(lblZoomLevel);
+    this->addPermanentWidget(lblPrimitiveCount);
     this->addPermanentWidget(lblPos);
     this->addPermanentWidget(btnGrid);
     this->addPermanentWidget(btnSnapGrid);
@@ -118,5 +121,10 @@ void StatusBar::settingChanged()
 {
     loadSettings();
     update();
+}
+
+void StatusBar::primitiveCounts(int totalPrimitives, int macroCount)
+{
+    lblPrimitiveCount->setText(QString("Primitive %1  Macro %2").arg(totalPrimitives).arg(macroCount));
 }
 

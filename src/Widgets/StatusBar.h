@@ -42,6 +42,9 @@ public slots:
     void sceneMousePos(QPointF point);
     void zoomLevel(unsigned int level);
     void settingChanged();
+    // totalPrimitives includes macros - macroCount is the subset of those
+    // that are PartLib (MC) instances, shown separately.
+    void primitiveCounts(int totalPrimitives, int macroCount);
 
 signals:
     void zoomChanged(unsigned int level);
@@ -49,6 +52,7 @@ signals:
 private:
         QLabel *lblPos = new QLabel(this);
         QLabel *lblZoomLevel = new QLabel(this);
+        QLabel *lblPrimitiveCount = new QLabel(this);
         int gridSize;
         double mm_step;
 
