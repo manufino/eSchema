@@ -80,10 +80,6 @@ private:
 public slots:
     void settingChanged();
     void adjustView();
-    void enableGrid(bool enable = true) {
-        gridEnabled = enable;
-        this->scene()->update();
-    }
 
 signals:
     void mouseMoved(QPointF point);

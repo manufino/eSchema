@@ -76,6 +76,10 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("grid_step_mark", 50);
     saveSetting("grid_line_width", 0.20);
     saveSetting("grid_line_mark_width", 0.20);
+    // Whether the grid is actually drawn - toggled via the status bar's grid
+    // button (StatusBar::btnGrid), independent of the grid's own appearance
+    // settings above.
+    saveSetting("grid_visible", true);
 
     // SNAP - defaults to the same spacing as the visible grid (grid_step) so
     // clicks visibly snap to grid intersections. Any multiple of 1 keeps

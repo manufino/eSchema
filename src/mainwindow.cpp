@@ -164,7 +164,6 @@ void MainWindow::setConnections()
     connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::sceneMousePos);
     connect(ui->actionOptions, &QAction::triggered, this, &MainWindow::clickOptionAction);
     connect(ui->actionInformation, &QAction::triggered, this, &MainWindow::clickAboutAction);
-    connect(ui->statusbar->btnGrid, &QPushButton::toggled, ui->graphicsView, &SheetView::enableGrid);
     connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
     connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::adjustView);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);

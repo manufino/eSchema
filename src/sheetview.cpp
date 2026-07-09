@@ -22,10 +22,6 @@
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
-    /* TODO: per ora lo lascio cosi ..
-     * ma sara' da salvare nel file dei settings.*/
-    gridEnabled=true;
-
     zoomLevel=100;
 
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
@@ -284,6 +280,12 @@ void SheetView::loadSettings()
 
     val = SettingsManager::getInstance().loadSetting("grid_type");
     gridType = static_cast<Utils::GridType>(val.toInt());
+
+    // Falls back to visible (true) rather than QVariant::toBool()'s own
+    // false-for-invalid default, so a settings file saved before this option
+    // existed (or none at all yet, on first run) still shows the grid.
+    val = SettingsManager::getInstance().loadSetting("grid_visible");
+    gridEnabled = val.isValid() ? val.toBool() : true;
 }
 
 void SheetView::zoomUpdate()
