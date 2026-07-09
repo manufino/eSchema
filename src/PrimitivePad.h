@@ -53,6 +53,12 @@ public:
     bool supportsFCJ() const override { return false; }
 
 private:
+    // Just the outer shape (rect/ellipse/rounded-rect), no hole - shared by
+    // paint() and buildPath() below.
+    QPainterPath buildOuterPath() const;
+    // The outer shape with the hole punched out via the even-odd fill rule -
+    // used for hit-testing (shape()), where the hole should never count as
+    // "on the pad" regardless of how it's actually painted.
     QPainterPath buildPath() const;
 
     QPointF m_pos;

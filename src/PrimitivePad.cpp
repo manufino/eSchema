@@ -19,6 +19,7 @@
 
 #include "PrimitivePad.h"
 #include "FidoCadTokenUtils.h"
+#include "SettingsManager.h"
 #include <QStyleOptionGraphicsItem>
 #include <QPainterPath>
 
@@ -35,20 +36,12 @@ QRectF PrimitivePad::boundingRect() const
             .united(labelBoundingRect());
 }
 
-// Built as a single even-odd path (outer shape + inner hole) rather than
-// drawing the hole with CompositionMode_Clear: clearing to transparent
-// doesn't composite correctly over the view's opaque backing store (the
-// "hole" came out solid black instead of see-through). The even-odd fill
-// rule punches the hole directly, with no compositing involved. Shared by
-// paint() and shape() - the hole is not drawn, so it must not be selectable
-// either.
-QPainterPath PrimitivePad::buildPath() const
+QPainterPath PrimitivePad::buildOuterPath() const
 {
     const QPointF center = mapFromScene(m_pos);
     const QRectF outer(center - QPointF(m_rx / 2, m_ry / 2), QSizeF(m_rx, m_ry));
 
     QPainterPath path;
-    path.setFillRule(Qt::OddEvenFill);
     switch (m_style) {
     case Round:
         path.addEllipse(outer);
@@ -60,8 +53,18 @@ QPainterPath PrimitivePad::buildPath() const
         path.addRoundedRect(outer, outer.width() * 0.2, outer.height() * 0.2);
         break;
     }
+    return path;
+}
+
+// The even-odd fill rule punches the hole out of the outer shape - only
+// meaningful for hit-testing (shape()) now that paint() below actively
+// paints over the hole instead of just leaving it unpainted.
+QPainterPath PrimitivePad::buildPath() const
+{
+    QPainterPath path = buildOuterPath();
+    path.setFillRule(Qt::OddEvenFill);
     if (m_ri > 0)
-        path.addEllipse(center, m_ri / 2, m_ri / 2);
+        path.addEllipse(mapFromScene(m_pos), m_ri / 2, m_ri / 2);
     return path;
 }
 
@@ -78,7 +81,23 @@ void PrimitivePad::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
 
     painter->setPen(Qt::NoPen);
     painter->setBrush(drawColor());
-    painter->drawPath(buildPath());
+    painter->drawPath(buildOuterPath());
+
+    if (m_ri > 0) {
+        // Actually punches through whatever was painted underneath (e.g. a
+        // trace this pad was dropped on top of) instead of just leaving that
+        // circle unpainted, which would let it show through as if the pad
+        // had no hole at all. Filling with the sheet's own background color
+        // (not a transparent clear - CompositionMode_Clear renders solid
+        // black over this view's opaque backing store, which is exactly why
+        // buildPath() above uses an even-odd fill instead for hit-testing)
+        // is what makes it read as an actual drilled hole.
+        const QVariant backgroundSetting = SettingsManager::getInstance().loadSetting("background_color");
+        const QColor background = backgroundSetting.isValid() ? QColor(backgroundSetting.toString())
+                                                                : QColor(Qt::white);
+        painter->setBrush(background);
+        painter->drawEllipse(mapFromScene(m_pos), m_ri / 2, m_ri / 2);
+    }
 
     paintLabels(painter);
 }
