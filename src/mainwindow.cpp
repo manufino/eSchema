@@ -79,15 +79,22 @@ MainWindow::MainWindow(QWidget *parent)
     // mix), not just hold a single row/column of docks - without this, two
     // docks in the same area can only stack or tab, never sit side by side,
     // which is what "completely configurable, like professional drawing
-    // apps" actually requires.
-    setDockNestingEnabled(true);
+    // apps" actually requires. AnimatedDocks (on by default) is deliberately
+    // left out: it drives the docking preview through QWidgetAnimator, which
+    // grabs a pixmap of the widget being dragged - reproducibly crashing in
+    // Qt6Core.dll on this machine (an access violation confirmed via
+    // Windows' own crash log, always at the same offset) as soon as a drag
+    // starts, apparently a zero-sized grab hitting a bad code path in Qt's
+    // ANGLE/GPU-accelerated pixmap backend. Docking/undocking/floating still
+    // works exactly the same without the slide animation.
+    setDockOptions(QMainWindow::AllowNestedDocks | QMainWindow::AllowTabbedDocks);
 
-    // Librerie/Proprietà are QDockWidgets (freely movable/floatable/dockable
-    // to any edge - or split side by side, or tabbed together - matching the
-    // reference FidoCadJ editor's own dockable panels), each exposing its
-    // own show/hide toggle here rather than the single "Barra laterale"
-    // action that used to hide both at once when they were still one fixed
-    // sidebar.
+    // The Libraries and Properties panels are QDockWidgets (freely movable/
+    // floatable/dockable to any edge - or split side by side, or tabbed
+    // together - matching the reference FidoCadJ editor's own dockable
+    // panels), each exposing its own show/hide toggle here rather than the
+    // single sidebar-toggle action that used to hide both at once when they
+    // were still one fixed sidebar.
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockProperties->toggleViewAction());
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockLibraries->toggleViewAction());
     // Restores whatever dock/toolbar arrangement (position, size, floating,
@@ -425,7 +432,7 @@ void MainWindow::updateEditActionsState()
     ui->actionDistributeVertical->setEnabled(hasAtLeastThree);
 }
 
-// Reuses the very same ui->action* objects the Modifica menu bar entry is
+// Reuses the very same ui->action* objects the Edit menu bar entry is
 // built from (rather than a second, parallel set wired to the same slots),
 // so this menu's content, enabled state, shortcuts and icons can never drift
 // out of sync with the menu bar - see updateEditActionsState().
@@ -1048,9 +1055,9 @@ bool MainWindow::confirmDiscardChanges()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (confirmDiscardChanges()) {
-        // Persists the current dock/toolbar arrangement (Librerie/Proprietà
-        // position, size, floating, tabbing) so it's restored exactly as
-        // left on the next launch - see the constructor's restoreState().
+        // Persists the current dock/toolbar arrangement (Libraries/Properties
+        // panel position, size, floating, tabbing) so it's restored exactly
+        // as left on the next launch - see the constructor's restoreState().
         SettingsManager::getInstance().saveSetting("window_dock_state", saveState());
         event->accept();
     } else {
