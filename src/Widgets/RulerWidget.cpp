@@ -148,7 +148,10 @@ void RulerWidget::paintEvent(QPaintEvent *)
         }
 
         if (isMajor) {
-            const QString label = QString::number(qRound(sceneVal));
+            // The count of grid steps from zero (e.g. "4"), not the raw
+            // scene coordinate (e.g. "40") - index already *is* that count,
+            // since sceneVal is index * m_minorStep.
+            const QString label = QString::number(index);
             painter.setPen(labelColor);
             if (horizontal) {
                 painter.drawText(QRectF(px + 2, 0, 60, breadth), Qt::AlignLeft | Qt::AlignVCenter, label);
