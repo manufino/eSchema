@@ -19,6 +19,8 @@
 
 #include "Sheet.h"
 #include "SettingsManager.h"
+#include "PrimitivePad.h"
+#include <utility>
 
 namespace {
 // Falls back to the compiled-in spec default (matches
@@ -70,4 +72,14 @@ void Sheet::clearPrimitives()
     m_connectionDiameter = 2.0;
     m_lineWidth = defaultLineWidthSetting();
     m_lineWidthCircles = 0.35;
+}
+
+void Sheet::drawForeground(QPainter *painter, const QRectF &)
+{
+    for (GraphicsPrimitive *primitive : std::as_const(m_primitives)) {
+        if (auto *pad = dynamic_cast<PrimitivePad *>(primitive)) {
+            if (pad->isVisible())
+                pad->paintHole(painter);
+        }
+    }
 }
