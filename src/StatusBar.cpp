@@ -96,7 +96,7 @@ void StatusBar::sceneMousePos(QPointF point)
 
     int halfGridSize = gridSize / 2;
 
-    // Arrotonda alla griglia in base alla distanza dalla griglia
+    // Round to the grid based on the distance from the grid line
     x = (x + halfGridSize) / gridSize * gridSize;
     y = (y + halfGridSize) / gridSize * gridSize;
 

@@ -21,7 +21,7 @@
 
 SettingsManager& SettingsManager::getInstance()
 {
-    static SettingsManager instance;  // Istanzia il singleton una sola volta
+    static SettingsManager instance;  // Instantiate the singleton only once
     return instance;
 }
 
@@ -43,12 +43,12 @@ QVariant SettingsManager::loadSetting(const QString& key) const
 
 void SettingsManager::restoreDefaultSettings()
 {
-    m_settings.clear(); // Cancella le impostazioni esistenti
-    m_settings.sync(); // Assicura che le modifiche siano salvate su disco
+    m_settings.clear(); // Clear existing settings
+    m_settings.sync(); // Make sure the changes are saved to disk
 
-    // Impostazioni predefinite
+    // Default settings
 
-    // GENERALE
+    // GENERAL
     saveSetting("language", "it");
     saveSetting("gui_style", "light");
     saveSetting("stylesheet_path", "");
@@ -69,7 +69,7 @@ void SettingsManager::restoreDefaultSettings()
     // was actually drawn.
     saveSetting("selection_tolerance", 3.0);
 
-    // GRIGLIA
+    // GRID
     saveSetting("grid_step", 10);
     saveSetting("mm_step", 1.27);
     saveSetting("grid_type", 0);
@@ -88,7 +88,7 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("snap_enabled", true);
     saveSetting("snap_step", 10);
 
-    // COLORI
+    // COLORS
     saveSetting("background_color", QColor("white").name());
     saveSetting("grid_dot_color", QColor("blue").name());
     saveSetting("grid_line_color", QColor(100, 100, 100).name());

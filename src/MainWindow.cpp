@@ -110,10 +110,10 @@ MainWindow::MainWindow(QWidget *parent)
         restoreState(dockState);
 
     layerToolBarWidget = new LayerToolBarWidget(this);
-    ui->toolBarTools->addWidget(layerToolBarWidget); // aggiungo il layer combobox alla toolbar
+    ui->toolBarTools->addWidget(layerToolBarWidget); // add the layer combobox to the toolbar
 
     sheetScene = new Sheet();
-    sheetScene->setSceneRect(0,0,5000,5000); // fisso le dimensioni della scena
+    sheetScene->setSceneRect(0,0,5000,5000); // fix the scene dimensions
 
     ui->graphicsView->setScene(sheetScene);
 

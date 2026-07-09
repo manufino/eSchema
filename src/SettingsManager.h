@@ -30,7 +30,7 @@ class SettingsManager : public QObject
     Q_OBJECT
 
 public:
-    static SettingsManager& getInstance();  // Metodo per ottenere l'istanza del singleton
+    static SettingsManager& getInstance();  // Method to get the singleton instance
 
     void saveSetting(const QString& key, const QVariant& value);
     QVariant loadSetting(const QString& key) const;
@@ -40,9 +40,9 @@ signals:
     void settingIsChanged();
 
 private:
-    SettingsManager();  // Costruttore privato per impedire la creazione di istanze esterne
-    SettingsManager(const SettingsManager&) = delete;  // Disabilita il costruttore di copia
-    SettingsManager& operator=(const SettingsManager&) = delete;  // Disabilita l'operatore di assegnazione
+    SettingsManager();  // Private constructor to prevent creating external instances
+    SettingsManager(const SettingsManager&) = delete;  // Disable the copy constructor
+    SettingsManager& operator=(const SettingsManager&) = delete;  // Disable the assignment operator
 
     QSettings m_settings;
 };

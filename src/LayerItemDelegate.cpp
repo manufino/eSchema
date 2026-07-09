@@ -28,28 +28,28 @@ void LayerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
     QRect rect = opt.rect;
 
-    // Disegna il rettangolo di sfondo dell'elemento con il colore di sfondo dell'hover
+    // Draw the item's background rectangle using the hover background color
     if (opt.state & QStyle::State_MouseOver) {
         opt.palette.setColor(QPalette::Highlight, QColor(200, 200, 200));
         painter->fillRect(opt.rect, opt.palette.highlight());
     }
 
-    // Disegna il quadratino colorato
+    // Draw the color swatch
     QColor colore = index.data(Qt::UserRole + 1).value<QColor>();
     QRect colorRect = QRect(rect.x(), rect.y(), 20, 20);
     painter->fillRect(colorRect, colore);
 
-    // Imposta il colore del testo
+    // Set the text color
     painter->setPen(opt.palette.color(QPalette::WindowText));
 
-    // Disegna il testo a fianco del quadratino
+    // Draw the text next to the swatch
     QString testo = index.data(Qt::DisplayRole).toString();
-    QRect textRect = opt.rect.adjusted(25, 0, 0, 0); // Sposta il testo a destra del quadratino
+    QRect textRect = opt.rect.adjusted(25, 0, 0, 0); // Move the text to the right of the swatch
     painter->drawText(textRect, Qt::AlignVCenter, testo);
 }
 
 QSize LayerItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    // Aggiungi un margine per aumentare la distanza tra le righe della combobox
+    // Add a margin to increase the spacing between combobox rows
     QSize hint = QStyledItemDelegate::sizeHint(option, index);
     hint.setHeight(hint.height() + 2);
     hint.setWidth(hint.width() - 40);

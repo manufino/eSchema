@@ -28,7 +28,7 @@ class LayerList : public QObject
     Q_OBJECT
 
 public:
- // Metodo per ottenere l'istanza del singleton
+ // Method to get the singleton instance
     static LayerList& getInstance() {
         static LayerList instance;
         return instance;
@@ -55,9 +55,9 @@ signals:
     void layerListChanged(QList<Layer*> *layerList);
 
 private:
-    LayerList(){};  // Costruttore privato per impedire la creazione di istanze esterne
-    LayerList(const LayerList&) = delete;  // Disabilita il costruttore di copia
-    LayerList& operator=(const LayerList&) = delete;  // Disabilita l'operatore di assegnazione
+    LayerList(){};  // Private constructor to prevent creating external instances
+    LayerList(const LayerList&) = delete;  // Disable the copy constructor
+    LayerList& operator=(const LayerList&) = delete;  // Disable the assignment operator
 
     QList<Layer*> *layerList = new QList<Layer*>;
 };

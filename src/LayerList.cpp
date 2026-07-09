@@ -74,7 +74,7 @@ void LayerList::removeLayer(Layer *layer)
 
     if (index != -1) {
         layerList->removeAt(index);
-        delete layer; // libero la memoria
+        delete layer; // free the memory
         emit layerListChanged(layerList);
     }
 }
@@ -84,7 +84,7 @@ void LayerList::setMaster(Layer* layer)
     for (int i = 0; i < layerList->count(); i++)
     {
         Layer* currentLayer = (*layerList)[i];
-        // il layer master deve essere sempre visibile
+        // the master layer must always be visible
         if(currentLayer->isMaster())
             currentLayer->setVisible(true);
         currentLayer->setMaster(currentLayer == layer);
@@ -99,7 +99,7 @@ void LayerList::setMaster(QString name)
 
         if(l->name() == name) {
             l->setMaster(true);
-            l->setVisible(true);// il layer master deve essere sempre visibile
+            l->setVisible(true);// the master layer must always be visible
         } else l->setMaster(false);
     }
 }
@@ -112,7 +112,7 @@ void LayerList::setMaster(int index)
 
         l->setMaster(i == index);
 
-        // il layer master deve essere sempre visibile
+        // the master layer must always be visible
         if(l->isMaster())
             l->setVisible(true);
     }
@@ -125,7 +125,7 @@ void LayerList::setVisible(Layer* layer, bool visible)
         Layer* currentLayer = (*layerList)[i];
         if (currentLayer == layer)
         {
-            // non permetto di nascondere il layer master
+            // don't allow hiding the master layer
             if(visible == false && layer->isMaster())
                 return;
 
@@ -142,7 +142,7 @@ void LayerList::setAllVisibleOrHidden(bool visible)
     {
         Layer* currentLayer = (*layerList)[i];
 
-        // non permetto di nascondere il layer master
+        // don't allow hiding the master layer
         if(currentLayer->isMaster())
             continue;
 

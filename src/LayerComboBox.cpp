@@ -43,7 +43,7 @@ void LayerComboBox::addLayer(const QString& testo, const QColor& colore)
 
 void LayerComboBox::addLayerList(QList<Layer*> *list)
 {
-    // disattivo il segnale mentre carico la lista
+    // Disable the signal while loading the list
     disconnect(this, &QComboBox::currentIndexChanged,
                this, &LayerComboBox::currentIndexChanged);
 
@@ -52,9 +52,9 @@ void LayerComboBox::addLayerList(QList<Layer*> *list)
     for(Layer *layer: *list)
         addLayer(layer->name(), QColor(layer->color()));
 
-    setAutoMaster(); // setto il master layer
+    setAutoMaster(); // set the master layer
 
-    // ri-attivo il segnale
+    // Re-enable the signal
     connect(this, &QComboBox::currentIndexChanged,
             this, &LayerComboBox::currentIndexChanged);
 }
@@ -89,10 +89,10 @@ void LayerComboBox::paintEvent(QPaintEvent* event)
     QStyleOptionComboBox opt;
     initStyleOption(&opt);
 
-    // Chiamiamo solo la parte di disegno della combobox che disegna il bordo, la freccia, ecc.
+    // Only draw the combobox's own chrome (border, arrow, etc.)
     style()->drawComplexControl(QStyle::CC_ComboBox, &opt, &painter, this);
 
-    // Disegna il quadratino colorato
+    // Draw the color swatch
     if (currentIndex() >= 0 && currentIndex() < count()) {
         painter.setRenderHint(QPainter::Antialiasing);
         QRect colorRect = QRect(5, 5, 20, 14);
@@ -115,8 +115,8 @@ void LayerComboBox::paintEvent(QPaintEvent* event)
 QSize LayerComboBox::sizeHint() const
 {
     QSize hint = QComboBox::sizeHint();
-    // TODO: da verificare.
-    // Trova la larghezza massima del testo nei singoli item
+    // TODO: needs verification.
+    // Find the widest text among the individual items
     int maxWidth = 0;
     for (int i = 0; i < count(); ++i) {
         QString text = itemText(i);

@@ -88,7 +88,7 @@ public:
     }
 
 private:
-    // Costruttore privato per evitare la creazione di istanze esterne
+    // Private constructor to prevent creating external instances
     Utils() {}
     ~Utils() = default;
     Utils(const Utils&) = delete;

@@ -45,7 +45,7 @@ void LayerListView::addLayerList(QList<Layer*> *layerList)
 
 Layer* LayerListView::getSelectedLayer()
 {
-    // se non ci sono item selezionati ritorna un nullptr
+    // return a nullptr if there are no selected items
     if(selectedItems().size() == 0)
         return nullptr;
 
@@ -64,11 +64,11 @@ void LayerListView::setSelectedLayer(Layer *layer)
         if (item != nullptr && item->data(Qt::UserRole+5).isValid()) {
             Layer *currentLayer = qvariant_cast<Layer*>(item->data(Qt::UserRole+5));
             if (currentLayer == layer) {
-                setCurrentItem(item); // Imposta l'elemento corrente sulla base del layer passato
+                setCurrentItem(item); // Set the current item based on the given layer
                 return;
             }
         }
     }
-    // Se il layer passato non è stato trovato, deseleziona tutti gli elementi
+    // If the given layer wasn't found, deselect all items
     setCurrentItem(nullptr);
 }

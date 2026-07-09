@@ -136,10 +136,10 @@ void SheetView::wheelEvent(QWheelEvent *event)
             factor = 0.9;
         }
 
-        qreal currentScale = transform().m11(); // Ottiene la scala corrente sull'asse x
-        qreal newScale = currentScale * factor; // Calcola la nuova scala
+        qreal currentScale = transform().m11(); // Get the current scale on the x axis
+        qreal newScale = currentScale * factor; // Compute the new scale
 
-        // Limiti del fattore di zoom
+        // Zoom factor limits
         if (newScale < ZOOM_SCALE_MIN) {
             factor = ZOOM_SCALE_MIN / currentScale;
         } else if (newScale > ZOOM_SCALE_MAX) {
@@ -159,7 +159,7 @@ void SheetView::wheelEvent(QWheelEvent *event)
 
 void SheetView::mouseMoveEvent(QMouseEvent *event)
 {
-    // mappo le coordinate della vista sulla scena
+    // map the view coordinates onto the scene
     QPoint origin = mapFromGlobal(QCursor::pos());
     QPointF relativeOrigin = mapToScene(origin);
 

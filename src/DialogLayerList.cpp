@@ -90,7 +90,7 @@ void DialogLayerList::deleteCurrent()
 {
     if(layerIsSelected())
     {
-        // il layer master non si cancella
+        // the master layer can't be deleted
         if(ui->listWidget->getSelectedLayer()->isMaster())
             return;
 

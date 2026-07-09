@@ -23,22 +23,22 @@ LayerLabelName::LayerLabelName(Layer *layer, QWidget *parent) : QWidget(parent)
 {
     this->layer = layer;
 
-    // Creazione di QLabel
+    // Create the QLabel
     label = new QLabel(layer->name(), this);
     label->installEventFilter(this);
 
-    // Creazione di QLineEdit
+    // Create the QLineEdit
     lineEdit = new QLineEdit(this);
     lineEdit->setVisible(false);
 
-    // Layout per organizzare i widget
+    // Layout to organize the widgets
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(label);
     layout->addWidget(lineEdit);
 
-    // Impostazione della politica di stretching orizzontale
-    layout->setStretch(0, 0);  // QLabel non si espande
-    layout->setStretch(1, 1);  // QLineEdit si espande
+    // Horizontal stretch policy
+    layout->setStretch(0, 0);  // QLabel doesn't expand
+    layout->setStretch(1, 1);  // QLineEdit expands
 
     setLayout(layout);
     connect(lineEdit, &QLineEdit::editingFinished, this, &LayerLabelName::lineEditEditingFinished);
@@ -54,7 +54,7 @@ bool LayerLabelName::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == label && event->type() == QEvent::MouseButtonDblClick)
     {
-        // Doppio clic sulla QLabel
+        // Double click on the QLabel
         lineEdit->setText(label->text());
         label->setVisible(false);
         lineEdit->setVisible(true);
@@ -66,7 +66,7 @@ bool LayerLabelName::eventFilter(QObject *obj, QEvent *event)
 
 void LayerLabelName::lineEditEditingFinished()
 {
-    // Chiamato quando l'editing della QLineEdit è terminato
+    // Called when QLineEdit editing has finished
     label->setText(lineEdit->text());
     label->setVisible(true);
     layer->setName(lineEdit->text());

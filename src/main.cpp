@@ -30,13 +30,13 @@ int main(int argc, char *argv[])
 
     QPixmap pixmap(":/res/resources/splash.jpeg");
 
-    int newWidth = 500; // Larghezza desiderata
-    int newHeight = 0;  // Altezza sarà calcolata automaticamente per mantenere le proporzioni
+    int newWidth = 500; // desired width
+    int newHeight = 0;  // height will be computed automatically to keep the aspect ratio
 
-    // Calcola la nuova altezza mantenendo le proporzioni originali
+    // Compute the new height, keeping the original aspect ratio
     newHeight = pixmap.height() * newWidth / pixmap.width();
 
-    // Ridimensiona la QPixmap mantenendo le proporzioni originali
+    // Resize the QPixmap, keeping the original aspect ratio
     QPixmap resizedPixmap = pixmap.scaled(newWidth, newHeight, Qt::KeepAspectRatio);
 
     QSplashScreen splash(resizedPixmap);

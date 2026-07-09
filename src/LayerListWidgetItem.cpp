@@ -27,19 +27,19 @@ LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : Q
     QHBoxLayout *layout = new QHBoxLayout(widget);
     layout->setContentsMargins(2, 0, 4, 0);
 
-    // mostra o dasconde il layer
+    // show or hide the layer
     LayerVisibilityButton *lickableIconLabel = new LayerVisibilityButton(layer, widget);
     layout->addWidget(lickableIconLabel);
 
-    // colore del layer
+    // layer color
     LayerColorPicker *colorPicker = new LayerColorPicker(layer, widget);
     layout->addWidget(colorPicker);
 
-    // nome del layer
+    // layer name
     LayerLabelName *label = new LayerLabelName(layer, widget);
     layout->addWidget(label);
 
-    // solo nel layer master aggiungo l'icona
+    // only add the icon on the master layer
     if (layer->isMaster()) {
         QLabel *nonClickableIconLabel = new QLabel(widget);
         QIcon icon = QIcon(":/res/resources/remix/bookmark-3-line.png");

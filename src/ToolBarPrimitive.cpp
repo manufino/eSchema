@@ -32,14 +32,14 @@ ToolBarPrimitive::ToolBarPrimitive(QWidget *parent) : QToolBar(parent)
 
 void ToolBarPrimitive::handleActionTriggered(QAction *action)
 {
-    // Porta in stato unchecked tutte le altre azioni della toolbar
+    // Set every other toolbar action to unchecked
     uncheckOtherActions(action);
     lastChecked = action;
 }
 
 void ToolBarPrimitive::uncheckOtherActions(QAction *selectedAction)
 {
-    // Itera attraverso tutte le azioni della toolbar
+    // Iterate through every toolbar action
     for (QAction *action : actions()) {
         if (action != selectedAction && action->isCheckable()) {
             action->setChecked(false);

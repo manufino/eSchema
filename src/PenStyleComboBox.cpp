@@ -29,7 +29,7 @@ void PenStyleDelegate::initStyleOptionHover(QStyleOptionViewItem &option,
 {
     QStyledItemDelegate::initStyleOption(&option, index);
 
-    // Aggiungi il flag Hover
+    // Add the Hover flag
     option.state |= QStyle::State_MouseOver;
 }
 
@@ -45,10 +45,10 @@ bool PenStyleDelegate::eventFilter(QObject *object, QEvent *event)
             if (view) {
                 QModelIndex index = view->model()->index(view->currentIndex().row(), 0);
                 if (index.isValid()) {
-                    // Forza un aggiornamento dell'elemento sotto il cursore
+                    // Force an update of the item under the cursor
                     QStyleOptionViewItem option;
                     initStyleOptionHover(option, index);
-                    // Ottenere la vista associata all'oggetto
+                    // Get the view associated with the object
                     view->update(index);
                 }
             }
@@ -73,7 +73,7 @@ void PenStyleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
     if (opt.state & QStyle::State_MouseOver)
     {
-        // Aggiungi l'effetto hover
+        // Add the hover effect
         //pen.setColor(QColor("white"));
         painter->fillRect(rect, QBrush(QColor("cyan")));
     }
@@ -104,11 +104,11 @@ PenStyleComboBox::PenStyleComboBox(QWidget *parent)
 {
     setView(new QListView());
     setItemDelegate(new PenStyleDelegate(this));
-    setFixedHeight(22);  // Imposta un'altezza fissa per mantenere il disegno visibile
+    setFixedHeight(22);  // Set a fixed height to keep the drawing visible
     setupUi();
     setCursor(Qt::PointingHandCursor);
 
-    // Installa l'event filter per gestire gli eventi hover
+    // Install the event filter to handle hover events
     view()->installEventFilter(new PenStyleDelegate(this));
 }
 
@@ -144,16 +144,15 @@ void PenStyleComboBox::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    // Disattivo il paint del controllo padre,
-    // non voglio che venga disegnato il bordo e la freccina
-    // delle classiche combobox.
+    // Skip the parent control's paint - the border and little arrow of a
+    // regular combobox aren't wanted here.
 
     //QComboBox::paintEvent(event);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // Disegna la linea selezionata nella ComboBox chiusa
+    // Draw the selected line in the closed ComboBox
     QRect rect = this->rect();
     int midY = rect.top() + rect.height() / 2;
     QLine line(rect.left()+5, midY, rect.right()-5, midY);
