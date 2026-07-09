@@ -32,7 +32,7 @@ def main() -> None:
     else:
         repo_root = pathlib.Path(__file__).resolve().parent.parent
         src = repo_root / "src"
-        files = sorted(list(src.glob("*.cpp")) + list(src.glob("*.h")))
+        files = sorted(list(src.rglob("*.cpp")) + list(src.rglob("*.h")))
 
     total_lines = 0
     total_code = 0

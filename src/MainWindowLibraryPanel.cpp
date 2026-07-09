@@ -1,0 +1,279 @@
+/*
+ * MainWindowLibraryPanel.cpp
+ *
+ * Copyright (C) 2023-2026 Manuel Finessi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// MainWindow's Libraries dock: building/filtering the per-library QTreeWidget
+// pages and the rename/delete context menu for libraries, categories and
+// macros. See MainWindow.cpp's top-of-file comment for why this lives in its
+// own translation unit instead of inside MainWindow.cpp itself.
+
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
+#include "LibraryManager.h"
+#include <QTreeWidget>
+#include <QFont>
+#include <QMenu>
+#include <QInputDialog>
+#include <QMessageBox>
+
+void MainWindow::buildLibraryPanel()
+{
+    while (ui->toolBoxLib->count() > 0) {
+        QWidget *page = ui->toolBoxLib->widget(0);
+        ui->toolBoxLib->removeItem(0);
+        delete page;
+    }
+
+    // Falls back to the compiled-in default (matches SettingsManager::
+    // restoreDefaultSettings()) rather than the 0 QSettings::value() would
+    // return for a settings file saved before this option existed.
+    int iconSize = SettingsManager::getInstance().loadSetting("macro_icon_size").toInt();
+    if (iconSize <= 0)
+        iconSize = 32;
+    const QSize iconQSize(iconSize, iconSize);
+
+    for (const MacroLibrary &library : LibraryManager::getInstance().libraries()) {
+        // A tree (library page -> category node -> macro leaf) instead of a
+        // flat icon list, so a library's categories - the second grouping
+        // level the .fcl format itself defines via "{...}" lines - actually
+        // read as sections instead of being just another same-sized cell in
+        // an icon grid.
+        auto *tree = new QTreeWidget(ui->toolBoxLib);
+        tree->setHeaderHidden(true);
+        tree->setIconSize(iconQSize);
+        tree->setIndentation(12);
+        // NOT uniform: category rows (text-only) and macro rows (icon-sized,
+        // which the user can set anywhere from 16 to 128px) are genuinely
+        // different heights - forcing a single shared height was clipping/
+        // overlapping the icons once they got larger than whatever height
+        // Qt had cached from the first (short, text-only) row it measured.
+
+        for (const QString &category : library.categoryOrder) {
+            auto *categoryItem = new QTreeWidgetItem(tree, QStringList(category));
+            categoryItem->setFlags(Qt::ItemIsEnabled);
+            QFont categoryFont = categoryItem->font(0);
+            categoryFont.setBold(true);
+            categoryItem->setFont(0, categoryFont);
+            // Collapsed by default: several libraries here have 15-24
+            // categories (PCB Footprints, IHRAM, Simboli Elettrotecnica) -
+            // expanding all of them at once overflows the panel so badly
+            // that only the first one or two categories are ever visible,
+            // making a perfectly complete library look empty/broken.
+
+            for (const MacroDescriptor &descriptor : library.macrosByCategory.value(category)) {
+                auto *item = new QTreeWidgetItem(categoryItem, QStringList(descriptor.name));
+                item->setIcon(0, LibraryManager::getInstance().icon(descriptor.key, iconSize));
+                item->setData(0, Qt::UserRole, descriptor.key);
+                item->setToolTip(0, descriptor.name);
+                // An explicit size hint, not just the icon size passed to the
+                // tree above: some styles' default item delegate doesn't
+                // reliably grow the row to fit a large icon on its own.
+                item->setSizeHint(0, QSize(iconSize + 24, iconSize + 4));
+            }
+        }
+
+        connect(tree, &QTreeWidget::itemClicked, this, &MainWindow::clickLibraryMacroItem);
+
+        // Rename/delete via right-click - standard libraries stay read-only
+        // (showLibraryContextMenu() itself checks and no-ops), only user
+        // libraries get an actual menu.
+        tree->setContextMenuPolicy(Qt::CustomContextMenu);
+        const QString libraryFilename = library.filename;
+        connect(tree, &QTreeWidget::customContextMenuRequested, this, [this, tree, libraryFilename](const QPoint &pos) {
+            showLibraryContextMenu(tree, libraryFilename, pos);
+        });
+
+        const QString label = !library.displayName.isEmpty() ? library.displayName
+                : (library.filename.isEmpty() ? tr("Standard") : library.filename);
+        ui->toolBoxLib->addItem(tree, label);
+    }
+}
+
+void MainWindow::filterLibraryPanel(const QString &text)
+{
+    for (int page = 0; page < ui->toolBoxLib->count(); ++page) {
+        auto *tree = qobject_cast<QTreeWidget *>(ui->toolBoxLib->widget(page));
+        if (!tree)
+            continue;
+
+        bool pageHasMatch = false;
+        for (int c = 0; c < tree->topLevelItemCount(); ++c) {
+            QTreeWidgetItem *categoryItem = tree->topLevelItem(c);
+            bool categoryHasMatch = false;
+            for (int m = 0; m < categoryItem->childCount(); ++m) {
+                QTreeWidgetItem *macroItem = categoryItem->child(m);
+                const bool matches = text.isEmpty() || macroItem->text(0).contains(text, Qt::CaseInsensitive);
+                macroItem->setHidden(!matches);
+                categoryHasMatch = categoryHasMatch || matches;
+            }
+            categoryItem->setHidden(!categoryHasMatch);
+            // Categories are collapsed by default (see buildLibraryPanel()) -
+            // while actively searching, expand every category with a match
+            // so its children are actually visible instead of just present-
+            // but-collapsed; collapse back down once the search is cleared.
+            categoryItem->setExpanded(!text.isEmpty() && categoryHasMatch);
+            pageHasMatch = pageHasMatch || categoryHasMatch;
+        }
+        if (!text.isEmpty() && pageHasMatch)
+            ui->toolBoxLib->setCurrentIndex(page); // jump to the first library with a match
+    }
+}
+
+void MainWindow::clickLibraryMacroItem(QTreeWidgetItem *item)
+{
+    const QString key = item->data(0, Qt::UserRole).toString();
+    if (!key.isEmpty())
+        placementController->armMacroPlacement(key);
+}
+
+void MainWindow::showLibraryContextMenu(QTreeWidget *tree, const QString &libraryFilename, const QPoint &pos)
+{
+    if (LibraryManager::getInstance().isStandardLibraryFilename(libraryFilename))
+        return;
+
+    QTreeWidgetItem *item = tree->itemAt(pos);
+    QMenu menu(this);
+
+    if (!item) {
+        QAction *renameAction = menu.addAction(tr("Rinomina libreria..."));
+        QAction *deleteAction = menu.addAction(tr("Elimina libreria..."));
+        QAction *chosen = menu.exec(tree->viewport()->mapToGlobal(pos));
+        if (chosen == renameAction)
+            renameLibraryInteractive(libraryFilename);
+        else if (chosen == deleteAction)
+            deleteLibraryInteractive(libraryFilename);
+        return;
+    }
+
+    if (!item->parent()) {
+        const QString category = item->text(0);
+        QAction *renameAction = menu.addAction(tr("Rinomina categoria..."));
+        QAction *deleteAction = menu.addAction(tr("Elimina categoria..."));
+        QAction *chosen = menu.exec(tree->viewport()->mapToGlobal(pos));
+        if (chosen == renameAction)
+            renameCategoryInteractive(libraryFilename, category);
+        else if (chosen == deleteAction)
+            deleteCategoryInteractive(libraryFilename, category);
+        return;
+    }
+
+    const QString key = item->data(0, Qt::UserRole).toString();
+    QAction *renameAction = menu.addAction(tr("Rinomina macro..."));
+    QAction *deleteAction = menu.addAction(tr("Elimina macro..."));
+    QAction *chosen = menu.exec(tree->viewport()->mapToGlobal(pos));
+    if (chosen == renameAction)
+        renameMacroInteractive(key);
+    else if (chosen == deleteAction)
+        deleteMacroInteractive(key);
+}
+
+void MainWindow::renameLibraryInteractive(const QString &filename)
+{
+    QString currentName = filename;
+    for (const MacroLibrary &library : LibraryManager::getInstance().libraries()) {
+        if (library.filename.compare(filename, Qt::CaseInsensitive) == 0) {
+            currentName = library.displayName.isEmpty() ? library.filename : library.displayName;
+            break;
+        }
+    }
+
+    bool ok = false;
+    const QString newName = QInputDialog::getText(this, tr("Rinomina libreria"), tr("Nome libreria:"),
+                                                    QLineEdit::Normal, currentName, &ok);
+    if (!ok || newName.trimmed().isEmpty())
+        return;
+
+    QString errorMessage;
+    if (!LibraryManager::getInstance().renameLibrary(filename, newName, &errorMessage))
+        QMessageBox::warning(this, tr("Rinomina libreria"), errorMessage);
+}
+
+void MainWindow::deleteLibraryInteractive(const QString &filename)
+{
+    const auto answer = QMessageBox::question(
+                this, tr("Elimina libreria"),
+                tr("Eliminare definitivamente questa libreria e tutte le macro che contiene?"),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (answer != QMessageBox::Yes)
+        return;
+
+    QString errorMessage;
+    if (!LibraryManager::getInstance().deleteLibrary(filename, &errorMessage))
+        QMessageBox::warning(this, tr("Elimina libreria"), errorMessage);
+}
+
+void MainWindow::renameCategoryInteractive(const QString &filename, const QString &category)
+{
+    bool ok = false;
+    const QString newName = QInputDialog::getText(this, tr("Rinomina categoria"), tr("Nome categoria:"),
+                                                    QLineEdit::Normal, category, &ok);
+    if (!ok || newName.trimmed().isEmpty())
+        return;
+
+    QString errorMessage;
+    if (!LibraryManager::getInstance().renameCategory(filename, category, newName, &errorMessage))
+        QMessageBox::warning(this, tr("Rinomina categoria"), errorMessage);
+}
+
+void MainWindow::deleteCategoryInteractive(const QString &filename, const QString &category)
+{
+    const auto answer = QMessageBox::question(
+                this, tr("Elimina categoria"),
+                tr("Eliminare la categoria \"%1\" e tutte le macro che contiene?").arg(category),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (answer != QMessageBox::Yes)
+        return;
+
+    QString errorMessage;
+    if (!LibraryManager::getInstance().deleteCategory(filename, category, &errorMessage))
+        QMessageBox::warning(this, tr("Elimina categoria"), errorMessage);
+}
+
+void MainWindow::renameMacroInteractive(const QString &key)
+{
+    const MacroDescriptor *descriptor = LibraryManager::getInstance().macro(key);
+    if (!descriptor)
+        return;
+
+    bool ok = false;
+    const QString newName = QInputDialog::getText(this, tr("Rinomina macro"), tr("Nome macro:"),
+                                                    QLineEdit::Normal, descriptor->name, &ok);
+    if (!ok || newName.trimmed().isEmpty())
+        return;
+
+    QString errorMessage;
+    if (!LibraryManager::getInstance().renameMacro(key, newName, &errorMessage))
+        QMessageBox::warning(this, tr("Rinomina macro"), errorMessage);
+}
+
+void MainWindow::deleteMacroInteractive(const QString &key)
+{
+    const MacroDescriptor *descriptor = LibraryManager::getInstance().macro(key);
+    const QString name = descriptor ? descriptor->name : key;
+
+    const auto answer = QMessageBox::question(
+                this, tr("Elimina macro"),
+                tr("Eliminare definitivamente la macro \"%1\"?").arg(name),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (answer != QMessageBox::Yes)
+        return;
+
+    QString errorMessage;
+    if (!LibraryManager::getInstance().deleteMacro(key, &errorMessage))
+        QMessageBox::warning(this, tr("Elimina macro"), errorMessage);
+}

@@ -21,6 +21,9 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 SOURCES += \
 	src/main.cpp \
 	src/MainWindow.cpp \
+	src/MainWindowLibraryPanel.cpp \
+	src/MainWindowPropertiesPanel.cpp \
+	src/MainWindowEditActions.cpp \
 	src/Core/GraphicsPrimitive.cpp \
 	src/Core/LayerList.cpp \
 	src/Core/LibraryManager.cpp \
