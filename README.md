@@ -2,7 +2,7 @@
 
 ![eSchema main window](https://github.com/manufino/eSchema/blob/main/resources/main_window.png?raw=true)
 
-**eSchema** is a free, open-source 2D CAD editor for electrical/electronic schematics and PCB sketches, built with C++ and Qt 6. It uses [FidoCadJ](https://darwinne.github.io/FidoCadJ/) as its native drawing format, combining a lightweight, human-readable file format with a modern, dockable desktop UI.
+**eSchema** is a free, open-source 2D CAD editor for electrical/electronic schematics and PCB sketches, built with C++ and Qt 6. It uses [FidoCadJ](https://github.com/FidoCadJ/FidoCadJ) as its native drawing format, combining a lightweight, human-readable file format with a modern, dockable desktop UI.
 
 Licensed under the **GNU GPLv3**.
 
@@ -100,6 +100,6 @@ eSchema is released under the [GNU General Public License v3.0](LICENSE).
 
 ## Acknowledgements
 
-- [FidoCadJ](https://darwinne.github.io/FidoCadJ/) — the native file format and component libraries eSchema builds on
+- [FidoCadJ](https://github.com/FidoCadJ/FidoCadJ) — the native file format and component libraries eSchema builds on
 - [Remixicon](https://remixicon.com/) — toolbar and UI icons
 - [dafont.com](https://www.dafont.com/) — bundled fonts
