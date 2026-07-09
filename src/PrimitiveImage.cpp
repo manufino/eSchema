@@ -73,10 +73,25 @@ void PrimitiveImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
         m_grayscalePixmap = toGrayscale(m_pixmap);
     const QPixmap &displayPixmap = m_grayscale ? m_grayscalePixmap : m_pixmap;
 
+    const QRectF rect = QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized();
+
     painter->save();
     painter->setOpacity(m_opacity);
-    painter->drawPixmap(QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized(), displayPixmap,
-                         displayPixmap.rect());
+    // A 90/270 rotation already transposed the box's own width/height (see
+    // rotate90() - the corner points it rotates end up producing exactly
+    // that swapped bounding box), so the pixmap has to be drawn into a rect
+    // with those dimensions swapped back - centered on the origin - before
+    // rotating the painter itself brings it back in line with the box.
+    const bool transposed = m_rotationDeg == 90 || m_rotationDeg == 270;
+    QRectF drawRect(0, 0, transposed ? rect.height() : rect.width(),
+                     transposed ? rect.width() : rect.height());
+    drawRect.moveCenter(QPointF(0, 0));
+
+    painter->translate(rect.center());
+    painter->rotate(m_rotationDeg);
+    if (m_mirrored)
+        painter->scale(-1, 1);
+    painter->drawPixmap(drawRect, displayPixmap, displayPixmap.rect());
     painter->restore();
 
     // An image has no layer color to blend when selected (unlike every other
@@ -86,7 +101,7 @@ void PrimitiveImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
         painter->save();
         painter->setPen(QPen(drawColor(), 0, Qt::DashLine));
         painter->setBrush(Qt::NoBrush);
-        painter->drawRect(QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized());
+        painter->drawRect(rect);
         painter->restore();
     }
 
@@ -105,6 +120,29 @@ void PrimitiveImage::setControlPoint(int index, const QPointF &scenePos)
         m_p1 = scenePos;
     else
         m_p2 = scenePos;
+}
+
+void PrimitiveImage::mirror(Qt::Orientation axis, const QPointF &pivot)
+{
+    GraphicsPrimitive::mirror(axis, pivot); // moves the two corners
+    if (axis == Qt::Horizontal) {
+        m_mirrored = !m_mirrored;
+    } else {
+        // No separate "vertical flip" state: flipping across the horizontal
+        // axis is equivalent to a horizontal flip followed by a 180 degree
+        // rotation - (x,y) -> (-x,y) -> (x,-y) - and paint() already applies
+        // the mirror before the rotation, so composing it this way is exact.
+        m_mirrored = !m_mirrored;
+        m_rotationDeg = (m_rotationDeg + 180) % 360;
+    }
+    update();
+}
+
+void PrimitiveImage::rotate90(const QPointF &pivot)
+{
+    GraphicsPrimitive::rotate90(pivot); // moves the two corners
+    m_rotationDeg = (m_rotationDeg + 90) % 360;
+    update();
 }
 
 QPointF PrimitiveImage::constrainResizePoint(int index, const QPointF &point) const

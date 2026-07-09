@@ -48,6 +48,17 @@ public:
     // special-casing this primitive type directly.
     QPointF constrainResizePoint(int index, const QPointF &point) const override;
 
+    // The two corners alone can't represent a mirrored/rotated image: once
+    // boundingRect()/paint() normalize them back into an axis-aligned box,
+    // a plain corner reflection or rotation has no visible effect on its
+    // own - unlike PrimitiveMacro (whose MC token has real orientation/
+    // mirror fields), FIDOSPECS.md 5.12's IM token has no slot for this, so
+    // these track it as extra display-only state on top of the inherited
+    // point transform, applied to the pixmap itself in paint(). Like
+    // grayscale/keepAspectRatio, this doesn't survive a save/reload.
+    void mirror(Qt::Orientation axis, const QPointF &pivot) override;
+    void rotate90(const QPointF &pivot) override;
+
     qreal opacity() const { return m_opacity; }
     void setOpacity(qreal opacity) { m_opacity = opacity; update(); }
     int hue() const { return m_hue; }
@@ -82,6 +93,8 @@ private:
     bool m_keepAspectRatio = true;
     bool m_grayscale = false;
     QPixmap m_grayscalePixmap; // lazily built from m_pixmap the first time grayscale is on; invalidated by setImageData()
+    bool m_mirrored = false; // horizontal flip of the pixmap content - see mirror()/rotate90()
+    int m_rotationDeg = 0;   // 0/90/180/270, same reasoning
 };
 
 #endif // PRIMITIVEIMAGE_H
