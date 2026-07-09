@@ -19,6 +19,7 @@
 
 #include "SheetView.h"
 #include "PrimitivePlacementController.h"
+#include <cmath>
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -51,17 +52,29 @@ void SheetView::setGrid(int size, QColor clr)
 
 void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    // se la griglia e' disabilitata
-    // non disegno niente
-    if(!gridEnabled)
+    if (!gridEnabled)
         return;
 
-    qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
-    qreal top = int(rect.top()) - (int(rect.top()) % gridSize);
+    // gridSize is normally clamped to >= 5 by the Options spinbox, but a
+    // hand-edited (or pre-existing, pre-clamp) settings file could still
+    // load a 0 here - guard against it since it would otherwise divide by
+    // zero below. gridMarkSize is normally clamped to >= 10, same reasoning:
+    // markStep collapsing to 0 would turn the thick-line loops below into an
+    // infinite loop (the step never advances x/y past rect.right()/bottom()).
+    const int step = qMax(1, gridSize);
+    const int markStep = qMax(1, gridMarkSize / 10) * step;
 
-    QPen myPen(Qt::NoPen);
+    // Floors toward negative infinity regardless of sign - rect.left()/top()
+    // can be negative (e.g. after panning past the scene's own origin with
+    // the middle-mouse drag in mouseMoveEvent(), which isn't clamped to the
+    // scene rect), where C++'s truncating '%' rounds toward zero instead and
+    // would misalign the grid origin by up to one step whenever the visible
+    // area crosses into negative coordinates.
+    const qreal left = std::floor(rect.left() / step) * step;
+    const qreal top = std::floor(rect.top() / step) * step;
+
+    painter->setPen(Qt::NoPen);
     painter->setBrush(QBrush(backgroundColor));
-    painter->setPen(myPen);
     painter->drawRect(rect);
 
     // LINEE+PUNTI o LINEE
@@ -69,16 +82,16 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     {
         QVarLengthArray<QLineF, 100> lines;
 
-        for (qreal x = left; x < rect.right(); x += gridSize)
+        for (qreal x = left; x < rect.right(); x += step)
             lines.append(QLineF(x, rect.top(), x, rect.bottom()));
-        for (qreal y = top; y < rect.bottom(); y += gridSize)
+        for (qreal y = top; y < rect.bottom(); y += step)
             lines.append(QLineF(rect.left(), y, rect.right(), y));
 
         QVarLengthArray<QLineF, 100> thickLines;
 
-        for (qreal x = left; x < rect.right(); x += gridSize * (gridMarkSize/10))
+        for (qreal x = left; x < rect.right(); x += markStep)
             thickLines.append(QLineF(x, rect.top(), x, rect.bottom()));
-        for (qreal y = top; y < rect.bottom(); y += gridSize * (gridMarkSize/10))
+        for (qreal y = top; y < rect.bottom(); y += markStep)
             thickLines.append(QLineF(rect.left(), y, rect.right(), y));
 
         QPen penHLines(lineGridColor, lineGridWidth, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin);
@@ -94,9 +107,12 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     {
         painter->setPen(dotsGridColor);
 
+        const int columns = int((rect.right() - left) / step) + 1;
+        const int rows = int((rect.bottom() - top) / step) + 1;
         QVector<QPointF> points;
-        for (qreal x = left; x < rect.right(); x += gridSize) {
-            for (qreal y = top; y < rect.bottom(); y += gridSize) {
+        points.reserve(qMax(0, columns) * qMax(0, rows));
+        for (qreal x = left; x < rect.right(); x += step) {
+            for (qreal y = top; y < rect.bottom(); y += step) {
                 points.append(QPointF(x, y));
             }
         }
