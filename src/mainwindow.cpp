@@ -219,10 +219,22 @@ void MainWindow::setConnections()
                 static_cast<PrimitiveText *>(primitive)->setFontName(font.family());
         }
     });
-    connect(ui->dspinOpacity, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+    connect(ui->spinOpacity, &QSpinBox::valueChanged, this, [this](int percent) {
         for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
             if (primitive->getPrimitiveType() == GraphicsPrimitive::Image)
-                static_cast<PrimitiveImage *>(primitive)->setOpacity(value);
+                static_cast<PrimitiveImage *>(primitive)->setOpacity(percent / 100.0);
+        }
+    });
+    connect(ui->checkBoxKeepAspectRatio, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Image)
+                static_cast<PrimitiveImage *>(primitive)->setKeepAspectRatio(checked);
+        }
+    });
+    connect(ui->checkBoxGrayscale, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Image)
+                static_cast<PrimitiveImage *>(primitive)->setGrayscale(checked);
         }
     });
 
@@ -640,7 +652,9 @@ void MainWindow::updatePropertiesPanel()
     const QSignalBlocker blockFill(ui->checkBox);
     const QSignalBlocker blockStyle(ui->cbPropLineStyle);
     const QSignalBlocker blockFont(ui->fontComboBox);
-    const QSignalBlocker blockOpacity(ui->dspinOpacity);
+    const QSignalBlocker blockOpacity(ui->spinOpacity);
+    const QSignalBlocker blockKeepAspectRatio(ui->checkBoxKeepAspectRatio);
+    const QSignalBlocker blockGrayscale(ui->checkBoxGrayscale);
 
     auto showRow = [](QWidget *label, QWidget *field, bool visible) {
         label->setVisible(visible);
@@ -656,7 +670,9 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->label_6, ui->checkBox, false);
         showRow(ui->label_7, ui->cbPropLineStyle, false);
         showRow(ui->label_8, ui->fontComboBox, false);
-        showRow(ui->label_9, ui->dspinOpacity, false);
+        showRow(ui->label_9, ui->spinOpacity, false);
+        showRow(ui->label_10, ui->checkBoxKeepAspectRatio, false);
+        showRow(ui->label_11, ui->checkBoxGrayscale, false);
         ui->lineEdit->clear();
         ui->lineEdit_2->clear();
         return;
@@ -707,9 +723,15 @@ void MainWindow::updatePropertiesPanel()
         ui->fontComboBox->setCurrentFont(QFont(static_cast<PrimitiveText *>(primitive)->fontName()));
 
     const bool isImage = primitive->getPrimitiveType() == GraphicsPrimitive::Image;
-    showRow(ui->label_9, ui->dspinOpacity, isImage);
-    if (isImage)
-        ui->dspinOpacity->setValue(static_cast<PrimitiveImage *>(primitive)->opacity());
+    showRow(ui->label_9, ui->spinOpacity, isImage);
+    showRow(ui->label_10, ui->checkBoxKeepAspectRatio, isImage);
+    showRow(ui->label_11, ui->checkBoxGrayscale, isImage);
+    if (isImage) {
+        auto *image = static_cast<PrimitiveImage *>(primitive);
+        ui->spinOpacity->setValue(qRound(image->opacity() * 100.0));
+        ui->checkBoxKeepAspectRatio->setChecked(image->keepAspectRatio());
+        ui->checkBoxGrayscale->setChecked(image->isGrayscale());
+    }
 }
 
 // Mirror/Rotate/Delete are never applied directly here - each pushes an undo

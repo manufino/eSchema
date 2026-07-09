@@ -800,7 +800,7 @@ margin:1px;
       </widget>
      </item>
      <item row="10" column="1">
-      <widget class="QDoubleSpinBox" name="dspinOpacity">
+      <widget class="QSpinBox" name="spinOpacity">
        <property name="minimumSize">
         <size>
          <width>119</width>
@@ -816,22 +816,75 @@ margin:1px;
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
-       <property name="decimals">
-        <number>2</number>
+       <property name="suffix">
+        <string>%</string>
        </property>
        <property name="minimum">
-        <double>0.000000000000000</double>
+        <number>1</number>
        </property>
        <property name="maximum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.050000000000000</double>
+        <number>100</number>
        </property>
        <property name="value">
-        <double>1.000000000000000</double>
+        <number>100</number>
        </property>
       </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="font">
+        <font>
+         <family>Hack</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Mantieni proporzioni</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QCheckBox" name="checkBoxKeepAspectRatio">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="font">
+        <font>
+         <family>Hack</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Bianco e nero</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="1">
+      <widget class="QCheckBox" name="checkBoxGrayscale">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0" colspan="2">
+      <spacer name="verticalSpacerProp">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </widget>

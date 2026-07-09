@@ -138,6 +138,16 @@ public:
     virtual void mirror(Qt::Orientation axis, const QPointF &pivot);
     virtual void rotate90(const QPointF &pivot);
 
+    // Called by the generic resize-handle drag (PrimitiveHandleItem) before
+    // actually moving a geometric control point (index < controlPointCount()
+    // - never called for a label point), with the point it's about to be
+    // dragged to. Default is a no-op passthrough (free resize, the existing
+    // behavior for every primitive type); a primitive that wants to
+    // constrain the drag - e.g. PrimitiveImage's "keep aspect ratio" option,
+    // pivoting around the opposite corner - overrides this to adjust the
+    // point before it's actually applied.
+    virtual QPointF constrainResizePoint(int index, const QPointF &point) const { Q_UNUSED(index); return point; }
+
     // Shifts every control point by `delta`. Used by itemChange() to implement
     // dragging: the item's own pos() is kept pinned at (0,0) forever, and
     // moves are applied directly to the control points instead. This keeps

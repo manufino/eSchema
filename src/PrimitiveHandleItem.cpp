@@ -56,7 +56,11 @@ void PrimitiveHandleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void PrimitiveHandleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    const QPointF snapped = Utils::instance().snapToGrid(event->scenePos());
+    QPointF snapped = Utils::instance().snapToGrid(event->scenePos());
+    // Only a geometric corner can be constrained (e.g. aspect-ratio locked) -
+    // a label point (index >= controlPointCount()) always drags freely.
+    if (m_index < m_target->controlPointCount())
+        snapped = m_target->constrainResizePoint(m_index, snapped);
     setPos(snapped);
     m_target->setPointAt(m_index, snapped);
 }

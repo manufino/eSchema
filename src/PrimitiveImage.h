@@ -41,6 +41,12 @@ public:
     int controlPointCount() const override { return 2; }
     QPointF controlPoint(int index) const override;
     void setControlPoint(int index, const QPointF &scenePos) override;
+    // Keeps the dragged corner's box on the image's own natural aspect
+    // ratio (pivoting around the opposite corner) when keepAspectRatio() is
+    // on - a no-op passthrough otherwise. See GraphicsPrimitive's own doc
+    // comment on why this hook exists instead of PrimitiveHandleItem
+    // special-casing this primitive type directly.
+    QPointF constrainResizePoint(int index, const QPointF &point) const override;
 
     qreal opacity() const { return m_opacity; }
     void setOpacity(qreal opacity) { m_opacity = opacity; update(); }
@@ -48,6 +54,17 @@ public:
     void setHue(int hue) { m_hue = hue; }
     QString mimeSubtype() const { return m_mimeSubtype; }
     QString base64Data() const { return m_base64Data; }
+
+    // Editing-session-only preferences, neither part of FIDOSPECS.md 5.12's
+    // token layout nor saved to the file: keepAspectRatio() only affects how
+    // the resize handles behave here (see constrainResizePoint()), and
+    // grayscale() is a display-only recolor of the very same original bytes
+    // saved unchanged - matching how hue rotation above is already handled
+    // (see paint()'s own comment).
+    bool keepAspectRatio() const { return m_keepAspectRatio; }
+    void setKeepAspectRatio(bool keep) { m_keepAspectRatio = keep; }
+    bool isGrayscale() const { return m_grayscale; }
+    void setGrayscale(bool grayscale) { m_grayscale = grayscale; update(); }
 
     // Decodes and caches the pixmap from `data:image/<mime>;base64,<data>`.
     void setImageData(const QString &mimeSubtype, const QString &base64Data);
@@ -62,6 +79,9 @@ private:
     QString m_mimeSubtype;
     QString m_base64Data;
     QPixmap m_pixmap; // decoded once in setImageData(), reused on every paint()
+    bool m_keepAspectRatio = true;
+    bool m_grayscale = false;
+    QPixmap m_grayscalePixmap; // lazily built from m_pixmap the first time grayscale is on; invalidated by setImageData()
 };
 
 #endif // PRIMITIVEIMAGE_H
