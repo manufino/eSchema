@@ -81,6 +81,9 @@ void DialogOptions::loadSettings()
     val = SettingsManager::getInstance().loadSetting("snap_enabled");
     ui->chkSnapEnabled->setChecked(val.toBool());
 
+    val = SettingsManager::getInstance().loadSetting("rulers_visible");
+    ui->chkRulersVisible->setChecked(val.isValid() ? val.toBool() : true);
+
     val = SettingsManager::getInstance().loadSetting("snap_step");
     ui->spinSnapStep->setValue(val.toInt());
 
@@ -109,6 +112,7 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("library_directory", ui->txtLibPath->text());
     SettingsManager::getInstance().saveSetting("stylesheet_directory", ui->txtStylesheetPath->text());
     SettingsManager::getInstance().saveSetting("snap_enabled", ui->chkSnapEnabled->isChecked());
+    SettingsManager::getInstance().saveSetting("rulers_visible", ui->chkRulersVisible->isChecked());
     SettingsManager::getInstance().saveSetting("snap_step", ui->spinSnapStep->value());
     SettingsManager::getInstance().saveSetting("macro_icon_size", ui->spinMacroIconSize->value());
     SettingsManager::getInstance().saveSetting("line_width", ui->spinLineWidth->value());

@@ -19,6 +19,7 @@
 
 #include "SheetView.h"
 #include "PrimitivePlacementController.h"
+#include <QScrollBar>
 #include <cmath>
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
@@ -27,6 +28,12 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &SheetView::settingChanged);
+
+    // Scrolling (dragging a scrollbar, arrow keys, rubber-band auto-scroll)
+    // changes the scene<->viewport mapping without going through wheelEvent/
+    // adjustView() below - only the scrollbars themselves see it directly.
+    connect(horizontalScrollBar(), &QScrollBar::valueChanged, this, &SheetView::viewTransformChanged);
+    connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &SheetView::viewTransformChanged);
 
     loadSettings();
 
@@ -150,6 +157,7 @@ void SheetView::wheelEvent(QWheelEvent *event)
         setTransformationAnchor(anchor);
 
         zoomUpdate();
+        emit viewTransformChanged();
 
     } else {
         QGraphicsView::wheelEvent(event);
@@ -171,6 +179,7 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
         QPointF translation = newp - oldp;
 
         translate(translation.x(), translation.y());
+        emit viewTransformChanged();
 
         m_originX = event->position().x();
         m_originY = event->position().y();
@@ -324,6 +333,19 @@ void SheetView::adjustView()
 {
     fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
     zoomUpdate();
+    emit viewTransformChanged();
+}
+
+void SheetView::resizeEvent(QResizeEvent *event)
+{
+    QGraphicsView::resizeEvent(event);
+    emit viewTransformChanged();
+}
+
+void SheetView::leaveEvent(QEvent *event)
+{
+    QGraphicsView::leaveEvent(event);
+    emit mouseLeftView();
 }
 
 

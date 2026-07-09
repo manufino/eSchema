@@ -107,6 +107,8 @@ MainWindow::MainWindow(QWidget *parent)
     layerToolBarWidget = new LayerToolBarWidget(this);
     ui->toolBarTools->addWidget(layerToolBarWidget); // add the layer combobox to the toolbar
 
+    ui->rulerVertical->setOrientation(Qt::Vertical);
+
     sheetScene = new Sheet();
     sheetScene->setSceneRect(0,0,5000,5000); // fix the scene dimensions
 
@@ -146,6 +148,8 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     setConnections();
+    updateRulers();
+    updateRulersVisibility();
 }
 
 MainWindow::~MainWindow()
@@ -161,6 +165,17 @@ void MainWindow::setConnections()
     connect(ui->actionOptions, &QAction::triggered, this, &MainWindow::clickOptionAction);
     connect(ui->actionInformation, &QAction::triggered, this, &MainWindow::clickAboutAction);
     connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
+    connect(ui->graphicsView, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
+    connect(ui->graphicsView, &SheetView::mouseMoved, this, [this](QPointF scenePos) {
+        ui->rulerHorizontal->setMarkerPosition(scenePos.x(), true);
+        ui->rulerVertical->setMarkerPosition(scenePos.y(), true);
+    });
+    connect(ui->graphicsView, &SheetView::mouseLeftView, this, [this]() {
+        ui->rulerHorizontal->setMarkerPosition(0, false);
+        ui->rulerVertical->setMarkerPosition(0, false);
+    });
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, &MainWindow::updateRulersVisibility);
     connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::adjustView);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
@@ -314,6 +329,23 @@ void MainWindow::setCurrentFilePath(const QString &filePath)
 {
     currentFilePath = filePath;
     updateWindowTitle();
+}
+
+void MainWindow::updateRulers()
+{
+    const QPointF originPx = ui->graphicsView->mapFromScene(QPointF(0, 0));
+    const QTransform transform = ui->graphicsView->transform();
+    ui->rulerHorizontal->setViewTransform(originPx.x(), transform.m11());
+    ui->rulerVertical->setViewTransform(originPx.y(), transform.m22());
+}
+
+void MainWindow::updateRulersVisibility()
+{
+    const QVariant val = SettingsManager::getInstance().loadSetting("rulers_visible");
+    const bool visible = val.isValid() ? val.toBool() : true;
+    ui->rulerHorizontal->setVisible(visible);
+    ui->rulerVertical->setVisible(visible);
+    ui->rulerCorner->setVisible(visible);
 }
 
 bool MainWindow::saveToPath(const QString &filePath)

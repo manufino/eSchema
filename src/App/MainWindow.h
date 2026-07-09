@@ -170,6 +170,15 @@ private:
     bool saveToPath(const QString &filePath);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();
+    // Reads ui->graphicsView's current transform/scroll position and pushes
+    // the resulting origin+scale to both rulers - wired to SheetView::
+    // viewTransformChanged() (pan/zoom/resize) so they always match what's
+    // actually visible.
+    void updateRulers();
+    // Shows/hides both rulers and the corner widget between them per the
+    // "rulers_visible" setting - wired to SettingsManager::settingIsChanged
+    // and called once at startup.
+    void updateRulersVisibility();
     // Asks "save changes?" if the undo stack isn't clean. Returns true if the
     // caller may proceed (nothing to save, changes were saved, or the user
     // chose to discard them) and false if the user cancelled.

@@ -376,7 +376,7 @@ margin:1px;
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_4">
+   <layout class="QGridLayout" name="gridLayoutCentral">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -392,7 +392,29 @@ margin:1px;
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
+    <item row="0" column="0">
+     <widget class="QWidget" name="rulerCorner">
+      <property name="minimumSize">
+       <size>
+        <width>22</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>22</width>
+        <height>22</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="RulerWidget" name="rulerHorizontal"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="RulerWidget" name="rulerVertical"/>
+    </item>
+    <item row="1" column="1">
      <widget class="SheetView" name="graphicsView">
       <property name="minimumSize">
        <size>
@@ -1768,7 +1790,12 @@ margin:1px;
   <customwidget>
    <class>PenStyleComboBox</class>
    <extends>QComboBox</extends>
-   <header>penstylecombobox.h</header>
+   <header>PenStyleComboBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>RulerWidget</class>
+   <extends>QWidget</extends>
+   <header>RulerWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

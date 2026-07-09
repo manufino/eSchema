@@ -69,6 +69,7 @@ SOURCES += \
 	src/Widgets/LayerToolBarWidget.cpp \
 	src/Widgets/LayerVisibilityButton.cpp \
 	src/Widgets/PenStyleComboBox.cpp \
+	src/Widgets/RulerWidget.cpp \
 	src/Widgets/StatusBar.cpp \
 	src/Widgets/ToolBarPrimitive.cpp
 
@@ -124,6 +125,7 @@ HEADERS += \
 	src/Widgets/LayerVisibilityButton.h \
 	src/Widgets/LinkLabel.h \
 	src/Widgets/PenStyleComboBox.h \
+	src/Widgets/RulerWidget.h \
 	src/Widgets/StatusBar.h \
 	src/Widgets/ToolBarPrimitive.h
 

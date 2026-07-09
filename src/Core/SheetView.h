@@ -24,6 +24,7 @@
 #include <QGraphicsScene>
 #include <QWheelEvent>
 #include <QMouseEvent>
+#include <QResizeEvent>
 #include <QGraphicsRectItem>
 #include <QColor>
 #include <QEvent>
@@ -72,6 +73,12 @@ protected:
     // MainWindow is asked to show it; right-clicking one already part of a
     // multi-selection, or empty canvas, leaves the current selection as-is.
     void contextMenuEvent(QContextMenuEvent *event) override;
+    // Both fire viewTransformChanged() (see below): a resize can shift what
+    // scene point sits under viewport pixel (0,0) since resizeAnchor
+    // defaults to AnchorViewCenter, and the mouse leaving is when the
+    // rulers' tracking marker should disappear.
+    void resizeEvent(QResizeEvent *event) override;
+    void leaveEvent(QEvent *event) override;
 
 private:
     void loadSettings();
@@ -89,6 +96,14 @@ signals:
     // objects the menu reuses) - SheetView only decides where/on-what the
     // click landed.
     void contextMenuRequested(const QPoint &globalPos);
+    // Fired whenever pan, zoom, or resize changes the mapping between scene
+    // and viewport coordinates - MainWindow reads transform()/mapFromScene()
+    // in response to this to keep the rulers' tick spacing and origin in
+    // sync with the view.
+    void viewTransformChanged();
+    // The mouse pointer has left the viewport - MainWindow uses this to hide
+    // the rulers' tracking marker, since no further mouseMoved() will arrive.
+    void mouseLeftView();
 
 private:
     int m_originX, m_originY, gridSize, gridMarkSize, zoomLevel;

@@ -88,6 +88,10 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("snap_enabled", true);
     saveSetting("snap_step", 10);
 
+    // RULERS - whether the top/left rulers are shown around the drawing
+    // area (RulerWidget), toggled from the Options dialog.
+    saveSetting("rulers_visible", true);
+
     // COLORS
     saveSetting("background_color", QColor("white").name());
     saveSetting("grid_dot_color", QColor("blue").name());
