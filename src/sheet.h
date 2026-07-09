@@ -27,6 +27,8 @@
 
 #include "GraphicsPrimitive.h"
 
+class QPainter;
+
 class Sheet : public QGraphicsScene
 {
     Q_OBJECT
@@ -64,6 +66,16 @@ public:
     void setLineWidth(qreal width) { m_lineWidth = width; }
     qreal lineWidthCircles() const { return m_lineWidthCircles; }
     void setLineWidthCircles(qreal width) { m_lineWidthCircles = width; }
+
+protected:
+    // Repaints every pad's hole on top of everything else painted this
+    // frame. QGraphicsScene paints items strictly in z/insertion order, so
+    // a pad's own paint() can only punch its hole through whatever was
+    // already drawn *before* it - a primitive placed on top of the pad
+    // afterward would still show through the hole otherwise.
+    // drawForeground() runs after every item regardless, so redoing the
+    // hole here keeps it clean no matter what gets drawn after the pad too.
+    void drawForeground(QPainter *painter, const QRectF &rect) override;
 
 private:
     QList<GraphicsPrimitive*> m_primitives;

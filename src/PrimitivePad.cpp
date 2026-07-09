@@ -83,23 +83,40 @@ void PrimitivePad::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     painter->setBrush(drawColor());
     painter->drawPath(buildOuterPath());
 
-    if (m_ri > 0) {
-        // Actually punches through whatever was painted underneath (e.g. a
-        // trace this pad was dropped on top of) instead of just leaving that
-        // circle unpainted, which would let it show through as if the pad
-        // had no hole at all. Filling with the sheet's own background color
-        // (not a transparent clear - CompositionMode_Clear renders solid
-        // black over this view's opaque backing store, which is exactly why
-        // buildPath() above uses an even-odd fill instead for hit-testing)
-        // is what makes it read as an actual drilled hole.
-        const QVariant backgroundSetting = SettingsManager::getInstance().loadSetting("background_color");
-        const QColor background = backgroundSetting.isValid() ? QColor(backgroundSetting.toString())
-                                                                : QColor(Qt::white);
-        painter->setBrush(background);
-        painter->drawEllipse(mapFromScene(m_pos), m_ri / 2, m_ri / 2);
-    }
+    // Punches through whatever was painted underneath so far (e.g. a trace
+    // this pad was just dropped on top of) - but Sheet::drawForeground()
+    // repaints every pad's hole again after every primitive has been drawn,
+    // which is what actually keeps it clean against anything drawn *after*
+    // the pad too; this call only covers "underneath" for a pad that, for
+    // whatever reason, gets painted outside of a Sheet (there is no such
+    // case today, but paint() shouldn't depend on drawForeground() alone to
+    // look correct).
+    paintHole(painter);
 
     paintLabels(painter);
+}
+
+void PrimitivePad::paintHole(QPainter *painter) const
+{
+    if (m_ri <= 0)
+        return;
+
+    // Filling with the sheet's own background color (not a transparent
+    // clear - CompositionMode_Clear renders solid black over this view's
+    // opaque backing store, which is exactly why buildPath() uses an
+    // even-odd fill instead for hit-testing) is what makes this read as an
+    // actual drilled hole rather than a see-through gap.
+    const QVariant backgroundSetting = SettingsManager::getInstance().loadSetting("background_color");
+    const QColor background = backgroundSetting.isValid() ? QColor(backgroundSetting.toString())
+                                                            : QColor(Qt::white);
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(background);
+    // controlPoint(0) (== m_pos) rather than mapFromScene(m_pos): numerically
+    // identical here since pos() is always pinned at the origin (see
+    // GraphicsPrimitive's header comment), but this makes it explicit that
+    // the coordinate is scene-space, since Sheet::drawForeground() calls
+    // this with a painter that has no per-item transform at all.
+    painter->drawEllipse(controlPoint(0), m_ri / 2, m_ri / 2);
 }
 
 QPointF PrimitivePad::controlPoint(int) const

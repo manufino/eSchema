@@ -40,6 +40,14 @@ public:
     QPointF controlPoint(int index) const override;
     void setControlPoint(int index, const QPointF &scenePos) override;
 
+    // Paints just the hole (a background-colored circle, or a no-op when
+    // there isn't one). Scene coordinates - safe to call from either this
+    // item's own paint() (where item-local and scene coordinates are
+    // numerically identical, since pos() is always pinned at the origin -
+    // see GraphicsPrimitive's header comment) or Sheet::drawForeground(),
+    // which paints directly in scene space with no per-item transform.
+    void paintHole(QPainter *painter) const;
+
     qreal outerWidth() const { return m_rx; }
     qreal outerHeight() const { return m_ry; }
     qreal holeDiameter() const { return m_ri; }
