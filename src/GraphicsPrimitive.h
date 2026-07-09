@@ -91,8 +91,8 @@ public:
     // Sheet, e.g. a macro-library body prototype.
     qreal effectiveLineWidth() const;
 
-    // Extra hit-test padding (scene units), read live from the "Tolleranza
-    // selezione" option, same live-settings pattern as effectiveLineWidth().
+    // Extra hit-test padding (scene units), read live from the selection
+    // tolerance option, same live-settings pattern as effectiveLineWidth().
     // Added on top of the actual drawn stroke width by every concrete
     // primitive's shape() override, so click/rubber-band selection only
     // responds near what's actually drawn rather than anywhere inside the
