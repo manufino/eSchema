@@ -47,6 +47,10 @@ PrimitivePlacementController::PrimitivePlacementController(SheetView *view, Shee
     : QObject(parent), m_view(view), m_sheet(sheet), m_toolBar(toolBar),
       m_layerCombo(layerCombo), m_fillCheckBox(fillCheckBox)
 {
+    if (m_toolBar) {
+        connect(m_toolBar, &QToolBar::actionTriggered,
+                this, &PrimitivePlacementController::handleToolBarActionTriggered);
+    }
 }
 
 PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() const
@@ -256,14 +260,25 @@ void PrimitivePlacementController::startChainedSegment(Tool tool, const QPointF 
     m_sheet->addPrimitive(m_activePrimitive);
 }
 
-void PrimitivePlacementController::cancelPlacement()
+void PrimitivePlacementController::discardActivePrimitive()
 {
     if (m_activePrimitive)
         m_sheet->removePrimitive(m_activePrimitive);
     m_activePrimitive = nullptr;
     m_pointsPlaced = 0;
+}
+
+void PrimitivePlacementController::cancelPlacement()
+{
+    discardActivePrimitive();
     m_activeTool = Tool::Select;
     switchToolBarToSelectTool();
+}
+
+void PrimitivePlacementController::handleToolBarActionTriggered(QAction *)
+{
+    discardActivePrimitive();
+    m_armedMacroKey.clear();
 }
 
 bool PrimitivePlacementController::handleMouseRightClick()
@@ -363,26 +378,36 @@ bool PrimitivePlacementController::handleMouseDoubleClick(const QPointF &scenePo
 
 bool PrimitivePlacementController::handleKeyPress(QKeyEvent *event)
 {
-    if (!m_activePrimitive) {
-        // A macro can be armed (from the library panel) before any click has
-        // started an m_activePrimitive - Escape should still drop it.
-        if (event->key() == Qt::Key_Escape && !m_armedMacroKey.isEmpty()) {
-            m_armedMacroKey.clear();
-            switchToolBarToSelectTool();
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+        if (m_activePrimitive && isVariableVertexTool(m_activeTool)) {
+            finishPlacement();
             return true;
         }
         return false;
     }
 
-    if (event->key() == Qt::Key_Escape) {
+    if (event->key() != Qt::Key_Escape)
+        return false;
+
+    // Escape always leaves drawing mode entirely and returns to Select,
+    // regardless of which of these three "something is active" states it
+    // catches: an in-progress primitive to discard, an armed macro (from
+    // the library panel) with no click yet, or just a drawing tool picked
+    // on the toolbar with nothing placed at all - matching the reference
+    // FidoCadJ editor (PopUpMenu's Escape binding goes to the same
+    // "selection" action as pressing A).
+    if (m_activePrimitive) {
         cancelPlacement();
         return true;
     }
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
-        if (isVariableVertexTool(m_activeTool)) {
-            finishPlacement();
-            return true;
-        }
+    if (!m_armedMacroKey.isEmpty()) {
+        m_armedMacroKey.clear();
+        switchToolBarToSelectTool();
+        return true;
+    }
+    if (currentTool() != Tool::Select) {
+        switchToolBarToSelectTool();
+        return true;
     }
     return false;
 }

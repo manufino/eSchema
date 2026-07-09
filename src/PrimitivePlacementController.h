@@ -30,6 +30,7 @@ class ToolBarPrimitive;
 class LayerComboBox;
 class QCheckBox;
 class QKeyEvent;
+class QAction;
 class GraphicsPrimitive;
 
 // Drives interactive primitive *creation*. Reads which drawing tool is checked
@@ -80,6 +81,15 @@ public:
     // Cancels whatever toolbar-driven placement was in progress, if any.
     void armMacroPlacement(const QString &macroKey);
 
+private slots:
+    // Whenever the toolbar's own checked tool changes - including the user
+    // clicking the already-visible Select button directly while mid-draw,
+    // not just via Escape - abandons whatever was in progress instead of
+    // leaving an orphaned, never-finished primitive sitting in the document.
+    // The toolbar's checked state is left alone: it already reflects
+    // whichever tool the user just picked, Select or otherwise.
+    void handleToolBarActionTriggered(QAction *action);
+
 private:
     enum class Tool { Select, Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Text, Connection,
                       PcbTrack, Pad, Macro };
@@ -88,6 +98,13 @@ private:
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count
     void startPlacement(const QPointF &scenePos);
     void finishPlacement();
+    // Removes the in-progress primitive (if any) from the sheet and resets
+    // the point-count/active-primitive state, without touching the toolbar
+    // or m_activeTool - shared by cancelPlacement() (which also does both of
+    // those) and handleToolBarActionTriggered() (which must not, since the
+    // toolbar's checked state at that point is exactly what the user just
+    // picked).
+    void discardActivePrimitive();
     void cancelPlacement();
     bool isVariableVertexTool(Tool tool) const;
     // Line and PCB track are the only two FidoCadJ tools that "chain":
