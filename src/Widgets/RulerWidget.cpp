@@ -94,9 +94,13 @@ void RulerWidget::paintEvent(QPaintEvent *)
     const QColor background = palette().window().color();
     const QColor foreground = palette().windowText().color();
     const QColor markerColor = palette().highlight().color();
+    // Deliberately plain gray rather than palette-derived: ticks and labels
+    // are secondary/reference marks, not primary UI text, so they should
+    // read as muted regardless of the active light/dark stylesheet.
+    const QColor tickColor(128, 128, 128);
+    const QColor labelColor(165, 165, 165);
 
     painter.fillRect(rect(), background);
-    painter.setPen(foreground);
 
     const bool horizontal = m_orientation == Qt::Horizontal;
     const int length = horizontal ? width() : height();
@@ -109,28 +113,34 @@ void RulerWidget::paintEvent(QPaintEvent *)
     // a heavily zoomed-out view doesn't turn the ruler into a solid smear.
     const bool drawMinorTicks = m_minorStep * m_scale >= 3.0;
 
-    // First minorStep-aligned scene coordinate visible at pixel 0.
-    const qreal firstScene = std::floor((-m_origin / m_scale) / m_minorStep) * m_minorStep;
+    // How many minor steps make up one major step - an exact integer since
+    // majorGridStep() is always a whole multiple of minorGridStep()
+    // (SheetView::majorGridStep()). Ticks/labels are placed by multiplying
+    // this out from an integer index rather than repeatedly adding
+    // m_minorStep, so every labelled value is an exact multiple of the grid
+    // step with no float accumulation drift possible.
+    const int minorPerMajor = qMax(1, qRound(m_majorStep / m_minorStep));
+
+    // Index (in minorStep units) of the first tick visible at pixel 0.
+    const qint64 firstIndex = static_cast<qint64>(std::floor((-m_origin / m_scale) / m_minorStep));
 
     QFont font = painter.font();
     font.setPixelSize(qMax(7, breadth - 6));
     painter.setFont(font);
 
-    for (qreal sceneVal = firstScene; ; sceneVal += m_minorStep) {
+    for (qint64 index = firstIndex; ; ++index) {
+        const qreal sceneVal = index * m_minorStep;
         const qreal px = m_origin + sceneVal * m_scale;
         if (px > length + 1)
             break;
         if (px < -1)
             continue;
 
-        // A small epsilon absorbs float drift accumulated over many
-        // += m_minorStep steps, which would otherwise make the comparison
-        // against m_majorStep miss ticks that should count as "major".
-        const qreal majorRatio = sceneVal / m_majorStep;
-        const bool isMajor = std::abs(majorRatio - std::round(majorRatio)) < 1e-6;
+        const bool isMajor = (index % minorPerMajor) == 0;
 
         if (isMajor || drawMinorTicks) {
             const int tickLen = isMajor ? breadth : breadth / 2;
+            painter.setPen(tickColor);
             if (horizontal)
                 painter.drawLine(QPointF(px, breadth - tickLen), QPointF(px, breadth));
             else
@@ -139,6 +149,7 @@ void RulerWidget::paintEvent(QPaintEvent *)
 
         if (isMajor) {
             const QString label = QString::number(qRound(sceneVal));
+            painter.setPen(labelColor);
             if (horizontal) {
                 painter.drawText(QRectF(px + 2, 0, 60, breadth), Qt::AlignLeft | Qt::AlignVCenter, label);
             } else {
