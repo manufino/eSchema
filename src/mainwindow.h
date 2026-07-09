@@ -46,6 +46,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 class QPrinter;
+class QTreeWidget;
 class QTreeWidgetItem;
 
 class MainWindow : public QMainWindow
@@ -120,6 +121,20 @@ private:
     // the sheet drops an instance of it there. Category nodes carry no key
     // and are ignored.
     void clickLibraryMacroItem(QTreeWidgetItem *item);
+    // Right-click menu for one library's tree, wired per-page in
+    // buildLibraryPanel() - a no-op on a standard library (read-only, per
+    // LibraryManager::isStandardLibraryFilename()). What's under `pos`
+    // decides the scope: empty space offers to rename/delete the whole
+    // library, a top-level (category) item offers to rename/delete that
+    // category and everything in it, a leaf (macro) item offers to rename/
+    // delete just that macro.
+    void showLibraryContextMenu(QTreeWidget *tree, const QString &libraryFilename, const QPoint &pos);
+    void renameLibraryInteractive(const QString &filename);
+    void deleteLibraryInteractive(const QString &filename);
+    void renameCategoryInteractive(const QString &filename, const QString &category);
+    void deleteCategoryInteractive(const QString &filename, const QString &category);
+    void renameMacroInteractive(const QString &key);
+    void deleteMacroInteractive(const QString &key);
     // Syncs the Proprietà panel to the current selection: populates every
     // field from the first selected primitive (a representative value for a
     // mixed-type multi-selection) and enables/disables each one by whether

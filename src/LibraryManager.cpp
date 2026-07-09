@@ -329,3 +329,237 @@ bool LibraryManager::addUserMacro(const QString &libraryFilename, const QString 
     emit librariesReloaded();
     return true;
 }
+
+MacroLibrary *LibraryManager::findLibrary(const QString &filename)
+{
+    for (MacroLibrary &candidate : m_libraries) {
+        if (candidate.filename.compare(filename, Qt::CaseInsensitive) == 0)
+            return &candidate;
+    }
+    return nullptr;
+}
+
+bool LibraryManager::writeLibraryFile(const MacroLibrary &library, QString *errorMessage) const
+{
+    const QDir libDir(QCoreApplication::applicationDirPath() + QStringLiteral("/lib"));
+    const QString filePath = libDir.filePath(library.filename + QStringLiteral(".fcl"));
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        if (errorMessage)
+            *errorMessage = QObject::tr("Impossibile scrivere il file %1").arg(filePath);
+        return false;
+    }
+
+    QTextStream out(&file);
+    const QString displayName = library.displayName.isEmpty() ? library.filename : library.displayName;
+    out << "[FIDOLIB " << displayName << "]\n\n";
+
+    const QString prefixDot = library.filename + QLatin1Char('.');
+    for (const QString &category : library.categoryOrder) {
+        const QList<MacroDescriptor> macros = library.macrosByCategory.value(category);
+        if (macros.isEmpty())
+            continue;
+        out << '{' << category << "}\n";
+        for (const MacroDescriptor &descriptor : macros) {
+            // descriptor.key is "filename.rawkey" (never bare, since this is
+            // always a user library, never the unprefixed standard one) -
+            // strip the filename prefix back off before writing, matching
+            // the exact inverse of loadLibraryFile()'s own parsing.
+            const QString rawKey = descriptor.key.startsWith(prefixDot)
+                    ? descriptor.key.mid(prefixDot.length()) : descriptor.key;
+            out << '[' << rawKey << ' ' << descriptor.name << "]\n";
+            out << descriptor.body;
+            if (!descriptor.body.endsWith(QLatin1Char('\n')))
+                out << '\n';
+        }
+        out << '\n';
+    }
+    file.close();
+    return true;
+}
+
+bool LibraryManager::renameLibrary(const QString &filename, const QString &newDisplayName, QString *errorMessage)
+{
+    auto fail = [errorMessage](const QString &message) {
+        if (errorMessage)
+            *errorMessage = message;
+        return false;
+    };
+
+    if (isStandardLibraryFilename(filename))
+        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+    MacroLibrary *library = findLibrary(filename);
+    if (!library)
+        return fail(QObject::tr("Libreria non trovata."));
+    const QString trimmedName = newDisplayName.trimmed();
+    if (trimmedName.isEmpty())
+        return fail(QObject::tr("Il nome della libreria non può essere vuoto."));
+
+    MacroLibrary updated = *library;
+    updated.displayName = trimmedName;
+    if (!writeLibraryFile(updated, errorMessage))
+        return false;
+
+    loadLibraries();
+    return true;
+}
+
+bool LibraryManager::deleteLibrary(const QString &filename, QString *errorMessage)
+{
+    auto fail = [errorMessage](const QString &message) {
+        if (errorMessage)
+            *errorMessage = message;
+        return false;
+    };
+
+    if (isStandardLibraryFilename(filename))
+        return fail(QObject::tr("Non è possibile eliminare una libreria standard."));
+    if (!findLibrary(filename))
+        return fail(QObject::tr("Libreria non trovata."));
+
+    const QDir libDir(QCoreApplication::applicationDirPath() + QStringLiteral("/lib"));
+    const QString filePath = libDir.filePath(filename + QStringLiteral(".fcl"));
+    if (QFile::exists(filePath) && !QFile::remove(filePath))
+        return fail(QObject::tr("Impossibile eliminare il file %1").arg(filePath));
+
+    loadLibraries();
+    return true;
+}
+
+bool LibraryManager::renameCategory(const QString &filename, const QString &oldCategory,
+                                     const QString &newCategory, QString *errorMessage)
+{
+    auto fail = [errorMessage](const QString &message) {
+        if (errorMessage)
+            *errorMessage = message;
+        return false;
+    };
+
+    if (isStandardLibraryFilename(filename))
+        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+    MacroLibrary *library = findLibrary(filename);
+    if (!library)
+        return fail(QObject::tr("Libreria non trovata."));
+    const QString trimmedNew = newCategory.trimmed();
+    if (trimmedNew.isEmpty())
+        return fail(QObject::tr("Il nome della categoria non può essere vuoto."));
+    if (!library->macrosByCategory.contains(oldCategory))
+        return fail(QObject::tr("Categoria non trovata."));
+
+    MacroLibrary updated = *library;
+    QList<MacroDescriptor> moved = updated.macrosByCategory.take(oldCategory);
+    updated.categoryOrder.removeAll(oldCategory);
+    for (MacroDescriptor &descriptor : moved)
+        descriptor.category = trimmedNew;
+    if (!updated.macrosByCategory.contains(trimmedNew))
+        updated.categoryOrder.append(trimmedNew);
+    updated.macrosByCategory[trimmedNew] += moved;
+
+    if (!writeLibraryFile(updated, errorMessage))
+        return false;
+
+    loadLibraries();
+    return true;
+}
+
+bool LibraryManager::deleteCategory(const QString &filename, const QString &category, QString *errorMessage)
+{
+    auto fail = [errorMessage](const QString &message) {
+        if (errorMessage)
+            *errorMessage = message;
+        return false;
+    };
+
+    if (isStandardLibraryFilename(filename))
+        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+    MacroLibrary *library = findLibrary(filename);
+    if (!library)
+        return fail(QObject::tr("Libreria non trovata."));
+    if (!library->macrosByCategory.contains(category))
+        return fail(QObject::tr("Categoria non trovata."));
+
+    MacroLibrary updated = *library;
+    updated.macrosByCategory.remove(category);
+    updated.categoryOrder.removeAll(category);
+    if (!writeLibraryFile(updated, errorMessage))
+        return false;
+
+    loadLibraries();
+    return true;
+}
+
+bool LibraryManager::renameMacro(const QString &key, const QString &newName, QString *errorMessage)
+{
+    auto fail = [errorMessage](const QString &message) {
+        if (errorMessage)
+            *errorMessage = message;
+        return false;
+    };
+
+    const QString normalizedKey = key.trimmed().toLower();
+    const MacroDescriptor *descriptor = macro(normalizedKey);
+    if (!descriptor)
+        return fail(QObject::tr("Macro non trovata."));
+    if (isStandardLibraryFilename(descriptor->filename))
+        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+    const QString trimmedName = newName.trimmed();
+    if (trimmedName.isEmpty())
+        return fail(QObject::tr("Il nome della macro non può essere vuoto."));
+
+    MacroLibrary *library = findLibrary(descriptor->filename);
+    if (!library)
+        return fail(QObject::tr("Libreria non trovata."));
+
+    MacroLibrary updated = *library;
+    QList<MacroDescriptor> &list = updated.macrosByCategory[descriptor->category];
+    for (MacroDescriptor &d : list) {
+        if (d.key == normalizedKey) {
+            d.name = trimmedName;
+            break;
+        }
+    }
+    if (!writeLibraryFile(updated, errorMessage))
+        return false;
+
+    loadLibraries();
+    return true;
+}
+
+bool LibraryManager::deleteMacro(const QString &key, QString *errorMessage)
+{
+    auto fail = [errorMessage](const QString &message) {
+        if (errorMessage)
+            *errorMessage = message;
+        return false;
+    };
+
+    const QString normalizedKey = key.trimmed().toLower();
+    const MacroDescriptor *descriptor = macro(normalizedKey);
+    if (!descriptor)
+        return fail(QObject::tr("Macro non trovata."));
+    if (isStandardLibraryFilename(descriptor->filename))
+        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+
+    MacroLibrary *library = findLibrary(descriptor->filename);
+    if (!library)
+        return fail(QObject::tr("Libreria non trovata."));
+
+    MacroLibrary updated = *library;
+    QList<MacroDescriptor> &list = updated.macrosByCategory[descriptor->category];
+    for (int i = 0; i < list.size(); ++i) {
+        if (list.at(i).key == normalizedKey) {
+            list.removeAt(i);
+            break;
+        }
+    }
+    if (list.isEmpty()) {
+        updated.macrosByCategory.remove(descriptor->category);
+        updated.categoryOrder.removeAll(descriptor->category);
+    }
+    if (!writeLibraryFile(updated, errorMessage))
+        return false;
+
+    loadLibraries();
+    return true;
+}

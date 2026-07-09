@@ -115,6 +115,37 @@ public:
                        const QString &key, const QString &name, const QString &category,
                        const QString &body, QString *errorMessage = nullptr);
 
+    // The following six all rewrite the affected user library's ".fcl" file
+    // in full (from the mutated in-memory model) and then call
+    // loadLibraries() to resync everything from disk - simpler and safer
+    // than hand-patching individual lines in place, and guarantees the
+    // in-memory model can never drift from what's actually on disk. Every
+    // one fails (returning false and, if given, an explanatory
+    // *errorMessage) without changing anything on a standard library.
+
+    // Changes a user library's display name (the "[FIDOLIB ...]" header).
+    bool renameLibrary(const QString &filename, const QString &newDisplayName,
+                        QString *errorMessage = nullptr);
+    // Deletes a user library's ".fcl" file entirely, along with every macro
+    // it contains.
+    bool deleteLibrary(const QString &filename, QString *errorMessage = nullptr);
+
+    // Renames a category within a user library; every macro under it moves
+    // to the new category name (merging into an existing one of that name,
+    // if any).
+    bool renameCategory(const QString &filename, const QString &oldCategory,
+                         const QString &newCategory, QString *errorMessage = nullptr);
+    // Deletes a category and every macro declared under it from a user
+    // library.
+    bool deleteCategory(const QString &filename, const QString &category,
+                         QString *errorMessage = nullptr);
+
+    // Changes one macro's display name (not its lookup key) within a user
+    // library.
+    bool renameMacro(const QString &key, const QString &newName, QString *errorMessage = nullptr);
+    // Deletes one macro from a user library.
+    bool deleteMacro(const QString &key, QString *errorMessage = nullptr);
+
 signals:
     void librariesReloaded();
 
@@ -126,6 +157,13 @@ private:
 
     void loadLibraryFile(const QString &filePath);
     Sheet *parseContext();
+    // Non-const pointer into m_libraries for the given filename, or nullptr -
+    // shared by every mutator above.
+    MacroLibrary *findLibrary(const QString &filename);
+    // Overwrites the library's ".fcl" file from scratch based on `library`'s
+    // current categoryOrder/macrosByCategory - the exact inverse of
+    // loadLibraryFile()'s own parsing.
+    bool writeLibraryFile(const MacroLibrary &library, QString *errorMessage) const;
 
     QList<MacroLibrary> m_libraries;
     QHash<QString, MacroDescriptor> m_macrosByKey;
