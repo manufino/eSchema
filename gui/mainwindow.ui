@@ -1601,7 +1601,7 @@ margin:1px;
    </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
+     <normaloff>:/res/resources/image.png</normaloff>:/res/resources/image.png</iconset>
    </property>
    <property name="text">
     <string>Immagine</string>

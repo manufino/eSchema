@@ -175,36 +175,6 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         auto *primitiveText = static_cast<PrimitiveText *>(createPrimitiveForTool(Tool::Text));
         primitiveText->setText(text);
         m_activePrimitive = primitiveText;
-    } else if (m_activeTool == Tool::Image) {
-        // Picks the file first, then the click(-drag) just placed becomes the
-        // box the image is fitted into - the same order the Text tool asks
-        // for its content before the click places it.
-        const QString path = QFileDialog::getOpenFileName(
-                    m_view, tr("Inserisci immagine"), QString(),
-                    tr("Immagini (*.png *.jpg *.jpeg *.bmp *.gif)"));
-        if (path.isEmpty()) {
-            m_activeTool = Tool::Select;
-            return; // user cancelled - nothing to place
-        }
-
-        QFile file(path);
-        if (!file.open(QIODevice::ReadOnly)) {
-            QMessageBox::warning(m_view, tr("Inserisci immagine"),
-                                  tr("Impossibile leggere il file:\n%1").arg(path));
-            m_activeTool = Tool::Select;
-            return;
-        }
-        const QByteArray data = file.readAll();
-
-        // FIDOSPECS.md 5.12's mime subtype, not a full "image/..." string -
-        // ".jpg" is the common file extension but "jpeg" is the real subtype.
-        QString mimeSubtype = QFileInfo(path).suffix().toLower();
-        if (mimeSubtype == QStringLiteral("jpg"))
-            mimeSubtype = QStringLiteral("jpeg");
-
-        auto *primitiveImage = static_cast<PrimitiveImage *>(createPrimitiveForTool(Tool::Image));
-        primitiveImage->setImageData(mimeSubtype, QString::fromLatin1(data.toBase64()));
-        m_activePrimitive = primitiveImage;
     } else {
         m_activePrimitive = createPrimitiveForTool(m_activeTool);
     }
@@ -249,6 +219,12 @@ void PrimitivePlacementController::finishPlacement()
             static_cast<PrimitiveComplexCurve *>(m_activePrimitive)->removeLastVertex();
     }
 
+    // The 50% preview opacity armImagePlacement() set while this was still
+    // following the cursor was never the user's actual choice - restore the
+    // real default now that it's actually being placed.
+    if (m_activePrimitive && m_activeTool == Tool::Image)
+        static_cast<PrimitiveImage *>(m_activePrimitive)->setOpacity(1.0);
+
     GraphicsPrimitive *finished = m_activePrimitive;
     const Tool finishedTool = m_activeTool;
     // Line/PCB-track chaining needs the endpoint just placed - grab it before
@@ -274,6 +250,14 @@ void PrimitivePlacementController::finishPlacement()
     m_pointsPlaced = 0;
     m_activeTool = Tool::Select;
     m_armedMacroKey.clear();
+
+    // Unlike Rectangle/Text/etc., staying on the tool wouldn't let the next
+    // click place another image anyway - it always needs a fresh file pick
+    // first (armImagePlacement(), triggered from the toolbar button, not
+    // from a click here) - so leaving "Immagine" checked would just make
+    // the next canvas click silently do nothing.
+    if (finishedTool == Tool::Image)
+        switchToolBarToSelectTool();
 
     if (shouldChain)
         startChainedSegment(finishedTool, chainStart);
@@ -313,10 +297,78 @@ void PrimitivePlacementController::cancelPlacement()
     switchToolBarToSelectTool();
 }
 
-void PrimitivePlacementController::handleToolBarActionTriggered(QAction *)
+void PrimitivePlacementController::handleToolBarActionTriggered(QAction *action)
 {
     discardActivePrimitive();
     m_armedMacroKey.clear();
+
+    if (action && action->objectName() == QStringLiteral("actionImage"))
+        armImagePlacement();
+}
+
+void PrimitivePlacementController::armImagePlacement()
+{
+    const QString path = QFileDialog::getOpenFileName(
+                m_view, tr("Inserisci immagine"), QString(),
+                tr("Immagini (*.png *.jpg *.jpeg *.bmp *.gif)"));
+    if (path.isEmpty()) {
+        switchToolBarToSelectTool();
+        return; // user cancelled - nothing to place
+    }
+
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::warning(m_view, tr("Inserisci immagine"),
+                              tr("Impossibile leggere il file:\n%1").arg(path));
+        switchToolBarToSelectTool();
+        return;
+    }
+    const QByteArray data = file.readAll();
+
+    // FIDOSPECS.md 5.12's mime subtype, not a full "image/..." string -
+    // ".jpg" is the common file extension but "jpeg" is the real subtype.
+    QString mimeSubtype = QFileInfo(path).suffix().toLower();
+    if (mimeSubtype == QStringLiteral("jpg"))
+        mimeSubtype = QStringLiteral("jpeg");
+
+    auto *primitiveImage = static_cast<PrimitiveImage *>(createPrimitiveForTool(Tool::Image));
+    const QString base64Data = QString::fromLatin1(data.toBase64());
+    primitiveImage->setImageData(mimeSubtype, base64Data);
+    // Half-transparent while it's still just following the cursor, so it
+    // reads as a not-yet-placed preview rather than the real, final image -
+    // finishPlacement() restores full opacity the moment it's actually
+    // dropped.
+    primitiveImage->setOpacity(0.5);
+    applyDefaults(primitiveImage);
+
+    // Decodes the same bytes already in memory rather than a second disk
+    // read, just to learn the natural pixel size - scaled down to a sane
+    // on-sheet footprint (scene units == FidoCadJ grid units, 5 mil each;
+    // a photo's raw pixel dimensions would dwarf the whole sheet) while
+    // keeping its aspect ratio.
+    QPixmap pixmap;
+    pixmap.loadFromData(QByteArray::fromBase64(base64Data.toLatin1()));
+    constexpr qreal MaxDimension = 100.0;
+    qreal width = MaxDimension, height = MaxDimension;
+    if (!pixmap.isNull() && pixmap.width() > 0 && pixmap.height() > 0) {
+        const qreal scale = MaxDimension / qMax(pixmap.width(), pixmap.height());
+        width = pixmap.width() * scale;
+        height = pixmap.height() * scale;
+    }
+    m_imageHalfSize = QPointF(width / 2.0, height / 2.0);
+
+    m_activeTool = Tool::Image;
+    m_activePrimitive = primitiveImage;
+    m_pointsPlaced = 0; // still tracking the cursor, not placed yet
+
+    // Seeds it at the view's current center so it's visible right away,
+    // before the very next mouse-move takes over and starts following the
+    // cursor instead.
+    const QPointF center = m_view ? m_view->mapToScene(m_view->viewport()->rect().center()) : QPointF();
+    primitiveImage->setControlPoint(0, center - m_imageHalfSize);
+    primitiveImage->setControlPoint(1, center + m_imageHalfSize);
+
+    m_sheet->addPrimitive(primitiveImage);
 }
 
 bool PrimitivePlacementController::handleMouseRightClick()
@@ -359,6 +411,16 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &scenePos)
         return m_activePrimitive != nullptr;
     }
 
+    if (m_activeTool == Tool::Image) {
+        // Both corners move together, at their already-fixed size - a click
+        // just confirms wherever it's currently centered, unlike Rectangle's
+        // two independent corner clicks.
+        m_activePrimitive->setControlPoint(0, scenePos - m_imageHalfSize);
+        m_activePrimitive->setControlPoint(1, scenePos + m_imageHalfSize);
+        finishPlacement();
+        return true;
+    }
+
     if (isVariableVertexTool(m_activeTool)) {
         // Fix the current live vertex, then start a new live vertex for the
         // next segment.
@@ -385,6 +447,12 @@ bool PrimitivePlacementController::handleMouseMove(const QPointF &scenePos)
 {
     if (!m_activePrimitive)
         return false;
+
+    if (m_activeTool == Tool::Image) {
+        m_activePrimitive->setControlPoint(0, scenePos - m_imageHalfSize);
+        m_activePrimitive->setControlPoint(1, scenePos + m_imageHalfSize);
+        return true;
+    }
 
     if (isVariableVertexTool(m_activeTool)) {
         if (m_activeTool == Tool::Polygon) {

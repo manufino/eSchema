@@ -126,6 +126,15 @@ private:
     // no click consumed, just a live "point 1" preview like any other
     // in-progress placement.
     void startChainedSegment(Tool tool, const QPointF &startPoint);
+    // Opens the "insert image" file picker immediately when the Immagine
+    // toolbar button is clicked (rather than waiting for a canvas click
+    // first, like every other tool) - see handleToolBarActionTriggered().
+    // On success, creates and adds the PrimitiveImage right away, centered
+    // on the view for now; handleMouseMove() takes over from there and
+    // keeps it centered on the cursor, at its already-fixed size, until the
+    // next click drops it in place. Reverts to Select on cancel or read
+    // failure, matching every other placement that can be aborted.
+    void armImagePlacement();
     // Programmatically switches the toolbar back to the Select tool, exactly
     // as if the user had clicked/pressed its shortcut - so Esc while mid-
     // placement (see handleKeyPress()) doesn't just discard the in-progress
@@ -147,6 +156,11 @@ private:
     // empty means no macro is armed. Kept separate from m_activeTool/
     // currentTool() because there's no toolbar action driving it.
     QString m_armedMacroKey;
+    // Half the width/height an image armed by armImagePlacement() keeps as
+    // it follows the cursor - fixed once at arm time (from the picked
+    // file's own pixel size, scaled to a sane on-sheet footprint), not
+    // resized by the placement click the way Rectangle's second corner is.
+    QPointF m_imageHalfSize;
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H

@@ -14,6 +14,7 @@
         <file>resources/complexcurve.png</file>
         <file>resources/connection.png</file>
         <file>resources/ellipse.png</file>
+        <file>resources/image.png</file>
         <file>resources/line.png</file>
         <file>resources/pcbline.png</file>
         <file>resources/pcbpad.png</file>
