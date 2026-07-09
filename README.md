@@ -1,6 +1,6 @@
 # eSchema
 
-![eSchema main window](https://github.com/manufino/eSchema/blob/main/resources/win.JPG?raw=true)
+![eSchema main window](https://github.com/manufino/eSchema/blob/main/resources/main_window.png?raw=true)
 
 **eSchema** is a free, open-source 2D CAD editor for electrical/electronic schematics and PCB sketches, built with C++ and Qt 6. It uses [FidoCadJ](https://darwinne.github.io/FidoCadJ/) as its native drawing format, combining a lightweight, human-readable file format with a modern, dockable desktop UI.
 
@@ -55,9 +55,9 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 
 ## Screenshots
 
-| Layers | Options |
+| Layer manager | Component libraries |
 |---|---|
-| ![Layer manager](https://github.com/manufino/eSchema/blob/main/resources/layer_win.JPG?raw=true) | ![Options dialog](https://github.com/manufino/eSchema/blob/main/resources/option_win.JPG?raw=true) |
+| ![Layer manager](https://github.com/manufino/eSchema/blob/main/resources/layer_manager.png?raw=true) | ![Library panel](https://github.com/manufino/eSchema/blob/main/resources/library_panel.png?raw=true) |
 
 ---
 
