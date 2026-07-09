@@ -7,7 +7,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17 # lrelease
 
-INCLUDEPATH += src src/Core src/Primitives src/Commands src/IO src/Dialogs src/Widgets
+INCLUDEPATH += src src/App src/Core src/Primitives src/Commands src/IO src/Dialogs src/Widgets
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -20,10 +20,10 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
 	src/main.cpp \
-	src/MainWindow.cpp \
-	src/MainWindowLibraryPanel.cpp \
-	src/MainWindowPropertiesPanel.cpp \
-	src/MainWindowEditActions.cpp \
+	src/App/MainWindow.cpp \
+	src/App/MainWindowLibraryPanel.cpp \
+	src/App/MainWindowPropertiesPanel.cpp \
+	src/App/MainWindowEditActions.cpp \
 	src/Core/GraphicsPrimitive.cpp \
 	src/Core/LayerList.cpp \
 	src/Core/LibraryManager.cpp \
@@ -73,7 +73,7 @@ SOURCES += \
 	src/Widgets/ToolBarPrimitive.cpp
 
 HEADERS += \
-	src/MainWindow.h \
+	src/App/MainWindow.h \
 	src/Core/GlobalUtils.h \
 	src/Core/GraphicsPrimitive.h \
 	src/Core/Layer.h \
