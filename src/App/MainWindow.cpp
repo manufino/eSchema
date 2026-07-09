@@ -333,10 +333,23 @@ void MainWindow::setCurrentFilePath(const QString &filePath)
 
 void MainWindow::updateRulers()
 {
-    const QPointF originPx = ui->graphicsView->mapFromScene(QPointF(0, 0));
+    // QGraphicsView::mapFromScene() returns coordinates relative to its
+    // *viewport* child widget, not the graphicsView widget itself - the two
+    // differ by the view's frame width. The rulers are separate sibling
+    // widgets in the same layout column/row as graphicsView (not children of
+    // its viewport), so placing ticks straight from mapFromScene() was off
+    // by that frame width, making a ruler's numbers land next to the wrong
+    // point of the drawing (mismatched against the status bar's readout of
+    // the same screen position). Routing through global screen coordinates
+    // sidesteps whatever the actual offset between the two widgets is.
+    const QPoint viewportOriginGlobal = ui->graphicsView->viewport()->mapToGlobal(
+                ui->graphicsView->mapFromScene(QPointF(0, 0)));
+    const QPoint originInHorizontalRuler = ui->rulerHorizontal->mapFromGlobal(viewportOriginGlobal);
+    const QPoint originInVerticalRuler = ui->rulerVertical->mapFromGlobal(viewportOriginGlobal);
+
     const QTransform transform = ui->graphicsView->transform();
-    ui->rulerHorizontal->setViewTransform(originPx.x(), transform.m11());
-    ui->rulerVertical->setViewTransform(originPx.y(), transform.m22());
+    ui->rulerHorizontal->setViewTransform(originInHorizontalRuler.x(), transform.m11());
+    ui->rulerVertical->setViewTransform(originInVerticalRuler.y(), transform.m22());
 
     const qreal minorStep = ui->graphicsView->minorGridStep();
     const qreal majorStep = ui->graphicsView->majorGridStep();

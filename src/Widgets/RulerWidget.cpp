@@ -92,13 +92,13 @@ void RulerWidget::paintEvent(QPaintEvent *)
     QPainter painter(this);
 
     const QColor background = palette().window().color();
-    const QColor foreground = palette().windowText().color();
     const QColor markerColor = palette().highlight().color();
     // Deliberately plain gray rather than palette-derived: ticks and labels
     // are secondary/reference marks, not primary UI text, so they should
     // read as muted regardless of the active light/dark stylesheet.
     const QColor tickColor(128, 128, 128);
-    const QColor labelColor(165, 165, 165);
+    const QColor labelColor(110, 110, 110);
+    const QColor edgeColor(140, 140, 140);
 
     painter.fillRect(rect(), background);
 
@@ -171,7 +171,9 @@ void RulerWidget::paintEvent(QPaintEvent *)
             painter.drawLine(QPointF(0, px), QPointF(breadth, px));
     }
 
-    painter.setPen(foreground);
+    // Cosmetic (width 0) hairline - a real 1-unit-wide pen was rendering
+    // heavier than intended on high-DPI displays.
+    painter.setPen(QPen(edgeColor, 0));
     if (horizontal)
         painter.drawLine(0, breadth - 1, length, breadth - 1);
     else
