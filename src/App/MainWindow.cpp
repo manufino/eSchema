@@ -36,6 +36,7 @@
 #include "PrimitivePad.h"
 #include "PrimitivePcbTrack.h"
 #include "PrimitiveComplexCurve.h"
+#include "ThemeManager.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -78,6 +79,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     updateWindowTitle();
+
+    // main.cpp's startup call to ThemeManager::apply() runs before this
+    // window (and therefore its actions/icons) exist, so re-apply here to
+    // pick up the dark theme's white-tinted icons on the very first show.
+    ThemeManager::apply();
 
     // Lets a dock area itself be split further (side by side, stacked, or a
     // mix), not just hold a single row/column of docks - without this, two
