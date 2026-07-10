@@ -60,11 +60,6 @@ QString decodeFontName(const QString &token)
     return decoded;
 }
 
-qreal clampCoordinate(qreal value)
-{
-    return std::clamp(value, qreal(0), qreal(1000000));
-}
-
 int clampLayer(int layer)
 {
     return std::clamp(layer, 0, 15);

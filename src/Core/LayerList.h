@@ -35,7 +35,6 @@ public:
     }
 
     QList<Layer*>*getList() { return layerList; }
-    void setList(QList<Layer*> *list) { layerList = list; }
     void addLayer(Layer *layer);
     void addLayer(QString name, QColor color);
     Layer* getMaster();

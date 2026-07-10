@@ -37,7 +37,6 @@ GraphicsPrimitive::GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem
     showName = true;
     showValue = true;
     visible = true;
-    _pen = QPen(Qt::black);
     // objLayer was previously left uninitialized (garbage pointer) - every new
     // primitive now defaults to the master layer, matching what a freshly drawn
     // primitive should belong to until the user assigns a different one.

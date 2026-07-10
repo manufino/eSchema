@@ -38,9 +38,6 @@ QString roundIntelligently(qreal value);
 QString encodeFontName(const QString &fontName);
 QString decodeFontName(const QString &token);
 
-// Coordinates are clamped to [0, 1 000 000] and never negative (FIDOSPECS.md 3).
-qreal clampCoordinate(qreal value);
-
 // Layer indices are clamped to [0, 15]; anything out of range (or non-numeric,
 // handled by the caller before calling this) coerces to layer 0.
 int clampLayer(int layer);

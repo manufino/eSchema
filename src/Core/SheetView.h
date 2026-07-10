@@ -44,9 +44,7 @@ class SheetView : public QGraphicsView
     Q_OBJECT
 public:
     explicit SheetView(QWidget *parent = nullptr);
-    int getGridSize() const {return this->gridSize;}
     void setGrid(int size, QColor clr);
-    QPoint getMousePos() { return point;}
 
     // Not owned - the controller is created and owned by MainWindow, which
     // wires it up here since it needs sibling widgets (toolbar, property

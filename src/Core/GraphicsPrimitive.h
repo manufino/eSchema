@@ -73,9 +73,6 @@ public:
     int layerIndex() const;
     bool isFilled() const { return filled; }
     bool isVisible() const { return visible; }
-    bool nameIsVisible() const { return showName; }
-    bool valueIsVisible() const { return showValue; }
-    QPen pen() const { return this->_pen; }
     // The dash style actually used by paint() - needed by FidoCadWriter,
     // which isn't a subclass and so can't reach the protected field directly.
     Qt::PenStyle lineStyle() const { return penStyle; }
@@ -270,7 +267,6 @@ public slots:
     void setNameVisible(bool visible) { showName = visible; }
     void setValueVisible(bool visible) { showValue = visible; }
     void setVisible(bool visible) { this->visible = visible; }
-    void setPen(QPen pen) { this->_pen = pen; }
 
 protected:
     // Dragging is implemented manually (mousePressEvent/mouseMoveEvent) rather
@@ -289,7 +285,6 @@ protected:
     QString objName;
     QString  objValue;
     Layer *objLayer;
-    QPen _pen;
 
     QPointF m_dragAnchor; // last mouse scene position seen during an active drag
     // Control-point snapshots (per moved primitive - a multi-selection drag
