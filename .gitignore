@@ -30,6 +30,9 @@ ui_*.h
 Makefile*
 *build-*
 *.qm
+# ...except eSchema's own compiled UI translations, which are committed like
+# any other binary resource (icons, fonts) since resources.qrc embeds them.
+!/translations/*.qm
 *.prl
 
 # Qt unit tests

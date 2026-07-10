@@ -18,11 +18,43 @@
  */
 
 #include "MainWindow.h"
+#include "SettingsManager.h"
 
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
 #include <QSplashScreen>
+
+namespace {
+// Every language eSchema ships a translation for, besides "it" (the source
+// language the UI strings are written in, so it needs no QTranslator at all).
+const QStringList SupportedLanguages = {
+    "en", "de", "fr", "es", "ru", "zh", "pl", "ja", "pt", "ar", "hi"
+};
+
+// Reads the user's saved language choice (see DialogOptions), or - on the
+// very first run, before that setting exists - derives one from the OS
+// locale and persists it, so the app then keeps opening in that language
+// regardless of later OS locale changes until the user picks a different one
+// from Opzioni.
+QString resolveLanguageCode()
+{
+    const QVariant saved = SettingsManager::getInstance().loadSetting("language");
+    if (saved.isValid() && !saved.toString().isEmpty())
+        return saved.toString();
+
+    QString detected = QStringLiteral("it");
+    for (const QString &uiLanguage : QLocale::system().uiLanguages()) {
+        const QString code = QLocale(uiLanguage).name().section('_', 0, 0);
+        if (code == QStringLiteral("it") || SupportedLanguages.contains(code)) {
+            detected = code;
+            break;
+        }
+    }
+    SettingsManager::getInstance().saveSetting("language", detected);
+    return detected;
+}
+}
 
 int main(int argc, char *argv[])
 {
@@ -44,14 +76,9 @@ int main(int argc, char *argv[])
     splash.showMessage("Caricamento ...");
 
     QTranslator translator;
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "eSchema_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
-            a.installTranslator(&translator);
-            break;
-        }
-    }
+    const QString languageCode = resolveLanguageCode();
+    if (languageCode != QStringLiteral("it") && translator.load(":/i18n/eSchema_" + languageCode))
+        a.installTranslator(&translator);
 
     MainWindow w;
     w.show();

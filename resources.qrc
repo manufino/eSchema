@@ -135,4 +135,17 @@
         <file>resources/align/distribute_horizontal.png</file>
         <file>resources/align/distribute_vertical.png</file>
     </qresource>
+    <qresource prefix="/i18n">
+        <file alias="eSchema_en.qm">translations/eSchema_en.qm</file>
+        <file alias="eSchema_de.qm">translations/eSchema_de.qm</file>
+        <file alias="eSchema_fr.qm">translations/eSchema_fr.qm</file>
+        <file alias="eSchema_es.qm">translations/eSchema_es.qm</file>
+        <file alias="eSchema_ru.qm">translations/eSchema_ru.qm</file>
+        <file alias="eSchema_zh.qm">translations/eSchema_zh.qm</file>
+        <file alias="eSchema_pl.qm">translations/eSchema_pl.qm</file>
+        <file alias="eSchema_ja.qm">translations/eSchema_ja.qm</file>
+        <file alias="eSchema_pt.qm">translations/eSchema_pt.qm</file>
+        <file alias="eSchema_ar.qm">translations/eSchema_ar.qm</file>
+        <file alias="eSchema_hi.qm">translations/eSchema_hi.qm</file>
+    </qresource>
 </RCC>

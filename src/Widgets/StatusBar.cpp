@@ -23,7 +23,7 @@
 
 StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 {
-    lblPos->setText("X 0  Y 0 (X 0.0mm Y 0.0mm)");
+    lblPos->setText(tr("X 0  Y 0 (X 0.0mm Y 0.0mm)"));
 
     lblPos->setMinimumWidth(350);
 
@@ -33,7 +33,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     btnGrid->setIconSize(QSize(24,24));
     btnGrid->setMinimumSize(QSize(24,24));
     btnGrid->setMaximumSize(QSize(24,24));
-    btnGrid->setToolTip("Attiva o disattiva la griglia");
+    btnGrid->setToolTip(tr("Attiva o disattiva la griglia"));
     // Persists across restarts (see loadSettings()'s own read of the same
     // key) - toggled() only fires on an actual state change, so the initial
     // setChecked() below can't be relied on to also save it back.
@@ -47,7 +47,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     btnSnapGrid->setIconSize(QSize(24,24));
     btnSnapGrid->setMinimumSize(QSize(24,24));
     btnSnapGrid->setMaximumSize(QSize(24,24));
-    btnSnapGrid->setToolTip("Attiva o disattiva \nil snap sulla griglia");
+    btnSnapGrid->setToolTip(tr("Attiva o disattiva \nil snap sulla griglia"));
     // Same "snap_enabled" key the Options dialog's own checkbox reads/writes
     // (GlobalUtils.h's snapToGrid() is what actually consults it) - this
     // button is just a second, quicker way to flip the very same setting.
@@ -55,8 +55,8 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
         SettingsManager::getInstance().saveSetting("snap_enabled", checked);
     });
 
-    lblZoomLevel->setText("Zoom 7%");
-    lblPrimitiveCount->setText("Primitive 0  Macro 0");
+    lblZoomLevel->setText(tr("Zoom 7%"));
+    lblPrimitiveCount->setText(tr("Primitive 0  Macro 0"));
     lblPrimitiveCount->setMinimumWidth(150);
 
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
@@ -106,14 +106,14 @@ void StatusBar::sceneMousePos(QPointF point)
     double xmm = mm_step * (x/gridSize);
     double ymm = mm_step * (y/gridSize);
 
-    QString pos = QString("X %1 Y %2 (X %3mm Y %4mm)")
+    QString pos = tr("X %1 Y %2 (X %3mm Y %4mm)")
                       .arg(x).arg(y).arg(xmm).arg(ymm);
     lblPos->setText(pos);
 }
 
 void StatusBar::zoomLevel(unsigned int level)
 {
-    QString pos = QString("Zoom %1%").arg(level);
+    QString pos = tr("Zoom %1%").arg(level);
     lblZoomLevel->setText(pos);
 }
 
@@ -125,6 +125,6 @@ void StatusBar::settingChanged()
 
 void StatusBar::primitiveCounts(int totalPrimitives, int macroCount)
 {
-    lblPrimitiveCount->setText(QString("Primitive %1  Macro %2").arg(totalPrimitives).arg(macroCount));
+    lblPrimitiveCount->setText(tr("Primitive %1  Macro %2").arg(totalPrimitives).arg(macroCount));
 }
 

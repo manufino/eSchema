@@ -196,9 +196,6 @@
          </item>
          <item row="0" column="3">
           <widget class="QComboBox" name="cboxLanguage">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="minimumSize">
             <size>
              <width>160</width>
@@ -207,26 +204,68 @@
            </property>
            <item>
             <property name="text">
-             <string>Italiano</string>
+             <string notr="true">Italiano</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>English</string>
+             <string notr="true">English</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Spain</string>
+             <string notr="true">Deutsch</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">Français</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">Español</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">Русский</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">中文</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">Polski</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">日本語</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">Português</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">العربية</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string notr="true">हिन्दी</string>
             </property>
            </item>
           </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLabel" name="label">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="minimumSize">
             <size>
              <width>100</width>

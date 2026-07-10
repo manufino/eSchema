@@ -49,6 +49,10 @@ public slots:
 
 private:
     Ui::DialogOptions *ui;
+    // cboxLanguage's index when the dialog was opened (or last applied) - compared
+    // against the current index on apply()/accept() to decide whether to warn that
+    // a restart is needed, since the UI isn't retranslated live.
+    int m_initialLanguageIndex = 0;
 };
 
 #endif // DIALOGOPTIONS_H

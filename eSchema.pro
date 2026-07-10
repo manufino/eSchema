@@ -140,6 +140,25 @@ FORMS += \
 
 RESOURCES += resources.qrc
 
+# Italian is the source language the UI/tr() strings are written in, so it
+# needs no .ts of its own - main.cpp simply installs no QTranslator for "it".
+# TRANSLATIONS only drives `lupdate eSchema.pro`, which refreshes these .ts
+# files with any new/changed tr() strings (existing translations are kept).
+# After editing translations, re-run `lrelease` on each .ts to refresh the
+# committed .qm binaries under translations/, which resources.qrc embeds.
+TRANSLATIONS += \
+	translations/eSchema_en.ts \
+	translations/eSchema_de.ts \
+	translations/eSchema_fr.ts \
+	translations/eSchema_es.ts \
+	translations/eSchema_ru.ts \
+	translations/eSchema_zh.ts \
+	translations/eSchema_pl.ts \
+	translations/eSchema_ja.ts \
+	translations/eSchema_pt.ts \
+	translations/eSchema_ar.ts \
+	translations/eSchema_hi.ts
+
 win32 {
 	RC_ICONS = "resources/main.ico"
 	DEFINES += BUILDDATE=\\\"$$system('echo %date%')\\\"

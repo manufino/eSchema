@@ -26,7 +26,7 @@ ColorPicker::ColorPicker(QWidget *parent) : QLabel(parent)
     setAutoFillBackground(true);
     m_color = QColor("black");
     setCursor(Qt::PointingHandCursor);
-    setToolTip("Cambia colore ...");
+    setToolTip(tr("Cambia colore ..."));
     setProperty("class", "labelColor");
 }
 
@@ -40,7 +40,7 @@ void ColorPicker::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         QColorDialog colorDialog(this);
-        QColor color = colorDialog.getColor(getColor(), this, "Seleziona colore");
+        QColor color = colorDialog.getColor(getColor(), this, tr("Seleziona colore"));
 
         if (color.isValid()) {
             setColor(color);

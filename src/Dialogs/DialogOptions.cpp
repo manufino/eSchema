@@ -20,6 +20,14 @@
 #include "DialogOptions.h"
 #include "ui_DialogOptions.h"
 
+namespace {
+// Matches cboxLanguage's item order 1:1 (see DialogOptions.ui) - index into
+// this to get/set the "language" setting's value from/to the combo box.
+const QStringList LanguageCodes = {
+    "it", "en", "de", "fr", "es", "ru", "zh", "pl", "ja", "pt", "ar", "hi"
+};
+}
+
 DialogOptions::DialogOptions(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogOptions)
@@ -92,6 +100,11 @@ void DialogOptions::loadSettings()
 
     val = SettingsManager::getInstance().loadSetting("selection_tolerance");
     ui->spinSelectionTolerance->setValue(val.toDouble() > 0 ? val.toDouble() : 3.0);
+
+    val = SettingsManager::getInstance().loadSetting("language");
+    const int languageIndex = LanguageCodes.indexOf(val.toString());
+    ui->cboxLanguage->setCurrentIndex(languageIndex >= 0 ? languageIndex : 0);
+    m_initialLanguageIndex = ui->cboxLanguage->currentIndex();
 }
 
 void DialogOptions::saveSettings()
@@ -113,6 +126,7 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("macro_icon_size", ui->spinMacroIconSize->value());
     SettingsManager::getInstance().saveSetting("line_width", ui->spinLineWidth->value());
     SettingsManager::getInstance().saveSetting("selection_tolerance", ui->spinSelectionTolerance->value());
+    SettingsManager::getInstance().saveSetting("language", LanguageCodes.at(ui->cboxLanguage->currentIndex()));
 }
 
 void DialogOptions::accept()
@@ -129,14 +143,23 @@ void DialogOptions::cancel()
 void DialogOptions::apply()
 {
     saveSettings();
+
+    // The UI isn't retranslated live - the change is saved and takes effect
+    // on the next launch, so tell the user rather than leaving them thinking
+    // the combo box selection did nothing.
+    if (ui->cboxLanguage->currentIndex() != m_initialLanguageIndex) {
+        m_initialLanguageIndex = ui->cboxLanguage->currentIndex();
+        QMessageBox::information(this, tr("Lingua"),
+                                  tr("La nuova lingua sarà attiva al prossimo riavvio di eSchema."));
+    }
 }
 
 void DialogOptions::restore()
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Attenzione !",
-                                  "Tutti i settaggi verranno sovrascritti.\n\n"
-                                  "Procedere con il ripristino dei valori ?\n",
+    reply = QMessageBox::question(this, tr("Attenzione !"),
+                                  tr("Tutti i settaggi verranno sovrascritti.\n\n"
+                                  "Procedere con il ripristino dei valori ?\n"),
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         SettingsManager::getInstance().restoreDefaultSettings();
