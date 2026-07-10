@@ -161,9 +161,29 @@ TRANSLATIONS += \
 
 win32 {
 	RC_ICONS = "resources/main.ico"
-	DEFINES += BUILDDATE=\\\"$$system('echo %date%')\\\"
+	# $$system() on win32 always shells out through cmd.exe, regardless of
+	# which shell qmake itself was launched from - so this has to be a cmd
+	# command. Plain "echo %date%" (cmd's own locale-formatted date) is not
+	# an option: on a machine/CI runner whose regional short-date format
+	# includes the weekday name (e.g. "Fri 07/10/2026"), the embedded space
+	# splits DEFINES into two list entries, and the second one
+	# ("-D07/10/2026\"") isn't a valid macro name, breaking the build.
+	# Get-Date -Format explicitly with no day name and no locale-dependent
+	# spacing sidesteps that regardless of the machine's regional settings.
+	DEFINES += BUILDDATE=\\\"$$system(powershell -NoProfile -Command Get-Date -Format dd/MM/yyyy)\\\"
 } else {
 	DEFINES += BUILDDATE=\\\"$$system(date '+%d/%m/%y')\\\"
+}
+
+macx {
+	# Xcode 15+'s Clang promotes -Wimplicit-function-declaration from a
+	# warning to a hard error by default. Qt 6.9.2's own qyieldcpu.h header
+	# calls the __yield() intrinsic without declaring it first, which then
+	# fails our build the moment any of our sources transitively include
+	# that Qt header - nothing to do with our own code, so downgrade just
+	# this one diagnostic back to a warning.
+	QMAKE_CXXFLAGS += -Wno-error=implicit-function-declaration
+	QMAKE_CFLAGS += -Wno-error=implicit-function-declaration
 }
 
 # Copies the FidoCadJ macro libraries next to the built executable after every
