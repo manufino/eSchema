@@ -47,6 +47,11 @@ public slots:
     void apply();
     void restore();
 
+private slots:
+    // Only the "Stylesheet" (custom) choice in cboxStyle needs a path -
+    // toggles txtStylesheetPath/btnOpenStylesheetPath's enabled state to match.
+    void updateStylesheetPathEnabled();
+
 private:
     Ui::DialogOptions *ui;
     // cboxLanguage's index when the dialog was opened (or last applied) - compared

@@ -1,0 +1,445 @@
+/*
+ * eSchema - Dark theme
+ *
+ * Derived from eSchema.qss (the original light theme): every selector below
+ * mirrors one from the base file, recolored for a dark surface, plus a
+ * handful of additional rules covering containers/widgets the original
+ * stylesheet never touched (dock widgets, dialogs, group boxes, the ruler
+ * and layer/pen-style combo boxes) so the whole app frame goes dark, not
+ * just the pieces that already had custom styling.
+ *
+ * ThemeManager also applies a matching dark QPalette alongside this
+ * stylesheet, because a few custom-painted widgets (RulerWidget,
+ * LayerComboBox, PenStyleComboBox) read QWidget::palette() directly in
+ * their paintEvent rather than relying purely on the QSS cascade.
+ */
+
+QMenu {
+border:1px solid #1a1a1a;
+padding-left:2px;
+background-color: #2b2b2b;
+color: #dcdcdc;
+}
+
+QMenuBar  {
+	color: #dcdcdc;
+	font: 10pt "BankGothic Lt BT";
+background-color: #2b2b2b;
+}
+
+QMenu::item {
+	font: 10pt "BankGothic Lt BT";
+padding-left:2px;
+padding-right:25px;
+padding-top:2px;
+padding-bottom:2px;
+color: #dcdcdc;
+}
+QMenu::item:selected {
+	color: #ffffff;
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 230), stop:0.508772 rgba(40, 80, 110, 220), stop:0.997301 rgba(35, 100, 110, 230));
+}
+
+QMenu::item:checked {
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 170), stop:0.508772 rgba(40, 80, 110, 190), stop:0.997301 rgba(35, 100, 110, 170));
+}
+
+
+QStatusBar{
+border-top:1px solid #1a1a1a;
+background-color: #2b2b2b;
+color: #dcdcdc;
+}
+
+
+QToolBox::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 0.4 #363636,
+                                stop: 0.5 #313131, stop: 1.0 #2b2b2b);
+
+ color: #b0b0b0;
+border:1px solid #555555;
+}
+
+QToolBox::tab:selected {
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 230), stop:0.508772 rgba(40, 80, 110, 210), stop:0.997301 rgba(35, 100, 110, 230));
+    font: italic;
+    color: #ffffff;
+border:1px solid #2fa7b4;
+}
+
+QToolBar {
+background-color: #2b2b2b;
+}
+
+QToolBar QToolButton { /* all types of tool button */
+    border: 1px solid #555555;
+    border-radius: 3px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #454545, stop: 1 #333333);
+	color: #dcdcdc;
+margin:1px;
+}
+
+QToolBar QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
+    padding-right: 20px; /* make way for the popup button */
+}
+
+QToolBar QToolButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #333333, stop: 1 #454545);
+}
+
+QToolBar QToolButton:checked {
+    border: 1px solid #555555;
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 230), stop:0.508772 rgba(40, 80, 110, 210), stop:0.997301 rgba(35, 100, 110, 230));
+}
+
+/* the subcontrols below are used only in the MenuButtonPopup mode */
+QToolBar QToolButton::menu-button {
+    border: 1px solid #555555;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    /* 16px width + 4px for border = 20px allocated above */
+    width: 16px;
+}
+
+QToolBar QToolButton::menu-arrow {
+
+}
+
+QToolBar QToolButton::menu-arrow:open {
+    top: 1px; left: 1px; /* shift it a bit */
+}
+
+QToolTip {
+border: 1px solid #555555;
+	background-color: #3a3a3a;
+font:10pt "Hack";
+	color: #dcdcdc;
+padding:4px;
+border-radius:3px;
+}
+
+
+
+QTabWidget::pane { /* The tab widget frame */
+border: 2px solid #4a4a4a;
+margin-right:4px;
+background-color: #2b2b2b;
+}
+
+QTabWidget::tab-bar {
+
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3a3a3a, stop: 0.4 #363636,
+                                stop: 0.5 #313131, stop: 1.0 #2b2b2b);
+    border:1px solid #4a4a4a;
+    border-bottom-color: #4a4a4a; /* same as the pane color */
+height:16px;
+    min-width: 14ex;
+    padding: 8px;
+	color: #dcdcdc;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #4a4a4a, stop: 0.4 #454545,
+                                stop: 0.5 #3a3a3a, stop: 1.0 #4a4a4a);
+	color: #ffffff;
+}
+
+QTabBar::tab:selected {
+	border-color: #2fa7b4;
+    border-bottom-color: #4a4a4a; /* same as pane color */
+}
+
+QTabBar::tab:!selected {
+    margin-top: 0px; /* make non-selected tabs look smaller */
+}
+
+StatusBar > QLabel {
+	color: #dcdcdc;
+	font: 10pt "CFBSFONT";
+margin-left:5px;
+}
+
+StatusBar > QPushButton {
+    border: 1px solid #555555;
+    border-radius: 3px;
+	color: #dcdcdc;
+	background-color: #3a3a3a;
+margin:1px;
+}
+
+StatusBar > QPushButton:checked {
+	border-color: #2fa7b4;
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 230), stop:0.508772 rgba(40, 80, 110, 210), stop:0.997301 rgba(35, 100, 110, 230));
+}
+
+QScrollBar:vertical {
+        border: 1px solid #4a4a4a;
+	background-color: #2b2b2b;
+        width:8px;
+        margin: 0px 0px 0px 0px;
+border-radius:4px;
+    }
+QScrollBar:horizontal {
+        border: 1px solid #4a4a4a;
+	background-color: #2b2b2b;
+        height:8px;
+        margin: 0px 0px 0px 0px;
+border-radius:4px;
+    }
+    QScrollBar::handle:vertical{
+	background-color: #6e6e6e;
+border-radius:2px;
+    }
+    QScrollBar::handle:horizontal {
+	background-color: #6e6e6e;
+border-radius:2px;
+    }
+    QScrollBar::add-line {
+	background-color: transparent;
+        height: 0px;
+        subcontrol-position: bottom;
+        subcontrol-origin: margin;
+border-radius:4px;
+    }
+    QScrollBar::sub-line {
+	background-color: transparent;
+        height: 0 px;
+        subcontrol-position: top;
+        subcontrol-origin: margin;
+border-radius:4px;
+    }
+
+
+QComboBox QAbstractItemView {
+	border-radius:3px;
+    border: 1px solid #555555;
+    selection-background-color: #2f6f7a;
+	background-color: #2b2b2b;
+	color: #dcdcdc;
+}
+
+QComboBox {
+    border: 1px solid #555555;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+	color: #dcdcdc;
+}
+
+QComboBox:editable {
+    background: #232323;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #3a3a3a, stop: 0.4 #363636,
+                                 stop: 0.5 #313131, stop: 1.0 #2b2b2b);
+}
+
+/* QComboBox gets the "on" state when the popup is open */
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2b2b2b, stop: 0.4 #313131,
+                                stop: 0.5 #363636, stop: 1.0 #3a3a3a);
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: #555555;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+}
+
+QComboBox::down-arrow {
+    image:url(:res/resources/down.png);
+    border: 0px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height:10px;
+    width:10px;
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}
+
+QComboBox QAbstractItemView::item {
+                    min-height: 20px;
+                }
+
+QComboBox QAbstractItemView::item:hover {
+color: #ffffff;
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 220), stop:0.508772 rgba(40, 80, 110, 210), stop:0.997301 rgba(35, 100, 110, 220));
+                }
+
+
+
+/******************************************************************************************************/
+
+QDoubleSpinBox, QSpinBox {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2b2b2b, stop: 0.4 #313131,
+                                stop: 0.5 #363636, stop: 1.0 #3a3a3a);
+	    border: 1px solid #555555;
+    border-radius: 3px;
+	color: #dcdcdc;
+}
+
+QLineEdit {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #2b2b2b, stop: 0.4 #313131,
+                                stop: 0.5 #363636, stop: 1.0 #3a3a3a);
+	    border: 1px solid #555555;
+    border-radius: 3px;
+	color: #dcdcdc;
+}
+
+
+#txtSearch {
+border:1px solid #555555;
+border-top-right-radius:8px;
+border-top-left-radius:8px;
+
+border-bottom-right-radius:0px;
+border-bottom-left-radius:0px;
+margin-right:1px;
+    padding: 2  2 2 20; /* left padding (last number) must be more than the icon's width */
+
+    background-image: url(:res/resources/search.png); /* actual size, e.g. 16x16 */
+    background-repeat: no-repeat;
+background-position: left center;
+
+	background-color: #232323;
+	color: #dcdcdc;
+
+}
+
+
+LayerListView {
+background-color: #2b2b2b;
+color: #dcdcdc;
+}
+
+LayerListView QLineEdit {
+font: 10pt "Hack";
+border:1px solid #555555;
+background:#232323;
+color: #dcdcdc;
+height: 20px;
+text-align:left;
+}
+
+LayerListView::item {
+    border-bottom:1px solid #4a4a4a;
+}
+
+
+LayerListView::item:selected {
+    border: 1px solid #cfcfcf;
+}
+
+LayerListView::item:selected:!active {
+	background-color: #4a4a4a;
+}
+
+LayerListView::item:selected:active {
+	background-color: #4a4a4a;
+}
+
+LayerListView::item:hover {
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 230), stop:0.508772 rgba(40, 80, 110, 210), stop:0.997301 rgba(35, 100, 110, 230));
+}
+
+
+.layoutLayerListButton {
+    border: 1px solid #555555;
+    border-radius: 3px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #454545, stop: 1 #333333);
+margin:1px;
+}
+
+.layoutLayerListButton:hover {
+	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 230), stop:0.508772 rgba(40, 80, 110, 210), stop:0.997301 rgba(35, 100, 110, 230));
+}
+
+/* --- Formerly inline styleSheet properties from other .ui files --- */
+
+/* DialogShortcuts.ui: section-header labels */
+DialogShortcuts QLabel#label_57,
+DialogShortcuts QLabel#label_46,
+DialogShortcuts QLabel#headerFile,
+DialogShortcuts QLabel#headerModifica,
+DialogShortcuts QLabel#headerStrumenti,
+DialogShortcuts QLabel#headerDurante,
+DialogShortcuts QLabel#headerVista {
+background-color: #4a4a4a;
+color: #e8e8e8;
+}
+
+/* DialogCreateMacro.ui: validation error label (semantic, kept identical
+   across all themes for consistent legibility) */
+QLabel#labelError {
+color: rgb(200, 0, 0);
+}
+
+/* LayerToolBarWidget.ui: "LAYER ATTIVO" caption */
+LayerToolBarWidget QLabel#label {
+border:1px solid #555555;
+background-color: #4a4a4a;
+color: #e8e8e8;
+}
+
+/* DialogOptions.ui: dialog-wide font (redundant with the dialog's own Hack
+   10pt font property, kept for a faithful extraction) */
+DialogOptions, DialogOptions * {
+font: 10pt "Hack";
+}
+
+/* --- Dark-theme-only additions: containers the base sheet never styled ---
+   Kept as an enumerated list (not a blanket QWidget{} rule) to avoid
+   degrading native rendering of internal sub-widgets Qt's style engine
+   otherwise handles natively (combo popups, spin box buttons, etc). */
+QMainWindow, QDialog, QDockWidget, QDockWidget > QWidget,
+QScrollArea, QScrollArea > QWidget, QToolBox, QToolBox QWidget,
+QGroupBox, QLabel {
+background-color: #2b2b2b;
+color: #dcdcdc;
+}
+QGroupBox::title {
+color: #dcdcdc;
+}
+QDockWidget::title {
+background-color: #3a3a3a;
+color: #dcdcdc;
+padding: 3px;
+}
+
+/* Custom-painted widgets that read palette() directly rather than relying
+   purely on the QSS cascade - ThemeManager also sets a matching QPalette,
+   but these explicit rules keep QSS as the primary source of truth too. */
+RulerWidget, LayerComboBox, PenStyleComboBox {
+background-color: #2b2b2b;
+color: #dcdcdc;
+}

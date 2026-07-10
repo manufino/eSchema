@@ -148,4 +148,9 @@
         <file alias="eSchema_ar.qm">translations/eSchema_ar.qm</file>
         <file alias="eSchema_hi.qm">translations/eSchema_hi.qm</file>
     </qresource>
+    <qresource prefix="/styles">
+        <file alias="eSchema.qss">resources/styles/eSchema.qss</file>
+        <file alias="eSchema_dark.qss">resources/styles/eSchema_dark.qss</file>
+        <file alias="eSchema_system.qss">resources/styles/eSchema_system.qss</file>
+    </qresource>
 </RCC>

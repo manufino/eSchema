@@ -80,9 +80,6 @@
    </item>
    <item>
     <widget class="QLabel" name="labelError">
-     <property name="styleSheet">
-      <string notr="true">color: rgb(200, 0, 0);</string>
-     </property>
      <property name="text">
       <string/>
      </property>

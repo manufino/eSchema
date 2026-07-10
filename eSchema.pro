@@ -30,6 +30,7 @@ SOURCES += \
 	src/Core/SettingsManager.cpp \
 	src/Core/Sheet.cpp \
 	src/Core/SheetView.cpp \
+	src/Core/ThemeManager.cpp \
 	src/Primitives/PrimitiveBezier.cpp \
 	src/Primitives/PrimitiveComplexCurve.cpp \
 	src/Primitives/PrimitiveConnection.cpp \
@@ -84,6 +85,7 @@ HEADERS += \
 	src/Core/SettingsManager.h \
 	src/Core/Sheet.h \
 	src/Core/SheetView.h \
+	src/Core/ThemeManager.h \
 	src/Primitives/PrimitiveArrowUtils.h \
 	src/Primitives/PrimitiveBezier.h \
 	src/Primitives/PrimitiveComplexCurve.h \

@@ -98,9 +98,6 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(200, 200, 200);</string>
-       </property>
        <property name="text">
         <string>TASTI</string>
        </property>
@@ -129,9 +126,6 @@
          <pointsize>10</pointsize>
          <bold>true</bold>
         </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(200, 200, 200);</string>
        </property>
        <property name="text">
         <string>AZIONE</string>
@@ -195,9 +189,6 @@
              <pointsize>10</pointsize>
              <bold>true</bold>
             </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(200, 200, 200);</string>
            </property>
            <property name="text">
             <string>FILE</string>
@@ -377,9 +368,6 @@
              <pointsize>10</pointsize>
              <bold>true</bold>
             </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(200, 200, 200);</string>
            </property>
            <property name="text">
             <string>MODIFICA</string>
@@ -694,9 +682,6 @@
              <pointsize>10</pointsize>
              <bold>true</bold>
             </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(200, 200, 200);</string>
            </property>
            <property name="text">
             <string>STRUMENTI DI DISEGNO</string>
@@ -1039,9 +1024,6 @@
              <bold>true</bold>
             </font>
            </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(200, 200, 200);</string>
-           </property>
            <property name="text">
             <string>DURANTE IL DISEGNO</string>
            </property>
@@ -1112,9 +1094,6 @@
              <pointsize>10</pointsize>
              <bold>true</bold>
             </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(200, 200, 200);</string>
            </property>
            <property name="text">
             <string>VISTA</string>

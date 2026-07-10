@@ -1,0 +1,27 @@
+/*
+ * eSchema - System theme
+ *
+ * Uses the OS-native Qt style/palette for everything. Only the two rules
+ * below are kept, and only because they encode information the native
+ * style/palette has no way to express on its own - not because of any
+ * visual preference:
+ *   - the search box's icon is a CSS background-image with no native
+ *     equivalent widget affordance;
+ *   - the macro-creation error label's red color is semantic (it signals
+ *     a validation error), not decorative, and must stay legible
+ *     regardless of theme.
+ * Every other rule that used to be hardcoded across the app's .ui files
+ * (menus, toolbars, scrollbars, combo boxes, tabs, the layer list, etc.)
+ * is intentionally omitted here so the native Qt style takes over.
+ */
+
+#txtSearch {
+padding: 2  2 2 20; /* left padding (last number) must be more than the icon's width */
+background-image: url(:res/resources/search.png);
+background-repeat: no-repeat;
+background-position: left center;
+}
+
+QLabel#labelError {
+color: rgb(200, 0, 0);
+}

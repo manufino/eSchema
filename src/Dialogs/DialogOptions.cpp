@@ -19,12 +19,22 @@
 
 #include "DialogOptions.h"
 #include "ui_DialogOptions.h"
+#include "ThemeManager.h"
+
+#include <QFileDialog>
 
 namespace {
 // Matches cboxLanguage's item order 1:1 (see DialogOptions.ui) - index into
 // this to get/set the "language" setting's value from/to the combo box.
 const QStringList LanguageCodes = {
     "it", "en", "de", "fr", "es", "ru", "zh", "pl", "ja", "pt", "ar", "hi"
+};
+
+// Matches cboxStyle's item order 1:1 (Chiaro/Scuro/Sistema/Stylesheet, see
+// DialogOptions.ui) - index into this to get/set the "gui_style" setting's
+// value from/to the combo box. Also consumed by ThemeManager::apply().
+const QStringList GuiStyleCodes = {
+    "light", "dark", "system", "custom"
 };
 }
 
@@ -39,6 +49,14 @@ DialogOptions::DialogOptions(QWidget *parent) :
     connect(ui->btnCancel, &QPushButton::clicked, this, &DialogOptions::cancel);
     connect(ui->btnApply, &QPushButton::clicked, this, &DialogOptions::apply);
     connect(ui->btnRestore, &QPushButton::clicked, this, &DialogOptions::restore);
+    connect(ui->cboxStyle, &QComboBox::currentIndexChanged, this, &DialogOptions::updateStylesheetPathEnabled);
+    connect(ui->btnOpenStylesheetPath, &QPushButton::clicked, this, [this]() {
+        const QString path = QFileDialog::getOpenFileName(this, tr("Seleziona stylesheet"),
+                                                            ui->txtStylesheetPath->text(),
+                                                            tr("Stylesheet (*.qss)"));
+        if (!path.isEmpty())
+            ui->txtStylesheetPath->setText(path);
+    });
 
     loadSettings();
 }
@@ -83,8 +101,14 @@ void DialogOptions::loadSettings()
     val = SettingsManager::getInstance().loadSetting("library_directory");
     ui->txtLibPath->setText(val.toString());
 
-    val = SettingsManager::getInstance().loadSetting("stylesheet_directory");
+    val = SettingsManager::getInstance().loadSetting("gui_style");
+    const int styleIndex = GuiStyleCodes.indexOf(val.toString());
+    ui->cboxStyle->setCurrentIndex(styleIndex >= 0 ? styleIndex : 0);
+
+    val = SettingsManager::getInstance().loadSetting("stylesheet_path");
     ui->txtStylesheetPath->setText(val.toString());
+
+    updateStylesheetPathEnabled();
 
     val = SettingsManager::getInstance().loadSetting("snap_enabled");
     ui->chkSnapEnabled->setChecked(val.toBool());
@@ -123,7 +147,8 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("grid_step_mark", ui->spinGridLineMarkStep->value());
     SettingsManager::getInstance().saveSetting("mm_step", ui->doubleSpinStep_mm->value());
     SettingsManager::getInstance().saveSetting("library_directory", ui->txtLibPath->text());
-    SettingsManager::getInstance().saveSetting("stylesheet_directory", ui->txtStylesheetPath->text());
+    SettingsManager::getInstance().saveSetting("gui_style", GuiStyleCodes.at(ui->cboxStyle->currentIndex()));
+    SettingsManager::getInstance().saveSetting("stylesheet_path", ui->txtStylesheetPath->text());
     SettingsManager::getInstance().saveSetting("snap_enabled", ui->chkSnapEnabled->isChecked());
     SettingsManager::getInstance().saveSetting("snap_step", ui->spinSnapStep->value());
     SettingsManager::getInstance().saveSetting("macro_icon_size", ui->spinMacroIconSize->value());
@@ -147,6 +172,7 @@ void DialogOptions::cancel()
 void DialogOptions::apply()
 {
     saveSettings();
+    ThemeManager::apply();
 
     // The UI isn't retranslated live - the change is saved and takes effect
     // on the next launch, so tell the user rather than leaving them thinking
@@ -156,6 +182,13 @@ void DialogOptions::apply()
         QMessageBox::information(this, tr("Lingua"),
                                   tr("La nuova lingua sarà attiva al prossimo riavvio di eSchema."));
     }
+}
+
+void DialogOptions::updateStylesheetPathEnabled()
+{
+    const bool isCustom = ui->cboxStyle->currentIndex() == GuiStyleCodes.indexOf("custom");
+    ui->txtStylesheetPath->setEnabled(isCustom);
+    ui->btnOpenStylesheetPath->setEnabled(isCustom);
 }
 
 void DialogOptions::restore()

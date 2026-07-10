@@ -46,10 +46,6 @@
    <iconset>
     <normaloff>:/res/resources/settings.png</normaloff>:/res/resources/settings.png</iconset>
   </property>
-  <property name="styleSheet">
-   <string notr="true">*{font: 10pt &quot;Hack&quot;;}
-</string>
-  </property>
   <property name="modal">
    <bool>false</bool>
   </property>
@@ -157,9 +153,6 @@
          </item>
          <item row="3" column="1">
           <widget class="QLabel" name="label_14">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="text">
             <string>Percorso stylesheet</string>
            </property>
@@ -282,9 +275,6 @@
          </item>
          <item row="2" column="3">
           <widget class="QComboBox" name="cboxStyle">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="minimumSize">
             <size>
              <width>160</width>
@@ -299,6 +289,11 @@
            <item>
             <property name="text">
              <string>Scuro</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Sistema</string>
             </property>
            </item>
            <item>
@@ -320,9 +315,6 @@
          </item>
          <item row="2" column="1">
           <widget class="QLabel" name="label_2">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="minimumSize">
             <size>
              <width>100</width>
@@ -339,9 +331,6 @@
          </item>
          <item row="4" column="1" colspan="3">
           <widget class="QLineEdit" name="txtStylesheetPath">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -349,9 +338,6 @@
          </item>
          <item row="4" column="4">
           <widget class="QPushButton" name="btnOpenStylesheetPath">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="minimumSize">
             <size>
              <width>30</width>

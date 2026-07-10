@@ -19,6 +19,7 @@
 
 #include "MainWindow.h"
 #include "SettingsManager.h"
+#include "ThemeManager.h"
 
 #include <QApplication>
 #include <QLocale>
@@ -59,6 +60,8 @@ QString resolveLanguageCode()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    ThemeManager::apply();
 
     QPixmap pixmap(":/res/resources/splash.jpeg");
 
