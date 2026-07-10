@@ -350,9 +350,6 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
         if (!primitive)
             continue; // unrecognized/malformed line - skip (robustness contract)
 
-        if (primitive->getPrimitiveType() == GraphicsPrimitive::Connection)
-            static_cast<PrimitiveConnection *>(primitive)->setDiameter(sheet->connectionDiameter());
-
         pending = primitive;
         // SA/PL/PA/MC/IM have no FCJ line - their name/value TY lines (if any)
         // simply follow directly (FIDOSPECS.md 6.3), so optimistically expect

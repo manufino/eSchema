@@ -32,12 +32,20 @@ qreal defaultLineWidthSetting()
     const qreal value = SettingsManager::getInstance().loadSetting("line_width").toDouble();
     return value > 0 ? value : 0.5;
 }
+// Same fallback pattern, for "connection_diameter" (matches
+// PrimitiveConnection::effectiveDiameter()'s own fallback).
+qreal defaultConnectionDiameterSetting()
+{
+    const qreal value = SettingsManager::getInstance().loadSetting("connection_diameter").toDouble();
+    return value > 0 ? value : 2.0;
+}
 }
 
 Sheet::Sheet(QObject *parent) :
     QGraphicsScene(parent)
 {
     m_lineWidth = defaultLineWidthSetting();
+    m_connectionDiameter = defaultConnectionDiameterSetting();
 }
 
 void Sheet::addPrimitive(GraphicsPrimitive *primitive)
@@ -84,7 +92,7 @@ void Sheet::clearPrimitives()
     // primitives here since they were all added via addItem() in addPrimitive().
     clear();
     m_primitives.clear();
-    m_connectionDiameter = 2.0;
+    m_connectionDiameter = defaultConnectionDiameterSetting();
     m_lineWidth = defaultLineWidthSetting();
     m_lineWidthCircles = 0.35;
     emit primitivesChanged();

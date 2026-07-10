@@ -150,6 +150,14 @@ MainWindow::MainWindow(QWidget *parent)
         sheetScene->setLineWidth(value > 0 ? value : 0.5);
         sheetScene->update();
     });
+    // Same live-settings pattern as line_width above, for the connection-dot
+    // size every PrimitiveConnection now reads live via effectiveDiameter()
+    // instead of caching its own copy.
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged, this, [this]() {
+        const qreal value = SettingsManager::getInstance().loadSetting("connection_diameter").toDouble();
+        sheetScene->setConnectionDiameter(value > 0 ? value : 2.0);
+        sheetScene->update();
+    });
 
     // Reflects whatever was last saved (or the compiled-in default, for a
     // settings file saved before this action persisted anything) rather than

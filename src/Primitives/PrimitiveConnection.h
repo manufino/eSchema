@@ -38,8 +38,13 @@ public:
     QPointF controlPoint(int index) const override;
     void setControlPoint(int index, const QPointF &scenePos) override;
 
-    qreal diameter() const { return m_diameter; }
-    void setDiameter(qreal diameter) { m_diameter = diameter; }
+    // The dot size actually drawn: read live from the owning Sheet's
+    // document-wide default every time (FIDOSPECS.md 5.7/7's "FJC C"), rather
+    // than storing one independently per primitive - same live-settings
+    // pattern as GraphicsPrimitive::effectiveLineWidth(), so every connection
+    // dot always renders at the one document-wide size, and a change from the
+    // Options dialog is reflected immediately without touching each instance.
+    qreal effectiveDiameter() const;
 
     bool isDegenerate() const override { return false; } // a connection dot is always meaningful
     QStringList toTokens() const override;
@@ -47,7 +52,6 @@ public:
 
 private:
     QPointF m_pos;
-    qreal m_diameter = 2.0;
 };
 
 #endif // PRIMITIVECONNECTION_H

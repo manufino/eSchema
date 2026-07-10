@@ -68,6 +68,11 @@ void SettingsManager::restoreDefaultSettings()
     // anywhere inside its bounding box, including empty space far from what
     // was actually drawn.
     saveSetting("selection_tolerance", 3.0);
+    // Matches the reference FidoCadJ editor's own compiled-in default
+    // (Globals.diameterConnection) - the connection-dot size every SA
+    // primitive draws with, unless overridden per-document by an "FJC C" line
+    // (Sheet::connectionDiameter()/PrimitiveConnection::effectiveDiameter()).
+    saveSetting("connection_diameter", 2.0);
 
     // GRID
     saveSetting("grid_step", 10);

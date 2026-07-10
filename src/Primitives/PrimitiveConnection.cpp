@@ -19,6 +19,8 @@
 
 #include "PrimitiveConnection.h"
 #include "FidoCadTokenUtils.h"
+#include "Sheet.h"
+#include "SettingsManager.h"
 #include <QStyleOptionGraphicsItem>
 #include <QPainterPath>
 
@@ -27,9 +29,20 @@ PrimitiveConnection::PrimitiveConnection(QGraphicsItem *parent)
 {
 }
 
+qreal PrimitiveConnection::effectiveDiameter() const
+{
+    if (auto *sheet = qobject_cast<Sheet *>(scene()))
+        return sheet->connectionDiameter();
+    // Not attached to a Sheet (e.g. a macro-library body prototype) - reads
+    // the same "connection_diameter" option live, matching every other
+    // primitive not currently in a document (see effectiveLineWidth()).
+    const qreal fromSettings = SettingsManager::getInstance().loadSetting("connection_diameter").toDouble();
+    return fromSettings > 0 ? fromSettings : 2.0;
+}
+
 QRectF PrimitiveConnection::boundingRect() const
 {
-    const qreal r = m_diameter / 2.0 + 1;
+    const qreal r = effectiveDiameter() / 2.0 + 1;
     return QRectF(mapFromScene(m_pos) - QPointF(r, r), QSizeF(2 * r, 2 * r))
             .united(labelBoundingRect());
 }
@@ -37,7 +50,7 @@ QRectF PrimitiveConnection::boundingRect() const
 QPainterPath PrimitiveConnection::shape() const
 {
     QPainterPath path;
-    const qreal r = m_diameter / 2.0;
+    const qreal r = effectiveDiameter() / 2.0;
     path.addEllipse(mapFromScene(m_pos), r, r);
     return withLabelArea(path.united(strokeOutline(path, 0)));
 }
@@ -51,7 +64,7 @@ void PrimitiveConnection::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->setPen(Qt::NoPen);
     painter->setBrush(color);
 
-    const qreal r = m_diameter / 2.0;
+    const qreal r = effectiveDiameter() / 2.0;
     painter->drawEllipse(mapFromScene(m_pos), r, r);
 
     paintLabels(painter);

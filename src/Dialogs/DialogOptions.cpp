@@ -101,6 +101,9 @@ void DialogOptions::loadSettings()
     val = SettingsManager::getInstance().loadSetting("selection_tolerance");
     ui->spinSelectionTolerance->setValue(val.toDouble() > 0 ? val.toDouble() : 3.0);
 
+    val = SettingsManager::getInstance().loadSetting("connection_diameter");
+    ui->spinConnectionDiameter->setValue(val.toDouble() > 0 ? val.toDouble() : 2.0);
+
     val = SettingsManager::getInstance().loadSetting("language");
     const int languageIndex = LanguageCodes.indexOf(val.toString());
     ui->cboxLanguage->setCurrentIndex(languageIndex >= 0 ? languageIndex : 0);
@@ -126,6 +129,7 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("macro_icon_size", ui->spinMacroIconSize->value());
     SettingsManager::getInstance().saveSetting("line_width", ui->spinLineWidth->value());
     SettingsManager::getInstance().saveSetting("selection_tolerance", ui->spinSelectionTolerance->value());
+    SettingsManager::getInstance().saveSetting("connection_diameter", ui->spinConnectionDiameter->value());
     SettingsManager::getInstance().saveSetting("language", LanguageCodes.at(ui->cboxLanguage->currentIndex()));
 }
 
