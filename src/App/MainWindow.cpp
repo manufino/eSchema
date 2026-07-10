@@ -43,6 +43,7 @@
 #include <QPrintPreviewDialog>
 #include <QPainter>
 #include <QFont>
+#include <QSignalBlocker>
 
 namespace {
 // FidoCadJ's 16 default layers and colors (FIDOSPECS.md 3.1). Populating all
@@ -147,6 +148,15 @@ MainWindow::MainWindow(QWidget *parent)
         sheetScene->update();
     });
 
+    // Reflects whatever was last saved (or the compiled-in default, for a
+    // settings file saved before this action persisted anything) rather than
+    // always starting checked. Signals blocked: this is loading the saved
+    // state, not the user changing it, so it must not immediately re-trigger
+    // a save (same pattern as StatusBar's grid/snap toggle buttons).
+    const QVariant rulersVisible = SettingsManager::getInstance().loadSetting("rulers_visible");
+    const QSignalBlocker blockRulersAction(ui->actionRulersVisible);
+    ui->actionRulersVisible->setChecked(rulersVisible.isValid() ? rulersVisible.toBool() : true);
+
     setConnections();
     updateRulers();
     updateRulersVisibility();
@@ -176,6 +186,12 @@ void MainWindow::setConnections()
     });
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &MainWindow::updateRulersVisibility);
+    // Persists across restarts (see the constructor's own read of the same
+    // key) - toggled() only fires on an actual state change, so the initial
+    // setChecked() there can't be relied on to also save it back.
+    connect(ui->actionRulersVisible, &QAction::toggled, this, [](bool checked) {
+        SettingsManager::getInstance().saveSetting("rulers_visible", checked);
+    });
     connect(sheetScene, &Sheet::primitivesChanged, this, [this]() {
         int macroCount = 0;
         for (GraphicsPrimitive *primitive : sheetScene->primitives()) {

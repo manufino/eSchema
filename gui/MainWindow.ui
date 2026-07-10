@@ -971,6 +971,7 @@ margin:1px;
     </property>
     <addaction name="actionToolBarBaseVisible"/>
     <addaction name="actionToolBarPrimitiveVisible"/>
+    <addaction name="actionRulersVisible"/>
     <addaction name="separator"/>
     <addaction name="actionAdjustView"/>
    </widget>
@@ -1763,6 +1764,17 @@ margin:1px;
    </property>
    <property name="text">
     <string>Strumenti di disegno</string>
+   </property>
+  </action>
+  <action name="actionRulersVisible">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mostra righelli</string>
    </property>
   </action>
  </widget>
