@@ -185,6 +185,12 @@ win32 {
 	# sees it - "//" is MSYS's documented escape to suppress that conversion.
 	QMAKE_POST_LINK += $$quote(xcopy //s //y //i \"$$system_path($$PWD/lib)\" \"$$system_path($$OUT_PWD/release/lib)\" $$escape_expand(\\n\\t))
 	QMAKE_POST_LINK += $$quote(xcopy //s //y //i \"$$system_path($$PWD/lib)\" \"$$system_path($$OUT_PWD/debug/lib)\" $$escape_expand(\\n\\t))
+} else:macx {
+	# CONFIG+=app_bundle is the default on mac, so the actual executable lands
+	# inside $$TARGET.app/Contents/MacOS/ - not directly under $$OUT_PWD like
+	# on Linux - and that's the directory applicationDirPath() resolves to, so
+	# "lib" has to be copied one level deeper here than the unix branch below.
+	QMAKE_POST_LINK += $$quote(mkdir -p \"$$OUT_PWD/$${TARGET}.app/Contents/MacOS/lib\" && cp -r \"$$PWD/lib/.\" \"$$OUT_PWD/$${TARGET}.app/Contents/MacOS/lib\" $$escape_expand(\\n\\t))
 } else {
 	QMAKE_POST_LINK += $$quote(mkdir -p \"$$OUT_PWD/lib\" && cp -r \"$$PWD/lib/.\" \"$$OUT_PWD/lib\" $$escape_expand(\\n\\t))
 }
