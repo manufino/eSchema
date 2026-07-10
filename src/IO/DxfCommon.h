@@ -48,9 +48,10 @@ QVector<GroupPair> tokenizePairs(const QString &text);
 // Appends one group-code/value record (two lines) to `lines`.
 void appendGroup(QStringList &lines, int code, const QString &value);
 void appendGroup(QStringList &lines, int code, int value);
-// Real-valued group (coordinates, sizes, angles) - formatted via
-// FidoCadTokenUtils::roundIntelligently, consistent with how the rest of
-// the app already formats every other real-numbered field.
+// Real-valued group (coordinates, sizes, angles) - always includes an
+// explicit decimal point (e.g. "10.0", never a bare "10"), which strict DXF
+// parsers (AutoCAD itself, unlike this app's own lenient DxfReader) require
+// for every floating-point group code.
 void appendGroup(QStringList &lines, int code, qreal value);
 
 // Approximates the standard 256-entry AutoCAD Color Index (ACI) palette

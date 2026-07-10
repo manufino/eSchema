@@ -18,7 +18,6 @@
  */
 
 #include "DxfCommon.h"
-#include "FidoCadTokenUtils.h"
 
 #include <QtMath>
 #include <cmath>
@@ -101,9 +100,29 @@ void appendGroup(QStringList &lines, int code, int value)
     appendGroup(lines, code, QString::number(value));
 }
 
+namespace {
+
+// DXF's floating-point group codes (10-59, 140-147, 210-239, ...) must be
+// written with an explicit decimal point - unlike FidoCadTokenUtils::
+// roundIntelligently() (which deliberately prints whole numbers bare, e.g.
+// "10" not "10.0"), a real AutoCAD-compatible parser expects every real
+// value to look like one, and rejects a bare integer string there even
+// though lenient readers (this app's own DxfReader, ezdxf, LibreCAD) parse
+// it fine via a generic strtod(). Six decimals, trailing zeros trimmed but
+// always leaving at least one digit after the point.
+QString formatReal(qreal value)
+{
+    QString text = QString::number(value, 'f', 6);
+    while (text.endsWith(QLatin1Char('0')) && !text.endsWith(QStringLiteral(".0")))
+        text.chop(1);
+    return text;
+}
+
+} // namespace
+
 void appendGroup(QStringList &lines, int code, qreal value)
 {
-    appendGroup(lines, code, FidoCadTokenUtils::roundIntelligently(value));
+    appendGroup(lines, code, formatReal(value));
 }
 
 QColor aciToColor(int index)
