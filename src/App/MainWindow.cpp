@@ -493,7 +493,7 @@ void MainWindow::updateWindowTitle()
     const QString name = currentFilePath.isEmpty()
             ? tr("Nuovo disegno* (non salvato)")
             : QFileInfo(currentFilePath).fileName();
-    setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" BETA ]  -  ") + name);
+    setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" ]  -  ") + name);
 }
 
 void MainWindow::setCurrentFilePath(const QString &filePath)
