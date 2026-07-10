@@ -1,0 +1,194 @@
+name: Release
+
+# Builds portable Windows/Linux/macOS packages and publishes them as assets
+# on a GitHub Release whenever a "vX.Y.Z" tag is pushed. Each package is
+# assembled with the platform's own Qt deployment tool (windeployqt /
+# linuxdeploy+plugin-qt / macdeployqt), which only copies the Qt
+# libraries/plugins the binary actually links against - not the whole Qt
+# installation - to keep the zip as small as possible.
+
+on:
+  push:
+    tags:
+      - "v*"
+  # Lets a maintainer run the packaging jobs on demand (e.g. to sanity-check
+  # a workflow change) without having to push a throwaway tag. The final
+  # "release" job below still only runs for an actual tag push.
+  workflow_dispatch:
+
+env:
+  QT_VERSION: "6.9.2"
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt (MinGW 13.1)
+        run: |
+          python -m pip install --upgrade pip
+          pip install aqtinstall
+          python -m aqt install-qt windows desktop "$QT_VERSION" win64_mingw -O C:/Qt
+          python -m aqt install-tool windows desktop tools_mingw1310 qt.tools.win64_mingw1310 -O C:/Qt
+
+      - name: Build
+        run: |
+          export PATH="/c/Qt/$QT_VERSION/mingw_64/bin:/c/Qt/Tools/mingw1310_64/bin:$PATH"
+          mkdir build && cd build
+          qmake ../eSchema.pro
+          mingw32-make -j$(nproc)
+
+      - name: Assemble portable package
+        run: |
+          export PATH="/c/Qt/$QT_VERSION/mingw_64/bin:/c/Qt/Tools/mingw1310_64/bin:$PATH"
+          mkdir -p dist/eSchema
+          cp build/release/eSchema.exe dist/eSchema/
+          cp -r build/release/lib dist/eSchema/lib
+          cp LICENSE README.md dist/eSchema/
+          # --no-opengl-sw: this is a plain QGraphicsView/QWidgets app with no
+          # OpenGL usage, so the ~20MB software GL rasterizer DLL would be
+          # dead weight. --compiler-runtime: MinGW's own runtime DLLs
+          # (libstdc++/libgcc_s_seh/libwinpthread) aren't deployed by default
+          # and the target machine won't have MinGW installed.
+          windeployqt --release --no-translations --no-opengl-sw --compiler-runtime dist/eSchema/eSchema.exe
+
+      - name: Package zip
+        run: |
+          cd dist
+          7z a -tzip "../eSchema-${{ github.ref_name }}-windows-x64.zip" eSchema
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eSchema-windows
+          path: eSchema-*-windows-x64.zip
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        run: |
+          pip install aqtinstall
+          python -m aqt install-qt linux desktop "$QT_VERSION" linux_gcc_64 -O "$HOME/Qt"
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgl1-mesa-dev libxkbcommon-dev imagemagick
+
+      - name: Build
+        run: |
+          export PATH="$HOME/Qt/$QT_VERSION/gcc_64/bin:$PATH"
+          mkdir build && cd build
+          qmake ../eSchema.pro
+          make -j$(nproc)
+
+      - name: Assemble AppDir
+        run: |
+          mkdir -p AppDir/usr/bin
+          cp build/eSchema AppDir/usr/bin/
+          cp -r build/lib AppDir/usr/bin/lib
+          convert "resources/main.ico[0]" icon.png
+          cat > eSchema.desktop <<'EOF'
+          [Desktop Entry]
+          Type=Application
+          Name=eSchema
+          Exec=eSchema
+          Icon=eSchema
+          Categories=Development;Electronics;
+          EOF
+
+      - name: Deploy Qt dependencies
+        env:
+          # Both linuxdeploy and its Qt plugin can run without FUSE by
+          # extracting themselves to a temp dir first - hosted runners don't
+          # have FUSE available, so this is required rather than optional.
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+        run: |
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage linuxdeploy-plugin-qt-x86_64.AppImage
+          # linuxdeploy discovers plugins by looking for an executable named
+          # exactly "linuxdeploy-plugin-<name>" on PATH.
+          mv linuxdeploy-plugin-qt-x86_64.AppImage linuxdeploy-plugin-qt
+          export PATH="$PWD:$PATH"
+          export QMAKE="$HOME/Qt/$QT_VERSION/gcc_64/bin/qmake"
+          ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt \
+            --executable AppDir/usr/bin/eSchema \
+            --desktop-file eSchema.desktop \
+            --icon-file icon.png
+
+      - name: Package zip
+        run: |
+          cp LICENSE README.md AppDir/
+          mv AppDir "eSchema-${{ github.ref_name }}-linux-x86_64"
+          zip -r "eSchema-${{ github.ref_name }}-linux-x86_64.zip" "eSchema-${{ github.ref_name }}-linux-x86_64"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eSchema-linux
+          path: eSchema-*-linux-x86_64.zip
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        run: |
+          pip install aqtinstall
+          python -m aqt install-qt mac desktop "$QT_VERSION" clang_64 -O "$HOME/Qt"
+
+      - name: Build
+        run: |
+          export PATH="$HOME/Qt/$QT_VERSION/macos/bin:$PATH"
+          mkdir build && cd build
+          qmake ../eSchema.pro
+          make -j$(sysctl -n hw.ncpu)
+
+      - name: Deploy Qt dependencies
+        run: |
+          export PATH="$HOME/Qt/$QT_VERSION/macos/bin:$PATH"
+          # The "lib" macro-library folder is already inside
+          # eSchema.app/Contents/MacOS/lib - copied there by eSchema.pro's
+          # macx-specific QMAKE_POST_LINK step.
+          macdeployqt build/eSchema.app
+
+      - name: Package zip
+        run: |
+          mkdir dist
+          cp -r build/eSchema.app dist/
+          cp LICENSE README.md dist/
+          cd dist
+          zip -r "../eSchema-${{ github.ref_name }}-macos.zip" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eSchema-macos
+          path: eSchema-*-macos.zip
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [windows, linux, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" artifacts/*.zip \
+            --repo "${{ github.repository }}" \
+            --title "eSchema ${{ github.ref_name }}" \
+            --generate-notes
