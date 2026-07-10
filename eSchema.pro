@@ -1,5 +1,5 @@
 # eSchema Version
-VERSION = 1.0.1
+VERSION = 1.0.2
 
 QT += core gui printsupport svg
 
