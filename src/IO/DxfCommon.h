@@ -20,39 +20,16 @@
 #ifndef DXFCOMMON_H
 #define DXFCOMMON_H
 
-#include <QString>
-#include <QStringList>
 #include <QVector>
 #include <QColor>
 #include <QPointF>
 
-// Shared infrastructure for DxfReader/DxfWriter: ASCII DXF group-code
-// read/write helpers, the AutoCAD Color Index (ACI) palette, and arc
-// tessellation - no entity-specific logic lives here.
+// Shared infrastructure for DxfReader/DxfWriter: the AutoCAD Color Index
+// (ACI) palette and arc tessellation. Actual DXF group-code reading/writing
+// is delegated entirely to the vendored libdxfrw (see
+// third_party/libdxfrw/README-eschema.md) - no group-code handling lives
+// here anymore.
 namespace DxfCommon {
-
-// One "group code / value" pair - the fundamental unit of the ASCII DXF
-// format (every record is a pair of lines: an integer code, then its value).
-struct GroupPair {
-    int code;
-    QString value;
-};
-
-// Splits raw DXF text into an ordered list of group-code pairs. Tolerant of
-// CRLF/LF and surrounding whitespace; a line that isn't a valid integer code
-// drops just that one pair (its value line is still consumed, so pairing
-// stays aligned for everything after it) rather than aborting the whole
-// parse - matching FidoCadReader's per-line robustness contract.
-QVector<GroupPair> tokenizePairs(const QString &text);
-
-// Appends one group-code/value record (two lines) to `lines`.
-void appendGroup(QStringList &lines, int code, const QString &value);
-void appendGroup(QStringList &lines, int code, int value);
-// Real-valued group (coordinates, sizes, angles) - always includes an
-// explicit decimal point (e.g. "10.0", never a bare "10"), which strict DXF
-// parsers (AutoCAD itself, unlike this app's own lenient DxfReader) require
-// for every floating-point group code.
-void appendGroup(QStringList &lines, int code, qreal value);
 
 // Approximates the standard 256-entry AutoCAD Color Index (ACI) palette
 // (group code 62): colors 1-9 (primaries) and 250-255 (grayscale ramp) are

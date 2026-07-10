@@ -6,8 +6,23 @@ QT += core gui printsupport svg
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17 # lrelease
+# Mirrors each source's directory under the build dir for its .o file,
+# instead of just its basename - needed because two vendored libdxfrw
+# filenames (intern/dxfreader.cpp, intern/dxfwriter.cpp) only differ in case
+# from this project's own DxfReader.cpp/DxfWriter.cpp, which collide on
+# Windows' case-insensitive filesystem otherwise.
+CONFIG += object_parallel_to_source
 
 INCLUDEPATH += src src/App src/Core src/Primitives src/Commands src/IO src/Dialogs src/Widgets
+
+# Vendored DXF read/write library (see third_party/libdxfrw/README-eschema.md).
+# Must stay AFTER the INCLUDEPATH line above: this app's own DxfReader.h/
+# DxfWriter.h only differ in case from libdxfrw's intern/dxfreader.h/
+# dxfwriter.h, and on Windows' case-insensitive filesystem, whichever
+# INCLUDEPATH entry appears first wins an unqualified #include lookup from a
+# file outside src/IO/ itself (e.g. MainWindow.cpp) - moving this above the
+# INCLUDEPATH line would silently start pulling in the wrong header.
+include(third_party/libdxfrw/libdxfrw.pri)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

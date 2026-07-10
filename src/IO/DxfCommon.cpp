@@ -70,61 +70,6 @@ const QVector<QColor> &aciPalette()
 
 } // namespace
 
-QVector<GroupPair> tokenizePairs(const QString &text)
-{
-    QVector<GroupPair> pairs;
-
-    QString normalized = text;
-    normalized.replace(QStringLiteral("\r\n"), QStringLiteral("\n"));
-    normalized.replace(QLatin1Char('\r'), QLatin1Char('\n'));
-    const QStringList lines = normalized.split(QLatin1Char('\n'));
-
-    for (int i = 0; i + 1 < lines.size(); i += 2) {
-        bool ok = false;
-        const int code = lines.at(i).trimmed().toInt(&ok);
-        if (!ok)
-            continue; // malformed group-code line - skip just this pair
-        pairs.append({code, lines.at(i + 1).trimmed()});
-    }
-
-    return pairs;
-}
-
-void appendGroup(QStringList &lines, int code, const QString &value)
-{
-    lines << QString::number(code) << value;
-}
-
-void appendGroup(QStringList &lines, int code, int value)
-{
-    appendGroup(lines, code, QString::number(value));
-}
-
-namespace {
-
-// DXF's floating-point group codes (10-59, 140-147, 210-239, ...) must be
-// written with an explicit decimal point - unlike FidoCadTokenUtils::
-// roundIntelligently() (which deliberately prints whole numbers bare, e.g.
-// "10" not "10.0"), a real AutoCAD-compatible parser expects every real
-// value to look like one, and rejects a bare integer string there even
-// though lenient readers (this app's own DxfReader, ezdxf, LibreCAD) parse
-// it fine via a generic strtod(). Six decimals, trailing zeros trimmed but
-// always leaving at least one digit after the point.
-QString formatReal(qreal value)
-{
-    QString text = QString::number(value, 'f', 6);
-    while (text.endsWith(QLatin1Char('0')) && !text.endsWith(QStringLiteral(".0")))
-        text.chop(1);
-    return text;
-}
-
-} // namespace
-
-void appendGroup(QStringList &lines, int code, qreal value)
-{
-    appendGroup(lines, code, formatReal(value));
-}
-
 QColor aciToColor(int index)
 {
     if (index < 1 || index > 255)

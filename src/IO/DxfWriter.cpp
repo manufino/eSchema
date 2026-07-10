@@ -33,8 +33,11 @@
 #include "PrimitiveMacro.h"
 #include "PrimitiveText.h"
 
+#include "libdxfrw.h"
+#include "drw_interface.h"
+
 #include <QFile>
-#include <QTextStream>
+#include <QTemporaryFile>
 #include <QMap>
 #include <QtMath>
 
@@ -105,324 +108,340 @@ QList<GraphicsPrimitive *> flattenMacros(const Sheet *sheet, QList<GraphicsPrimi
     return result;
 }
 
-void writeHeaderSection(QStringList &lines)
-{
-    lines << QStringLiteral("0") << QStringLiteral("SECTION");
-    appendGroup(lines, 2, QStringLiteral("HEADER"));
-    appendGroup(lines, 9, QStringLiteral("$ACADVER"));
-    appendGroup(lines, 1, QStringLiteral("AC1015"));
-    appendGroup(lines, 9, QStringLiteral("$INSUNITS"));
-    appendGroup(lines, 70, 0); // unitless, matching eSchema's own unit-agnostic coordinates
-    lines << QStringLiteral("0") << QStringLiteral("ENDSEC");
-}
-
-void writeTablesSection(QStringList &lines, const QMap<QString, QColor> &layers)
-{
-    lines << QStringLiteral("0") << QStringLiteral("SECTION");
-    appendGroup(lines, 2, QStringLiteral("TABLES"));
-
-    lines << QStringLiteral("0") << QStringLiteral("TABLE");
-    appendGroup(lines, 2, QStringLiteral("LAYER"));
-    appendGroup(lines, 70, int(layers.size()));
-
-    for (auto it = layers.constBegin(); it != layers.constEnd(); ++it) {
-        lines << QStringLiteral("0") << QStringLiteral("LAYER");
-        appendGroup(lines, 2, it.key());
-        appendGroup(lines, 70, 0);
-        appendGroup(lines, 62, colorToAci(it.value()));
-        appendGroup(lines, 6, QStringLiteral("CONTINUOUS"));
-    }
-
-    lines << QStringLiteral("0") << QStringLiteral("ENDTAB");
-    lines << QStringLiteral("0") << QStringLiteral("ENDSEC");
-}
-
-void writeLine(QStringList &lines, const QPointF &p1, const QPointF &p2, const QString &layerName)
-{
-    lines << QStringLiteral("0") << QStringLiteral("LINE");
-    appendGroup(lines, 8, layerName);
-    appendGroup(lines, 10, p1.x());
-    appendGroup(lines, 20, p1.y());
-    appendGroup(lines, 30, 0.0);
-    appendGroup(lines, 11, p2.x());
-    appendGroup(lines, 21, p2.y());
-    appendGroup(lines, 31, 0.0);
-}
-
-void writeCircle(QStringList &lines, const QPointF &center, qreal radius, const QString &layerName)
-{
-    lines << QStringLiteral("0") << QStringLiteral("CIRCLE");
-    appendGroup(lines, 8, layerName);
-    appendGroup(lines, 10, center.x());
-    appendGroup(lines, 20, center.y());
-    appendGroup(lines, 30, 0.0);
-    appendGroup(lines, 40, radius);
-}
-
-void writeEllipse(QStringList &lines, const QPointF &center, qreal rx, qreal ry, const QString &layerName)
-{
-    lines << QStringLiteral("0") << QStringLiteral("ELLIPSE");
-    appendGroup(lines, 8, layerName);
-    appendGroup(lines, 10, center.x());
-    appendGroup(lines, 20, center.y());
-    appendGroup(lines, 30, 0.0);
-    // Major axis endpoint, relative to center - along whichever of rx/ry is
-    // larger, so the ratio (group 40) never exceeds 1.
-    if (rx >= ry) {
-        appendGroup(lines, 11, rx);
-        appendGroup(lines, 21, 0.0);
-        appendGroup(lines, 40, ry / rx);
-    } else {
-        appendGroup(lines, 11, 0.0);
-        appendGroup(lines, 21, ry);
-        appendGroup(lines, 40, rx / ry);
-    }
-    appendGroup(lines, 31, 0.0);
-    appendGroup(lines, 41, 0.0);              // start parameter
-    appendGroup(lines, 42, 2.0 * M_PI);       // end parameter - full ellipse
-}
-
-// Closed polygon of arbitrary vertex count (PrimitiveRectangle/PrimitivePolygon
-// and PrimitivePad's rectangular styles all funnel through this).
-void writeClosedPolyline(QStringList &lines, const QVector<QPointF> &vertices, const QString &layerName)
-{
-    lines << QStringLiteral("0") << QStringLiteral("LWPOLYLINE");
-    appendGroup(lines, 8, layerName);
-    appendGroup(lines, 100, QStringLiteral("AcDbEntity"));
-    appendGroup(lines, 100, QStringLiteral("AcDbPolyline"));
-    appendGroup(lines, 90, int(vertices.size()));
-    appendGroup(lines, 70, 1); // bit 0 = closed
-    for (const QPointF &v : vertices) {
-        appendGroup(lines, 10, v.x());
-        appendGroup(lines, 20, v.y());
-    }
-}
-
-// A 2-vertex widthed (open) LWPOLYLINE - the structurally distinctive
-// signature DxfReader recognizes as a PrimitivePcbTrack on the way back in.
-void writeTrackPolyline(QStringList &lines, const QPointF &p1, const QPointF &p2,
-                         qreal width, const QString &layerName)
-{
-    lines << QStringLiteral("0") << QStringLiteral("LWPOLYLINE");
-    appendGroup(lines, 8, layerName);
-    appendGroup(lines, 100, QStringLiteral("AcDbEntity"));
-    appendGroup(lines, 100, QStringLiteral("AcDbPolyline"));
-    appendGroup(lines, 90, 2);
-    appendGroup(lines, 70, 0); // open
-    appendGroup(lines, 10, p1.x());
-    appendGroup(lines, 20, p1.y());
-    appendGroup(lines, 40, width);
-    appendGroup(lines, 41, width);
-    appendGroup(lines, 10, p2.x());
-    appendGroup(lines, 20, p2.y());
-    appendGroup(lines, 40, width);
-    appendGroup(lines, 41, width);
-}
-
-// Fit-point spline - used both for PrimitiveComplexCurve (its own vertices
-// are the fit points directly) and for PrimitiveBezier (sampled into points
-// first, see bezierPoint() below), so both share this one, hand-verified
-// group-code combination rather than also emitting a second, riskier
-// control-point spline form.
-void writeFitPointSpline(QStringList &lines, const QVector<QPointF> &fitPoints, bool closed, const QString &layerName)
-{
-    lines << QStringLiteral("0") << QStringLiteral("SPLINE");
-    appendGroup(lines, 8, layerName);
-    appendGroup(lines, 100, QStringLiteral("AcDbEntity"));
-    appendGroup(lines, 100, QStringLiteral("AcDbSpline"));
-    appendGroup(lines, 70, closed ? 9 : 8); // 8 = planar, +1 = closed
-    appendGroup(lines, 71, 3);              // degree
-    appendGroup(lines, 72, 0);              // knot count - none, fit-point form
-    appendGroup(lines, 73, 0);              // control point count - none
-    appendGroup(lines, 74, int(fitPoints.size()));
-    for (const QPointF &v : fitPoints) {
-        appendGroup(lines, 11, v.x());
-        appendGroup(lines, 21, v.y());
-        appendGroup(lines, 31, 0.0);
-    }
-}
-
 QPointF bezierPoint(qreal t, const QPointF &p0, const QPointF &p1, const QPointF &p2, const QPointF &p3)
 {
     const qreal u = 1.0 - t;
     return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3;
 }
 
-void writePoint(QStringList &lines, const QPointF &pos, const QString &layerName)
+DRW_Coord toCoord(const QPointF &p)
 {
-    lines << QStringLiteral("0") << QStringLiteral("POINT");
-    appendGroup(lines, 8, layerName);
-    appendGroup(lines, 10, pos.x());
-    appendGroup(lines, 20, pos.y());
-    appendGroup(lines, 30, 0.0);
+    return DRW_Coord(p.x(), p.y(), 0.0);
 }
 
-void writeText(QStringList &lines, const QPointF &pos, qreal height, qreal rotationDeg,
-               const QString &text, const QString &layerName)
+void addPolylineVertices(DRW_LWPolyline &lwp, const QVector<QPointF> &points,
+                          qreal startWidth = 0.0, qreal endWidth = 0.0)
 {
-    lines << QStringLiteral("0") << QStringLiteral("TEXT");
-    appendGroup(lines, 8, layerName);
-    appendGroup(lines, 10, pos.x());
-    appendGroup(lines, 20, pos.y());
-    appendGroup(lines, 30, 0.0);
-    appendGroup(lines, 40, height);
-    appendGroup(lines, 1, text);
-    appendGroup(lines, 50, rotationDeg);
+    for (const QPointF &pt : points) {
+        DRW_Vertex2D v(pt.x(), pt.y(), 0.0);
+        v.stawidth = startWidth;
+        v.endwidth = endWidth;
+        lwp.addVertex(v);
+    }
 }
 
-void writePrimitive(QStringList &lines, GraphicsPrimitive *primitive)
-{
-    if (primitive->isDegenerate())
-        return;
+// Everything this app can write, keyed by the DRW_Interface implementation's
+// writeEntities() below - one function per DXF entity kind, taking the
+// dxfRW to write through plus the entity data. Kept as free functions
+// (rather than DRW_Entity subclass methods) since libdxfrw's own entity
+// structs are plain data, not something we subclass.
+class ExportInterface : public DRW_Interface {
+public:
+    dxfRW *writer = nullptr;
+    QList<GraphicsPrimitive *> primitives; // pre-flattened, ready to emit
+    QMap<QString, QColor> layers;          // name -> color, gathered up front
 
-    const QString layerName = layerNameOf(primitive);
+    void writeEntity(GraphicsPrimitive *primitive)
+    {
+        if (primitive->isDegenerate())
+            return;
 
-    switch (primitive->getPrimitiveType()) {
-    case GraphicsPrimitive::Line: {
-        auto *p = static_cast<PrimitiveLine *>(primitive);
-        writeLine(lines, p->controlPoint(0), p->controlPoint(1), layerName);
-        break;
-    }
-    case GraphicsPrimitive::Rectangle: {
-        auto *p = static_cast<PrimitiveRectangle *>(primitive);
-        const QPointF a = p->controlPoint(0);
-        const QPointF c = p->controlPoint(1);
-        const QVector<QPointF> corners { a, QPointF(c.x(), a.y()), c, QPointF(a.x(), c.y()) };
-        writeClosedPolyline(lines, corners, layerName);
-        break;
-    }
-    case GraphicsPrimitive::Ellipse: {
-        auto *p = static_cast<PrimitiveEllipse *>(primitive);
-        const QPointF a = p->controlPoint(0);
-        const QPointF b = p->controlPoint(1);
-        const QPointF center = (a + b) / 2.0;
-        const qreal rx = qAbs(b.x() - a.x()) / 2.0;
-        const qreal ry = qAbs(b.y() - a.y()) / 2.0;
-        if (qFuzzyCompare(rx, ry))
-            writeCircle(lines, center, rx, layerName);
-        else
-            writeEllipse(lines, center, rx, ry, layerName);
-        break;
-    }
-    case GraphicsPrimitive::Bezier: {
-        auto *p = static_cast<PrimitiveBezier *>(primitive);
-        const QPointF p0 = p->controlPoint(0);
-        const QPointF c1 = p->controlPoint(1);
-        const QPointF c2 = p->controlPoint(2);
-        const QPointF p3 = p->controlPoint(3);
-        // Sampled into a fit-point spline rather than emitted as an exact
-        // 4-control-point spline, to reuse the one hand-verified SPLINE
-        // group-code combination (see writeFitPointSpline()) instead of a
-        // second, unvalidated one.
-        QVector<QPointF> points;
-        const int steps = 24;
-        for (int i = 0; i <= steps; ++i)
-            points.append(bezierPoint(qreal(i) / steps, p0, c1, c2, p3));
-        writeFitPointSpline(lines, points, false, layerName);
-        break;
-    }
-    case GraphicsPrimitive::Spline: {
-        auto *p = static_cast<PrimitiveComplexCurve *>(primitive);
-        QVector<QPointF> points;
-        for (int i = 0; i < p->controlPointCount(); ++i)
-            points.append(p->controlPoint(i));
-        writeFitPointSpline(lines, points, p->isClosed(), layerName);
-        break;
-    }
-    case GraphicsPrimitive::Polyline: {
-        auto *p = static_cast<PrimitivePolygon *>(primitive);
-        QVector<QPointF> points;
-        for (int i = 0; i < p->controlPointCount(); ++i)
-            points.append(p->controlPoint(i));
-        writeClosedPolyline(lines, points, layerName);
-        break;
-    }
-    case GraphicsPrimitive::Connection: {
-        auto *p = static_cast<PrimitiveConnection *>(primitive);
-        writePoint(lines, p->controlPoint(0), layerName);
-        break;
-    }
-    case GraphicsPrimitive::PcbTrack: {
-        auto *p = static_cast<PrimitivePcbTrack *>(primitive);
-        writeTrackPolyline(lines, p->controlPoint(0), p->controlPoint(1), p->width(), layerName);
-        break;
-    }
-    case GraphicsPrimitive::Pad: {
-        auto *p = static_cast<PrimitivePad *>(primitive);
-        const QPointF center = p->controlPoint(0);
-        if (p->style() == PrimitivePad::Round) {
-            writeCircle(lines, center, qMax(p->outerWidth(), p->outerHeight()) / 2.0, layerName);
-        } else {
-            const qreal hw = p->outerWidth() / 2.0;
-            const qreal hh = p->outerHeight() / 2.0;
-            const QVector<QPointF> corners {
-                center + QPointF(-hw, -hh), center + QPointF(hw, -hh),
-                center + QPointF(hw, hh), center + QPointF(-hw, hh)
-            };
-            writeClosedPolyline(lines, corners, layerName);
+        const std::string layerName = layerNameOf(primitive).toStdString();
+
+        switch (primitive->getPrimitiveType()) {
+        case GraphicsPrimitive::Line: {
+            auto *p = static_cast<PrimitiveLine *>(primitive);
+            DRW_Line ent;
+            ent.layer = layerName;
+            ent.basePoint = toCoord(p->controlPoint(0));
+            ent.secPoint = toCoord(p->controlPoint(1));
+            writer->writeLine(&ent);
+            break;
         }
-        break;
+        case GraphicsPrimitive::Rectangle: {
+            auto *p = static_cast<PrimitiveRectangle *>(primitive);
+            const QPointF a = p->controlPoint(0);
+            const QPointF c = p->controlPoint(1);
+            const QVector<QPointF> corners { a, QPointF(c.x(), a.y()), c, QPointF(a.x(), c.y()) };
+            DRW_LWPolyline ent;
+            ent.layer = layerName;
+            ent.flags = 1; // closed
+            addPolylineVertices(ent, corners);
+            writer->writeLWPolyline(&ent);
+            break;
+        }
+        case GraphicsPrimitive::Ellipse: {
+            auto *p = static_cast<PrimitiveEllipse *>(primitive);
+            const QPointF a = p->controlPoint(0);
+            const QPointF b = p->controlPoint(1);
+            const QPointF center = (a + b) / 2.0;
+            const qreal rx = qAbs(b.x() - a.x()) / 2.0;
+            const qreal ry = qAbs(b.y() - a.y()) / 2.0;
+            if (qFuzzyCompare(rx, ry)) {
+                DRW_Circle ent;
+                ent.layer = layerName;
+                ent.basePoint = toCoord(center);
+                ent.radious = rx;
+                writer->writeCircle(&ent);
+            } else {
+                DRW_Ellipse ent;
+                ent.layer = layerName;
+                ent.basePoint = toCoord(center);
+                // Major axis endpoint, relative to center, along whichever
+                // of rx/ry is larger, so the ratio never exceeds 1.
+                if (rx >= ry) {
+                    ent.secPoint = DRW_Coord(rx, 0.0, 0.0);
+                    ent.ratio = ry / rx;
+                } else {
+                    ent.secPoint = DRW_Coord(0.0, ry, 0.0);
+                    ent.ratio = rx / ry;
+                }
+                ent.staparam = 0.0;
+                ent.endparam = 2.0 * M_PI;
+                writer->writeEllipse(&ent);
+            }
+            break;
+        }
+        case GraphicsPrimitive::Bezier: {
+            // libdxfrw's writeSpline() (this vendored version) only ever
+            // emits control points (group 10/20/30), never fit points
+            // (11/21/31) - a fit-point SPLINE round-trips through this
+            // app's own lenient reader and ezdxf but writes out with no
+            // coordinate data at all, silently dropping the curve. Sampled
+            // densely into a plain LWPOLYLINE instead - geometrically
+            // identical to a degree-1 (linear) spline through the same
+            // points, without depending on that unimplemented path.
+            auto *p = static_cast<PrimitiveBezier *>(primitive);
+            const QPointF p0 = p->controlPoint(0);
+            const QPointF c1 = p->controlPoint(1);
+            const QPointF c2 = p->controlPoint(2);
+            const QPointF p3 = p->controlPoint(3);
+            QVector<QPointF> points;
+            const int steps = 24;
+            for (int i = 0; i <= steps; ++i)
+                points.append(bezierPoint(qreal(i) / steps, p0, c1, c2, p3));
+            DRW_LWPolyline ent;
+            ent.layer = layerName;
+            ent.flags = 0; // open
+            addPolylineVertices(ent, points);
+            writer->writeLWPolyline(&ent);
+            break;
+        }
+        case GraphicsPrimitive::Spline: {
+            // Same LWPOLYLINE fallback as Bezier above, and for the same
+            // reason. Straight segments between the curve's own vertices,
+            // not a resampled smooth interpolation - a known simplification
+            // (the smoothing algorithm is PrimitiveComplexCurve's own
+            // private implementation detail, not exposed for reuse here).
+            auto *p = static_cast<PrimitiveComplexCurve *>(primitive);
+            QVector<QPointF> points;
+            for (int i = 0; i < p->controlPointCount(); ++i)
+                points.append(p->controlPoint(i));
+            DRW_LWPolyline ent;
+            ent.layer = layerName;
+            ent.flags = p->isClosed() ? 1 : 0;
+            addPolylineVertices(ent, points);
+            writer->writeLWPolyline(&ent);
+            break;
+        }
+        case GraphicsPrimitive::Polyline: {
+            auto *p = static_cast<PrimitivePolygon *>(primitive);
+            QVector<QPointF> points;
+            for (int i = 0; i < p->controlPointCount(); ++i)
+                points.append(p->controlPoint(i));
+            DRW_LWPolyline ent;
+            ent.layer = layerName;
+            ent.flags = 1; // closed
+            addPolylineVertices(ent, points);
+            writer->writeLWPolyline(&ent);
+            break;
+        }
+        case GraphicsPrimitive::Connection: {
+            auto *p = static_cast<PrimitiveConnection *>(primitive);
+            DRW_Point ent;
+            ent.layer = layerName;
+            ent.basePoint = toCoord(p->controlPoint(0));
+            writer->writePoint(&ent);
+            break;
+        }
+        case GraphicsPrimitive::PcbTrack: {
+            // A 2-vertex widthed (open) LWPOLYLINE - the structurally
+            // distinctive signature DxfReader recognizes as a
+            // PrimitivePcbTrack on the way back in (a plain LINE never
+            // carries width).
+            auto *p = static_cast<PrimitivePcbTrack *>(primitive);
+            DRW_LWPolyline ent;
+            ent.layer = layerName;
+            ent.flags = 0; // open
+            addPolylineVertices(ent, { p->controlPoint(0), p->controlPoint(1) }, p->width(), p->width());
+            writer->writeLWPolyline(&ent);
+            break;
+        }
+        case GraphicsPrimitive::Pad: {
+            auto *p = static_cast<PrimitivePad *>(primitive);
+            const QPointF center = p->controlPoint(0);
+            if (p->style() == PrimitivePad::Round) {
+                DRW_Circle ent;
+                ent.layer = layerName;
+                ent.basePoint = toCoord(center);
+                ent.radious = qMax(p->outerWidth(), p->outerHeight()) / 2.0;
+                writer->writeCircle(&ent);
+            } else {
+                const qreal hw = p->outerWidth() / 2.0;
+                const qreal hh = p->outerHeight() / 2.0;
+                const QVector<QPointF> corners {
+                    center + QPointF(-hw, -hh), center + QPointF(hw, -hh),
+                    center + QPointF(hw, hh), center + QPointF(-hw, hh)
+                };
+                DRW_LWPolyline ent;
+                ent.layer = layerName;
+                ent.flags = 1; // closed
+                addPolylineVertices(ent, corners);
+                writer->writeLWPolyline(&ent);
+            }
+            break;
+        }
+        case GraphicsPrimitive::Text: {
+            auto *p = static_cast<PrimitiveText *>(primitive);
+            DRW_Text ent;
+            ent.layer = layerName;
+            ent.basePoint = toCoord(p->controlPoint(0));
+            ent.height = p->sizeY();
+            ent.text = p->text().toStdString();
+            ent.angle = p->orientationDeg(); // DXF TEXT rotation (code 50) is in degrees
+            writer->writeText(&ent);
+            break;
+        }
+        case GraphicsPrimitive::PartLib:
+            // Flattened away before writeEntity() is ever called on one -
+            // see flattenMacros().
+            break;
+        case GraphicsPrimitive::Image:
+            // No portable DXF equivalent (IMAGE needs an external file
+            // reference, not inline data) - known, accepted limitation.
+            break;
+        }
     }
-    case GraphicsPrimitive::Text: {
-        auto *p = static_cast<PrimitiveText *>(primitive);
-        writeText(lines, p->controlPoint(0), p->sizeY(), p->orientationDeg(), p->text(), layerName);
-        break;
+
+    // --- write-side callbacks actually used ---------------------------------
+    void writeHeader(DRW_Header &) override {}
+    void writeLayers() override
+    {
+        for (auto it = layers.constBegin(); it != layers.constEnd(); ++it) {
+            DRW_Layer layer;
+            layer.name = it.key().toStdString();
+            layer.color = colorToAci(it.value());
+            layer.lineType = "CONTINUOUS";
+            writer->writeLayer(&layer);
+        }
     }
-    case GraphicsPrimitive::PartLib:
-        // Flattened away before writePrimitive() is ever called on one - see
-        // flattenMacros().
-        break;
-    case GraphicsPrimitive::Image:
-        // No portable DXF equivalent (IMAGE needs an external file
-        // reference, not inline data) - known, accepted limitation.
-        break;
+    void writeEntities() override
+    {
+        for (GraphicsPrimitive *primitive : primitives)
+            writeEntity(primitive);
     }
-}
+    // Nothing else this app writes - every one of these is a legitimate
+    // no-op (dxfRW::write() supplies mandatory default table entries, e.g.
+    // "0"/"Standard", on its own when these add nothing).
+    void writeBlocks() override {}
+    void writeBlockRecords() override {}
+    void writeLTypes() override {}
+    void writeTextstyles() override {}
+    void writeVports() override {}
+    void writeDimstyles() override {}
+    void writeObjects() override {}
+    void writeAppId() override {}
+
+    // --- read-side callbacks: unused on the write path, still pure virtual --
+    void addHeader(const DRW_Header *) override {}
+    void addLType(const DRW_LType &) override {}
+    void addLayer(const DRW_Layer &) override {}
+    void addDimStyle(const DRW_Dimstyle &) override {}
+    void addVport(const DRW_Vport &) override {}
+    void addTextStyle(const DRW_Textstyle &) override {}
+    void addAppId(const DRW_AppId &) override {}
+    void addBlock(const DRW_Block &) override {}
+    void setBlock(const int) override {}
+    void endBlock() override {}
+    void addPoint(const DRW_Point &) override {}
+    void addLine(const DRW_Line &) override {}
+    void addRay(const DRW_Ray &) override {}
+    void addXline(const DRW_Xline &) override {}
+    void addArc(const DRW_Arc &) override {}
+    void addCircle(const DRW_Circle &) override {}
+    void addEllipse(const DRW_Ellipse &) override {}
+    void addLWPolyline(const DRW_LWPolyline &) override {}
+    void addPolyline(const DRW_Polyline &) override {}
+    void addSpline(const DRW_Spline *) override {}
+    void addKnot(const DRW_Entity &) override {}
+    void addInsert(const DRW_Insert &) override {}
+    void addTrace(const DRW_Trace &) override {}
+    void add3dFace(const DRW_3Dface &) override {}
+    void addSolid(const DRW_Solid &) override {}
+    void addMText(const DRW_MText &) override {}
+    void addText(const DRW_Text &) override {}
+    void addDimAlign(const DRW_DimAligned *) override {}
+    void addDimLinear(const DRW_DimLinear *) override {}
+    void addDimRadial(const DRW_DimRadial *) override {}
+    void addDimDiametric(const DRW_DimDiametric *) override {}
+    void addDimAngular(const DRW_DimAngular *) override {}
+    void addDimAngular3P(const DRW_DimAngular3p *) override {}
+    void addDimOrdinate(const DRW_DimOrdinate *) override {}
+    void addLeader(const DRW_Leader *) override {}
+    void addHatch(const DRW_Hatch *) override {}
+    void addViewport(const DRW_Viewport &) override {}
+    void addImage(const DRW_Image *) override {}
+    void linkImage(const DRW_ImageDef *) override {}
+    void addComment(const char *) override {}
+    void addPlotSettings(const DRW_PlotSettings *) override {}
+};
 
 } // namespace
 
-QString write(const Sheet *sheet)
+bool writeFile(const Sheet *sheet, const QString &filePath, QString *errorMessage)
 {
     QList<GraphicsPrimitive *> owned;
-    const QList<GraphicsPrimitive *> primitives = flattenMacros(sheet, owned);
+    ExportInterface iface;
+    iface.primitives = flattenMacros(sheet, owned);
 
-    QMap<QString, QColor> layers;
-    layers.insert(QStringLiteral("0"), QColor(Qt::white));
-    for (GraphicsPrimitive *primitive : primitives) {
+    iface.layers.insert(QStringLiteral("0"), QColor(Qt::white));
+    for (GraphicsPrimitive *primitive : iface.primitives) {
         if (primitive->isDegenerate())
             continue;
-        layers.insert(layerNameOf(primitive), layerColorOf(primitive));
+        iface.layers.insert(layerNameOf(primitive), layerColorOf(primitive));
     }
 
-    QStringList lines;
-    writeHeaderSection(lines);
-    writeTablesSection(lines, layers);
-
-    lines << QStringLiteral("0") << QStringLiteral("SECTION");
-    appendGroup(lines, 2, QStringLiteral("ENTITIES"));
-    for (GraphicsPrimitive *primitive : primitives)
-        writePrimitive(lines, primitive);
-    lines << QStringLiteral("0") << QStringLiteral("ENDSEC");
-
-    lines << QStringLiteral("0") << QStringLiteral("EOF");
+    dxfRW writer(filePath.toLocal8Bit().constData());
+    iface.writer = &writer;
+    const bool ok = writer.write(&iface, DRW::AC1015, /*bin=*/false);
 
     qDeleteAll(owned);
 
-    return lines.join(QLatin1Char('\n'));
+    if (!ok && errorMessage)
+        *errorMessage = QStringLiteral("libdxfrw write() failed");
+    return ok;
 }
 
-bool writeFile(const Sheet *sheet, const QString &filePath, QString *errorMessage)
+QString write(const Sheet *sheet)
 {
-    QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly)) {
-        if (errorMessage)
-            *errorMessage = file.errorString();
-        return false;
-    }
+    // libdxfrw always writes straight to a file path - there is no
+    // in-memory writer to call directly, unlike FidoCadWriter's own
+    // hand-rolled QStringList-based one. Route through a temp file instead,
+    // so callers that want the text (e.g. tests) can still get it.
+    QTemporaryFile temp;
+    if (!temp.open())
+        return QString();
+    const QString path = temp.fileName();
+    temp.close();
 
-    QTextStream stream(&file);
-    stream << write(sheet);
-    return true;
+    QString error;
+    if (!writeFile(sheet, path, &error))
+        return QString();
+
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return QString();
+    return QString::fromUtf8(file.readAll());
 }
 
 } // namespace DxfWriter

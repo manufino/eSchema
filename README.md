@@ -46,6 +46,10 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 - Faithful, idempotent round-tripping — including the `FCJ` extensions (dash styles, arrowheads) and per-document `FJC` configuration
 - Print and print-preview support
 
+### DXF import/export
+- Import and export AutoCAD DXF drawings, powered by the [libdxfrw](https://github.com/LibreCAD/libdxfrw) library
+- A best-effort mapping between FidoCadJ primitives and DXF entities (lines, circles/ellipses, arcs, polylines, splines, text, blocks) in both directions, with a post-import summary of anything that couldn't be mapped
+
 ### A UI that adapts to you
 - Dockable, floatable, tabbable panels (Libraries, Properties) — arrange your workspace however you like, and it's remembered between sessions
 - Light and dark themes, with custom stylesheet support
@@ -101,5 +105,6 @@ eSchema is released under the [GNU General Public License v3.0](LICENSE).
 ## Acknowledgements
 
 - [FidoCadJ](https://github.com/FidoCadJ/FidoCadJ) — the native file format and component libraries eSchema builds on
+- [libdxfrw](https://github.com/LibreCAD/libdxfrw) — DXF import/export (vendored under `third_party/libdxfrw/`, GPL-2.0-or-later)
 - [Remixicon](https://remixicon.com/) — toolbar and UI icons
 - [dafont.com](https://www.dafont.com/) — bundled fonts

@@ -30,11 +30,16 @@
 #include "PrimitivePcbTrack.h"
 #include "PrimitiveText.h"
 
+#include "libdxfrw.h"
+#include "drw_interface.h"
+
 #include <QFile>
+#include <QTemporaryFile>
 #include <QTextStream>
 #include <QTransform>
 #include <QHash>
 #include <QSet>
+#include <QLineF>
 #include <QRegularExpression>
 #include <QtMath>
 #include <cmath>
@@ -46,19 +51,7 @@ namespace {
 
 using namespace DxfCommon;
 
-const int kMaxInsertDepth = 20;
-
-// One code-0-delimited DXF record ("0 <TYPE>" plus every group up to, but
-// not including, the next "0" group).
-struct RawEntity {
-    QString type;
-    QVector<GroupPair> groups;
-};
-
-struct BlockDef {
-    QPointF basePoint;
-    QVector<RawEntity> entities;
-};
+const int kMaxInsertDepth = 20; // safety net only - see addInsert(), flattening here is never truly recursive
 
 // A polyline/legacy-POLYLINE vertex, with its optional per-vertex bulge
 // (arc segment to the next vertex) and start/end width.
@@ -73,129 +66,33 @@ struct ParsedPrimitive {
     QString dxfLayer;
 };
 
+// A block's entities are stored already fully resolved to the block's own
+// local coordinate space (any nested INSERT inside this block's own body
+// was flattened - see addInsert() - while this block was being read), so
+// instantiating this block later is always a single transform pass, never
+// a recursive one.
+struct BlockDef {
+    QPointF basePoint;
+    QList<ParsedPrimitive> entities;
+};
+
 struct ParseContext {
-    QList<ParsedPrimitive> primitives;
     QHash<QString, int> unsupportedCounts;
     int truncatedVertexCount = 0;
     int rotatedEllipseCount = 0;
-    int insertDepthExceeded = 0;
     int missingBlockCount = 0;
 };
 
-QString findValue(const QVector<GroupPair> &groups, int code, const QString &fallback = QString())
+QString stripMTextFormatting(QString text)
 {
-    for (const GroupPair &g : groups)
-        if (g.code == code)
-            return g.value;
-    return fallback;
-}
-
-QVector<QString> findValues(const QVector<GroupPair> &groups, int code)
-{
-    QVector<QString> values;
-    for (const GroupPair &g : groups)
-        if (g.code == code)
-            values.append(g.value);
-    return values;
-}
-
-// Splits pairs[start,end) into consecutive code-0-delimited records.
-QVector<RawEntity> splitIntoEntities(const QVector<GroupPair> &pairs, int start, int end)
-{
-    QVector<RawEntity> result;
-    int i = start;
-    while (i < end) {
-        if (pairs.at(i).code != 0) { ++i; continue; }
-        RawEntity entity;
-        entity.type = pairs.at(i).value;
-        ++i;
-        const int groupStart = i;
-        while (i < end && pairs.at(i).code != 0)
-            ++i;
-        entity.groups = pairs.mid(groupStart, i - groupStart);
-        result.append(entity);
-    }
-    return result;
-}
-
-// Body range [start,end) of the named top-level SECTION, or {-1,-1} if the
-// file has none - not every DXF has TABLES/BLOCKS (a bare ENTITIES-only file
-// is legal), so this is a normal, non-error outcome.
-QPair<int, int> findSection(const QVector<GroupPair> &pairs, const QString &sectionName)
-{
-    for (int i = 0; i < pairs.size(); ++i) {
-        if (pairs.at(i).code == 0 && pairs.at(i).value == QStringLiteral("SECTION")
-                && i + 1 < pairs.size() && pairs.at(i + 1).code == 2
-                && pairs.at(i + 1).value == sectionName) {
-            const int bodyStart = i + 2;
-            int j = bodyStart;
-            while (j < pairs.size() && !(pairs.at(j).code == 0 && pairs.at(j).value == QStringLiteral("ENDSEC")))
-                ++j;
-            return {bodyStart, j};
-        }
-    }
-    return {-1, -1};
-}
-
-QHash<QString, QColor> parseLayerTable(const QVector<GroupPair> &pairs)
-{
-    QHash<QString, QColor> table;
-    const QPair<int, int> range = findSection(pairs, QStringLiteral("TABLES"));
-    if (range.first < 0)
-        return table;
-
-    const QVector<RawEntity> records = splitIntoEntities(pairs, range.first, range.second);
-    bool inLayerTable = false;
-    for (const RawEntity &e : records) {
-        if (e.type == QStringLiteral("TABLE")) {
-            inLayerTable = findValue(e.groups, 2) == QStringLiteral("LAYER");
-        } else if (e.type == QStringLiteral("ENDTAB")) {
-            inLayerTable = false;
-        } else if (inLayerTable && e.type == QStringLiteral("LAYER")) {
-            const QString name = findValue(e.groups, 2, QStringLiteral("0"));
-            const QString trueColor = findValue(e.groups, 420);
-            QColor color;
-            if (!trueColor.isEmpty()) {
-                color = trueColorToQColor(trueColor.toLongLong());
-            } else {
-                bool ok = false;
-                const int aci = findValue(e.groups, 62, QStringLiteral("7")).toInt(&ok);
-                // A negative ACI just means "layer off" - the color itself
-                // is still the absolute value.
-                color = aciToColor(ok ? qAbs(aci) : 7);
-            }
-            table.insert(name, color);
-        }
-    }
-    return table;
-}
-
-QHash<QString, BlockDef> parseBlocks(const QVector<GroupPair> &pairs)
-{
-    QHash<QString, BlockDef> blocks;
-    const QPair<int, int> range = findSection(pairs, QStringLiteral("BLOCKS"));
-    if (range.first < 0)
-        return blocks;
-
-    const QVector<RawEntity> records = splitIntoEntities(pairs, range.first, range.second);
-    int i = 0;
-    while (i < records.size()) {
-        if (records.at(i).type != QStringLiteral("BLOCK")) { ++i; continue; }
-        BlockDef def;
-        const QString name = findValue(records.at(i).groups, 2);
-        def.basePoint = QPointF(findValue(records.at(i).groups, 10, QStringLiteral("0")).toDouble(),
-                                 findValue(records.at(i).groups, 20, QStringLiteral("0")).toDouble());
-        ++i;
-        while (i < records.size() && records.at(i).type != QStringLiteral("ENDBLK")) {
-            def.entities.append(records.at(i));
-            ++i;
-        }
-        if (i < records.size())
-            ++i; // consume ENDBLK
-        if (!name.isEmpty())
-            blocks.insert(name, def);
-    }
-    return blocks;
+    text.replace(QStringLiteral("\\P"), QStringLiteral(" "));
+    text.replace(QStringLiteral("\\~"), QStringLiteral(" "));
+    static const QRegularExpression formatting(QStringLiteral("\\\\[A-Za-z][^;\\\\{}]*;"));
+    text.remove(formatting);
+    text.remove(QLatin1Char('{'));
+    text.remove(QLatin1Char('}'));
+    text.replace(QStringLiteral("\\\\"), QStringLiteral("\\"));
+    return text;
 }
 
 // Standard bulge-to-arc conversion (Lee Mac's formula, as used by e.g.
@@ -262,116 +159,6 @@ QVector<QPointF> expandPolylineVertices(const QVector<RawPoint> &verts, bool clo
     return points;
 }
 
-QVector<RawPoint> extractLwPolylineVertices(const QVector<GroupPair> &groups)
-{
-    QVector<RawPoint> points;
-    bool haveX = false;
-    for (const GroupPair &g : groups) {
-        if (g.code == 10) {
-            RawPoint p;
-            p.x = g.value.toDouble();
-            points.append(p);
-            haveX = true;
-        } else if (g.code == 20 && haveX) {
-            points.last().y = g.value.toDouble();
-        } else if (g.code == 40 && !points.isEmpty()) {
-            points.last().startWidth = g.value.toDouble();
-        } else if (g.code == 41 && !points.isEmpty()) {
-            points.last().endWidth = g.value.toDouble();
-        } else if (g.code == 42 && !points.isEmpty()) {
-            points.last().bulge = g.value.toDouble();
-        }
-    }
-    return points;
-}
-
-QString stripMTextFormatting(QString text)
-{
-    text.replace(QStringLiteral("\\P"), QStringLiteral(" "));
-    text.replace(QStringLiteral("\\~"), QStringLiteral(" "));
-    static const QRegularExpression formatting(QStringLiteral("\\\\[A-Za-z][^;\\\\{}]*;"));
-    text.remove(formatting);
-    text.remove(QLatin1Char('{'));
-    text.remove(QLatin1Char('}'));
-    text.replace(QStringLiteral("\\\\"), QStringLiteral("\\"));
-    return text;
-}
-
-// --- Per-entity-type builders ------------------------------------------------
-// Each returns the primitive(s) it produced (0, 1, or several), still in
-// local (pre-INSERT-transform) coordinates - the caller applies whatever
-// transform is active and records the raw DXF layer name.
-
-QList<GraphicsPrimitive *> buildLine(const RawEntity &e)
-{
-    const QPointF p1(findValue(e.groups, 10).toDouble(), findValue(e.groups, 20).toDouble());
-    const QPointF p2(findValue(e.groups, 11).toDouble(), findValue(e.groups, 21).toDouble());
-    if (QLineF(p1, p2).length() < 1e-9)
-        return {};
-    auto *p = new PrimitiveLine();
-    p->setControlPoint(0, p1);
-    p->setControlPoint(1, p2);
-    return { p };
-}
-
-QList<GraphicsPrimitive *> buildCircle(const RawEntity &e)
-{
-    const QPointF center(findValue(e.groups, 10).toDouble(), findValue(e.groups, 20).toDouble());
-    const qreal radius = findValue(e.groups, 40).toDouble();
-    if (radius <= 0)
-        return {};
-    auto *p = new PrimitiveEllipse();
-    p->setControlPoint(0, center - QPointF(radius, radius));
-    p->setControlPoint(1, center + QPointF(radius, radius));
-    return { p };
-}
-
-QList<GraphicsPrimitive *> buildArc(const RawEntity &e)
-{
-    const QPointF center(findValue(e.groups, 10).toDouble(), findValue(e.groups, 20).toDouble());
-    const qreal radius = findValue(e.groups, 40).toDouble();
-    const qreal startAngle = findValue(e.groups, 50).toDouble();
-    const qreal endAngle = findValue(e.groups, 51).toDouble();
-    if (radius <= 0)
-        return {};
-    const QVector<QPointF> pts = sampleArc(center, radius, startAngle, endAngle);
-    if (pts.size() < 2)
-        return {};
-    auto *p = new PrimitiveComplexCurve();
-    p->setClosed(false);
-    for (const QPointF &pt : pts)
-        p->appendVertex(pt);
-    return { p };
-}
-
-// Axis-aligned bounding box of a (possibly rotated) ellipse - the standard
-// formula halfW=sqrt((a*cosT)^2+(b*sinT)^2), halfH=sqrt((a*sinT)^2+(b*cosT)^2)
-// reduces exactly to (a,b) when T is a multiple of 90 degrees, so this
-// covers the axis-aligned case with no special-casing needed.
-QList<GraphicsPrimitive *> buildEllipse(const RawEntity &e, bool &discardedRotation)
-{
-    discardedRotation = false;
-    const QPointF center(findValue(e.groups, 10).toDouble(), findValue(e.groups, 20).toDouble());
-    const qreal majorX = findValue(e.groups, 11).toDouble();
-    const qreal majorY = findValue(e.groups, 21).toDouble();
-    const qreal ratio = qBound(0.0001, findValue(e.groups, 40, QStringLiteral("1")).toDouble(), 1.0);
-    const qreal a = std::hypot(majorX, majorY);
-    if (a <= 0)
-        return {};
-    const qreal b = a * ratio;
-    const qreal theta = std::atan2(majorY, majorX);
-    const qreal cosT = std::cos(theta), sinT = std::sin(theta);
-    const qreal halfWidth = std::sqrt(a * cosT * a * cosT + b * sinT * b * sinT);
-    const qreal halfHeight = std::sqrt(a * sinT * a * sinT + b * cosT * b * cosT);
-    const qreal thetaMod = std::fmod(std::abs(theta), M_PI / 2.0);
-    discardedRotation = thetaMod > 0.01 && (M_PI / 2.0 - thetaMod) > 0.01;
-
-    auto *p = new PrimitiveEllipse();
-    p->setControlPoint(0, center - QPointF(halfWidth, halfHeight));
-    p->setControlPoint(1, center + QPointF(halfWidth, halfHeight));
-    return { p };
-}
-
 QList<GraphicsPrimitive *> buildFromVertices(const QVector<RawPoint> &verts, bool closed, ParseContext &ctx)
 {
     // A widthed, open, exactly-2-vertex polyline is the structurally
@@ -414,198 +201,344 @@ QList<GraphicsPrimitive *> buildFromVertices(const QVector<RawPoint> &verts, boo
     return lines;
 }
 
-QList<GraphicsPrimitive *> buildLwPolyline(const RawEntity &e, ParseContext &ctx)
+// Deep copy of a primitive this reader can produce (only the 7 types below -
+// buildFromVertices()/addX() never construct anything else). Used to
+// instantiate a block's stored entities at each of its INSERT placements,
+// since the same block can be placed more than once and each placement
+// needs its own independent primitive.
+GraphicsPrimitive *clonePrimitive(GraphicsPrimitive *src)
 {
-    const bool closed = (findValue(e.groups, 70, QStringLiteral("0")).toInt() & 1) != 0;
-    const QVector<RawPoint> verts = extractLwPolylineVertices(e.groups);
-    if (verts.size() < 2)
-        return {};
-    return buildFromVertices(verts, closed, ctx);
-}
-
-QList<GraphicsPrimitive *> buildSpline(const RawEntity &e, ParseContext &ctx)
-{
-    QVector<QString> xs = findValues(e.groups, 11);
-    QVector<QString> ys = findValues(e.groups, 21);
-    if (xs.isEmpty()) {
-        // No fit points - fall back to control points.
-        xs = findValues(e.groups, 10);
-        ys = findValues(e.groups, 20);
+    GraphicsPrimitive *dst = nullptr;
+    switch (src->getPrimitiveType()) {
+    case GraphicsPrimitive::Line:
+        dst = new PrimitiveLine();
+        break;
+    case GraphicsPrimitive::Ellipse:
+        dst = new PrimitiveEllipse();
+        break;
+    case GraphicsPrimitive::Spline: {
+        auto *c = new PrimitiveComplexCurve();
+        c->setClosed(static_cast<PrimitiveComplexCurve *>(src)->isClosed());
+        for (int i = 0; i < src->controlPointCount(); ++i)
+            c->appendVertex(src->controlPoint(i));
+        return c;
     }
-    const int count = qMin(xs.size(), ys.size());
-    if (count < 2)
-        return {};
-
-    const bool closed = (findValue(e.groups, 70, QStringLiteral("0")).toInt() & 1) != 0;
-    int vertexCount = qMin(count, int(PrimitiveComplexCurve::MaxVertices));
-    if (vertexCount < count)
-        ++ctx.truncatedVertexCount;
-
-    auto *p = new PrimitiveComplexCurve();
-    p->setClosed(closed);
-    for (int i = 0; i < vertexCount; ++i)
-        p->appendVertex(QPointF(xs.at(i).toDouble(), ys.at(i).toDouble()));
-    return { p };
-}
-
-QList<GraphicsPrimitive *> buildText(const RawEntity &e, bool isMText)
-{
-    const QPointF pos(findValue(e.groups, 10).toDouble(), findValue(e.groups, 20).toDouble());
-    qreal height = findValue(e.groups, 40, QStringLiteral("4")).toDouble();
-    if (height <= 0)
-        height = 4;
-    const qreal rotation = findValue(e.groups, 50, QStringLiteral("0")).toDouble();
-
-    QString text;
-    if (isMText) {
-        for (const QString &chunk : findValues(e.groups, 3))
-            text += chunk;
-        text += findValue(e.groups, 1);
-        text = stripMTextFormatting(text);
-    } else {
-        text = findValue(e.groups, 1);
+    case GraphicsPrimitive::Polyline: {
+        auto *c = new PrimitivePolygon();
+        for (int i = 0; i < src->controlPointCount(); ++i)
+            c->appendVertex(src->controlPoint(i));
+        return c;
     }
-    if (text.trimmed().isEmpty())
-        return {};
-
-    auto *p = new PrimitiveText();
-    p->setControlPoint(0, pos);
-    p->setSize(qMax(1, int(qRound(height))), qMax(1, int(qRound(height * 0.75))));
-    p->setOrientationDeg(int(qRound(rotation)));
-    p->setText(text);
-    return { p };
+    case GraphicsPrimitive::Connection:
+        dst = new PrimitiveConnection();
+        break;
+    case GraphicsPrimitive::PcbTrack:
+        dst = new PrimitivePcbTrack();
+        static_cast<PrimitivePcbTrack *>(dst)->setWidth(static_cast<PrimitivePcbTrack *>(src)->width());
+        break;
+    case GraphicsPrimitive::Text: {
+        auto *s = static_cast<PrimitiveText *>(src);
+        auto *t = new PrimitiveText();
+        t->setText(s->text());
+        t->setSize(s->sizeY(), s->sizeX());
+        t->setOrientationDeg(s->orientationDeg());
+        dst = t;
+        break;
+    }
+    default:
+        return nullptr; // never produced by this reader
+    }
+    for (int i = 0; i < src->controlPointCount(); ++i)
+        dst->setControlPoint(i, src->controlPoint(i));
+    return dst;
 }
 
-QList<GraphicsPrimitive *> buildPoint(const RawEntity &e)
-{
-    auto *p = new PrimitiveConnection();
-    p->setControlPoint(0, QPointF(findValue(e.groups, 10).toDouble(), findValue(e.groups, 20).toDouble()));
-    return { p };
-}
-
-// Applies the accumulated INSERT transform to every control point, plus (for
-// PrimitiveText, whose rotation/size are scalar fields rather than derivable
-// from a single anchor point) the accumulated rotation/scale directly.
+// Applies one INSERT's transform to a primitive's geometry, plus (for
+// PrimitiveText, whose rotation/size are scalar fields rather than
+// derivable from a single anchor point) this step's own rotation/scale
+// directly - correct without needing an accumulated total threaded through
+// calls, since each block's entities are already fully resolved to that
+// block's own local space by the time an outer INSERT places it (see
+// BlockDef's comment).
 void applyInsertTransform(GraphicsPrimitive *primitive, const QTransform &transform,
-                           qreal accumRotationDeg, qreal accumScale)
+                           qreal rotationDeg, qreal scale)
 {
     for (int i = 0; i < primitive->controlPointCount(); ++i)
         primitive->setControlPoint(i, transform.map(primitive->controlPoint(i)));
 
     if (primitive->getPrimitiveType() == GraphicsPrimitive::Text) {
         auto *text = static_cast<PrimitiveText *>(primitive);
-        text->setOrientationDeg(int(qRound(text->orientationDeg() + accumRotationDeg)));
-        text->setSize(qMax(1, int(qRound(text->sizeY() * accumScale))),
-                      qMax(1, int(qRound(text->sizeX() * accumScale))));
+        text->setOrientationDeg(int(qRound(text->orientationDeg() + rotationDeg)));
+        text->setSize(qMax(1, int(qRound(text->sizeY() * scale))),
+                      qMax(1, int(qRound(text->sizeX() * scale))));
     }
 }
 
-void processRecords(const QVector<RawEntity> &records, const QHash<QString, BlockDef> &blocks,
-                     const QTransform &transform, qreal accumRotationDeg, qreal accumScale,
-                     int depth, ParseContext &ctx)
-{
-    int i = 0;
-    while (i < records.size()) {
-        const RawEntity &e = records.at(i);
-        const QString &type = e.type;
+// Implements DRW_Interface for reading: the addX() callbacks fire for both
+// top-level ENTITIES-section entities and (while inside an addBlock()/
+// endBlock() pair) a block definition's own body - emit_() routes to
+// whichever is currently active. Every entity type this app has no mapping
+// for (HATCH, DIMENSION*, LEADER, SOLID/3DFACE, ...) is a one-line counting
+// no-op. The write-side DRW_Interface methods are never called on the read
+// path but are still pure virtual and must be overridden.
+class ImportInterface : public DRW_Interface {
+public:
+    QList<ParsedPrimitive> topLevel;
+    QHash<QString, QColor> layerColors;
+    QHash<QString, BlockDef> blocks;
+    ParseContext ctx;
 
-        if (type == QStringLiteral("POLYLINE")) {
-            // Legacy POLYLINE/VERTEX/SEQEND cluster - gather every following
-            // VERTEX record until SEQEND, a structurally different shape
-            // than LWPOLYLINE's single flat record.
-            const QString layerName = findValue(e.groups, 8, QStringLiteral("0"));
-            const bool closed = (findValue(e.groups, 70, QStringLiteral("0")).toInt() & 1) != 0;
-            QVector<RawPoint> verts;
-            ++i;
-            while (i < records.size() && records.at(i).type == QStringLiteral("VERTEX")) {
-                RawPoint rp;
-                rp.x = findValue(records.at(i).groups, 10).toDouble();
-                rp.y = findValue(records.at(i).groups, 20).toDouble();
-                rp.bulge = findValue(records.at(i).groups, 42, QStringLiteral("0")).toDouble();
-                verts.append(rp);
-                ++i;
-            }
-            if (i < records.size() && records.at(i).type == QStringLiteral("SEQEND"))
-                ++i;
-            if (verts.size() >= 2) {
-                for (GraphicsPrimitive *p : buildFromVertices(verts, closed, ctx)) {
-                    applyInsertTransform(p, transform, accumRotationDeg, accumScale);
-                    ctx.primitives.append({ p, layerName });
-                }
-            }
-            continue;
-        }
+    bool inBlock = false;
+    QString currentBlockName;
+    int insertDepth = 0;
 
-        if (type == QStringLiteral("INSERT")) {
-            const QString blockName = findValue(e.groups, 2);
-            if (depth >= kMaxInsertDepth) {
-                ++ctx.insertDepthExceeded;
-            } else if (!blocks.contains(blockName)) {
-                ++ctx.missingBlockCount;
-            } else {
-                const BlockDef &block = blocks.value(blockName);
-                const QPointF insertPoint(findValue(e.groups, 10, QStringLiteral("0")).toDouble(),
-                                           findValue(e.groups, 20, QStringLiteral("0")).toDouble());
-                qreal xScale = findValue(e.groups, 41, QStringLiteral("1")).toDouble();
-                qreal yScale = findValue(e.groups, 42, QStringLiteral("1")).toDouble();
-                if (qFuzzyIsNull(xScale)) xScale = 1.0;
-                if (qFuzzyIsNull(yScale)) yScale = 1.0;
-                const qreal rotationDeg = findValue(e.groups, 50, QStringLiteral("0")).toDouble();
-
-                // Maps the block's own local space to the space `transform`
-                // already maps into - block-local -> subtract base point ->
-                // scale -> rotate -> translate to the insertion point.
-                QTransform local;
-                local.translate(insertPoint.x(), insertPoint.y());
-                local.rotate(rotationDeg);
-                local.scale(xScale, yScale);
-                local.translate(-block.basePoint.x(), -block.basePoint.y());
-                const QTransform combined = local * transform;
-
-                processRecords(block.entities, blocks, combined, accumRotationDeg + rotationDeg,
-                                accumScale * (std::abs(xScale) + std::abs(yScale)) / 2.0, depth + 1, ctx);
-            }
-            ++i;
-            continue;
-        }
-
-        QList<GraphicsPrimitive *> built;
-        if (type == QStringLiteral("LINE")) {
-            built = buildLine(e);
-        } else if (type == QStringLiteral("CIRCLE")) {
-            built = buildCircle(e);
-        } else if (type == QStringLiteral("ARC")) {
-            built = buildArc(e);
-        } else if (type == QStringLiteral("ELLIPSE")) {
-            bool discardedRotation = false;
-            built = buildEllipse(e, discardedRotation);
-            if (discardedRotation)
-                ++ctx.rotatedEllipseCount;
-        } else if (type == QStringLiteral("LWPOLYLINE")) {
-            built = buildLwPolyline(e, ctx);
-        } else if (type == QStringLiteral("SPLINE")) {
-            built = buildSpline(e, ctx);
-        } else if (type == QStringLiteral("TEXT")) {
-            built = buildText(e, false);
-        } else if (type == QStringLiteral("MTEXT")) {
-            built = buildText(e, true);
-        } else if (type == QStringLiteral("POINT")) {
-            built = buildPoint(e);
-        } else if (type != QStringLiteral("SEQEND") && type != QStringLiteral("VERTEX")) {
-            // Any other entity type has no DXF<->eSchema mapping (HATCH,
-            // DIMENSION, LEADER/MLEADER, SOLID/3DFACE, XLINE/RAY,
-            // TOLERANCE, WIPEOUT, ...) - counted for the post-import summary.
-            ++ctx.unsupportedCounts[type];
-        }
-
-        const QString layerName = findValue(e.groups, 8, QStringLiteral("0"));
-        for (GraphicsPrimitive *p : built) {
-            applyInsertTransform(p, transform, accumRotationDeg, accumScale);
-            ctx.primitives.append({ p, layerName });
-        }
-        ++i;
+    void emitPrimitive(GraphicsPrimitive *p, const QString &layerName)
+    {
+        if (!p)
+            return;
+        if (inBlock)
+            blocks[currentBlockName].entities.append({ p, layerName });
+        else
+            topLevel.append({ p, layerName });
     }
-}
+
+    void buildText(const DRW_Text &data, bool isMText)
+    {
+        QString text = QString::fromStdString(data.text);
+        if (isMText)
+            text = stripMTextFormatting(text);
+        if (text.trimmed().isEmpty())
+            return;
+        const qreal height = data.height > 0 ? data.height : 4.0;
+        auto *p = new PrimitiveText();
+        p->setControlPoint(0, QPointF(data.basePoint.x, data.basePoint.y));
+        p->setSize(qMax(1, int(qRound(height))), qMax(1, int(qRound(height * 0.75))));
+        // DXF TEXT/MTEXT rotation (code 50) is in degrees, unlike ARC/ELLIPSE
+        // angles which libdxfrw hands back in radians.
+        p->setOrientationDeg(int(qRound(data.angle)));
+        p->setText(text);
+        emitPrimitive(p, QString::fromStdString(data.layer));
+    }
+
+    // --- read-side callbacks actually used -----------------------------------
+    void addLayer(const DRW_Layer &data) override
+    {
+        const QString name = QString::fromStdString(data.name);
+        const QColor color = data.color24 >= 0 ? trueColorToQColor(data.color24)
+                                                : aciToColor(qAbs(data.color));
+        layerColors.insert(name, color);
+    }
+
+    void addBlock(const DRW_Block &data) override
+    {
+        inBlock = true;
+        currentBlockName = QString::fromStdString(data.name);
+        blocks[currentBlockName].basePoint = QPointF(data.basePoint.x, data.basePoint.y);
+    }
+    void setBlock(const int) override {} // DWG-only, never fires on the ASCII DXF path
+    void endBlock() override { inBlock = false; currentBlockName.clear(); }
+
+    void addPoint(const DRW_Point &data) override
+    {
+        auto *p = new PrimitiveConnection();
+        p->setControlPoint(0, QPointF(data.basePoint.x, data.basePoint.y));
+        emitPrimitive(p, QString::fromStdString(data.layer));
+    }
+
+    void addLine(const DRW_Line &data) override
+    {
+        const QPointF p1(data.basePoint.x, data.basePoint.y);
+        const QPointF p2(data.secPoint.x, data.secPoint.y);
+        if (QLineF(p1, p2).length() < 1e-9)
+            return;
+        auto *p = new PrimitiveLine();
+        p->setControlPoint(0, p1);
+        p->setControlPoint(1, p2);
+        emitPrimitive(p, QString::fromStdString(data.layer));
+    }
+
+    void addArc(const DRW_Arc &data) override
+    {
+        if (data.radious <= 0)
+            return;
+        const QPointF center(data.basePoint.x, data.basePoint.y);
+        const qreal startDeg = qRadiansToDegrees(data.staangle);
+        const qreal endDeg = qRadiansToDegrees(data.endangle);
+        const QVector<QPointF> pts = sampleArc(center, data.radious, startDeg, endDeg);
+        if (pts.size() < 2)
+            return;
+        auto *p = new PrimitiveComplexCurve();
+        p->setClosed(false);
+        for (const QPointF &pt : pts)
+            p->appendVertex(pt);
+        emitPrimitive(p, QString::fromStdString(data.layer));
+    }
+
+    void addCircle(const DRW_Circle &data) override
+    {
+        if (data.radious <= 0)
+            return;
+        const QPointF center(data.basePoint.x, data.basePoint.y);
+        auto *p = new PrimitiveEllipse();
+        p->setControlPoint(0, center - QPointF(data.radious, data.radious));
+        p->setControlPoint(1, center + QPointF(data.radious, data.radious));
+        emitPrimitive(p, QString::fromStdString(data.layer));
+    }
+
+    // Axis-aligned bounding box of a (possibly rotated) ellipse - reduces
+    // exactly to (a,b) when the rotation is a multiple of 90 degrees, so
+    // this covers the axis-aligned case with no special-casing needed.
+    void addEllipse(const DRW_Ellipse &data) override
+    {
+        const QPointF center(data.basePoint.x, data.basePoint.y);
+        const qreal majorX = data.secPoint.x, majorY = data.secPoint.y;
+        const qreal ratio = qBound(0.0001, data.ratio, 1.0);
+        const qreal a = std::hypot(majorX, majorY);
+        if (a <= 0)
+            return;
+        const qreal b = a * ratio;
+        const qreal theta = std::atan2(majorY, majorX);
+        const qreal cosT = std::cos(theta), sinT = std::sin(theta);
+        const qreal halfWidth = std::sqrt(a * cosT * a * cosT + b * sinT * b * sinT);
+        const qreal halfHeight = std::sqrt(a * sinT * a * sinT + b * cosT * b * cosT);
+        const qreal thetaMod = std::fmod(std::abs(theta), M_PI / 2.0);
+        if (thetaMod > 0.01 && (M_PI / 2.0 - thetaMod) > 0.01)
+            ++ctx.rotatedEllipseCount;
+
+        auto *p = new PrimitiveEllipse();
+        p->setControlPoint(0, center - QPointF(halfWidth, halfHeight));
+        p->setControlPoint(1, center + QPointF(halfWidth, halfHeight));
+        emitPrimitive(p, QString::fromStdString(data.layer));
+    }
+
+    void addLWPolyline(const DRW_LWPolyline &data) override
+    {
+        const bool closed = (data.flags & 1) != 0;
+        QVector<RawPoint> verts;
+        for (const auto &v : data.vertlist)
+            verts.append({ v->x, v->y, v->bulge, v->stawidth, v->endwidth });
+        if (verts.size() < 2)
+            return;
+        const QString layer = QString::fromStdString(data.layer);
+        for (GraphicsPrimitive *p : buildFromVertices(verts, closed, ctx))
+            emitPrimitive(p, layer);
+    }
+
+    void addPolyline(const DRW_Polyline &data) override
+    {
+        const bool closed = (data.flags & 1) != 0;
+        QVector<RawPoint> verts;
+        for (const auto &v : data.vertlist)
+            verts.append({ v->basePoint.x, v->basePoint.y, v->bulge, v->stawidth, v->endwidth });
+        if (verts.size() < 2)
+            return;
+        const QString layer = QString::fromStdString(data.layer);
+        for (GraphicsPrimitive *p : buildFromVertices(verts, closed, ctx))
+            emitPrimitive(p, layer);
+    }
+
+    void addSpline(const DRW_Spline *data) override
+    {
+        const auto &pts = !data->fitlist.empty() ? data->fitlist : data->controllist;
+        if (pts.size() < 2)
+            return;
+        const bool closed = (data->flags & 1) != 0;
+        const int vertexCount = qMin(int(pts.size()), int(PrimitiveComplexCurve::MaxVertices));
+        if (vertexCount < int(pts.size()))
+            ++ctx.truncatedVertexCount;
+
+        auto *p = new PrimitiveComplexCurve();
+        p->setClosed(closed);
+        for (int i = 0; i < vertexCount; ++i)
+            p->appendVertex(QPointF(pts[i]->x, pts[i]->y));
+        emitPrimitive(p, QString::fromStdString(data->layer));
+    }
+    void addKnot(const DRW_Entity &) override {} // legacy/DWG-only, never populated for ASCII DXF
+
+    void addText(const DRW_Text &data) override { buildText(data, false); }
+    void addMText(const DRW_MText &data) override { buildText(data, true); }
+
+    // Resolves a block reference by placing a fresh clone of every one of
+    // its (already block-local-resolved, see BlockDef) entities through
+    // this INSERT's own transform. Not recursive - see BlockDef's comment -
+    // insertDepth is only a defensive cap in case that invariant is ever
+    // violated by a future change, never expected to trigger in practice.
+    void addInsert(const DRW_Insert &data) override
+    {
+        if (insertDepth >= kMaxInsertDepth)
+            return;
+        const QString blockName = QString::fromStdString(data.name);
+        if (!blocks.contains(blockName)) {
+            ++ctx.missingBlockCount;
+            return;
+        }
+        const BlockDef &block = blocks.value(blockName);
+        const QPointF insertPoint(data.basePoint.x, data.basePoint.y);
+        const qreal xScale = qFuzzyIsNull(data.xscale) ? 1.0 : data.xscale;
+        const qreal yScale = qFuzzyIsNull(data.yscale) ? 1.0 : data.yscale;
+        // DRW_Insert::angle is in radians, unlike DRW_Text::angle (degrees).
+        const qreal rotationDeg = qRadiansToDegrees(data.angle);
+
+        QTransform transform;
+        transform.translate(insertPoint.x(), insertPoint.y());
+        transform.rotate(rotationDeg);
+        transform.scale(xScale, yScale);
+        transform.translate(-block.basePoint.x(), -block.basePoint.y());
+
+        const qreal uniformScale = (qAbs(xScale) + qAbs(yScale)) / 2.0;
+        ++insertDepth;
+        for (const ParsedPrimitive &pp : block.entities) {
+            GraphicsPrimitive *clone = clonePrimitive(pp.primitive);
+            if (!clone)
+                continue;
+            applyInsertTransform(clone, transform, rotationDeg, uniformScale);
+            emitPrimitive(clone, pp.dxfLayer);
+        }
+        --insertDepth;
+    }
+
+    // --- unsupported entity types: counted for the post-import summary ------
+    void addRay(const DRW_Ray &) override { ++ctx.unsupportedCounts[QStringLiteral("RAY")]; }
+    void addXline(const DRW_Xline &) override { ++ctx.unsupportedCounts[QStringLiteral("XLINE")]; }
+    void addTrace(const DRW_Trace &) override { ++ctx.unsupportedCounts[QStringLiteral("TRACE")]; }
+    void add3dFace(const DRW_3Dface &) override { ++ctx.unsupportedCounts[QStringLiteral("3DFACE")]; }
+    void addSolid(const DRW_Solid &) override { ++ctx.unsupportedCounts[QStringLiteral("SOLID")]; }
+    void addDimAlign(const DRW_DimAligned *) override { ++ctx.unsupportedCounts[QStringLiteral("DIMENSION")]; }
+    void addDimLinear(const DRW_DimLinear *) override { ++ctx.unsupportedCounts[QStringLiteral("DIMENSION")]; }
+    void addDimRadial(const DRW_DimRadial *) override { ++ctx.unsupportedCounts[QStringLiteral("DIMENSION")]; }
+    void addDimDiametric(const DRW_DimDiametric *) override { ++ctx.unsupportedCounts[QStringLiteral("DIMENSION")]; }
+    void addDimAngular(const DRW_DimAngular *) override { ++ctx.unsupportedCounts[QStringLiteral("DIMENSION")]; }
+    void addDimAngular3P(const DRW_DimAngular3p *) override { ++ctx.unsupportedCounts[QStringLiteral("DIMENSION")]; }
+    void addDimOrdinate(const DRW_DimOrdinate *) override { ++ctx.unsupportedCounts[QStringLiteral("DIMENSION")]; }
+    void addLeader(const DRW_Leader *) override { ++ctx.unsupportedCounts[QStringLiteral("LEADER")]; }
+    void addHatch(const DRW_Hatch *) override { ++ctx.unsupportedCounts[QStringLiteral("HATCH")]; }
+    void addViewport(const DRW_Viewport &) override { ++ctx.unsupportedCounts[QStringLiteral("VIEWPORT")]; }
+    void addImage(const DRW_Image *) override { ++ctx.unsupportedCounts[QStringLiteral("IMAGE")]; }
+
+    // --- structural / irrelevant ---------------------------------------------
+    void addHeader(const DRW_Header *) override {}
+    void addLType(const DRW_LType &) override {}
+    void addDimStyle(const DRW_Dimstyle &) override {}
+    void addVport(const DRW_Vport &) override {}
+    void addTextStyle(const DRW_Textstyle &) override {}
+    void addAppId(const DRW_AppId &) override {}
+    void linkImage(const DRW_ImageDef *) override {}
+    void addComment(const char *) override {}
+    void addPlotSettings(const DRW_PlotSettings *) override {}
+
+    // --- write-side: never called on the read path, still pure virtual ------
+    void writeHeader(DRW_Header &) override {}
+    void writeBlocks() override {}
+    void writeBlockRecords() override {}
+    void writeEntities() override {}
+    void writeLTypes() override {}
+    void writeLayers() override {}
+    void writeTextstyles() override {}
+    void writeVports() override {}
+    void writeDimstyles() override {}
+    void writeObjects() override {}
+    void writeAppId() override {}
+};
 
 // Renames/recolors the existing global 16-slot LayerList to mirror the
 // distinct DXF layers actually used by a kept (non-skipped) entity, in
@@ -670,32 +603,30 @@ QHash<QString, Layer *> remapLayers(const QStringList &usedLayerNamesInOrder,
 
 } // namespace
 
-void read(const QString &text, Sheet *sheet, QStringList *warnings)
+bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage, QStringList *warnings)
 {
     sheet->clearPrimitives();
 
-    const QVector<GroupPair> pairs = tokenizePairs(text);
-    const QHash<QString, QColor> layerColors = parseLayerTable(pairs);
-    const QHash<QString, BlockDef> blocks = parseBlocks(pairs);
-
-    ParseContext ctx;
-    const QPair<int, int> entitiesRange = findSection(pairs, QStringLiteral("ENTITIES"));
-    if (entitiesRange.first >= 0) {
-        const QVector<RawEntity> records = splitIntoEntities(pairs, entitiesRange.first, entitiesRange.second);
-        processRecords(records, blocks, QTransform(), 0.0, 1.0, 0, ctx);
+    ImportInterface iface;
+    dxfRW reader(filePath.toLocal8Bit().constData());
+    const bool ok = reader.read(&iface, /*ext=*/false);
+    if (!ok) {
+        if (errorMessage)
+            *errorMessage = QStringLiteral("libdxfrw read() failed");
+        return false;
     }
 
     QStringList usedLayerNames;
     QSet<QString> seenLayerNames;
-    for (const ParsedPrimitive &pp : ctx.primitives) {
+    for (const ParsedPrimitive &pp : iface.topLevel) {
         if (!seenLayerNames.contains(pp.dxfLayer)) {
             seenLayerNames.insert(pp.dxfLayer);
             usedLayerNames.append(pp.dxfLayer);
         }
     }
-    const QHash<QString, Layer *> layerMapping = remapLayers(usedLayerNames, layerColors, warnings);
+    const QHash<QString, Layer *> layerMapping = remapLayers(usedLayerNames, iface.layerColors, warnings);
 
-    for (const ParsedPrimitive &pp : ctx.primitives) {
+    for (const ParsedPrimitive &pp : iface.topLevel) {
         if (pp.primitive->isDegenerate()) {
             delete pp.primitive;
             continue;
@@ -704,45 +635,45 @@ void read(const QString &text, Sheet *sheet, QStringList *warnings)
         sheet->addPrimitive(pp.primitive);
     }
 
-    if (!warnings)
-        return;
+    if (warnings) {
+        for (auto it = iface.ctx.unsupportedCounts.constBegin(); it != iface.ctx.unsupportedCounts.constEnd(); ++it) {
+            warnings->append(QObject::tr("%1 entità %2 non supportate sono state ignorate.")
+                                      .arg(it.value()).arg(it.key()));
+        }
+        if (iface.ctx.truncatedVertexCount > 0) {
+            warnings->append(QObject::tr("%1 elementi con più di %2 vertici sono stati troncati.")
+                                      .arg(iface.ctx.truncatedVertexCount).arg(PrimitivePolygon::MaxVertices));
+        }
+        if (iface.ctx.rotatedEllipseCount > 0) {
+            warnings->append(QObject::tr("%1 ellissi ruotate sono state importate come non ruotate "
+                                          "(bounding box).").arg(iface.ctx.rotatedEllipseCount));
+        }
+        if (iface.ctx.missingBlockCount > 0) {
+            warnings->append(QObject::tr("%1 riferimenti INSERT a blocchi non trovati sono stati ignorati.")
+                                      .arg(iface.ctx.missingBlockCount));
+        }
+    }
 
-    for (auto it = ctx.unsupportedCounts.constBegin(); it != ctx.unsupportedCounts.constEnd(); ++it) {
-        warnings->append(QObject::tr("%1 entità %2 non supportate sono state ignorate.")
-                                  .arg(it.value()).arg(it.key()));
-    }
-    if (ctx.truncatedVertexCount > 0) {
-        warnings->append(QObject::tr("%1 elementi con più di %2 vertici sono stati troncati.")
-                                  .arg(ctx.truncatedVertexCount).arg(PrimitivePolygon::MaxVertices));
-    }
-    if (ctx.rotatedEllipseCount > 0) {
-        warnings->append(QObject::tr("%1 ellissi ruotate sono state importate come non ruotate "
-                                      "(bounding box).").arg(ctx.rotatedEllipseCount));
-    }
-    if (ctx.missingBlockCount > 0) {
-        warnings->append(QObject::tr("%1 riferimenti INSERT a blocchi non trovati sono stati ignorati.")
-                                  .arg(ctx.missingBlockCount));
-    }
-    if (ctx.insertDepthExceeded > 0) {
-        warnings->append(QObject::tr("%1 blocchi annidati oltre il limite di profondità sono stati ignorati.")
-                                  .arg(ctx.insertDepthExceeded));
-    }
-    if (entitiesRange.first < 0)
-        warnings->append(QObject::tr("Il file non contiene una sezione ENTITIES."));
+    return true;
 }
 
-bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage, QStringList *warnings)
+void read(const QString &text, Sheet *sheet, QStringList *warnings)
 {
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        if (errorMessage)
-            *errorMessage = file.errorString();
-        return false;
+    // libdxfrw only reads from a real file path - route through a temp file
+    // (mirrors DxfWriter::write()'s own temp-file bridge, the other way).
+    QTemporaryFile temp;
+    if (!temp.open()) {
+        sheet->clearPrimitives();
+        return;
     }
+    {
+        QTextStream stream(&temp);
+        stream << text;
+    }
+    const QString path = temp.fileName();
+    temp.close();
 
-    QTextStream stream(&file);
-    read(stream.readAll(), sheet, warnings);
-    return true;
+    readFile(path, sheet, nullptr, warnings);
 }
 
 } // namespace DxfReader
