@@ -38,7 +38,9 @@ public:
     void setControlPoint(int index, const QPointF &scenePos) override;
 
     qreal width() const { return m_width; }
-    void setWidth(qreal width) { m_width = width; }
+    // prepareGeometryChange()/update(): can now be changed live from the
+    // Properties panel on an already-visible selection, not just at parse time.
+    void setWidth(qreal width) { prepareGeometryChange(); m_width = width; update(); }
 
     bool isDegenerate() const override;
     QStringList toTokens() const override;

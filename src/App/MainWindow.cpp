@@ -33,6 +33,9 @@
 #include "LibraryManager.h"
 #include "PrimitiveText.h"
 #include "PrimitiveImage.h"
+#include "PrimitivePad.h"
+#include "PrimitivePcbTrack.h"
+#include "PrimitiveComplexCurve.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -269,6 +272,136 @@ void MainWindow::setConnections()
         for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
             if (primitive->getPrimitiveType() == GraphicsPrimitive::Image)
                 static_cast<PrimitiveImage *>(primitive)->setGrayscale(checked);
+        }
+    });
+    connect(ui->checkBoxArrowStart, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->supportsArrows())
+                primitive->setArrowAtStart(checked);
+        }
+    });
+    connect(ui->checkBoxArrowEnd, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->supportsArrows())
+                primitive->setArrowAtEnd(checked);
+        }
+    });
+    connect(ui->checkBoxArrowEmpty, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->supportsArrows())
+                primitive->setArrowStyleEmpty(checked);
+        }
+    });
+    connect(ui->checkBoxArrowLimiter, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->supportsArrows())
+                primitive->setArrowStyleLimiter(checked);
+        }
+    });
+    connect(ui->spinArrowLength, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->supportsArrows())
+                primitive->setArrowLength(value);
+        }
+    });
+    connect(ui->spinArrowHalfWidth, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->supportsArrows())
+                primitive->setArrowHalfWidth(value);
+        }
+    });
+    connect(ui->checkBoxCurveClosed, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Spline)
+                static_cast<PrimitiveComplexCurve *>(primitive)->setClosed(checked);
+        }
+    });
+    connect(ui->spinTrackWidth, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::PcbTrack)
+                static_cast<PrimitivePcbTrack *>(primitive)->setWidth(value);
+        }
+    });
+    connect(ui->spinPadWidth, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Pad) {
+                auto *pad = static_cast<PrimitivePad *>(primitive);
+                pad->setOuterSize(value, pad->outerHeight());
+            }
+        }
+    });
+    connect(ui->spinPadHeight, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Pad) {
+                auto *pad = static_cast<PrimitivePad *>(primitive);
+                pad->setOuterSize(pad->outerWidth(), value);
+            }
+        }
+    });
+    connect(ui->spinPadHole, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Pad)
+                static_cast<PrimitivePad *>(primitive)->setHoleDiameter(value);
+        }
+    });
+    connect(ui->cbPadStyle, &QComboBox::activated, this, [this](int index) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Pad)
+                static_cast<PrimitivePad *>(primitive)->setStyle(static_cast<PrimitivePad::Style>(index));
+        }
+    });
+    connect(ui->spinTextSizeX, &QSpinBox::valueChanged, this, [this](int value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Text) {
+                auto *text = static_cast<PrimitiveText *>(primitive);
+                text->setSize(text->sizeY(), value);
+            }
+        }
+    });
+    connect(ui->spinTextSizeY, &QSpinBox::valueChanged, this, [this](int value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Text) {
+                auto *text = static_cast<PrimitiveText *>(primitive);
+                text->setSize(value, text->sizeX());
+            }
+        }
+    });
+    connect(ui->spinTextOrientation, &QSpinBox::valueChanged, this, [this](int value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Text)
+                static_cast<PrimitiveText *>(primitive)->setOrientationDeg(value);
+        }
+    });
+    // Bold/Italic/Mirrored share one styleFlags() bitmask - each checkbox
+    // flips just its own bit, keeping the other two untouched.
+    connect(ui->checkBoxTextBold, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Text) {
+                auto *text = static_cast<PrimitiveText *>(primitive);
+                int flags = text->styleFlags();
+                flags = checked ? (flags | PrimitiveText::Bold) : (flags & ~PrimitiveText::Bold);
+                text->setStyleFlags(flags);
+            }
+        }
+    });
+    connect(ui->checkBoxTextItalic, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Text) {
+                auto *text = static_cast<PrimitiveText *>(primitive);
+                int flags = text->styleFlags();
+                flags = checked ? (flags | PrimitiveText::Italic) : (flags & ~PrimitiveText::Italic);
+                text->setStyleFlags(flags);
+            }
+        }
+    });
+    connect(ui->checkBoxTextMirrored, &QCheckBox::toggled, this, [this](bool checked) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Text) {
+                auto *text = static_cast<PrimitiveText *>(primitive);
+                int flags = text->styleFlags();
+                flags = checked ? (flags | PrimitiveText::Mirrored) : (flags & ~PrimitiveText::Mirrored);
+                text->setStyleFlags(flags);
+            }
         }
     });
 

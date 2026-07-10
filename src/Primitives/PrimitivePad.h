@@ -52,9 +52,11 @@ public:
     qreal outerHeight() const { return m_ry; }
     qreal holeDiameter() const { return m_ri; }
     Style style() const { return m_style; }
-    void setOuterSize(qreal rx, qreal ry) { m_rx = rx; m_ry = ry; }
-    void setHoleDiameter(qreal ri) { m_ri = ri; }
-    void setStyle(Style style) { m_style = style; }
+    // prepareGeometryChange()/update(): these can now be changed live from the
+    // Properties panel on an already-visible selection, not just at parse time.
+    void setOuterSize(qreal rx, qreal ry) { prepareGeometryChange(); m_rx = rx; m_ry = ry; update(); }
+    void setHoleDiameter(qreal ri) { prepareGeometryChange(); m_ri = ri; update(); }
+    void setStyle(Style style) { prepareGeometryChange(); m_style = style; update(); }
 
     bool isDegenerate() const override { return false; } // a pad is always meaningful
     QStringList toTokens() const override;

@@ -108,18 +108,22 @@ public:
 
     // FidoCadJ FCJ arrow attributes. Only meaningful for the line-like primitives
     // (LI/BE/CV/CP); the rest simply never read them.
+    // prepareGeometryChange()/update() matter here (unlike when these were only
+    // ever set at parse time, before the first paint) now that the Properties
+    // panel can change them on an already-visible selection - a bigger arrow
+    // can extend past the old cached boundingRect().
     bool arrowAtStart() const { return m_arrowAtStart; }
     bool arrowAtEnd() const { return m_arrowAtEnd; }
-    void setArrowAtStart(bool on) { m_arrowAtStart = on; }
-    void setArrowAtEnd(bool on) { m_arrowAtEnd = on; }
+    void setArrowAtStart(bool on) { prepareGeometryChange(); m_arrowAtStart = on; update(); }
+    void setArrowAtEnd(bool on) { prepareGeometryChange(); m_arrowAtEnd = on; update(); }
     bool arrowStyleLimiter() const { return m_arrowStyleLimiter; }
     bool arrowStyleEmpty() const { return m_arrowStyleEmpty; }
-    void setArrowStyleLimiter(bool on) { m_arrowStyleLimiter = on; }
-    void setArrowStyleEmpty(bool on) { m_arrowStyleEmpty = on; }
+    void setArrowStyleLimiter(bool on) { prepareGeometryChange(); m_arrowStyleLimiter = on; update(); }
+    void setArrowStyleEmpty(bool on) { prepareGeometryChange(); m_arrowStyleEmpty = on; update(); }
     qreal arrowLength() const { return m_arrowLength; }
     qreal arrowHalfWidth() const { return m_arrowHalfWidth; }
-    void setArrowLength(qreal len) { m_arrowLength = len; }
-    void setArrowHalfWidth(qreal halfWidth) { m_arrowHalfWidth = halfWidth; }
+    void setArrowLength(qreal len) { prepareGeometryChange(); m_arrowLength = len; update(); }
+    void setArrowHalfWidth(qreal halfWidth) { prepareGeometryChange(); m_arrowHalfWidth = halfWidth; update(); }
 
     virtual QRectF boundingRect() const = 0;
 

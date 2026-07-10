@@ -28,6 +28,9 @@
 #include "ui_MainWindow.h"
 #include "PrimitiveText.h"
 #include "PrimitiveImage.h"
+#include "PrimitivePad.h"
+#include "PrimitivePcbTrack.h"
+#include "PrimitiveComplexCurve.h"
 #include <QSignalBlocker>
 #include <QFont>
 
@@ -63,6 +66,24 @@ void MainWindow::updatePropertiesPanel()
     const QSignalBlocker blockOpacity(ui->spinOpacity);
     const QSignalBlocker blockKeepAspectRatio(ui->checkBoxKeepAspectRatio);
     const QSignalBlocker blockGrayscale(ui->checkBoxGrayscale);
+    const QSignalBlocker blockArrowStart(ui->checkBoxArrowStart);
+    const QSignalBlocker blockArrowEnd(ui->checkBoxArrowEnd);
+    const QSignalBlocker blockArrowEmpty(ui->checkBoxArrowEmpty);
+    const QSignalBlocker blockArrowLimiter(ui->checkBoxArrowLimiter);
+    const QSignalBlocker blockArrowLength(ui->spinArrowLength);
+    const QSignalBlocker blockArrowHalfWidth(ui->spinArrowHalfWidth);
+    const QSignalBlocker blockCurveClosed(ui->checkBoxCurveClosed);
+    const QSignalBlocker blockTrackWidth(ui->spinTrackWidth);
+    const QSignalBlocker blockPadWidth(ui->spinPadWidth);
+    const QSignalBlocker blockPadHeight(ui->spinPadHeight);
+    const QSignalBlocker blockPadHole(ui->spinPadHole);
+    const QSignalBlocker blockPadStyle(ui->cbPadStyle);
+    const QSignalBlocker blockTextSizeX(ui->spinTextSizeX);
+    const QSignalBlocker blockTextSizeY(ui->spinTextSizeY);
+    const QSignalBlocker blockTextOrientation(ui->spinTextOrientation);
+    const QSignalBlocker blockTextBold(ui->checkBoxTextBold);
+    const QSignalBlocker blockTextItalic(ui->checkBoxTextItalic);
+    const QSignalBlocker blockTextMirrored(ui->checkBoxTextMirrored);
 
     auto showRow = [](QWidget *label, QWidget *field, bool visible) {
         label->setVisible(visible);
@@ -81,6 +102,24 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->label_9, ui->spinOpacity, false);
         showRow(ui->label_10, ui->checkBoxKeepAspectRatio, false);
         showRow(ui->label_11, ui->checkBoxGrayscale, false);
+        showRow(ui->labelArrowStart, ui->checkBoxArrowStart, false);
+        showRow(ui->labelArrowEnd, ui->checkBoxArrowEnd, false);
+        showRow(ui->labelArrowEmpty, ui->checkBoxArrowEmpty, false);
+        showRow(ui->labelArrowLimiter, ui->checkBoxArrowLimiter, false);
+        showRow(ui->labelArrowLength, ui->spinArrowLength, false);
+        showRow(ui->labelArrowHalfWidth, ui->spinArrowHalfWidth, false);
+        showRow(ui->labelCurveClosed, ui->checkBoxCurveClosed, false);
+        showRow(ui->labelTrackWidth, ui->spinTrackWidth, false);
+        showRow(ui->labelPadWidth, ui->spinPadWidth, false);
+        showRow(ui->labelPadHeight, ui->spinPadHeight, false);
+        showRow(ui->labelPadHole, ui->spinPadHole, false);
+        showRow(ui->labelPadStyle, ui->cbPadStyle, false);
+        showRow(ui->labelTextSizeX, ui->spinTextSizeX, false);
+        showRow(ui->labelTextSizeY, ui->spinTextSizeY, false);
+        showRow(ui->labelTextOrientation, ui->spinTextOrientation, false);
+        showRow(ui->labelTextBold, ui->checkBoxTextBold, false);
+        showRow(ui->labelTextItalic, ui->checkBoxTextItalic, false);
+        showRow(ui->labelTextMirrored, ui->checkBoxTextMirrored, false);
         ui->lineEdit->clear();
         ui->lineEdit_2->clear();
         return;
@@ -127,8 +166,22 @@ void MainWindow::updatePropertiesPanel()
 
     const bool isText = primitive->getPrimitiveType() == GraphicsPrimitive::Text;
     showRow(ui->label_8, ui->fontComboBox, isText);
-    if (isText)
-        ui->fontComboBox->setCurrentFont(QFont(static_cast<PrimitiveText *>(primitive)->fontName()));
+    showRow(ui->labelTextSizeX, ui->spinTextSizeX, isText);
+    showRow(ui->labelTextSizeY, ui->spinTextSizeY, isText);
+    showRow(ui->labelTextOrientation, ui->spinTextOrientation, isText);
+    showRow(ui->labelTextBold, ui->checkBoxTextBold, isText);
+    showRow(ui->labelTextItalic, ui->checkBoxTextItalic, isText);
+    showRow(ui->labelTextMirrored, ui->checkBoxTextMirrored, isText);
+    if (isText) {
+        auto *text = static_cast<PrimitiveText *>(primitive);
+        ui->fontComboBox->setCurrentFont(QFont(text->fontName()));
+        ui->spinTextSizeX->setValue(text->sizeX());
+        ui->spinTextSizeY->setValue(text->sizeY());
+        ui->spinTextOrientation->setValue(text->orientationDeg());
+        ui->checkBoxTextBold->setChecked(text->styleFlags() & PrimitiveText::Bold);
+        ui->checkBoxTextItalic->setChecked(text->styleFlags() & PrimitiveText::Italic);
+        ui->checkBoxTextMirrored->setChecked(text->styleFlags() & PrimitiveText::Mirrored);
+    }
 
     const bool isImage = primitive->getPrimitiveType() == GraphicsPrimitive::Image;
     showRow(ui->label_9, ui->spinOpacity, isImage);
@@ -139,5 +192,47 @@ void MainWindow::updatePropertiesPanel()
         ui->spinOpacity->setValue(qRound(image->opacity() * 100.0));
         ui->checkBoxKeepAspectRatio->setChecked(image->keepAspectRatio());
         ui->checkBoxGrayscale->setChecked(image->isGrayscale());
+    }
+
+    // supportsArrows() alone correctly covers Line, Bezier, and an open
+    // ComplexCurve all at once (it's already false for a closed one - arrows
+    // are meaningless on a closed curve), no per-type switch needed here.
+    const bool hasArrows = primitive->supportsArrows();
+    showRow(ui->labelArrowStart, ui->checkBoxArrowStart, hasArrows);
+    showRow(ui->labelArrowEnd, ui->checkBoxArrowEnd, hasArrows);
+    showRow(ui->labelArrowEmpty, ui->checkBoxArrowEmpty, hasArrows);
+    showRow(ui->labelArrowLimiter, ui->checkBoxArrowLimiter, hasArrows);
+    showRow(ui->labelArrowLength, ui->spinArrowLength, hasArrows);
+    showRow(ui->labelArrowHalfWidth, ui->spinArrowHalfWidth, hasArrows);
+    if (hasArrows) {
+        ui->checkBoxArrowStart->setChecked(primitive->arrowAtStart());
+        ui->checkBoxArrowEnd->setChecked(primitive->arrowAtEnd());
+        ui->checkBoxArrowEmpty->setChecked(primitive->arrowStyleEmpty());
+        ui->checkBoxArrowLimiter->setChecked(primitive->arrowStyleLimiter());
+        ui->spinArrowLength->setValue(primitive->arrowLength());
+        ui->spinArrowHalfWidth->setValue(primitive->arrowHalfWidth());
+    }
+
+    const bool isComplexCurve = primitive->getPrimitiveType() == GraphicsPrimitive::Spline;
+    showRow(ui->labelCurveClosed, ui->checkBoxCurveClosed, isComplexCurve);
+    if (isComplexCurve)
+        ui->checkBoxCurveClosed->setChecked(static_cast<PrimitiveComplexCurve *>(primitive)->isClosed());
+
+    const bool isPcbTrack = primitive->getPrimitiveType() == GraphicsPrimitive::PcbTrack;
+    showRow(ui->labelTrackWidth, ui->spinTrackWidth, isPcbTrack);
+    if (isPcbTrack)
+        ui->spinTrackWidth->setValue(static_cast<PrimitivePcbTrack *>(primitive)->width());
+
+    const bool isPad = primitive->getPrimitiveType() == GraphicsPrimitive::Pad;
+    showRow(ui->labelPadWidth, ui->spinPadWidth, isPad);
+    showRow(ui->labelPadHeight, ui->spinPadHeight, isPad);
+    showRow(ui->labelPadHole, ui->spinPadHole, isPad);
+    showRow(ui->labelPadStyle, ui->cbPadStyle, isPad);
+    if (isPad) {
+        auto *pad = static_cast<PrimitivePad *>(primitive);
+        ui->spinPadWidth->setValue(pad->outerWidth());
+        ui->spinPadHeight->setValue(pad->outerHeight());
+        ui->spinPadHole->setValue(pad->holeDiameter());
+        ui->cbPadStyle->setCurrentIndex(static_cast<int>(pad->style()));
     }
 }

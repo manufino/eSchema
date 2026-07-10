@@ -54,11 +54,14 @@ public:
     void setText(const QString &text) { m_text = text; }
     int sizeY() const { return m_sizeY; }
     int sizeX() const { return m_sizeX; }
-    void setSize(int sizeY, int sizeX) { m_sizeY = sizeY; m_sizeX = sizeX; }
+    // prepareGeometryChange()/update(): can now be changed live from the
+    // Properties panel on an already-visible selection, not just at parse time -
+    // size/orientation/style-flags (bold/italic) all affect boundingRect().
+    void setSize(int sizeY, int sizeX) { prepareGeometryChange(); m_sizeY = sizeY; m_sizeX = sizeX; update(); }
     int orientationDeg() const { return m_orientationDeg; }
-    void setOrientationDeg(int deg) { m_orientationDeg = deg; }
+    void setOrientationDeg(int deg) { prepareGeometryChange(); m_orientationDeg = deg; update(); }
     int styleFlags() const { return m_styleFlags; }
-    void setStyleFlags(int flags) { m_styleFlags = flags; }
+    void setStyleFlags(int flags) { prepareGeometryChange(); m_styleFlags = flags; update(); }
     QString fontName() const { return m_fontName; }
     // prepareGeometryChange()/update() matter here (unlike the other setters
     // in this class, currently only called at parse/creation time) because

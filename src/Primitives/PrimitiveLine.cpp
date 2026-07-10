@@ -29,7 +29,10 @@ PrimitiveLine::PrimitiveLine(QGraphicsItem *parent)
 
 QRectF PrimitiveLine::boundingRect() const
 {
-    const qreal margin = effectiveLineWidth() + 4; // room for the pen width and any arrowhead
+    // qMax(4.0, ...) is a safety floor for the default arrow size; beyond that,
+    // must track the actually-configured arrow length/half-width or a large
+    // user-set arrow gets clipped against a stale, too-small cached rect.
+    const qreal margin = effectiveLineWidth() + qMax(4.0, qMax(arrowLength(), arrowHalfWidth()));
     return QRectF(mapFromScene(m_p1), mapFromScene(m_p2)).normalized()
             .adjusted(-margin, -margin, margin, margin)
             .united(labelBoundingRect());

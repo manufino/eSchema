@@ -47,7 +47,10 @@ public:
     int vertexCount() const { return m_vertices.size(); }
 
     bool isClosed() const { return m_closed; }
-    void setClosed(bool closed) { m_closed = closed; }
+    // prepareGeometryChange()/update(): can now be changed live from the
+    // Properties panel - closing the curve changes both its fill/shape and
+    // whether its (now-irrelevant) arrows are still painted.
+    void setClosed(bool closed) { prepareGeometryChange(); m_closed = closed; update(); }
 
     bool isDegenerate() const override;
     QStringList toTokens() const override;
