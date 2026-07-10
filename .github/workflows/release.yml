@@ -102,7 +102,10 @@ jobs:
           mkdir -p AppDir/usr/bin
           cp build/eSchema AppDir/usr/bin/
           cp -r build/lib AppDir/usr/bin/lib
-          convert "resources/main.ico[0]" icon.png
+          # linuxdeploy matches the desktop file's "Icon=" value against an
+          # icon file by basename, not just by --icon-file being present -
+          # it has to be named eSchema.png to match "Icon=eSchema" below.
+          convert "resources/main.ico[0]" eSchema.png
           cat > eSchema.desktop <<'EOF'
           [Desktop Entry]
           Type=Application
@@ -130,7 +133,7 @@ jobs:
           ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt \
             --executable AppDir/usr/bin/eSchema \
             --desktop-file eSchema.desktop \
-            --icon-file icon.png
+            --icon-file eSchema.png
 
       - name: Package zip
         run: |
