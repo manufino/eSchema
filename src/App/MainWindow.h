@@ -97,6 +97,9 @@ public slots:
     void clickSaveAction();
     void clickSaveAsAction();
     void clickPrintAction();
+    void clickExportPdfAction();
+    void clickExportSvgAction();
+    void clickExportPngAction();
     // Builds and execs the right-click menu at `globalPos` - wired to
     // SheetView::contextMenuRequested(), which has already adjusted the
     // selection (if needed) by the time this runs.

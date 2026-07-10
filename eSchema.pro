@@ -1,7 +1,7 @@
 # eSchema Version
 VERSION = 0.6.6
 
-QT += core gui printsupport
+QT += core gui printsupport svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

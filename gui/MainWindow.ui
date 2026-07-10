@@ -1519,8 +1519,21 @@ margin:1px;
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
     <addaction name="actionPrint"/>
+    <addaction name="menuExport"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuExport">
+    <property name="title">
+     <string>Esporta come</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../resources.qrc">
+      <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
+    </property>
+    <addaction name="actionExportPdf"/>
+    <addaction name="actionExportSvg"/>
+    <addaction name="actionExportPng"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -1762,6 +1775,33 @@ margin:1px;
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="actionExportPdf">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/file-copy-line.png</normaloff>:/res/resources/remix/file-copy-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>PDF...</string>
+   </property>
+  </action>
+  <action name="actionExportSvg">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/file-copy-2-line.png</normaloff>:/res/resources/remix/file-copy-2-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>SVG...</string>
+   </property>
+  </action>
+  <action name="actionExportPng">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>PNG...</string>
    </property>
   </action>
   <action name="actionUndo">
