@@ -52,6 +52,9 @@ SOURCES += \
 	src/Commands/MovePrimitiveCommand.cpp \
 	src/Commands/ResizePrimitiveCommand.cpp \
 	src/Commands/RotatePrimitiveCommand.cpp \
+	src/IO/DxfCommon.cpp \
+	src/IO/DxfReader.cpp \
+	src/IO/DxfWriter.cpp \
 	src/IO/FidoCadReader.cpp \
 	src/IO/FidoCadTokenUtils.cpp \
 	src/IO/FidoCadWriter.cpp \
@@ -108,6 +111,9 @@ HEADERS += \
 	src/Commands/MovePrimitiveCommand.h \
 	src/Commands/ResizePrimitiveCommand.h \
 	src/Commands/RotatePrimitiveCommand.h \
+	src/IO/DxfCommon.h \
+	src/IO/DxfReader.h \
+	src/IO/DxfWriter.h \
 	src/IO/FidoCadReader.h \
 	src/IO/FidoCadTokenUtils.h \
 	src/IO/FidoCadWriter.h \

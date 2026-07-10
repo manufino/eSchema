@@ -28,6 +28,8 @@
 
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "DxfReader.h"
+#include "DxfWriter.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
 #include "LibraryManager.h"
@@ -438,12 +440,14 @@ void MainWindow::setConnections()
     connect(ui->actionDistributeVertical, &QAction::triggered, this, &MainWindow::clickDistributeVerticalAction);
     connect(ui->actionNewDraw, &QAction::triggered, this, &MainWindow::clickNewAction);
     connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
+    connect(ui->actionImportDxf, &QAction::triggered, this, &MainWindow::clickImportDxfAction);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
     connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::clickPrintAction);
     connect(ui->actionExportPdf, &QAction::triggered, this, &MainWindow::clickExportPdfAction);
     connect(ui->actionExportSvg, &QAction::triggered, this, &MainWindow::clickExportSvgAction);
     connect(ui->actionExportPng, &QAction::triggered, this, &MainWindow::clickExportPngAction);
+    connect(ui->actionExportDxf, &QAction::triggered, this, &MainWindow::clickExportDxfAction);
     // QWidget::close() reaches closeEvent(), which does the unsaved-changes
     // check - so File > Close and the window's own titlebar X button behave
     // identically instead of needing separate logic.
@@ -623,6 +627,35 @@ bool MainWindow::openFile(const QString &filePath)
     sheetScene->undoStack()->setClean();
     setCurrentFilePath(filePath);
     return true;
+}
+
+void MainWindow::clickImportDxfAction()
+{
+    const QString path = QFileDialog::getOpenFileName(this, tr("Importa da DXF"), QString(),
+                                                        tr("DXF (*.dxf)"));
+    if (path.isEmpty())
+        return;
+
+    // Same non-undoable bulk-load contract as Open/FidoCadReader::read() -
+    // this replaces the current sheet's contents entirely, matching this
+    // app's single-always-open-document model rather than merging into it.
+    QString error;
+    QStringList warnings;
+    if (!DxfReader::readFile(path, sheetScene, &error, &warnings)) {
+        QMessageBox::warning(this, tr("Errore"), tr("Impossibile aprire il file:\n%1").arg(error));
+        return;
+    }
+    sheetScene->undoStack()->setClean();
+    // A DXF file has no notion of "this eSchema document's own path" - it's
+    // an import, not a native Open, so the next Save still goes through Save
+    // As rather than silently overwriting the .dxf with .fcd content.
+    setCurrentFilePath(QString());
+
+    if (!warnings.isEmpty()) {
+        QMessageBox::information(this, tr("Importa da DXF"),
+                                  tr("Alcuni elementi del file DXF non sono stati importati:\n\n%1")
+                                          .arg(warnings.join(QLatin1Char('\n'))));
+    }
 }
 
 void MainWindow::clickSaveAction()
@@ -806,4 +839,23 @@ void MainWindow::clickExportPngAction()
 
     for (QGraphicsItem *item : previousSelection)
         item->setSelected(true);
+}
+
+void MainWindow::clickExportDxfAction()
+{
+    if (sheetScene->itemsBoundingRect().isEmpty()) {
+        QMessageBox::information(this, tr("Esporta DXF"), tr("Il disegno e' vuoto."));
+        return;
+    }
+
+    QString path = QFileDialog::getSaveFileName(this, tr("Esporta come DXF"), QString(),
+                                                  tr("File DXF (*.dxf)"));
+    if (path.isEmpty())
+        return;
+    if (!path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
+        path += QStringLiteral(".dxf");
+
+    QString error;
+    if (!DxfWriter::writeFile(sheetScene, path, &error))
+        QMessageBox::warning(this, tr("Errore"), tr("Impossibile salvare il file:\n%1").arg(error));
 }

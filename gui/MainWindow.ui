@@ -1156,6 +1156,7 @@
     </property>
     <addaction name="actionNewDraw"/>
     <addaction name="actionOpenFile"/>
+    <addaction name="actionImportDxf"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
@@ -1176,6 +1177,7 @@
     <addaction name="actionExportPdf"/>
     <addaction name="actionExportSvg"/>
     <addaction name="actionExportPng"/>
+    <addaction name="actionExportDxf"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -1365,6 +1367,15 @@
     <string>Ctrl+O</string>
    </property>
   </action>
+  <action name="actionImportDxf">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/folder-add-line.png</normaloff>:/res/resources/remix/folder-add-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Importa da DXF...</string>
+   </property>
+  </action>
   <action name="actionSave">
    <property name="enabled">
     <bool>true</bool>
@@ -1444,6 +1455,15 @@
    </property>
    <property name="text">
     <string>PNG...</string>
+   </property>
+  </action>
+  <action name="actionExportDxf">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/file-copy-2-fill.png</normaloff>:/res/resources/remix/file-copy-2-fill.png</iconset>
+   </property>
+   <property name="text">
+    <string>DXF...</string>
    </property>
   </action>
   <action name="actionUndo">
