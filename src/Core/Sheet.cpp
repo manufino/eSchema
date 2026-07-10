@@ -66,11 +66,24 @@ void Sheet::removePrimitive(GraphicsPrimitive *primitive)
 
 void Sheet::clearPrimitives()
 {
+    // Drops the selection first so any resize-handle items (owned by
+    // SelectionHandleController, outside m_primitives) get torn down through the
+    // normal selectionChanged -> clearHandles() path before clear() below deletes
+    // their target primitive out from under them - otherwise they're left dangling.
+    clearSelection();
+
+    // Must run before m_primitives.clear(): CreatePrimitiveCommand/
+    // DeletePrimitiveCommand destructors decide whether they own their primitive
+    // by checking whether it's still in m_primitives. Clearing that list first
+    // would make every command wrongly conclude it owns (and must delete) a
+    // primitive that the QGraphicsScene::clear() below already destroyed,
+    // double-freeing it.
+    m_undoStack.clear();
+
     // QGraphicsScene::clear() deletes every item it still owns, which covers all
     // primitives here since they were all added via addItem() in addPrimitive().
     clear();
     m_primitives.clear();
-    m_undoStack.clear();
     m_connectionDiameter = 2.0;
     m_lineWidth = defaultLineWidthSetting();
     m_lineWidthCircles = 0.35;
