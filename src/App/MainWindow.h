@@ -89,6 +89,7 @@ public slots:
     void clickDeleteAction();
     void clickCutAction();
     void clickCopyAction();
+    void clickCopyAsImageAction();
     void clickPasteAction();
     void clickDuplicateAction();
     void clickSelectAllAction();

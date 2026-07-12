@@ -38,6 +38,8 @@
 #include "DialogCreateMacro.h"
 #include <QGuiApplication>
 #include <QClipboard>
+#include <QImage>
+#include <QPainter>
 #include <QMenu>
 #include <QMessageBox>
 #include <QRandomGenerator>
@@ -504,6 +506,57 @@ void MainWindow::clickCopyAction()
     if (selected.isEmpty())
         return;
     QGuiApplication::clipboard()->setText(FidoCadWriter::writeSelection(selected));
+}
+
+void MainWindow::clickCopyAsImageAction()
+{
+    if (sheetScene->itemsBoundingRect().isEmpty()) {
+        QMessageBox::information(this, tr("Copia come immagine"), tr("Il disegno e' vuoto."));
+        return;
+    }
+
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+
+    // Selection highlight and handles are editor chrome, not drawing content
+    // - same clear/restore pattern as the PNG/SVG/PDF exports.
+    const QList<QGraphicsItem *> previousSelection = sheetScene->selectedItems();
+    sheetScene->clearSelection();
+
+    // With a selection, copy just those primitives: hide everything else for
+    // this one render pass through the same primitive-owned visibility flag
+    // the CLI's per-layer split export already uses (paint() early-returns
+    // on it; it's independent of the QGraphicsItem visibility that layer
+    // hiding drives). Without a selection, copy the whole drawing.
+    QRectF sourceRect;
+    if (!selected.isEmpty()) {
+        for (GraphicsPrimitive *primitive : selected)
+            sourceRect = sourceRect.united(primitive->sceneBoundingRect());
+        for (GraphicsPrimitive *primitive : sheetScene->primitives())
+            primitive->setVisible(selected.contains(primitive));
+    } else {
+        sourceRect = sheetScene->itemsBoundingRect();
+    }
+
+    // Same fixed pixels-per-drawing-unit ratio as the PNG export's default
+    // scale factor - crisp enough to paste into documents without asking.
+    const int scale = 4;
+    const QSize targetSize = (sourceRect.size() * scale).toSize();
+    QImage image(targetSize, QImage::Format_ARGB32);
+    image.fill(Qt::white);
+    QPainter painter(&image);
+    painter.setRenderHint(QPainter::Antialiasing);
+    sheetScene->render(&painter, QRectF(QPointF(0, 0), targetSize), sourceRect);
+    painter.end();
+
+    if (!selected.isEmpty()) {
+        for (GraphicsPrimitive *primitive : sheetScene->primitives())
+            primitive->setVisible(true);
+    }
+
+    QGuiApplication::clipboard()->setImage(image);
+
+    for (QGraphicsItem *item : previousSelection)
+        item->setSelected(true);
 }
 
 void MainWindow::clickCutAction()

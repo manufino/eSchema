@@ -429,6 +429,7 @@ void MainWindow::setConnections()
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::clickDeleteAction);
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::clickCutAction);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::clickCopyAction);
+    connect(ui->actionCopyAsImage, &QAction::triggered, this, &MainWindow::clickCopyAsImageAction);
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::clickPasteAction);
     connect(ui->actionDuplicate, &QAction::triggered, this, &MainWindow::clickDuplicateAction);
     connect(ui->actionSelectAll, &QAction::triggered, this, &MainWindow::clickSelectAllAction);

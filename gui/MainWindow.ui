@@ -1230,6 +1230,7 @@
     <addaction name="separator"/>
     <addaction name="actionCut"/>
     <addaction name="actionCopy"/>
+    <addaction name="actionCopyAsImage"/>
     <addaction name="actionPaste"/>
     <addaction name="actionDuplicate"/>
     <addaction name="actionDelete"/>
@@ -1566,6 +1567,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionCopyAsImage">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copia come immagine</string>
+   </property>
+   <property name="toolTip">
+    <string>Copia la selezione (o tutto il disegno) negli appunti come immagine</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionPaste">
