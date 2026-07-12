@@ -1188,6 +1188,7 @@
     </property>
     <addaction name="actionNewDraw"/>
     <addaction name="actionOpenFile"/>
+    <addaction name="menuRecentFiles"/>
     <addaction name="actionImportDxf"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
@@ -1210,6 +1211,15 @@
     <addaction name="actionExportSvg"/>
     <addaction name="actionExportPng"/>
     <addaction name="actionExportDxf"/>
+   </widget>
+   <widget class="QMenu" name="menuRecentFiles">
+    <property name="title">
+     <string>Apri recenti</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../resources.qrc">
+      <normaloff>:/res/resources/remix/folder-open-line.png</normaloff>:/res/resources/remix/folder-open-line.png</iconset>
+    </property>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">

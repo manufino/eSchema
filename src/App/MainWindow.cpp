@@ -163,6 +163,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionRulersVisible->setChecked(rulersVisible.isValid() ? rulersVisible.toBool() : true);
 
     setConnections();
+    updateRecentFilesMenu();
     updateRulers();
     updateRulersVisibility();
 }
@@ -502,6 +503,64 @@ void MainWindow::setCurrentFilePath(const QString &filePath)
 {
     currentFilePath = filePath;
     updateWindowTitle();
+    // Every path that becomes "the current document" (Open, Save As, a file
+    // passed on the command line) is by definition the most recently used one.
+    if (!filePath.isEmpty())
+        addToRecentFiles(filePath);
+}
+
+void MainWindow::addToRecentFiles(const QString &filePath)
+{
+    const QString absolute = QFileInfo(filePath).absoluteFilePath();
+    QStringList recents = SettingsManager::getInstance().loadSetting("recent_files").toStringList();
+    // Case-insensitive de-duplication: on Windows the same file can arrive
+    // with different casing (file dialog vs command line vs drag&drop).
+    for (int i = recents.size() - 1; i >= 0; --i) {
+        if (QString::compare(recents.at(i), absolute, Qt::CaseInsensitive) == 0)
+            recents.removeAt(i);
+    }
+    recents.prepend(absolute);
+    while (recents.size() > 10)
+        recents.removeLast();
+    SettingsManager::getInstance().saveSetting("recent_files", recents);
+    updateRecentFilesMenu();
+}
+
+void MainWindow::updateRecentFilesMenu()
+{
+    ui->menuRecentFiles->clear();
+    const QStringList recents = SettingsManager::getInstance().loadSetting("recent_files").toStringList();
+    ui->menuRecentFiles->setEnabled(!recents.isEmpty());
+
+    // Every handler below rebuilds this menu (directly or via openFile() ->
+    // setCurrentFilePath() -> addToRecentFiles()), and rebuilding deletes the
+    // very action whose triggered() is being emitted - queued connections
+    // defer the handler until the emission stack has unwound, making that
+    // deletion safe.
+    for (const QString &path : recents) {
+        QAction *action = ui->menuRecentFiles->addAction(path);
+        connect(action, &QAction::triggered, this, [this, path]() {
+            if (!QFileInfo::exists(path)) {
+                QMessageBox::warning(this, tr("Apri recenti"),
+                                      tr("Il file non esiste piu':\n%1").arg(path));
+                QStringList recents = SettingsManager::getInstance().loadSetting("recent_files").toStringList();
+                recents.removeAll(path);
+                SettingsManager::getInstance().saveSetting("recent_files", recents);
+                updateRecentFilesMenu();
+                return;
+            }
+            if (!confirmDiscardChanges())
+                return;
+            openFile(path);
+        }, Qt::QueuedConnection);
+    }
+
+    ui->menuRecentFiles->addSeparator();
+    QAction *clearAction = ui->menuRecentFiles->addAction(tr("Svuota elenco"));
+    connect(clearAction, &QAction::triggered, this, [this]() {
+        SettingsManager::getInstance().saveSetting("recent_files", QStringList());
+        updateRecentFilesMenu();
+    }, Qt::QueuedConnection);
 }
 
 void MainWindow::updateRulers()

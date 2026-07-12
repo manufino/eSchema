@@ -175,6 +175,14 @@ private:
     bool saveToPath(const QString &filePath);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();
+    // Moves (or inserts) `filePath` to the top of the persisted recent-files
+    // list and rebuilds the File > Apri recenti submenu from it.
+    void addToRecentFiles(const QString &filePath);
+    // Rebuilds the File > Apri recenti submenu from the "recent_files"
+    // setting: one action per still-listed path (clicking it opens the file,
+    // with the same unsaved-changes prompt as File > Apri) plus a trailing
+    // "clear list" entry. Disabled entirely while the list is empty.
+    void updateRecentFilesMenu();
     // Reads ui->graphicsView's current transform/scroll position and pushes
     // the resulting origin+scale to both rulers - wired to SheetView::
     // viewTransformChanged() (pan/zoom/resize) so they always match what's
