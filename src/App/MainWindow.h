@@ -48,6 +48,9 @@ QT_END_NAMESPACE
 class QPrinter;
 class QTreeWidget;
 class QTreeWidgetItem;
+class QDragEnterEvent;
+class QDropEvent;
+class QMimeData;
 
 class MainWindow : public QMainWindow
 {
@@ -68,6 +71,11 @@ protected:
     // actually closes. Triggered both by File > Close and the window's own
     // titlebar close button, since QWidget::close() reaches here either way.
     void closeEvent(QCloseEvent *event) override;
+    // Dropping a .fcd (open) or .dxf (import) file anywhere on the window
+    // loads it, exactly like the corresponding File menu entry - including
+    // the unsaved-changes prompt. Other drops are refused at enter time.
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
 public slots:
     void clickOptionAction();
@@ -172,6 +180,16 @@ private:
     // MovePrimitiveCommand, macro-grouped so the whole alignment undoes in
     // one step.
     void moveSelectedPrimitives(const QHash<GraphicsPrimitive *, QPointF> &deltas, const QString &undoLabel);
+    // Replaces the sheet's contents with `filePath`'s (same bulk-load
+    // contract as openFile(), but as an import: the document stays untitled
+    // so the next Save goes through Save As). Shared by File > Importa da
+    // DXF and dropping a .dxf onto the window. Returns false on read errors
+    // (already reported to the user).
+    bool importDxfFile(const QString &filePath);
+    // The droppable local file carried by a drag's mime data - empty if the
+    // drag holds none (wrong extension, non-file payload). Shared by
+    // dragEnterEvent (to decide acceptance) and dropEvent.
+    static QString droppableFilePath(const QMimeData *mimeData);
     bool saveToPath(const QString &filePath);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();

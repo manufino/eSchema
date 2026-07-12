@@ -107,6 +107,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->rulerVertical->setOrientation(Qt::Vertical);
 
+    // Dropping a .fcd/.dxf file anywhere on the window opens/imports it (see
+    // dragEnterEvent()/dropEvent()). The canvas must not accept drops itself:
+    // QGraphicsView forwards drag events to the scene, which accepts them by
+    // default, swallowing any drop over the drawing area before it could
+    // propagate up to this window's handler.
+    setAcceptDrops(true);
+    ui->graphicsView->setAcceptDrops(false);
+
     sheetScene = new Sheet();
     sheetScene->setSceneRect(0,0,5000,5000); // fix the scene dimensions
 
@@ -696,14 +704,19 @@ void MainWindow::clickImportDxfAction()
     if (path.isEmpty())
         return;
 
+    importDxfFile(path);
+}
+
+bool MainWindow::importDxfFile(const QString &filePath)
+{
     // Same non-undoable bulk-load contract as Open/FidoCadReader::read() -
     // this replaces the current sheet's contents entirely, matching this
     // app's single-always-open-document model rather than merging into it.
     QString error;
     QStringList warnings;
-    if (!DxfReader::readFile(path, sheetScene, &error, &warnings)) {
+    if (!DxfReader::readFile(filePath, sheetScene, &error, &warnings)) {
         QMessageBox::warning(this, tr("Errore"), tr("Impossibile aprire il file:\n%1").arg(error));
-        return;
+        return false;
     }
     sheetScene->undoStack()->setClean();
     // A DXF file has no notion of "this eSchema document's own path" - it's
@@ -716,6 +729,44 @@ void MainWindow::clickImportDxfAction()
                                   tr("Alcuni elementi del file DXF non sono stati importati:\n\n%1")
                                           .arg(warnings.join(QLatin1Char('\n'))));
     }
+    return true;
+}
+
+QString MainWindow::droppableFilePath(const QMimeData *mimeData)
+{
+    if (!mimeData->hasUrls())
+        return QString();
+    // Only the first droppable file counts - this is a single-document app,
+    // so a multi-file drop can't open more than one anyway.
+    for (const QUrl &url : mimeData->urls()) {
+        const QString path = url.toLocalFile();
+        if (path.endsWith(QStringLiteral(".fcd"), Qt::CaseInsensitive)
+                || path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
+            return path;
+    }
+    return QString();
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (!droppableFilePath(event->mimeData()).isEmpty())
+        event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    const QString path = droppableFilePath(event->mimeData());
+    if (path.isEmpty())
+        return;
+
+    event->acceptProposedAction();
+    if (!confirmDiscardChanges())
+        return;
+
+    if (path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
+        importDxfFile(path);
+    else
+        openFile(path);
 }
 
 void MainWindow::clickSaveAction()
