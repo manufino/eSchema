@@ -43,6 +43,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QGuiApplication>
+#include <QApplication>
 #include <QClipboard>
 #include <QCloseEvent>
 #include <QPrinter>
@@ -189,6 +190,7 @@ void MainWindow::setConnections()
     connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::sceneMousePos);
     connect(ui->actionOptions, &QAction::triggered, this, &MainWindow::clickOptionAction);
     connect(ui->actionInformation, &QAction::triggered, this, &MainWindow::clickAboutAction);
+    connect(ui->actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
     connect(ui->graphicsView, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
     connect(ui->graphicsView, &SheetView::mouseMoved, this, [this](QPointF scenePos) {
