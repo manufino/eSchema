@@ -74,9 +74,14 @@ void SettingsManager::restoreDefaultSettings()
     // (Sheet::connectionDiameter()/PrimitiveConnection::effectiveDiameter()).
     saveSetting("connection_diameter", 2.0);
 
-    // GRID
-    saveSetting("grid_step", 10);
-    saveSetting("mm_step", 1.27);
+    // GRID - matches the reference FidoCadJ editor's own compiled-in default
+    // (GRID_SIZE = 5). The bundled libraries are drawn on that 5-unit pitch:
+    // many macros have pin offsets at odd multiples of 5 (e.g. +15/-10 from
+    // the anchor), so a coarser grid/snap step leaves some pins off-grid
+    // after placement. One logical unit is 5 mils (0.127 mm), hence a 5-unit
+    // grid step spans 0.635 mm.
+    saveSetting("grid_step", 5);
+    saveSetting("mm_step", 0.635);
     saveSetting("grid_type", 0);
     saveSetting("grid_step_mark", 50);
     saveSetting("grid_line_width", 0.20);
@@ -91,7 +96,7 @@ void SettingsManager::restoreDefaultSettings()
     // coordinates integers, satisfying FidoCadJ's grid-unit requirement
     // (FIDOSPECS.md 3), so this can be changed independently of grid_step.
     saveSetting("snap_enabled", true);
-    saveSetting("snap_step", 10);
+    saveSetting("snap_step", 5);
 
     // RULERS - whether the top/left rulers are shown around the drawing
     // area (RulerWidget), toggled from the Options dialog.
