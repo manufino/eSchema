@@ -89,6 +89,34 @@ QPainterPath GraphicsPrimitive::withLabelArea(const QPainterPath &path) const
     return path.united(labelPath);
 }
 
+void GraphicsPrimitive::syncLayerAppearance()
+{
+    // Macros carry no real per-user layer assignment (FIDOSPECS.md 5.10:
+    // "MC" tokens have no layer field - MainWindowPropertiesPanel hides the
+    // layer field for them for the same reason) - like every FidoCadJ
+    // selection/draw path (each explicitly bypasses the layer visible/
+    // locked check for "instanceof PrimitiveMacro"), a placed macro is
+    // always drawn and always selectable regardless of any layer's
+    // visibility or lock state.
+    if (primitiveType == PartLib) {
+        QGraphicsItem::setVisible(true);
+        setFlag(QGraphicsItem::ItemIsSelectable, true);
+        return;
+    }
+
+    const bool layerVisible = !objLayer || objLayer->isVisible();
+    const bool layerLocked = objLayer && objLayer->isLocked();
+
+    QGraphicsItem::setVisible(layerVisible);
+    setFlag(QGraphicsItem::ItemIsSelectable, !layerLocked);
+
+    // ItemIsSelectable only gates *future* selection attempts - it does not
+    // retroactively deselect an already-selected item, so a layer hidden or
+    // locked out from under an active selection must be dropped explicitly.
+    if ((!layerVisible || layerLocked) && isSelected())
+        setSelected(false);
+}
+
 int GraphicsPrimitive::layerIndex() const
 {
     QList<Layer*> *layers = LayerList::getInstance().getList();

@@ -145,7 +145,7 @@ void LayerList::setVisible(Layer* layer, bool visible)
                 return;
 
             currentLayer->setVisible(visible);
-            //emit layerListChanged(layerList);
+            emit layerAppearanceChanged();
             break;
         }
     }
@@ -163,4 +163,39 @@ void LayerList::setAllVisibleOrHidden(bool visible)
 
         currentLayer->setVisible(visible);
     }
+    emit layerAppearanceChanged();
+}
+
+void LayerList::setLocked(Layer* layer, bool locked)
+{
+    for (int i = 0; i < layerList->count(); i++)
+    {
+        Layer* currentLayer = (*layerList)[i];
+        if (currentLayer == layer)
+        {
+            // don't allow locking the master layer - avoids locking
+            // yourself out of the layer you're actively drawing on
+            if(locked && layer->isMaster())
+                return;
+
+            currentLayer->setLocked(locked);
+            emit layerAppearanceChanged();
+            break;
+        }
+    }
+}
+
+void LayerList::setAllLockedOrUnlocked(bool locked)
+{
+    for (int i = 0; i < layerList->count(); i++)
+    {
+        Layer* currentLayer = (*layerList)[i];
+
+        // don't allow locking the master layer
+        if(locked && currentLayer->isMaster())
+            continue;
+
+        currentLayer->setLocked(locked);
+    }
+    emit layerAppearanceChanged();
 }

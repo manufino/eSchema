@@ -67,12 +67,19 @@ public:
     // call this on an already-visible primitive - e.g. the properties panel
     // editing an existing selection - rather than only at
     // creation/parse-time, before the first paint.
-    void setLayer(Layer *layer) { this->objLayer = layer; update(); }
+    void setLayer(Layer *layer) { this->objLayer = layer; syncLayerAppearance(); update(); }
     // Index (0-15) of this primitive's layer in the global LayerList, clamped to a
     // valid FidoCadJ layer range. Used only at FCD read/write time.
     int layerIndex() const;
     bool isFilled() const { return filled; }
     bool isVisible() const { return visible; }
+    // Whether Qt will actually paint this item - distinct from isVisible()
+    // above (a separate, primitive-owned flag used transiently by the CLI's
+    // per-layer export splitting, see CommandLine.cpp) - false only when
+    // this primitive's layer is hidden. Needed because Sheet::
+    // drawForeground() calls paintHole() directly, bypassing paint()'s own
+    // isVisible() guard.
+    bool isOnCanvas() const { return QGraphicsItem::isVisible(); }
     // The dash style actually used by paint() - needed by FidoCadWriter,
     // which isn't a subclass and so can't reach the protected field directly.
     Qt::PenStyle lineStyle() const { return penStyle; }
@@ -237,6 +244,13 @@ public:
     // FidoCadJ editor (GraphicPrimitive.selectLayer()/activateSelectColor(),
     // which blends 60% toward green rather than drawing a separate outline).
     QColor drawColor() const;
+
+    // Recomputes this primitive's real on-screen visibility/selectability
+    // from its current layer's visible/locked state (see Layer::isVisible()/
+    // isLocked()) - call after changing objLayer, after adding the primitive
+    // to a Sheet, or whenever any layer's appearance changes globally (see
+    // Sheet::refreshLayerAppearance()).
+    void syncLayerAppearance();
 
 protected:
     // Draws name()/value() near controlPoint(0) if set and visible. Every

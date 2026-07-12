@@ -272,18 +272,29 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
             // Minimal FJC support: "C"/"A"/"B" (connection diameter, line
             // width, circle line width) are stored on the Sheet so
             // FidoCadWriter can re-emit them - see Sheet::connectionDiameter()
-            // et al. Other sub-codes (L/N/IMG - per-layer color/name overrides,
+            // et al. "K" (layer lock state) is applied straight to the
+            // global LayerList, matching FidoCadWriter's own emission.
+            // Other sub-codes (L/N/IMG - per-layer color/name overrides,
             // background image placement) are recognized-but-ignored for this
             // pass, matching the spec's "unknown sub-codes are ignored" rule.
+            // applyDocumentConfig is only true for a genuine whole-document
+            // read() - never for parse()/paste or macro-body expansion, so
+            // this can never clobber layer state mid-paste.
             if (applyDocumentConfig && tokens.size() >= 3) {
-                const qreal value = tokens.at(2).toDouble();
-                if (value > 0) {
-                    if (tokens.at(1) == QStringLiteral("C"))
-                        sheet->setConnectionDiameter(value);
-                    else if (tokens.at(1) == QStringLiteral("A"))
-                        sheet->setLineWidth(value);
-                    else if (tokens.at(1) == QStringLiteral("B"))
-                        sheet->setLineWidthCircles(value);
+                if (tokens.at(1) == QStringLiteral("K") && tokens.size() >= 4) {
+                    const int layerNum = tokens.at(2).toInt();
+                    layerFromIndex(layerNum)->setLocked(
+                        tokens.at(3).compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0);
+                } else {
+                    const qreal value = tokens.at(2).toDouble();
+                    if (value > 0) {
+                        if (tokens.at(1) == QStringLiteral("C"))
+                            sheet->setConnectionDiameter(value);
+                        else if (tokens.at(1) == QStringLiteral("A"))
+                            sheet->setLineWidth(value);
+                        else if (tokens.at(1) == QStringLiteral("B"))
+                            sheet->setLineWidthCircles(value);
+                    }
                 }
             }
             continue;

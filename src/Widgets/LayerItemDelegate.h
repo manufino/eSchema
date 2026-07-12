@@ -22,12 +22,21 @@
 
 #include <QStyledItemDelegate>
 #include <QPainter>
+#include <QRect>
 
 class LayerItemDelegate : public QStyledItemDelegate {
 public:
     LayerItemDelegate(QObject* parent = nullptr);
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+
+    // Icon hit-rects within a row, shared with LayerComboBox's event filter
+    // (see its eventFilter()) so drawing and click hit-testing can never
+    // drift apart - both simply call these same two functions.
+    static QRect eyeIconRect(const QRect &itemRect);
+    static QRect lockIconRect(const QRect &itemRect);
+    static QRect colorSwatchRect(const QRect &itemRect);
+    static QRect textRect(const QRect &itemRect);
 };
 
 #endif // LAYERITEMDELEGATE_H

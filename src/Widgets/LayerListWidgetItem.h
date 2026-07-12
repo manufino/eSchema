@@ -26,6 +26,7 @@
 
 #include "Layer.h"
 #include "LayerVisibilityButton.h"
+#include "LayerLockButton.h"
 #include "LayerLabelName.h"
 #include "LayerColorPicker.h"
 

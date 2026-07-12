@@ -42,6 +42,8 @@ public slots:
     void levelDown();
     void setAllVisible();
     void setAllHidden();
+    void setAllLocked();
+    void setAllUnlocked();
     void deleteCurrent();
     void addNewLayer();
 

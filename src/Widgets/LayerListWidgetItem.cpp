@@ -31,6 +31,10 @@ LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : Q
     LayerVisibilityButton *lickableIconLabel = new LayerVisibilityButton(layer, widget);
     layout->addWidget(lickableIconLabel);
 
+    // lock or unlock the layer (prevents selecting/editing its primitives)
+    LayerLockButton *lockButton = new LayerLockButton(layer, widget);
+    layout->addWidget(lockButton);
+
     // layer color
     LayerColorPicker *colorPicker = new LayerColorPicker(layer, widget);
     layout->addWidget(colorPicker);

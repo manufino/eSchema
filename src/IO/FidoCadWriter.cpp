@@ -21,6 +21,8 @@
 #include "FidoCadTokenUtils.h"
 #include "Sheet.h"
 #include "GraphicsPrimitive.h"
+#include "LayerList.h"
+#include "Layer.h"
 #include <QFile>
 #include <QTextStream>
 
@@ -96,6 +98,17 @@ void writeDocumentConfig(QStringList &lines, const Sheet *sheet)
         lines << QStringLiteral("FJC A ") + roundIntelligently(sheet->lineWidth());
     if (!qFuzzyCompare(sheet->lineWidthCircles(), 0.35))
         lines << QStringLiteral("FJC B ") + roundIntelligently(sheet->lineWidthCircles());
+
+    // Layer lock state: matches the reference FidoCadJ editor's own
+    // persistence (ParserActions.checkAndRegisterLayers()'s "FJC K i true"),
+    // only emitted for a layer actually locked - false is simply the
+    // default, absent state, mirroring FidoCadJ never writing "FJC K i
+    // false".
+    const QList<Layer *> *layers = LayerList::getInstance().getList();
+    for (int i = 0; layers && i < layers->size(); ++i) {
+        if (layers->at(i)->isLocked())
+            lines << QStringLiteral("FJC K %1 true").arg(i);
+    }
 }
 
 } // namespace

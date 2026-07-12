@@ -35,7 +35,7 @@ class LayerComboBox : public QComboBox {
     Q_OBJECT
 public:
     LayerComboBox(QWidget* parent = nullptr);
-    void addLayer(const QString& testo, const QColor& colore);
+    void addLayer(Layer *layer);
     void addLayerList(QList<Layer*> *list);
     void setMaster(Layer *layer);
     void setAutoMaster();
@@ -44,6 +44,12 @@ public:
 protected:
     void paintEvent(QPaintEvent *event) override;
     QSize sizeHint() const override;
+    // Intercepts clicks on the popup's eye/lock icons (see
+    // LayerItemDelegate::eyeIconRect()/lockIconRect()) so they toggle
+    // visibility/lock in place instead of being treated as "select this row
+    // and close the popup" - installed on view()->viewport() in the
+    // constructor.
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 signals:
     void layerSelectedChanged(int i);

@@ -56,9 +56,22 @@ public slots:
     void setMaster(int index);
     void setVisible(Layer *layer, bool visible);
     void setAllVisibleOrHidden(bool visible);
+    // Refuses to lock the master layer (same guard shape as setVisible()'s
+    // "can't hide master") - eSchema's own choice, not FidoCadJ's (which
+    // doesn't restrict locking master), to avoid locking oneself out of the
+    // layer actively being drawn on.
+    void setLocked(Layer *layer, bool locked);
+    void setAllLockedOrUnlocked(bool locked);
 
 signals:
     void layerListChanged(QList<Layer*> *layerList);
+    // Fired by setVisible/setAllVisibleOrHidden/setLocked/
+    // setAllLockedOrUnlocked - lighter-weight than layerListChanged (which
+    // the toolbar combobox rebuilds itself entirely from), so a simple
+    // eye/lock toggle never triggers a full QComboBox::clear()+repopulate.
+    // Sheet listens to this to resync every primitive's on-screen
+    // visibility/selectability.
+    void layerAppearanceChanged();
 
 private:
     LayerList(){};  // Private constructor to prevent creating external instances

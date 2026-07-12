@@ -19,6 +19,7 @@
 
 #include "DialogLayerList.h"
 #include "ui_DialogLayerList.h"
+#include "LayerIcons.h"
 
 DialogLayerList::DialogLayerList(QWidget *parent) :
     QDialog(parent),
@@ -32,6 +33,15 @@ DialogLayerList::DialogLayerList(QWidget *parent) :
     ui->btnLayerLevelUp->setProperty("class", "layoutLayerListButton");
     ui->btnSetAllVisible->setProperty("class", "layoutLayerListButton");
     ui->btnSetAllHidden->setProperty("class", "layoutLayerListButton");
+    ui->btnSetAllLocked->setProperty("class", "layoutLayerListButton");
+    ui->btnSetAllUnlocked->setProperty("class", "layoutLayerListButton");
+
+    // Runtime-rendered (no lock icon assets exist in resources.qrc), unlike
+    // the eye buttons' .ui-declared icons - see LayerIcons.h.
+    ui->btnSetAllLocked->setIcon(QIcon(LayerIcons::renderLockIcon(true)));
+    ui->btnSetAllLocked->setIconSize(QSize(25, 25));
+    ui->btnSetAllUnlocked->setIcon(QIcon(LayerIcons::renderLockIcon(false)));
+    ui->btnSetAllUnlocked->setIconSize(QSize(25, 25));
 
     connect(ui->btnAddNewLayer, &QPushButton::clicked,
             this, &DialogLayerList::addNewLayer);
@@ -45,6 +55,10 @@ DialogLayerList::DialogLayerList(QWidget *parent) :
             this, &DialogLayerList::setAllVisible);
     connect(ui->btnSetAllHidden, &QPushButton::clicked,
             this, &DialogLayerList::setAllHidden);
+    connect(ui->btnSetAllLocked, &QPushButton::clicked,
+            this, &DialogLayerList::setAllLocked);
+    connect(ui->btnSetAllUnlocked, &QPushButton::clicked,
+            this, &DialogLayerList::setAllUnlocked);
 }
 
 DialogLayerList::~DialogLayerList()
@@ -83,6 +97,18 @@ void DialogLayerList::setAllVisible()
 void DialogLayerList::setAllHidden()
 {
     LayerList::getInstance().setAllVisibleOrHidden(false);
+    ui->listWidget->updateList();
+}
+
+void DialogLayerList::setAllLocked()
+{
+    LayerList::getInstance().setAllLockedOrUnlocked(true);
+    ui->listWidget->updateList();
+}
+
+void DialogLayerList::setAllUnlocked()
+{
+    LayerList::getInstance().setAllLockedOrUnlocked(false);
     ui->listWidget->updateList();
 }
 

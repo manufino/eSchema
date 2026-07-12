@@ -18,7 +18,10 @@
  */
 
 #include "LayerComboBox.h"
+#include "LayerItemDelegate.h"
 #include "qpainterpath.h"
+#include <QAbstractItemView>
+#include <QMouseEvent>
 
 LayerComboBox::LayerComboBox(QWidget* parent)
     : QComboBox(parent)
@@ -28,13 +31,21 @@ LayerComboBox::LayerComboBox(QWidget* parent)
     addLayerList(la);
     connect(this, &QComboBox::currentIndexChanged,
     this, &LayerComboBox::currentIndexChanged);
+
+    // view() lazily creates the popup's QAbstractItemView - forcing that
+    // here lets the eye/lock click interception (eventFilter()) be wired up
+    // once, up front.
+    view()->viewport()->installEventFilter(this);
 }
 
-void LayerComboBox::addLayer(const QString& testo, const QColor& colore)
+void LayerComboBox::addLayer(Layer *layer)
 {
     QStandardItem* item = new QStandardItem;
-    item->setData(colore, Qt::UserRole + 1);
-    item->setData(testo, Qt::DisplayRole);
+    item->setData(QColor(layer->color()), Qt::UserRole + 1);
+    item->setData(layer->name(), Qt::DisplayRole);
+    // The live Layer* itself (not a cached visible/locked snapshot) - see
+    // LayerItemDelegate::paint(), which always reads current state from it.
+    item->setData(QVariant::fromValue(layer), Qt::UserRole + 2);
 
     QStandardItemModel* standardModel = qobject_cast<QStandardItemModel*>(model());
     if (standardModel)
@@ -50,7 +61,7 @@ void LayerComboBox::addLayerList(QList<Layer*> *list)
     clear();
     layerList = list;
     for(Layer *layer: *list)
-        addLayer(layer->name(), QColor(layer->color()));
+        addLayer(layer);
 
     setAutoMaster(); // set the master layer
 
@@ -132,6 +143,29 @@ Layer *LayerComboBox::selectedLayer() const
     if (!layerList || currentIndex() < 0 || currentIndex() >= layerList->size())
         return nullptr;
     return layerList->at(currentIndex());
+}
+
+bool LayerComboBox::eventFilter(QObject *watched, QEvent *event)
+{
+    if (view() && watched == view()->viewport() && event->type() == QEvent::MouseButtonPress) {
+        auto *mouseEvent = static_cast<QMouseEvent *>(event);
+        const QModelIndex index = view()->indexAt(mouseEvent->pos());
+        if (index.isValid()) {
+            Layer *layer = index.data(Qt::UserRole + 2).value<Layer *>();
+            const QRect itemRect = view()->visualRect(index);
+            if (layer && LayerItemDelegate::eyeIconRect(itemRect).contains(mouseEvent->pos())) {
+                LayerList::getInstance().setVisible(layer, !layer->isVisible());
+                view()->viewport()->update();
+                return true; // swallow - keep the popup open, don't select this row
+            }
+            if (layer && LayerItemDelegate::lockIconRect(itemRect).contains(mouseEvent->pos())) {
+                LayerList::getInstance().setLocked(layer, !layer->isLocked());
+                view()->viewport()->update();
+                return true;
+            }
+        }
+    }
+    return QComboBox::eventFilter(watched, event);
 }
 
 void LayerComboBox::currentIndexChanged(int index)

@@ -18,9 +18,31 @@
  */
 
 #include "LayerItemDelegate.h"
+#include "LayerIcons.h"
+#include "Layer.h"
 
 LayerItemDelegate::LayerItemDelegate(QObject* parent)
     : QStyledItemDelegate(parent) {}
+
+QRect LayerItemDelegate::eyeIconRect(const QRect &itemRect)
+{
+    return QRect(itemRect.x(), itemRect.y(), 20, itemRect.height());
+}
+
+QRect LayerItemDelegate::lockIconRect(const QRect &itemRect)
+{
+    return QRect(itemRect.x() + 20, itemRect.y(), 20, itemRect.height());
+}
+
+QRect LayerItemDelegate::colorSwatchRect(const QRect &itemRect)
+{
+    return QRect(itemRect.x() + 42, itemRect.y() + (itemRect.height() - 20) / 2, 20, 20);
+}
+
+QRect LayerItemDelegate::textRect(const QRect &itemRect)
+{
+    return itemRect.adjusted(67, 0, 0, 0);
+}
 
 void LayerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
     QStyleOptionViewItem opt = option;
@@ -34,24 +56,35 @@ void LayerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
         painter->fillRect(opt.rect, opt.palette.highlight());
     }
 
+    // Eye/lock toggle icons - clickable from LayerComboBox's own popup (see
+    // its eventFilter()). Always read the layer's *live* state (no cached
+    // bool in the model), so a toggle from elsewhere (DialogLayerList) is
+    // reflected the next time this row repaints, with no sync bookkeeping.
+    Layer *layer = index.data(Qt::UserRole + 2).value<Layer *>();
+    if (layer) {
+        const QPixmap eyeIcon(layer->isVisible()
+                ? QStringLiteral(":/res/resources/remix/eye-line.png")
+                : QStringLiteral(":/res/resources/remix/eye-off-line.png"));
+        painter->drawPixmap(eyeIconRect(rect), eyeIcon);
+        painter->drawPixmap(lockIconRect(rect), LayerIcons::renderLockIcon(layer->isLocked()));
+    }
+
     // Draw the color swatch
     QColor colore = index.data(Qt::UserRole + 1).value<QColor>();
-    QRect colorRect = QRect(rect.x(), rect.y(), 20, 20);
-    painter->fillRect(colorRect, colore);
+    painter->fillRect(colorSwatchRect(rect), colore);
 
     // Set the text color
     painter->setPen(opt.palette.color(QPalette::WindowText));
 
     // Draw the text next to the swatch
     QString testo = index.data(Qt::DisplayRole).toString();
-    QRect textRect = opt.rect.adjusted(25, 0, 0, 0); // Move the text to the right of the swatch
-    painter->drawText(textRect, Qt::AlignVCenter, testo);
+    painter->drawText(textRect(rect), Qt::AlignVCenter, testo);
 }
 
 QSize LayerItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
     // Add a margin to increase the spacing between combobox rows
     QSize hint = QStyledItemDelegate::sizeHint(option, index);
     hint.setHeight(hint.height() + 2);
-    hint.setWidth(hint.width() - 40);
+    hint.setWidth(hint.width() - 40 + 42); // existing fudge, plus the eye+lock icon boxes
     return hint;
 }

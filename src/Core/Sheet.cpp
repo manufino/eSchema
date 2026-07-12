@@ -20,6 +20,7 @@
 #include "Sheet.h"
 #include "SettingsManager.h"
 #include "PrimitivePad.h"
+#include "LayerList.h"
 #include <utility>
 
 namespace {
@@ -46,6 +47,9 @@ Sheet::Sheet(QObject *parent) :
 {
     m_lineWidth = defaultLineWidthSetting();
     m_connectionDiameter = defaultConnectionDiameterSetting();
+
+    connect(&LayerList::getInstance(), &LayerList::layerAppearanceChanged,
+            this, &Sheet::refreshLayerAppearance);
 }
 
 void Sheet::addPrimitive(GraphicsPrimitive *primitive)
@@ -53,8 +57,19 @@ void Sheet::addPrimitive(GraphicsPrimitive *primitive)
     if (m_primitives.contains(primitive))
         return; // already added - see the idempotency note in Sheet.h
     addItem(primitive);
+    // A primitive can be added onto an already-locked/hidden layer (e.g.
+    // reloading a file with "FJC K" lines, or a macro body parsed after a
+    // lock toggle) - make sure it starts in the right on-screen state.
+    primitive->syncLayerAppearance();
     m_primitives.append(primitive);
     emit primitivesChanged();
+}
+
+void Sheet::refreshLayerAppearance()
+{
+    for (GraphicsPrimitive *primitive : std::as_const(m_primitives))
+        primitive->syncLayerAppearance();
+    update();
 }
 
 void Sheet::takePrimitive(GraphicsPrimitive *primitive)
@@ -95,6 +110,18 @@ void Sheet::clearPrimitives()
     m_connectionDiameter = defaultConnectionDiameterSetting();
     m_lineWidth = defaultLineWidthSetting();
     m_lineWidthCircles = 0.35;
+
+    // Layer lock state (persisted per-file as "FJC K", see FidoCadWriter) is
+    // process-wide (LayerList is a singleton, not per-Sheet) - reset it here
+    // for the same reason as the document config above, so a lock from a
+    // previously open document can't leak into whatever gets loaded/created
+    // next. Covers every clearPrimitives() caller (New Drawing,
+    // FidoCadReader::read(), DxfReader's imports) in one place.
+    if (QList<Layer *> *layers = LayerList::getInstance().getList()) {
+        for (Layer *layer : std::as_const(*layers))
+            layer->setLocked(false);
+    }
+
     emit primitivesChanged();
 }
 
@@ -102,7 +129,7 @@ void Sheet::drawForeground(QPainter *painter, const QRectF &)
 {
     for (GraphicsPrimitive *primitive : std::as_const(m_primitives)) {
         if (auto *pad = dynamic_cast<PrimitivePad *>(primitive)) {
-            if (pad->isVisible())
+            if (pad->isVisible() && pad->isOnCanvas())
                 pad->paintHole(painter);
         }
     }

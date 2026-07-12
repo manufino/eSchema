@@ -83,6 +83,13 @@ protected:
     // hole here keeps it clean no matter what gets drawn after the pad too.
     void drawForeground(QPainter *painter, const QRectF &rect) override;
 
+private slots:
+    // Connected to LayerList::layerAppearanceChanged - resyncs every
+    // primitive's on-screen visibility/selectability (see
+    // GraphicsPrimitive::syncLayerAppearance()) whenever a layer's eye/lock
+    // state changes anywhere (toolbar combobox, DialogLayerList, ...).
+    void refreshLayerAppearance();
+
 private:
     QList<GraphicsPrimitive*> m_primitives;
     QUndoStack m_undoStack;

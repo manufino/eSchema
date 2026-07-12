@@ -44,12 +44,17 @@ public:
     inline QString name() const { return m_name; }
     inline bool isVisible() const { return m_visible; }
     inline bool isMaster() const { return m_master; }
+    // Whether primitives on this layer can be selected/edited - matches the
+    // reference FidoCadJ editor's LayerDesc.isLocked() (persisted as "FJC K"
+    // in the .fcd file, see FidoCadWriter/FidoCadReader).
+    inline bool isLocked() const { return m_locked; }
 
     // SET
     inline void setColor(QColor color) { this->m_color = color; }
     inline void setVisible(bool visible) { this->m_visible = visible; }
     inline void setName(QString name) { this->m_name = name; }
     inline void setMaster(bool isMaster) { m_master = isMaster; }
+    inline void setLocked(bool locked) { this->m_locked = locked; }
 /*
     bool operator ==(Layer &layer) const {
         return layer.name() == m_name;
@@ -61,6 +66,10 @@ private:
     int m_level;
     bool m_visible;
     bool m_master;
+    // In-class default initializer (unlike m_visible/m_master above) so it's
+    // safely false regardless of which constructor runs, including the
+    // defaulted Layer() one that never touches the other fields either.
+    bool m_locked = false;
 };
 
 #endif // LAYER_H

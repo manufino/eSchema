@@ -83,10 +83,12 @@ SOURCES += \
 	src/Widgets/ColorPicker.cpp \
 	src/Widgets/LayerColorPicker.cpp \
 	src/Widgets/LayerComboBox.cpp \
+	src/Widgets/LayerIcons.cpp \
 	src/Widgets/LayerItemDelegate.cpp \
 	src/Widgets/LayerLabelName.cpp \
 	src/Widgets/LayerListView.cpp \
 	src/Widgets/LayerListWidgetItem.cpp \
+	src/Widgets/LayerLockButton.cpp \
 	src/Widgets/LayerToolBarWidget.cpp \
 	src/Widgets/LayerVisibilityButton.cpp \
 	src/Widgets/PenStyleComboBox.cpp \
@@ -144,10 +146,12 @@ HEADERS += \
 	src/Widgets/ColorPicker.h \
 	src/Widgets/LayerColorPicker.h \
 	src/Widgets/LayerComboBox.h \
+	src/Widgets/LayerIcons.h \
 	src/Widgets/LayerItemDelegate.h \
 	src/Widgets/LayerLabelName.h \
 	src/Widgets/LayerListView.h \
 	src/Widgets/LayerListWidgetItem.h \
+	src/Widgets/LayerLockButton.h \
 	src/Widgets/LayerToolBarWidget.h \
 	src/Widgets/LayerVisibilityButton.h \
 	src/Widgets/LinkLabel.h \
