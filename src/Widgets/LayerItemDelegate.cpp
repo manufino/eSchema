@@ -26,22 +26,22 @@ LayerItemDelegate::LayerItemDelegate(QObject* parent)
 
 QRect LayerItemDelegate::eyeIconRect(const QRect &itemRect)
 {
-    return QRect(itemRect.x(), itemRect.y(), 20, itemRect.height());
+    return QRect(itemRect.x() + 2, itemRect.y() + (itemRect.height() - 20) / 2, 20, 20);
 }
 
 QRect LayerItemDelegate::lockIconRect(const QRect &itemRect)
 {
-    return QRect(itemRect.x() + 20, itemRect.y(), 20, itemRect.height());
+    return QRect(itemRect.x() + 24, itemRect.y() + (itemRect.height() - 20) / 2, 20, 20);
 }
 
 QRect LayerItemDelegate::colorSwatchRect(const QRect &itemRect)
 {
-    return QRect(itemRect.x() + 42, itemRect.y() + (itemRect.height() - 20) / 2, 20, 20);
+    return QRect(itemRect.x() + 46, itemRect.y() + (itemRect.height() - 20) / 2, 20, 20);
 }
 
 QRect LayerItemDelegate::textRect(const QRect &itemRect)
 {
-    return itemRect.adjusted(67, 0, 0, 0);
+    return itemRect.adjusted(71, 0, 0, 0);
 }
 
 void LayerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
@@ -55,6 +55,9 @@ void LayerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
         opt.palette.setColor(QPalette::Highlight, QColor(200, 200, 200));
         painter->fillRect(opt.rect, opt.palette.highlight());
     }
+
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
 
     // Eye/lock toggle icons - clickable from LayerComboBox's own popup (see
     // its eventFilter()). Always read the layer's *live* state (no cached
@@ -85,6 +88,6 @@ QSize LayerItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QMod
     // Add a margin to increase the spacing between combobox rows
     QSize hint = QStyledItemDelegate::sizeHint(option, index);
     hint.setHeight(hint.height() + 2);
-    hint.setWidth(hint.width() - 40 + 42); // existing fudge, plus the eye+lock icon boxes
+    hint.setWidth(hint.width() - 40 + 46); // existing fudge, plus the eye+lock icon boxes
     return hint;
 }

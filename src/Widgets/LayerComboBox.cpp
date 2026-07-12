@@ -19,6 +19,7 @@
 
 #include "LayerComboBox.h"
 #include "LayerItemDelegate.h"
+#include "LayerIcons.h"
 #include "qpainterpath.h"
 #include <QAbstractItemView>
 #include <QMouseEvent>
@@ -103,21 +104,30 @@ void LayerComboBox::paintEvent(QPaintEvent* event)
     // Only draw the combobox's own chrome (border, arrow, etc.)
     style()->drawComplexControl(QStyle::CC_ComboBox, &opt, &painter, this);
 
-    // Draw the color swatch
+    // Draw the eye/lock state, color swatch and name of the current layer -
+    // display-only here (not clickable: the current layer is always the
+    // master one, for which both are permanently forced to visible/
+    // unlocked, see LayerList::setVisible()/setLocked()'s master guards),
+    // so at a glance the closed combobox already shows what the popup would.
     if (currentIndex() >= 0 && currentIndex() < count()) {
         painter.setRenderHint(QPainter::Antialiasing);
-        QRect colorRect = QRect(5, 5, 20, 14);
+        painter.setRenderHint(QPainter::SmoothPixmapTransform);
+
+        if (Layer *layer = selectedLayer()) {
+            const QRect rowRect(0, 0, opt.rect.height(), opt.rect.height());
+            const QPixmap eyeIcon(layer->isVisible()
+                    ? QStringLiteral(":/res/resources/remix/eye-line.png")
+                    : QStringLiteral(":/res/resources/remix/eye-off-line.png"));
+            painter.drawPixmap(LayerItemDelegate::eyeIconRect(rowRect), eyeIcon);
+            painter.drawPixmap(LayerItemDelegate::lockIconRect(rowRect),
+                                LayerIcons::renderLockIcon(layer->isLocked()));
+        }
+
+        QRect colorRect = QRect(46, 5, 20, 14);
         QColor colore = itemData(currentIndex(), Qt::UserRole + 1).value<QColor>();
         painter.fillRect(colorRect, colore);
-        /*
-        QPainterPath path;
-        path.addRoundedRect(colorRect, 4, 4);
-        QPen pen(colore, 10);
-        painter.setPen(pen);
-        painter.fillPath(path, colore);
-        painter.drawPath(path);
-        */
-        QRect textRect = opt.rect.adjusted(28, 0, 0, 0);
+
+        QRect textRect = opt.rect.adjusted(71, 0, 0, 0);
         painter.setPen(opt.palette.color(QPalette::WindowText));
         painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, currentText());
     }
@@ -134,7 +144,7 @@ QSize LayerComboBox::sizeHint() const
         int textWidth = fontMetrics().horizontalAdvance(text);
         maxWidth = qMax(maxWidth, textWidth);
     }
-    hint.setWidth(maxWidth + 70);
+    hint.setWidth(maxWidth + 112); // + eye/lock icon boxes drawn in paintEvent()
     return hint;
 }
 
@@ -147,21 +157,32 @@ Layer *LayerComboBox::selectedLayer() const
 
 bool LayerComboBox::eventFilter(QObject *watched, QEvent *event)
 {
-    if (view() && watched == view()->viewport() && event->type() == QEvent::MouseButtonPress) {
+    // QComboBox's popup selects-and-closes on *release* (its "activated"
+    // click), not on press - swallowing only MouseButtonPress left the
+    // paired release free to fall through and close the popup anyway.
+    // Every event of the gesture (press/release/double-click) landing on an
+    // icon must be swallowed, and the actual toggle only applied once (on
+    // press), or a same-position double-click would toggle twice.
+    const bool isMouseGesture = event->type() == QEvent::MouseButtonPress
+            || event->type() == QEvent::MouseButtonRelease
+            || event->type() == QEvent::MouseButtonDblClick;
+    if (view() && watched == view()->viewport() && isMouseGesture) {
         auto *mouseEvent = static_cast<QMouseEvent *>(event);
         const QModelIndex index = view()->indexAt(mouseEvent->pos());
         if (index.isValid()) {
             Layer *layer = index.data(Qt::UserRole + 2).value<Layer *>();
             const QRect itemRect = view()->visualRect(index);
-            if (layer && LayerItemDelegate::eyeIconRect(itemRect).contains(mouseEvent->pos())) {
-                LayerList::getInstance().setVisible(layer, !layer->isVisible());
-                view()->viewport()->update();
+            const bool onEye = layer && LayerItemDelegate::eyeIconRect(itemRect).contains(mouseEvent->pos());
+            const bool onLock = layer && LayerItemDelegate::lockIconRect(itemRect).contains(mouseEvent->pos());
+            if (onEye || onLock) {
+                if (event->type() == QEvent::MouseButtonPress) {
+                    if (onEye)
+                        LayerList::getInstance().setVisible(layer, !layer->isVisible());
+                    else
+                        LayerList::getInstance().setLocked(layer, !layer->isLocked());
+                    view()->viewport()->update();
+                }
                 return true; // swallow - keep the popup open, don't select this row
-            }
-            if (layer && LayerItemDelegate::lockIconRect(itemRect).contains(mouseEvent->pos())) {
-                LayerList::getInstance().setLocked(layer, !layer->isLocked());
-                view()->viewport()->update();
-                return true;
             }
         }
     }

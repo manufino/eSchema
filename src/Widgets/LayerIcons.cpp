@@ -38,30 +38,44 @@ QPixmap renderLockIcon(bool locked, int size)
 
     QPen pen(Qt::black, 1.8, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     painter.setPen(pen);
-    painter.setBrush(Qt::NoBrush);
 
-    // Body: a simple rounded rectangle, stroke-only (matches the existing
-    // icon set's plain "line" style, e.g. eye-line.png).
     QPainterPath body;
     body.addRoundedRect(QRectF(5.0, 11.0, 14.0, 10.0), 2.0, 2.0);
-    painter.drawPath(body);
 
-    // Shackle: an upside-down U. Locked = symmetric, both legs entering the
-    // body. Unlocked = the right leg lifted clear of the body - the classic
-    // "open padlock" silhouette.
     QPainterPath shackle;
     if (locked) {
+        // Solid filled body + symmetric closed shackle + a punched-out
+        // keyhole - the classic "shut" padlock silhouette, unmistakably
+        // different (filled vs outline, closed vs open shackle) from the
+        // unlocked icon below rather than a subtle variation of the same
+        // shape.
+        painter.setBrush(Qt::black);
+        painter.drawPath(body);
+
         shackle.moveTo(8.0, 11.0);
         shackle.lineTo(8.0, 8.0);
         shackle.arcTo(QRectF(8.0, 3.0, 8.0, 10.0), 180.0, -180.0);
         shackle.lineTo(16.0, 11.0);
+        painter.setBrush(Qt::NoBrush);
+        painter.drawPath(shackle);
+
+        painter.setBrush(Qt::white);
+        painter.setPen(Qt::NoPen);
+        painter.drawEllipse(QRectF(10.5, 14.0, 3.0, 3.0));
+        QPainterPath keySlot;
+        keySlot.addRoundedRect(QRectF(11.2, 16.0, 1.6, 3.0), 0.5, 0.5);
+        painter.drawPath(keySlot);
     } else {
-        shackle.moveTo(7.0, 11.0);
-        shackle.lineTo(7.0, 8.0);
-        shackle.arcTo(QRectF(7.0, 3.0, 8.0, 10.0), 180.0, -180.0);
-        shackle.lineTo(15.0, 6.5);
+        // Outline-only body (no fill) + the shackle swung well clear to the
+        // side - the classic "open" padlock.
+        painter.setBrush(Qt::NoBrush);
+        painter.drawPath(body);
+
+        shackle.moveTo(8.0, 11.0);
+        shackle.lineTo(8.0, 7.0);
+        shackle.arcTo(QRectF(8.0, 1.0, 9.0, 10.0), 180.0, -160.0);
+        painter.drawPath(shackle);
     }
-    painter.drawPath(shackle);
 
     painter.end();
     return pixmap;
