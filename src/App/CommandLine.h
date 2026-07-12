@@ -64,8 +64,6 @@ public:
 private:
     void printHelp() const;
     int doConvert(Sheet *sheet);
-    bool exportOne(Sheet *sheet, const QString &path, const QString &format,
-                   QString *error);
 
     bool m_headless = false;
     bool m_commandLineOnly = false;

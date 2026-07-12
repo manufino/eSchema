@@ -21,24 +21,16 @@
 #include "Sheet.h"
 #include "LayerList.h"
 #include "LibraryManager.h"
-#include "GraphicsPrimitive.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
-#include "DxfWriter.h"
+#include "GraphicExporter.h"
 
 #include <QDir>
 #include <QElapsedTimer>
 #include <QFileInfo>
-#include <QImage>
 #include <QLocale>
-#include <QPageSize>
-#include <QPainter>
-#include <QPdfWriter>
-#include <QSet>
-#include <QSvgGenerator>
 #include <QtMath>
 
-#include <algorithm>
 #include <cstdio>
 
 #ifdef Q_OS_WIN
@@ -86,31 +78,6 @@ bool extensionCoherent(const QString &fileName, const QString &format)
     if (format == QLatin1String("jpg") || format == QLatin1String("jpeg"))
         return suffix == QLatin1String("jpg") || suffix == QLatin1String("jpeg");
     return suffix == format;
-}
-
-// "out.svg" + layer 3 -> "out_3.svg", matching the file naming FidoCadJ's -m
-// help text documents (test_0.svg, test_1.svg, ...).
-QString splitLayerFileName(const QString &fileName, int layer)
-{
-    const QFileInfo info(fileName);
-    const QString suffix = info.suffix();
-    QString name = info.completeBaseName() + QLatin1Char('_') + QString::number(layer);
-    if (!suffix.isEmpty())
-        name += QLatin1Char('.') + suffix;
-    return info.dir().filePath(name);
-}
-
-// Fits `source` inside `target` preserving the aspect ratio and centering it,
-// same logic as MainWindow::renderForPrint() - stretching a schematic unevenly
-// would distort right angles and text.
-QRectF fitCentered(const QRectF &source, const QRectF &target)
-{
-    const qreal scale = qMin(target.width() / source.width(),
-                              target.height() / source.height());
-    const QSizeF scaledSize = source.size() * scale;
-    return QRectF(target.left() + (target.width() - scaledSize.width()) / 2.0,
-                  target.top() + (target.height() - scaledSize.height()) / 2.0,
-                  scaledSize.width(), scaledSize.height());
 }
 
 } // namespace
@@ -279,120 +246,27 @@ int CommandLine::doConvert(Sheet *sheet)
     }
 
     QString error;
-    if (m_splitLayers && graphicFormat) {
-        // One output file per layer actually carrying primitives, named
-        // out_0.ext, out_1.ext, ... - every file shares the whole drawing's
-        // bounding box, so the per-layer images overlay perfectly.
-        const QList<GraphicsPrimitive *> &primitives = sheet->primitives();
-        QSet<int> usedSet;
-        for (GraphicsPrimitive *primitive : primitives)
-            usedSet.insert(primitive->layerIndex());
-        QList<int> usedLayers(usedSet.begin(), usedSet.end());
-        std::sort(usedLayers.begin(), usedLayers.end());
-
-        bool ok = true;
-        for (int layer : std::as_const(usedLayers)) {
-            for (GraphicsPrimitive *primitive : primitives)
-                primitive->setVisible(primitive->layerIndex() == layer);
-            if (!exportOne(sheet, splitLayerFileName(m_outputFile, layer),
-                           m_exportFormat, &error)) {
-                ok = false;
-                break;
-            }
-        }
-        for (GraphicsPrimitive *primitive : primitives)
-            primitive->setVisible(true);
-        if (!ok) {
+    if (m_exportFormat == QLatin1String("fcd")) {
+        if (!FidoCadWriter::writeFile(sheet, m_outputFile, &error)) {
             fprintf(stderr, "Export error: %s\n", qPrintable(error));
             return 1;
         }
-    } else if (!exportOne(sheet, m_outputFile, m_exportFormat, &error)) {
-        fprintf(stderr, "Export error: %s\n", qPrintable(error));
-        return 1;
+    } else {
+        GraphicExporter::Options options;
+        options.format = m_exportFormat;
+        options.resolutionBased = m_resolutionBased;
+        options.resolution = m_resolution;
+        options.totX = m_totX;
+        options.totY = m_totY;
+        options.splitLayers = m_splitLayers;
+        if (!GraphicExporter::exportSheet(sheet, m_outputFile, options, &error)) {
+            fprintf(stderr, "Export error: %s\n", qPrintable(error));
+            return 1;
+        }
     }
 
     fputs("Export completed\n", stdout);
     return 0;
-}
-
-bool CommandLine::exportOne(Sheet *sheet, const QString &path,
-                            const QString &format, QString *error)
-{
-    if (format == QLatin1String("fcd"))
-        return FidoCadWriter::writeFile(sheet, path, error);
-    if (format == QLatin1String("dxf"))
-        return DxfWriter::writeFile(sheet, path, error);
-
-    const QRectF source = sheet->itemsBoundingRect();
-
-    // r<res> means res pixels per logical unit (the image size follows the
-    // drawing); sx sy means an image of exactly that size with the drawing
-    // fitted and centered inside, preserving its aspect ratio - the same two
-    // sizing modes as FidoCadJ's ExportGraphic.export()/exportSize().
-    QSizeF targetSize;
-    if (m_resolutionBased)
-        targetSize = source.size() * m_resolution;
-    else
-        targetSize = QSizeF(m_totX, m_totY);
-    targetSize = targetSize.expandedTo(QSizeF(1, 1));
-
-    const QRectF target(QPointF(0, 0), targetSize);
-    const QRectF drawTarget = fitCentered(source, target);
-
-    if (format == QLatin1String("png") || format == QLatin1String("jpg")
-            || format == QLatin1String("jpeg")) {
-        // White background (not transparent), like the GUI's own PNG export:
-        // the scene itself paints none.
-        QImage image(qCeil(targetSize.width()), qCeil(targetSize.height()),
-                     QImage::Format_ARGB32);
-        image.fill(Qt::white);
-        QPainter painter(&image);
-        painter.setRenderHint(QPainter::Antialiasing);
-        sheet->render(&painter, drawTarget, source);
-        painter.end();
-        // Explicit format: with -f the extension may not match it.
-        const bool saved = image.save(path,
-                format == QLatin1String("png") ? "PNG" : "JPG");
-        if (!saved && error)
-            *error = QStringLiteral("unable to save the image to \"%1\"").arg(path);
-        return saved;
-    }
-
-    if (format == QLatin1String("svg")) {
-        QSvgGenerator generator;
-        generator.setFileName(path);
-        generator.setSize(targetSize.toSize());
-        generator.setViewBox(target);
-        generator.setTitle(QStringLiteral("eSchema drawing"));
-        QPainter painter;
-        if (!painter.begin(&generator)) {
-            if (error)
-                *error = QStringLiteral("unable to write \"%1\"").arg(path);
-            return false;
-        }
-        sheet->render(&painter, drawTarget, source);
-        painter.end();
-        return true;
-    }
-
-    // pdf: a single page cut exactly to the requested size (1 pt per pixel
-    // at 72 dpi), so both sizing modes are honored - unlike the GUI export,
-    // which fits the drawing onto a fixed printer page.
-    QPdfWriter writer(path);
-    writer.setResolution(72);
-    writer.setPageSize(QPageSize(targetSize, QPageSize::Point, QString(),
-                                 QPageSize::ExactMatch));
-    writer.setPageMargins(QMarginsF(0, 0, 0, 0));
-    QPainter painter;
-    if (!painter.begin(&writer)) {
-        if (error)
-            *error = QStringLiteral("unable to write \"%1\"").arg(path);
-        return false;
-    }
-    painter.setRenderHint(QPainter::Antialiasing);
-    sheet->render(&painter, drawTarget, source);
-    painter.end();
-    return true;
 }
 
 void CommandLine::printHelp() const

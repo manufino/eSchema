@@ -75,8 +75,10 @@ SOURCES += \
 	src/IO/FidoCadReader.cpp \
 	src/IO/FidoCadTokenUtils.cpp \
 	src/IO/FidoCadWriter.cpp \
+	src/IO/GraphicExporter.cpp \
 	src/Dialogs/DialogAbout.cpp \
 	src/Dialogs/DialogCreateMacro.cpp \
+	src/Dialogs/DialogExport.cpp \
 	src/Dialogs/DialogLayerList.cpp \
 	src/Dialogs/DialogOptions.cpp \
 	src/Dialogs/DialogShortcuts.cpp \
@@ -138,8 +140,10 @@ HEADERS += \
 	src/IO/FidoCadReader.h \
 	src/IO/FidoCadTokenUtils.h \
 	src/IO/FidoCadWriter.h \
+	src/IO/GraphicExporter.h \
 	src/Dialogs/DialogAbout.h \
 	src/Dialogs/DialogCreateMacro.h \
+	src/Dialogs/DialogExport.h \
 	src/Dialogs/DialogLayerList.h \
 	src/Dialogs/DialogOptions.h \
 	src/Dialogs/DialogShortcuts.h \
@@ -163,6 +167,7 @@ HEADERS += \
 FORMS += \
 	gui/DialogAbout.ui \
 	gui/DialogCreateMacro.ui \
+	gui/DialogExport.ui \
 	gui/DialogLayerList.ui \
 	gui/DialogOptions.ui \
 	gui/DialogShortcuts.ui \

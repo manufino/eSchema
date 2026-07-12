@@ -1195,22 +1195,9 @@
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
     <addaction name="actionPrint"/>
-    <addaction name="menuExport"/>
+    <addaction name="actionExport"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
-   </widget>
-   <widget class="QMenu" name="menuExport">
-    <property name="title">
-     <string>Esporta come</string>
-    </property>
-    <property name="icon">
-     <iconset resource="../resources.qrc">
-      <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
-    </property>
-    <addaction name="actionExportPdf"/>
-    <addaction name="actionExportSvg"/>
-    <addaction name="actionExportPng"/>
-    <addaction name="actionExportDxf"/>
    </widget>
    <widget class="QMenu" name="menuRecentFiles">
     <property name="title">
@@ -1474,40 +1461,19 @@
     <string>Ctrl+W</string>
    </property>
   </action>
-  <action name="actionExportPdf">
-   <property name="icon">
-    <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/remix/file-copy-line.png</normaloff>:/res/resources/remix/file-copy-line.png</iconset>
-   </property>
-   <property name="text">
-    <string>PDF...</string>
-   </property>
-  </action>
-  <action name="actionExportSvg">
-   <property name="icon">
-    <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/remix/file-copy-2-line.png</normaloff>:/res/resources/remix/file-copy-2-line.png</iconset>
-   </property>
-   <property name="text">
-    <string>SVG...</string>
-   </property>
-  </action>
-  <action name="actionExportPng">
+  <action name="actionExport">
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
    </property>
    <property name="text">
-    <string>PNG...</string>
+    <string>Esporta...</string>
    </property>
-  </action>
-  <action name="actionExportDxf">
-   <property name="icon">
-    <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/remix/file-copy-2-fill.png</normaloff>:/res/resources/remix/file-copy-2-fill.png</iconset>
+   <property name="toolTip">
+    <string>Esporta il disegno come PNG, JPG, SVG, PDF o DXF</string>
    </property>
-   <property name="text">
-    <string>DXF...</string>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="actionUndo">

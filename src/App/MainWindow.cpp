@@ -28,10 +28,11 @@
 
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "DialogExport.h"
 #include "DxfReader.h"
-#include "DxfWriter.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
+#include "GraphicExporter.h"
 #include "LibraryManager.h"
 #include "PrimitiveText.h"
 #include "PrimitiveImage.h"
@@ -51,9 +52,6 @@
 #include <QPainter>
 #include <QFont>
 #include <QSignalBlocker>
-#include <QSvgGenerator>
-#include <QInputDialog>
-#include <QImage>
 #include <QShortcut>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -449,10 +447,7 @@ void MainWindow::setConnections()
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
     connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::clickPrintAction);
-    connect(ui->actionExportPdf, &QAction::triggered, this, &MainWindow::clickExportPdfAction);
-    connect(ui->actionExportSvg, &QAction::triggered, this, &MainWindow::clickExportSvgAction);
-    connect(ui->actionExportPng, &QAction::triggered, this, &MainWindow::clickExportPngAction);
-    connect(ui->actionExportDxf, &QAction::triggered, this, &MainWindow::clickExportDxfAction);
+    connect(ui->actionExport, &QAction::triggered, this, &MainWindow::clickExportAction);
     // QWidget::close() reaches closeEvent(), which does the unsaved-changes
     // check - so File > Close and the window's own titlebar X button behave
     // identically instead of needing separate logic.
@@ -860,134 +855,39 @@ void MainWindow::renderForPrint(QPrinter *printer)
     sheetScene->render(&painter, centeredTarget, sourceRect);
 }
 
-void MainWindow::clickExportPdfAction()
+void MainWindow::clickExportAction()
 {
     if (sheetScene->itemsBoundingRect().isEmpty()) {
-        QMessageBox::information(this, tr("Esporta PDF"), tr("Il disegno e' vuoto."));
+        QMessageBox::information(this, tr("Esporta"), tr("Il disegno e' vuoto."));
         return;
     }
 
-    QString path = QFileDialog::getSaveFileName(this, tr("Esporta come PDF"), QString(),
-                                                  tr("File PDF (*.pdf)"));
+    DialogExport dialog(sheetScene->itemsBoundingRect().size(), this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+
+    QString path = QFileDialog::getSaveFileName(this, tr("Esporta disegno"), QString(),
+                                                  dialog.fileFilter());
     if (path.isEmpty())
         return;
-    if (!path.endsWith(QStringLiteral(".pdf"), Qt::CaseInsensitive))
-        path += QStringLiteral(".pdf");
+    const QString suffix = QLatin1Char('.') + dialog.defaultSuffix();
+    if (!path.endsWith(suffix, Qt::CaseInsensitive))
+        path += suffix;
 
+    // Selection highlighting and resize handles are editor chrome, not part
+    // of the drawing - hide them for the render by clearing the selection,
+    // restored right after (same pattern as printing).
     const QList<QGraphicsItem *> previousSelection = sheetScene->selectedItems();
     sheetScene->clearSelection();
-
-    // Reuses the same fit-to-page-and-center logic as File > Stampa
-    // (renderForPrint()) - a PDF page is rendered exactly like a printed one,
-    // just written straight to a file instead of a physical/virtual printer.
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(path);
-    renderForPrint(&printer);
-
-    for (QGraphicsItem *item : previousSelection)
-        item->setSelected(true);
-}
-
-void MainWindow::clickExportSvgAction()
-{
-    if (sheetScene->itemsBoundingRect().isEmpty()) {
-        QMessageBox::information(this, tr("Esporta SVG"), tr("Il disegno e' vuoto."));
-        return;
-    }
-
-    QString path = QFileDialog::getSaveFileName(this, tr("Esporta come SVG"), QString(),
-                                                  tr("File SVG (*.svg)"));
-    if (path.isEmpty())
-        return;
-    if (!path.endsWith(QStringLiteral(".svg"), Qt::CaseInsensitive))
-        path += QStringLiteral(".svg");
-
-    const QList<QGraphicsItem *> previousSelection = sheetScene->selectedItems();
-    sheetScene->clearSelection();
-
-    const QRectF sourceRect = sheetScene->itemsBoundingRect();
-    const QRectF targetRect(QPointF(0, 0), sourceRect.size());
-
-    // Scene units map 1:1 to SVG user units - the drawing is exported at its
-    // native scale, giving a resolution-independent vector file that a
-    // viewer/editor can scale to whatever size is needed, unlike the fixed
-    // pixel grid a PNG export bakes in.
-    QSvgGenerator generator;
-    generator.setFileName(path);
-    generator.setSize(targetRect.size().toSize());
-    generator.setViewBox(targetRect);
-    generator.setTitle(tr("Schema eSchema"));
-
-    QPainter painter(&generator);
-    sheetScene->render(&painter, targetRect, sourceRect);
-    painter.end();
-
-    for (QGraphicsItem *item : previousSelection)
-        item->setSelected(true);
-}
-
-void MainWindow::clickExportPngAction()
-{
-    if (sheetScene->itemsBoundingRect().isEmpty()) {
-        QMessageBox::information(this, tr("Esporta PNG"), tr("Il disegno e' vuoto."));
-        return;
-    }
-
-    bool ok = false;
-    const int scale = QInputDialog::getInt(this, tr("Esporta come PNG"),
-                                            tr("Fattore di scala (pixel per unita' di disegno):"),
-                                            4, 1, 20, 1, &ok);
-    if (!ok)
-        return;
-
-    QString path = QFileDialog::getSaveFileName(this, tr("Esporta come PNG"), QString(),
-                                                  tr("File PNG (*.png)"));
-    if (path.isEmpty())
-        return;
-    if (!path.endsWith(QStringLiteral(".png"), Qt::CaseInsensitive))
-        path += QStringLiteral(".png");
-
-    const QList<QGraphicsItem *> previousSelection = sheetScene->selectedItems();
-    sheetScene->clearSelection();
-
-    const QRectF sourceRect = sheetScene->itemsBoundingRect();
-    const QSize targetSize = (sourceRect.size() * scale).toSize();
-
-    // The scene itself paints no background (that's SheetView::drawBackground(),
-    // an on-screen-only grid/paper visual aid - see Sheet::drawForeground() for
-    // the one thing the scene does paint outside of primitives), so fill white
-    // explicitly here or the exported PNG would come out with a transparent
-    // background instead of a plain page like the PDF/print output.
-    QImage image(targetSize, QImage::Format_ARGB32);
-    image.fill(Qt::white);
-    QPainter painter(&image);
-    painter.setRenderHint(QPainter::Antialiasing);
-    sheetScene->render(&painter, QRectF(QPointF(0, 0), targetSize), sourceRect);
-    painter.end();
-
-    if (!image.save(path))
-        QMessageBox::warning(this, tr("Esporta PNG"), tr("Impossibile salvare il file PNG."));
-
-    for (QGraphicsItem *item : previousSelection)
-        item->setSelected(true);
-}
-
-void MainWindow::clickExportDxfAction()
-{
-    if (sheetScene->itemsBoundingRect().isEmpty()) {
-        QMessageBox::information(this, tr("Esporta DXF"), tr("Il disegno e' vuoto."));
-        return;
-    }
-
-    QString path = QFileDialog::getSaveFileName(this, tr("Esporta come DXF"), QString(),
-                                                  tr("File DXF (*.dxf)"));
-    if (path.isEmpty())
-        return;
-    if (!path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
-        path += QStringLiteral(".dxf");
 
     QString error;
-    if (!DxfWriter::writeFile(sheetScene, path, &error))
-        QMessageBox::warning(this, tr("Errore"), tr("Impossibile salvare il file:\n%1").arg(error));
+    const bool ok = GraphicExporter::exportSheet(sheetScene, path,
+                                                  dialog.options(), &error);
+
+    for (QGraphicsItem *item : previousSelection)
+        item->setSelected(true);
+
+    if (!ok)
+        QMessageBox::warning(this, tr("Errore"),
+                              tr("Impossibile esportare il file:\n%1").arg(error));
 }
