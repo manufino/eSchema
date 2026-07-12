@@ -39,6 +39,7 @@ SOURCES += \
 	src/App/MainWindowLibraryPanel.cpp \
 	src/App/MainWindowPropertiesPanel.cpp \
 	src/App/MainWindowEditActions.cpp \
+	src/Core/DecoratedText.cpp \
 	src/Core/GraphicsPrimitive.cpp \
 	src/Core/LayerList.cpp \
 	src/Core/LibraryManager.cpp \
@@ -94,6 +95,7 @@ SOURCES += \
 
 HEADERS += \
 	src/App/MainWindow.h \
+	src/Core/DecoratedText.h \
 	src/Core/GlobalUtils.h \
 	src/Core/GraphicsPrimitive.h \
 	src/Core/Layer.h \

@@ -369,6 +369,15 @@ void MainWindow::setConnections()
                 static_cast<PrimitivePad *>(primitive)->setStyle(static_cast<PrimitivePad::Style>(index));
         }
     });
+    // The text content itself (which may carry the ^/_ superscript/subscript
+    // markup rendered by DecoratedText) - editable after placement, like
+    // every other text property.
+    connect(ui->lineEditTextContent, &QLineEdit::editingFinished, this, [this]() {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Text)
+                static_cast<PrimitiveText *>(primitive)->setText(ui->lineEditTextContent->text());
+        }
+    });
     connect(ui->spinTextSizeX, &QSpinBox::valueChanged, this, [this](int value) {
         for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
             if (primitive->getPrimitiveType() == GraphicsPrimitive::Text) {

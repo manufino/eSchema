@@ -78,6 +78,7 @@ void MainWindow::updatePropertiesPanel()
     const QSignalBlocker blockPadHeight(ui->spinPadHeight);
     const QSignalBlocker blockPadHole(ui->spinPadHole);
     const QSignalBlocker blockPadStyle(ui->cbPadStyle);
+    const QSignalBlocker blockTextContent(ui->lineEditTextContent);
     const QSignalBlocker blockTextSizeX(ui->spinTextSizeX);
     const QSignalBlocker blockTextSizeY(ui->spinTextSizeY);
     const QSignalBlocker blockTextOrientation(ui->spinTextOrientation);
@@ -114,6 +115,7 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->labelPadHeight, ui->spinPadHeight, false);
         showRow(ui->labelPadHole, ui->spinPadHole, false);
         showRow(ui->labelPadStyle, ui->cbPadStyle, false);
+        showRow(ui->labelTextContent, ui->lineEditTextContent, false);
         showRow(ui->labelTextSizeX, ui->spinTextSizeX, false);
         showRow(ui->labelTextSizeY, ui->spinTextSizeY, false);
         showRow(ui->labelTextOrientation, ui->spinTextOrientation, false);
@@ -166,6 +168,7 @@ void MainWindow::updatePropertiesPanel()
 
     const bool isText = primitive->getPrimitiveType() == GraphicsPrimitive::Text;
     showRow(ui->label_8, ui->fontComboBox, isText);
+    showRow(ui->labelTextContent, ui->lineEditTextContent, isText);
     showRow(ui->labelTextSizeX, ui->spinTextSizeX, isText);
     showRow(ui->labelTextSizeY, ui->spinTextSizeY, isText);
     showRow(ui->labelTextOrientation, ui->spinTextOrientation, isText);
@@ -174,6 +177,7 @@ void MainWindow::updatePropertiesPanel()
     showRow(ui->labelTextMirrored, ui->checkBoxTextMirrored, isText);
     if (isText) {
         auto *text = static_cast<PrimitiveText *>(primitive);
+        ui->lineEditTextContent->setText(text->text());
         ui->fontComboBox->setCurrentFont(QFont(text->fontName()));
         ui->spinTextSizeX->setValue(text->sizeX());
         ui->spinTextSizeY->setValue(text->sizeY());

@@ -18,6 +18,7 @@
  */
 
 #include "GraphicsPrimitive.h"
+#include "DecoratedText.h"
 #include "LayerList.h"
 #include "GlobalUtils.h"
 #include "Sheet.h"
@@ -268,12 +269,15 @@ void GraphicsPrimitive::paintLabels(QPainter *painter) const
     painter->setPen(drawColor());
     QFont font(QStringLiteral("Courier New"));
     font.setPointSizeF(3.0);
-    painter->setFont(font);
 
+    // DecoratedText: name/value labels support the same ^/_ superscript/
+    // subscript markup as standalone text, exactly like the reference
+    // FidoCadJ editor (GraphicPrimitive.drawText also goes through its
+    // DecoratedText). It sets the painter's font itself, per chunk.
     if (drawName)
-        painter->drawText(mapFromScene(nameLabelPos()), objName);
+        DecoratedText::draw(painter, font, mapFromScene(nameLabelPos()), objName);
     if (drawValue)
-        painter->drawText(mapFromScene(valueLabelPos()), objValue);
+        DecoratedText::draw(painter, font, mapFromScene(valueLabelPos()), objValue);
     painter->restore();
 }
 

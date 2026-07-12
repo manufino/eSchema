@@ -946,6 +946,38 @@
       </widget>
      </item>
      <item row="22" column="0">
+      <widget class="QLabel" name="labelTextContent">
+       <property name="font">
+        <font>
+         <family>Hack</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Testo</string>
+       </property>
+      </widget>
+     </item>
+     <item row="22" column="1">
+      <widget class="QLineEdit" name="lineEditTextContent">
+       <property name="minimumSize">
+        <size>
+         <width>119</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Hack</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Usa ^ per l'apice e _ per il pedice (es. R^2, V_out); ogni ^ o _ in più annida di un livello. Usa \^ e \_ per scrivere i caratteri ^ e _.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="23" column="0">
       <widget class="QLabel" name="labelTextSizeX">
        <property name="font">
         <font>
@@ -958,7 +990,7 @@
        </property>
       </widget>
      </item>
-     <item row="22" column="1">
+     <item row="23" column="1">
       <widget class="QSpinBox" name="spinTextSizeX">
        <property name="minimumSize">
         <size>
@@ -983,7 +1015,7 @@
        </property>
       </widget>
      </item>
-     <item row="23" column="0">
+     <item row="24" column="0">
       <widget class="QLabel" name="labelTextSizeY">
        <property name="font">
         <font>
@@ -996,7 +1028,7 @@
        </property>
       </widget>
      </item>
-     <item row="23" column="1">
+     <item row="24" column="1">
       <widget class="QSpinBox" name="spinTextSizeY">
        <property name="minimumSize">
         <size>
@@ -1021,7 +1053,7 @@
        </property>
       </widget>
      </item>
-     <item row="24" column="0">
+     <item row="25" column="0">
       <widget class="QLabel" name="labelTextOrientation">
        <property name="font">
         <font>
@@ -1034,7 +1066,7 @@
        </property>
       </widget>
      </item>
-     <item row="24" column="1">
+     <item row="25" column="1">
       <widget class="QSpinBox" name="spinTextOrientation">
        <property name="minimumSize">
         <size>
@@ -1065,7 +1097,7 @@
        </property>
       </widget>
      </item>
-     <item row="25" column="0">
+     <item row="26" column="0">
       <widget class="QLabel" name="labelTextBold">
        <property name="font">
         <font>
@@ -1078,14 +1110,14 @@
        </property>
       </widget>
      </item>
-     <item row="25" column="1">
+     <item row="26" column="1">
       <widget class="QCheckBox" name="checkBoxTextBold">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="26" column="0">
+     <item row="27" column="0">
       <widget class="QLabel" name="labelTextItalic">
        <property name="font">
         <font>
@@ -1098,14 +1130,14 @@
        </property>
       </widget>
      </item>
-     <item row="26" column="1">
+     <item row="27" column="1">
       <widget class="QCheckBox" name="checkBoxTextItalic">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="27" column="0">
+     <item row="28" column="0">
       <widget class="QLabel" name="labelTextMirrored">
        <property name="font">
         <font>
@@ -1118,14 +1150,14 @@
        </property>
       </widget>
      </item>
-     <item row="27" column="1">
+     <item row="28" column="1">
       <widget class="QCheckBox" name="checkBoxTextMirrored">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="28" column="0" colspan="2">
+     <item row="29" column="0" colspan="2">
       <spacer name="verticalSpacerProp">
        <property name="orientation">
         <enum>Qt::Vertical</enum>

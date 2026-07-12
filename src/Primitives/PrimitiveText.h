@@ -21,6 +21,7 @@
 #define PRIMITIVETEXT_H
 
 #include "GraphicsPrimitive.h"
+#include <QFont>
 
 // FCD "TY" (advanced) / "TE" (legacy, always upgraded to TY on save) - a
 // standalone text primitive (FIDOSPECS.md 5.11). Note: when a TY line instead
@@ -51,7 +52,10 @@ public:
     void rotate90(const QPointF &pivot) override;
 
     QString text() const { return m_text; }
-    void setText(const QString &text) { m_text = text; }
+    // May contain FidoCadJ's ^/_ superscript/subscript markup (rendered via
+    // DecoratedText). prepareGeometryChange()/update(): editable live from
+    // the Properties panel, and the content directly drives boundingRect().
+    void setText(const QString &text) { prepareGeometryChange(); m_text = text; update(); }
     int sizeY() const { return m_sizeY; }
     int sizeX() const { return m_sizeX; }
     // prepareGeometryChange()/update(): can now be changed live from the
@@ -74,6 +78,10 @@ public:
     bool supportsFCJ() const override { return false; }
 
 private:
+    // The QFont carrying this primitive's family/size/bold/italic, shared by
+    // paint() and boundingRect() so drawing and invalidation always agree.
+    QFont styledFont() const;
+
     QPointF m_pos;
     int m_sizeY = 4, m_sizeX = 3;
     int m_orientationDeg = 0;

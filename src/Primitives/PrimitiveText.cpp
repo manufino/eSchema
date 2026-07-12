@@ -18,22 +18,48 @@
  */
 
 #include "PrimitiveText.h"
+#include "DecoratedText.h"
 #include "FidoCadTokenUtils.h"
 #include <QStyleOptionGraphicsItem>
 #include <QFontMetricsF>
+#include <QTransform>
 
 PrimitiveText::PrimitiveText(QGraphicsItem *parent)
     : GraphicsPrimitive(Text, parent)
 {
 }
 
-QRectF PrimitiveText::boundingRect() const
+QFont PrimitiveText::styledFont() const
 {
     QFont font(m_fontName);
     font.setPointSizeF(qMax(1, m_sizeX));
+    font.setBold(m_styleFlags & Bold);
+    font.setItalic(m_styleFlags & Italic);
+    return font;
+}
+
+QRectF PrimitiveText::boundingRect() const
+{
+    const QFont font = styledFont();
     const QFontMetricsF metrics(font);
-    const QRectF textRect = metrics.boundingRect(m_text);
-    return QRectF(mapFromScene(m_pos), textRect.size()).adjusted(-2, -2, 2, 2);
+    // Decorated measurement: ^/_ superscripts and subscripts change both the
+    // width (shrunk chunks) and the vertical extent (glyphs shifted outside
+    // the plain ascent/descent box) of the rendered text.
+    const qreal width = DecoratedText::width(font, m_text);
+    qreal top = 0, bottom = 0;
+    DecoratedText::verticalExtent(font, m_text, top, bottom);
+
+    // Local rect around the baseline used by paint() (anchor at the text's
+    // top, baseline one ascent below it), then mapped through paint()'s own
+    // rotation/mirror so a rotated or mirrored text is never clipped.
+    const QRectF local(0, metrics.ascent() + top, width, bottom - top);
+    QTransform transform;
+    const QPointF anchor = mapFromScene(m_pos);
+    transform.translate(anchor.x(), anchor.y());
+    transform.rotate(-m_orientationDeg);
+    if (m_styleFlags & Mirrored)
+        transform.scale(-1, 1);
+    return transform.mapRect(local).adjusted(-2, -2, 2, 2);
 }
 
 void PrimitiveText::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -41,11 +67,7 @@ void PrimitiveText::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
     if (!isVisible() || m_text.isEmpty())
         return;
 
-    QFont font(m_fontName);
-    font.setPointSizeF(qMax(1, m_sizeX));
-    font.setBold(m_styleFlags & Bold);
-    font.setItalic(m_styleFlags & Italic);
-    painter->setFont(font);
+    const QFont font = styledFont();
     painter->setPen(drawColor());
 
     painter->save();
@@ -55,12 +77,12 @@ void PrimitiveText::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
         painter->scale(-1, 1);
     // FIDOSPECS anchors a text primitive at the TOP of its bounding box
     // (matches PrimitiveAdvText.java, which tracks the text's extent
-    // downward from its anchor by the font ascent), but QPainter::drawText()
-    // anchors a point at the BASELINE - without this offset every text
-    // primitive rendered one font-ascent too high compared to the reference
-    // editor, most noticeable on the small, tightly-packed pin/value labels
-    // inside macro bodies.
-    painter->drawText(QPointF(0, QFontMetricsF(font).ascent()), m_text);
+    // downward from its anchor by the font ascent), but text is drawn from
+    // a BASELINE - without this offset every text primitive rendered one
+    // font-ascent too high compared to the reference editor, most noticeable
+    // on the small, tightly-packed pin/value labels inside macro bodies.
+    // DecoratedText handles the FidoCadJ ^/_ superscript/subscript markup.
+    DecoratedText::draw(painter, font, QPointF(0, QFontMetricsF(font).ascent()), m_text);
     painter->restore();
 }
 
