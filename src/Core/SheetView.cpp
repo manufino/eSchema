@@ -112,7 +112,13 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     // PUNTI o LINEE+PUNTI
     if(gridType == Utils::GridType::Dots || gridType == Utils::GridType::LinesAndDots)
     {
-        painter->setPen(dotsGridColor);
+        // Cosmetic pen: the dot size is expressed in device pixels and is not
+        // affected by the view's zoom transform. A plain setPen(QColor) would
+        // create a 1-scene-unit-wide pen instead, so each dot would grow into
+        // a square of up to ZOOM_SCALE_MAX pixels when zooming in.
+        QPen dotPen(dotsGridColor, 2);
+        dotPen.setCosmetic(true);
+        painter->setPen(dotPen);
 
         const int columns = int((rect.right() - left) / step) + 1;
         const int rows = int((rect.bottom() - top) / step) + 1;
