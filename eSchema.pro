@@ -35,6 +35,7 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
 	src/main.cpp \
+	src/App/CommandLine.cpp \
 	src/App/MainWindow.cpp \
 	src/App/MainWindowLibraryPanel.cpp \
 	src/App/MainWindowPropertiesPanel.cpp \
@@ -94,6 +95,7 @@ SOURCES += \
 	src/Widgets/ToolBarPrimitive.cpp
 
 HEADERS += \
+	src/App/CommandLine.h \
 	src/App/MainWindow.h \
 	src/Core/DecoratedText.h \
 	src/Core/GlobalUtils.h \

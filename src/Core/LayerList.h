@@ -35,6 +35,13 @@ public:
     }
 
     QList<Layer*>*getList() { return layerList; }
+    // Populates FidoCadJ's 16 default layers and colors (FIDOSPECS.md 3.1) -
+    // idempotent (does nothing once any layer exists), so the GUI startup
+    // and the headless command line path can both call it safely. Populating
+    // all 16 (rather than just a master layer) matters for FidoCadJ
+    // round-trip fidelity: a file referencing layer index 2 must land on
+    // that layer, not silently collapse to layer 0 for want of one existing.
+    void createDefaultLayers();
     void addLayer(Layer *layer);
     void addLayer(QString name, QColor color);
     Layer* getMaster();

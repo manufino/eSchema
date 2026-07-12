@@ -19,6 +19,21 @@
 
 #include "LayerList.h"
 
+void LayerList::createDefaultLayers()
+{
+    if (!layerList->isEmpty())
+        return;
+
+    static const QColor colors[16] = {
+        QColor(0, 0, 0),        QColor(0, 0, 128),      QColor(255, 0, 0),      QColor(0, 128, 128),
+        QColor(255, 200, 0),    QColor(127, 255, 0),    QColor(0, 255, 255),    QColor(0, 128, 0),
+        QColor(154, 205, 50),   QColor(255, 20, 147),   QColor(181, 155, 12),   QColor(1, 128, 255),
+        QColor(225, 225, 225, 242), QColor(162, 162, 162, 230), QColor(95, 95, 95, 230), QColor(0, 0, 0)
+    };
+    for (int i = 0; i < 16; ++i)
+        addLayer(new Layer(QString("Layer %1").arg(i), colors[i], i == 0));
+}
+
 void LayerList::addLayer(Layer *layer)
 {
     layerList->append(layer);

@@ -54,30 +54,13 @@
 #include <QInputDialog>
 #include <QImage>
 
-namespace {
-// FidoCadJ's 16 default layers and colors (FIDOSPECS.md 3.1). Populating all
-// of them (rather than just a single master layer) at startup matters for
-// FidoCadJ round-trip fidelity: opening a file that references layer index 2
-// must land on that layer, not silently collapse to layer 0 for want of one
-// existing.
-void createDefaultLayers()
-{
-    static const QColor colors[16] = {
-        QColor(0, 0, 0),        QColor(0, 0, 128),      QColor(255, 0, 0),      QColor(0, 128, 128),
-        QColor(255, 200, 0),    QColor(127, 255, 0),    QColor(0, 255, 255),    QColor(0, 128, 0),
-        QColor(154, 205, 50),   QColor(255, 20, 147),   QColor(181, 155, 12),   QColor(1, 128, 255),
-        QColor(225, 225, 225, 242), QColor(162, 162, 162, 230), QColor(95, 95, 95, 230), QColor(0, 0, 0)
-    };
-    for (int i = 0; i < 16; ++i)
-        LayerList::getInstance().addLayer(new Layer(QString("Layer %1").arg(i), colors[i], i == 0));
-}
-} // namespace
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    createDefaultLayers();
+    // Idempotent - a headless conversion run before the GUI (the -c option
+    // without -n) has already populated them.
+    LayerList::getInstance().createDefaultLayers();
 
     ui->setupUi(this);
     updateWindowTitle();

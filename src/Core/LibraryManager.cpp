@@ -73,11 +73,30 @@ void LibraryManager::loadLibraries()
     m_macrosByKey.clear();
     m_libraries.clear();
 
+    // The external directory (command line -d) takes precedence: a bundled
+    // library whose file name also exists there is skipped, so the external
+    // copy replaces it - matching FidoMain.readLibrariesProbeDirectory()'s
+    // "if those files are found in the external directory specified, the
+    // internal version is not loaded".
+    QStringList externalFiles;
+    QDir externalDir(m_externalLibraryDir);
+    if (!m_externalLibraryDir.isEmpty())
+        externalFiles = externalDir.entryList(QStringList() << QStringLiteral("*.fcl"),
+                                               QDir::Files, QDir::Name);
+    QStringList externalBaseNames;
+    for (const QString &fileName : std::as_const(externalFiles))
+        externalBaseNames.append(QFileInfo(fileName).completeBaseName().toLower());
+
     const QDir libDir(QCoreApplication::applicationDirPath() + QStringLiteral("/lib"));
     const QStringList files = libDir.entryList(QStringList() << QStringLiteral("*.fcl"),
                                                 QDir::Files, QDir::Name);
-    for (const QString &fileName : files)
-        loadLibraryFile(libDir.filePath(fileName));
+    for (const QString &fileName : files) {
+        if (!externalBaseNames.contains(QFileInfo(fileName).completeBaseName().toLower()))
+            loadLibraryFile(libDir.filePath(fileName));
+    }
+
+    for (const QString &fileName : std::as_const(externalFiles))
+        loadLibraryFile(externalDir.filePath(fileName));
 
     emit librariesReloaded();
 }

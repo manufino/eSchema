@@ -58,6 +58,13 @@ public:
     // safe to call more than once.
     void loadLibraries();
 
+    // Extra library directory (the command line's -d option, matching the
+    // reference FidoCadJ editor's own): its ".fcl" files are loaded by
+    // loadLibraries() and take the place of any bundled library with the
+    // same file name, exactly like FidoMain.readLibrariesProbeDirectory().
+    // Set it before calling loadLibraries(); empty means "bundled only".
+    void setExternalLibraryDirectory(const QString &dir) { m_externalLibraryDir = dir; }
+
     const QList<MacroLibrary> &libraries() const { return m_libraries; }
     const MacroDescriptor *macro(const QString &key) const;
 
@@ -166,6 +173,7 @@ private:
     bool writeLibraryFile(const MacroLibrary &library, QString *errorMessage) const;
 
     QList<MacroLibrary> m_libraries;
+    QString m_externalLibraryDir;
     QHash<QString, MacroDescriptor> m_macrosByKey;
     QHash<QString, QList<GraphicsPrimitive *>> m_expandedBodies;
     QHash<QString, QPixmap> m_iconCache;

@@ -17,6 +17,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "CommandLine.h"
 #include "MainWindow.h"
 #include "SettingsManager.h"
 #include "ThemeManager.h"
@@ -61,6 +62,21 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    // FidoCadJ-compatible command line (see CommandLine.h): "-h" and parse
+    // errors stop here; "-c"/"-s" run headless conversions before (or, with
+    // "-n", instead of) the GUI.
+    CommandLine commandLine;
+    const int parseResult = commandLine.process(a.arguments());
+    if (parseResult >= 0)
+        return parseResult;
+
+    int headlessResult = 0;
+    if (commandLine.headlessMode())
+        headlessResult = commandLine.runHeadlessTasks();
+    // Like FidoCadJ, the GUI still opens after a -c/-s unless -n was given.
+    if (commandLine.commandLineOnly())
+        return headlessResult;
+
     ThemeManager::apply();
 
     QPixmap pixmap(":/res/resources/splash.jpeg");
@@ -78,8 +94,11 @@ int main(int argc, char *argv[])
     splash.show();
     splash.showMessage("Caricamento ...");
 
+    // The command line's -l overrides (without persisting) the saved
+    // language choice, matching FidoCadJ's own -l semantics.
     QTranslator translator;
-    const QString languageCode = resolveLanguageCode();
+    const QString languageCode = commandLine.wantedLanguage().isEmpty()
+            ? resolveLanguageCode() : commandLine.wantedLanguage();
     if (languageCode != QStringLiteral("it") && translator.load(":/i18n/eSchema_" + languageCode))
         a.installTranslator(&translator);
 
@@ -89,9 +108,8 @@ int main(int argc, char *argv[])
 
     // "eschema drawing.fcd" opens that file directly, matching FidoCadJ's
     // command-line behaviour.
-    const QStringList args = a.arguments();
-    if (args.size() > 1)
-        w.openFile(args.at(1));
+    if (!commandLine.loadFileName().isEmpty())
+        w.openFile(commandLine.loadFileName());
 
     return a.exec();
 }
