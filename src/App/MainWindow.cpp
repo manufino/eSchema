@@ -53,6 +53,7 @@
 #include <QSvgGenerator>
 #include <QInputDialog>
 #include <QImage>
+#include <QShortcut>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -469,6 +470,23 @@ void MainWindow::setConnections()
     ui->actionRestore->setEnabled(undo->canRedo());
 
     connect(ui->txtSearch, &QLineEdit::textChanged, this, &MainWindow::filterLibraryPanel);
+
+    // Alt+arrows nudge the selection by one snap step (see nudgeSelection()).
+    // Window-scoped shortcuts, so they work with any part of the UI focused;
+    // typing in a text field is unaffected (Alt+arrows isn't a text key).
+    const struct { QKeySequence keys; QPointF direction; } nudges[] = {
+        { QKeySequence(Qt::ALT | Qt::Key_Left),  QPointF(-1, 0) },
+        { QKeySequence(Qt::ALT | Qt::Key_Right), QPointF(1, 0) },
+        { QKeySequence(Qt::ALT | Qt::Key_Up),    QPointF(0, -1) },
+        { QKeySequence(Qt::ALT | Qt::Key_Down),  QPointF(0, 1) },
+    };
+    for (const auto &nudge : nudges) {
+        auto *shortcut = new QShortcut(nudge.keys, this);
+        const QPointF direction = nudge.direction;
+        connect(shortcut, &QShortcut::activated, this, [this, direction]() {
+            nudgeSelection(direction);
+        });
+    }
 }
 
 void MainWindow::clickOptionAction()

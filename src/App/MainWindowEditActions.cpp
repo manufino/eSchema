@@ -307,6 +307,22 @@ void MainWindow::moveSelectedPrimitives(const QHash<GraphicsPrimitive *, QPointF
         undo->endMacro();
 }
 
+void MainWindow::nudgeSelection(const QPointF &direction)
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+
+    // One snap step per press, whether or not snapping is currently enabled -
+    // the point of a keyboard nudge is a predictable, grid-friendly move.
+    const int step = qMax(1, SettingsManager::getInstance().loadSetting("snap_step").toInt());
+
+    QHash<GraphicsPrimitive *, QPointF> deltas;
+    for (GraphicsPrimitive *primitive : selected)
+        deltas.insert(primitive, direction * step);
+    moveSelectedPrimitives(deltas, tr("Sposta selezione"));
+}
+
 // Align/distribute operate on each primitive's own bounding box (in scene
 // coordinates, since pos() is always pinned at the origin - see
 // GraphicsPrimitive's header comment), mirroring the reference FidoCadJ

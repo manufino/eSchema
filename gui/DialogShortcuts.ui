@@ -674,7 +674,34 @@
            </property>
           </widget>
          </item>
-         <item row="19" column="0" colspan="3">
+         <item row="19" column="0">
+          <widget class="QLabel" name="keyNudge">
+           <property name="text">
+            <string>ALT + FRECCE</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="19" column="1">
+          <widget class="Line" name="sepNudge">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="19" column="2">
+          <widget class="QLabel" name="actionNudge">
+           <property name="text">
+            <string>Sposta la selezione di un passo</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="20" column="0" colspan="3">
           <widget class="QLabel" name="headerStrumenti">
            <property name="font">
             <font>
@@ -691,7 +718,7 @@
            </property>
           </widget>
          </item>
-         <item row="20" column="0">
+         <item row="21" column="0">
           <widget class="QLabel" name="key18">
            <property name="text">
             <string>A</string>
@@ -701,14 +728,14 @@
            </property>
           </widget>
          </item>
-         <item row="20" column="1">
+         <item row="21" column="1">
           <widget class="Line" name="sep18">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="20" column="2">
+         <item row="21" column="2">
           <widget class="QLabel" name="action18">
            <property name="text">
             <string>Seleziona</string>
@@ -718,7 +745,7 @@
            </property>
           </widget>
          </item>
-         <item row="21" column="0">
+         <item row="22" column="0">
           <widget class="QLabel" name="key19">
            <property name="text">
             <string>L</string>
@@ -728,14 +755,14 @@
            </property>
           </widget>
          </item>
-         <item row="21" column="1">
+         <item row="22" column="1">
           <widget class="Line" name="sep19">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="21" column="2">
+         <item row="22" column="2">
           <widget class="QLabel" name="action19">
            <property name="text">
             <string>Linea</string>
@@ -745,7 +772,7 @@
            </property>
           </widget>
          </item>
-         <item row="22" column="0">
+         <item row="23" column="0">
           <widget class="QLabel" name="key20">
            <property name="text">
             <string>G</string>
@@ -755,14 +782,14 @@
            </property>
           </widget>
          </item>
-         <item row="22" column="1">
+         <item row="23" column="1">
           <widget class="Line" name="sep20">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="22" column="2">
+         <item row="23" column="2">
           <widget class="QLabel" name="action20">
            <property name="text">
             <string>Rettangolo</string>
@@ -772,7 +799,7 @@
            </property>
           </widget>
          </item>
-         <item row="23" column="0">
+         <item row="24" column="0">
           <widget class="QLabel" name="key21">
            <property name="text">
             <string>P</string>
@@ -782,14 +809,14 @@
            </property>
           </widget>
          </item>
-         <item row="23" column="1">
+         <item row="24" column="1">
           <widget class="Line" name="sep21">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="23" column="2">
+         <item row="24" column="2">
           <widget class="QLabel" name="action21">
            <property name="text">
             <string>Poligono</string>
@@ -799,7 +826,7 @@
            </property>
           </widget>
          </item>
-         <item row="24" column="0">
+         <item row="25" column="0">
           <widget class="QLabel" name="key22">
            <property name="text">
             <string>E</string>
@@ -809,14 +836,14 @@
            </property>
           </widget>
          </item>
-         <item row="24" column="1">
+         <item row="25" column="1">
           <widget class="Line" name="sep22">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="24" column="2">
+         <item row="25" column="2">
           <widget class="QLabel" name="action22">
            <property name="text">
             <string>Ellisse</string>
@@ -826,7 +853,7 @@
            </property>
           </widget>
          </item>
-         <item row="25" column="0">
+         <item row="26" column="0">
           <widget class="QLabel" name="key23">
            <property name="text">
             <string>B</string>
@@ -836,14 +863,14 @@
            </property>
           </widget>
          </item>
-         <item row="25" column="1">
+         <item row="26" column="1">
           <widget class="Line" name="sep23">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="25" column="2">
+         <item row="26" column="2">
           <widget class="QLabel" name="action23">
            <property name="text">
             <string>Curva Bézier</string>
@@ -853,7 +880,7 @@
            </property>
           </widget>
          </item>
-         <item row="26" column="0">
+         <item row="27" column="0">
           <widget class="QLabel" name="key24">
            <property name="text">
             <string>O</string>
@@ -863,14 +890,14 @@
            </property>
           </widget>
          </item>
-         <item row="26" column="1">
+         <item row="27" column="1">
           <widget class="Line" name="sep24">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="26" column="2">
+         <item row="27" column="2">
           <widget class="QLabel" name="action24">
            <property name="text">
             <string>Curva complessa</string>
@@ -880,7 +907,7 @@
            </property>
           </widget>
          </item>
-         <item row="27" column="0">
+         <item row="28" column="0">
           <widget class="QLabel" name="key25">
            <property name="text">
             <string>T</string>
@@ -890,14 +917,14 @@
            </property>
           </widget>
          </item>
-         <item row="27" column="1">
+         <item row="28" column="1">
           <widget class="Line" name="sep25">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="27" column="2">
+         <item row="28" column="2">
           <widget class="QLabel" name="action25">
            <property name="text">
             <string>Testo</string>
@@ -907,7 +934,7 @@
            </property>
           </widget>
          </item>
-         <item row="28" column="0">
+         <item row="29" column="0">
           <widget class="QLabel" name="key26">
            <property name="text">
             <string>C</string>
@@ -917,14 +944,14 @@
            </property>
           </widget>
          </item>
-         <item row="28" column="1">
+         <item row="29" column="1">
           <widget class="Line" name="sep26">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="28" column="2">
+         <item row="29" column="2">
           <widget class="QLabel" name="action26">
            <property name="text">
             <string>Connessione</string>
@@ -934,7 +961,7 @@
            </property>
           </widget>
          </item>
-         <item row="29" column="0">
+         <item row="30" column="0">
           <widget class="QLabel" name="key27">
            <property name="text">
             <string>I</string>
@@ -944,14 +971,14 @@
            </property>
           </widget>
          </item>
-         <item row="29" column="1">
+         <item row="30" column="1">
           <widget class="Line" name="sep27">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="29" column="2">
+         <item row="30" column="2">
           <widget class="QLabel" name="action27">
            <property name="text">
             <string>Traccia PCB</string>
@@ -961,7 +988,7 @@
            </property>
           </widget>
          </item>
-         <item row="30" column="0">
+         <item row="31" column="0">
           <widget class="QLabel" name="key28">
            <property name="text">
             <string>Z</string>
@@ -971,14 +998,14 @@
            </property>
           </widget>
          </item>
-         <item row="30" column="1">
+         <item row="31" column="1">
           <widget class="Line" name="sep28">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="30" column="2">
+         <item row="31" column="2">
           <widget class="QLabel" name="action28">
            <property name="text">
             <string>Pad PCB</string>
@@ -988,7 +1015,7 @@
            </property>
           </widget>
          </item>
-         <item row="31" column="0">
+         <item row="32" column="0">
           <widget class="QLabel" name="key29">
            <property name="text">
             <string>M</string>
@@ -998,14 +1025,14 @@
            </property>
           </widget>
          </item>
-         <item row="31" column="1">
+         <item row="32" column="1">
           <widget class="Line" name="sep29">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="31" column="2">
+         <item row="32" column="2">
           <widget class="QLabel" name="action29">
            <property name="text">
             <string>Immagine</string>
@@ -1015,7 +1042,7 @@
            </property>
           </widget>
          </item>
-         <item row="32" column="0" colspan="3">
+         <item row="33" column="0" colspan="3">
           <widget class="QLabel" name="headerDurante">
            <property name="font">
             <font>
@@ -1032,7 +1059,7 @@
            </property>
           </widget>
          </item>
-         <item row="33" column="0">
+         <item row="34" column="0">
           <widget class="QLabel" name="key30">
            <property name="text">
             <string>INVIO</string>
@@ -1042,14 +1069,14 @@
            </property>
           </widget>
          </item>
-         <item row="33" column="1">
+         <item row="34" column="1">
           <widget class="Line" name="sep30">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="33" column="2">
+         <item row="34" column="2">
           <widget class="QLabel" name="action30">
            <property name="text">
             <string>Termina poligono / curva</string>
@@ -1059,7 +1086,7 @@
            </property>
           </widget>
          </item>
-         <item row="34" column="0">
+         <item row="35" column="0">
           <widget class="QLabel" name="key31">
            <property name="text">
             <string>ESC</string>
@@ -1069,14 +1096,14 @@
            </property>
           </widget>
          </item>
-         <item row="34" column="1">
+         <item row="35" column="1">
           <widget class="Line" name="sep31">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="34" column="2">
+         <item row="35" column="2">
           <widget class="QLabel" name="action31">
            <property name="text">
             <string>Annulla / esci dallo strumento</string>
@@ -1086,7 +1113,7 @@
            </property>
           </widget>
          </item>
-         <item row="35" column="0" colspan="3">
+         <item row="36" column="0" colspan="3">
           <widget class="QLabel" name="headerVista">
            <property name="font">
             <font>
@@ -1103,7 +1130,7 @@
            </property>
           </widget>
          </item>
-         <item row="36" column="0">
+         <item row="37" column="0">
           <widget class="QLabel" name="key32">
            <property name="minimumSize">
             <size>
@@ -1125,14 +1152,14 @@
            </property>
           </widget>
          </item>
-         <item row="36" column="1">
+         <item row="37" column="1">
           <widget class="Line" name="sep32">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="36" column="2">
+         <item row="37" column="2">
           <widget class="QLabel" name="action32">
            <property name="minimumSize">
             <size>
@@ -1151,7 +1178,7 @@
            </property>
           </widget>
          </item>
-         <item row="37" column="0">
+         <item row="38" column="0">
           <widget class="QLabel" name="key33">
            <property name="text">
             <string>WHEEL BUTTON</string>
@@ -1161,21 +1188,21 @@
            </property>
           </widget>
          </item>
-         <item row="37" column="1">
+         <item row="38" column="1">
           <widget class="Line" name="sep33">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
           </widget>
          </item>
-         <item row="37" column="2">
+         <item row="38" column="2">
           <widget class="QLabel" name="action33">
            <property name="text">
             <string>Trascina la vista</string>
            </property>
           </widget>
          </item>
-         <item row="38" column="0">
+         <item row="39" column="0">
           <spacer name="verticalSpacer">
            <property name="orientation">
             <enum>Qt::Vertical</enum>

@@ -180,6 +180,11 @@ private:
     // MovePrimitiveCommand, macro-grouped so the whole alignment undoes in
     // one step.
     void moveSelectedPrimitives(const QHash<GraphicsPrimitive *, QPointF> &deltas, const QString &undoLabel);
+    // Moves the whole selection by one snap step in `direction` (a unit
+    // vector), as one undoable step - wired to Alt+arrow shortcuts in
+    // setConnections(), matching the reference FidoCadJ editor's own
+    // Alt+arrows nudge.
+    void nudgeSelection(const QPointF &direction);
     // Replaces the sheet's contents with `filePath`'s (same bulk-load
     // contract as openFile(), but as an import: the document stays untitled
     // so the next Save goes through Save As). Shared by File > Importa da
