@@ -653,6 +653,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::clickNewAction()
 {
+    if (!confirmDiscardChanges())
+        return;
+
     sheetScene->clearPrimitives();
     sheetScene->undoStack()->setClean();
     setCurrentFilePath(QString());
@@ -660,6 +663,9 @@ void MainWindow::clickNewAction()
 
 void MainWindow::clickOpenAction()
 {
+    if (!confirmDiscardChanges())
+        return;
+
     const QString path = QFileDialog::getOpenFileName(this, tr("Apri disegno"), QString(),
                                                         tr("FidoCadJ (*.fcd)"));
     if (path.isEmpty())
@@ -682,6 +688,9 @@ bool MainWindow::openFile(const QString &filePath)
 
 void MainWindow::clickImportDxfAction()
 {
+    if (!confirmDiscardChanges())
+        return;
+
     const QString path = QFileDialog::getOpenFileName(this, tr("Importa da DXF"), QString(),
                                                         tr("DXF (*.dxf)"));
     if (path.isEmpty())
