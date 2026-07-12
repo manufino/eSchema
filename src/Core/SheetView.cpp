@@ -112,20 +112,28 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     // PUNTI o LINEE+PUNTI
     if(gridType == Utils::GridType::Dots || gridType == Utils::GridType::LinesAndDots)
     {
-        // Cosmetic pen: the dot size is expressed in device pixels and is not
-        // affected by the view's zoom transform. A plain setPen(QColor) would
-        // create a 1-scene-unit-wide pen instead, so each dot would grow into
-        // a square of up to ZOOM_SCALE_MAX pixels when zooming in.
-        QPen dotPen(dotsGridColor, 2);
+        // Matches the reference FidoCadJ editor's grid rendering
+        // (Graphics2DSwing.drawGrid): single-pixel dots once the on-screen
+        // pitch gets tight, and below a 3-pixel pitch only every 5th grid
+        // point is drawn at all, so a zoomed-out drawing is not buried under
+        // its own grid. The pen is cosmetic: its width is in device pixels
+        // and ignores the zoom transform - a plain setPen(QColor) would
+        // create a 1-scene-unit pen whose dots grow into squares of up to
+        // ZOOM_SCALE_MAX pixels when zooming in.
+        const qreal pitchPx = step * painter->transform().m11();
+        const qreal dotStep = (pitchPx < 3.0) ? step * 5.0 : step;
+        QPen dotPen(dotsGridColor, pitchPx >= 16.0 ? 2 : 1);
         dotPen.setCosmetic(true);
         painter->setPen(dotPen);
 
-        const int columns = int((rect.right() - left) / step) + 1;
-        const int rows = int((rect.bottom() - top) / step) + 1;
+        const qreal dotLeft = std::floor(rect.left() / dotStep) * dotStep;
+        const qreal dotTop = std::floor(rect.top() / dotStep) * dotStep;
+        const int columns = int((rect.right() - dotLeft) / dotStep) + 1;
+        const int rows = int((rect.bottom() - dotTop) / dotStep) + 1;
         QVector<QPointF> points;
         points.reserve(qMax(0, columns) * qMax(0, rows));
-        for (qreal x = left; x < rect.right(); x += step) {
-            for (qreal y = top; y < rect.bottom(); y += step) {
+        for (qreal x = dotLeft; x < rect.right(); x += dotStep) {
+            for (qreal y = dotTop; y < rect.bottom(); y += dotStep) {
                 points.append(QPointF(x, y));
             }
         }
