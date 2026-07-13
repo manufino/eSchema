@@ -110,6 +110,7 @@ void Sheet::clearPrimitives()
     m_connectionDiameter = defaultConnectionDiameterSetting();
     m_lineWidth = defaultLineWidthSetting();
     m_lineWidthCircles = 0.35;
+    clearBackgroundImage();
 
     // Layer lock state (persisted per-file as "FJC K", see FidoCadWriter) is
     // process-wide (LayerList is a singleton, not per-Sheet) - reset it here
@@ -133,4 +134,32 @@ void Sheet::drawForeground(QPainter *painter, const QRectF &)
                 pad->paintHole(painter);
         }
     }
+}
+
+void Sheet::setBackgroundImage(const QString &mimeSubtype, const QString &base64Data,
+                                qreal resolution, const QPointF &corner)
+{
+    m_backgroundImageMimeSubtype = mimeSubtype;
+    m_backgroundImageBase64 = base64Data;
+    m_backgroundImage.loadFromData(QByteArray::fromBase64(base64Data.toLatin1()));
+    m_backgroundImageResolution = resolution > 0 ? resolution : 200.0;
+    m_backgroundImageCorner = corner;
+    update();
+}
+
+void Sheet::clearBackgroundImage()
+{
+    m_backgroundImage = QImage();
+    m_backgroundImageMimeSubtype.clear();
+    m_backgroundImageBase64.clear();
+    update();
+}
+
+QSizeF Sheet::backgroundImageLogicalSize() const
+{
+    if (m_backgroundImage.isNull() || m_backgroundImageResolution <= 0)
+        return QSizeF();
+    constexpr qreal ReferenceDpi = 200.0; // FidoCadJ's logical unit is fixed at 1/200 inch
+    const qreal scale = ReferenceDpi / m_backgroundImageResolution;
+    return QSizeF(m_backgroundImage.width() * scale, m_backgroundImage.height() * scale);
 }

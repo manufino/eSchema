@@ -28,6 +28,7 @@
 
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "DialogAttachImage.h"
 #include "DialogExport.h"
 #include "DialogPrintOptions.h"
 #include "DxfReader.h"
@@ -342,6 +343,7 @@ void MainWindow::setConnections()
     connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::adjustView);
     connect(ui->actionZoomToSelection, &QAction::triggered, ui->graphicsView, &SheetView::adjustViewToSelection);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
+    connect(ui->actionAttachImage, &QAction::triggered, this, &MainWindow::clickAttachImageAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
     connect(ui->btnApplyFcdCode, &QPushButton::clicked, this, &MainWindow::clickApplyFcdCodeAction);
     connect(ui->btnRefreshFcdCode, &QPushButton::clicked, this, &MainWindow::clickRefreshFcdCodeAction);
@@ -682,6 +684,30 @@ void MainWindow::clickLayerManagerAction()
     layerManager = new DialogLayerList(this);
     connect(layerManager, &QDialog::finished, layerManager, &QObject::deleteLater);
     layerManager->show();
+}
+
+void MainWindow::clickAttachImageAction()
+{
+    DialogAttachImage dialog(sheetScene, this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+
+    if (dialog.imageRemoved()) {
+        if (!sheetScene->hasBackgroundImage())
+            return; // nothing to do
+        sheetScene->clearBackgroundImage();
+    } else {
+        if (dialog.mimeSubtype().isEmpty() || dialog.base64Data().isEmpty())
+            return; // OK'd without ever loading an image - a no-op
+        sheetScene->setBackgroundImage(dialog.mimeSubtype(), dialog.base64Data(),
+                                        dialog.resolution(), dialog.corner());
+    }
+
+    // Not itself undoable, matching every other document-config setting
+    // (connection diameter, line width) this mirrors - just marks the
+    // document dirty so the change actually gets offered a save, the same
+    // trick checkForAutosaveRecovery() uses for a recovered drawing.
+    sheetScene->undoStack()->push(new QUndoCommand(tr("Attach tracing image")));
 }
 
 void MainWindow::updateWindowTitle()

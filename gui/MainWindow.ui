@@ -1368,6 +1368,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionLayerManager"/>
+    <addaction name="actionAttachImage"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -2230,6 +2231,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionAttachImage">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Tracing image...</string>
+   </property>
+   <property name="toolTip">
+    <string>Attach or remove a reference image drawn under the grid, for tracing over</string>
    </property>
   </action>
   <action name="actionToolBarBaseVisible">

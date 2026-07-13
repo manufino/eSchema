@@ -273,18 +273,30 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
             // width, circle line width) are stored on the Sheet so
             // FidoCadWriter can re-emit them - see Sheet::connectionDiameter()
             // et al. "K" (layer lock state) is applied straight to the
-            // global LayerList, matching FidoCadWriter's own emission.
-            // Other sub-codes (L/N/IMG - per-layer color/name overrides,
-            // background image placement) are recognized-but-ignored for this
-            // pass, matching the spec's "unknown sub-codes are ignored" rule.
-            // applyDocumentConfig is only true for a genuine whole-document
-            // read() - never for parse()/paste or macro-body expansion, so
-            // this can never clobber layer state mid-paste.
+            // global LayerList, matching FidoCadWriter's own emission. "IMG"
+            // (background tracing image) is an eSchema-only extension - the
+            // reference FidoCadJ editor's own equivalent never persists to
+            // file at all, so this is simply never present in a file it
+            // wrote, and a real FidoCadJ opening one eSchema wrote just skips
+            // it as an unrecognized sub-code, per the "L"/"N" (per-layer
+            // color/name overrides) precedent already noted below.
+            // Other sub-codes (L/N - per-layer color/name overrides) are
+            // recognized-but-ignored for this pass, matching the spec's
+            // "unknown sub-codes are ignored" rule. applyDocumentConfig is
+            // only true for a genuine whole-document read() - never for
+            // parse()/paste or macro-body expansion, so this can never
+            // clobber layer/image state mid-paste.
             if (applyDocumentConfig && tokens.size() >= 3) {
                 if (tokens.at(1) == QStringLiteral("K") && tokens.size() >= 4) {
                     const int layerNum = tokens.at(2).toInt();
                     layerFromIndex(layerNum)->setLocked(
                         tokens.at(3).compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0);
+                } else if (tokens.at(1) == QStringLiteral("IMG") && tokens.size() >= 7) {
+                    const QString mimeSubtype = tokens.at(2);
+                    const qreal resolution = tokens.at(3).toDouble();
+                    const qreal x = tokens.at(4).toDouble();
+                    const qreal y = tokens.at(5).toDouble();
+                    sheet->setBackgroundImage(mimeSubtype, tokens.at(6), resolution, QPointF(x, y));
                 } else {
                     const qreal value = tokens.at(2).toDouble();
                     if (value > 0) {

@@ -57,10 +57,25 @@ void SheetView::setGrid(int size, QColor clr)
     this->update();
 }
 
+void SheetView::drawTracingImage(QPainter *painter, const QRectF &rect)
+{
+    auto *sheet = qobject_cast<Sheet *>(scene());
+    if (!sheet || !sheet->hasBackgroundImage())
+        return;
+
+    const QRectF target(sheet->backgroundImageCorner(), sheet->backgroundImageLogicalSize());
+    if (!target.intersects(rect))
+        return;
+
+    painter->drawImage(target, sheet->backgroundImage());
+}
+
 void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    if (!gridEnabled)
+    if (!gridEnabled) {
+        drawTracingImage(painter, rect);
         return;
+    }
 
     // gridSize is normally clamped to >= 5 by the Options spinbox, but a
     // hand-edited (or pre-existing, pre-clamp) settings file could still
@@ -83,6 +98,8 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     painter->setPen(Qt::NoPen);
     painter->setBrush(QBrush(backgroundColor));
     painter->drawRect(rect);
+
+    drawTracingImage(painter, rect);
 
     // LINEE+PUNTI o LINEE
     if(gridType == Utils::GridType::LinesAndDots || gridType == Utils::GridType::Lines)

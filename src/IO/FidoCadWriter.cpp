@@ -109,6 +109,21 @@ void writeDocumentConfig(QStringList &lines, const Sheet *sheet)
         if (layers->at(i)->isLocked())
             lines << QStringLiteral("FJC K %1 true").arg(i);
     }
+
+    // Background tracing image - an eSchema-only extension (see
+    // FidoCadReader.cpp's own comment on the "IMG" sub-code for why this is
+    // safe to write even though the reference FidoCadJ editor never emits
+    // or reads it). Embedded as base64, matching PrimitiveImage's own "IM"
+    // line convention, rather than a file path, so the reference stays
+    // valid even if the original image file is later moved or deleted.
+    if (sheet->hasBackgroundImage()) {
+        lines << QStringLiteral("FJC IMG %1 %2 %3 %4 %5")
+                     .arg(sheet->backgroundImageMimeSubtype())
+                     .arg(roundIntelligently(sheet->backgroundImageResolution()))
+                     .arg(roundIntelligently(sheet->backgroundImageCorner().x()))
+                     .arg(roundIntelligently(sheet->backgroundImageCorner().y()))
+                     .arg(sheet->backgroundImageBase64());
+    }
 }
 
 } // namespace

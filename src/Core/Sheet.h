@@ -24,6 +24,10 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QList>
 #include <QUndoStack>
+#include <QImage>
+#include <QString>
+#include <QPointF>
+#include <QSizeF>
 
 #include "GraphicsPrimitive.h"
 
@@ -67,6 +71,37 @@ public:
     qreal lineWidthCircles() const { return m_lineWidthCircles; }
     void setLineWidthCircles(qreal width) { m_lineWidthCircles = width; }
 
+    // Background reference image for tracing - an eSchema extension: the
+    // reference FidoCadJ editor's own equivalent (ImageAsCanvas) is
+    // session-only and never written to the .fcd file, but eSchema persists
+    // it as a "FJC IMG" line instead (FidoCadReader.cpp/FidoCadWriter.cpp),
+    // which a real FidoCadJ simply skips as an unrecognized sub-code per the
+    // format's own robustness contract. Distinct from PrimitiveImage (a
+    // placed, selectable drawing element with its own undo history) - this
+    // has neither, and always paints beneath the grid (SheetView::
+    // drawTracingImage()).
+    bool hasBackgroundImage() const { return !m_backgroundImage.isNull(); }
+    const QImage &backgroundImage() const { return m_backgroundImage; }
+    QString backgroundImageMimeSubtype() const { return m_backgroundImageMimeSubtype; }
+    QString backgroundImageBase64() const { return m_backgroundImageBase64; }
+    // Dots per inch, matching the reference editor's own ImageAsCanvas -
+    // combined with the image's native pixel size, this determines its
+    // on-sheet footprint (see backgroundImageLogicalSize()).
+    qreal backgroundImageResolution() const { return m_backgroundImageResolution; }
+    void setBackgroundImageResolution(qreal resolution) { m_backgroundImageResolution = resolution; }
+    QPointF backgroundImageCorner() const { return m_backgroundImageCorner; }
+    void setBackgroundImageCorner(const QPointF &corner) { m_backgroundImageCorner = corner; }
+    // Decodes `base64Data`, replacing any previous background image.
+    void setBackgroundImage(const QString &mimeSubtype, const QString &base64Data,
+                             qreal resolution, const QPointF &corner);
+    void clearBackgroundImage();
+    // The image's footprint in logical units: FidoCadJ's logical unit is
+    // fixed at 1/200 inch, so at the reference resolution (200 dpi) one
+    // image pixel maps to exactly one logical unit; any other resolution
+    // scales proportionally - matching the reference editor's own
+    // ImageAsCanvas.drawCanvasImage() formula.
+    QSizeF backgroundImageLogicalSize() const;
+
 signals:
     // Fired whenever m_primitives changes (add/remove/clear) - drives the
     // status bar's live primitive/macro counters rather than those polling
@@ -96,6 +131,11 @@ private:
     qreal m_connectionDiameter = 2.0;
     qreal m_lineWidth = 0.5;
     qreal m_lineWidthCircles = 0.35;
+    QImage m_backgroundImage;
+    QString m_backgroundImageMimeSubtype;
+    QString m_backgroundImageBase64;
+    qreal m_backgroundImageResolution = 200.0;
+    QPointF m_backgroundImageCorner;
 };
 
 #endif // SHEET_H

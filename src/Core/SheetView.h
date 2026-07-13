@@ -66,6 +66,11 @@ public:
 
 protected:
     void drawBackground (QPainter* painter, const QRectF &rect);
+    // Paints the sheet's tracing reference image (if any), between the flat
+    // background fill and the grid lines - a no-op when none is set. Split
+    // out since drawBackground() has an early-return path when the grid is
+    // off that still needs this to run.
+    void drawTracingImage(QPainter *painter, const QRectF &rect);
     void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent* event);

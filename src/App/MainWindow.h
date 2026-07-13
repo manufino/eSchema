@@ -88,6 +88,7 @@ public slots:
     void clickShortcutsAction();
     void clickCheckUpdatesAction();
     void clickLayerManagerAction();
+    void clickAttachImageAction();
     // FCD code dock (dockFcdCode): Apply re-parses the text box and replaces
     // the whole drawing with it as one undo step; Refresh discards any local
     // edit and regenerates the text from the current drawing. See
