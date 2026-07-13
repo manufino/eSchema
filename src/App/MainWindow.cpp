@@ -67,6 +67,17 @@
 #include <QPainterPath>
 
 namespace {
+// Passed to save/restoreState() so a layout saved by an older build - with a
+// different set of dock widgets/toolbars than the current one - is cleanly
+// rejected by Qt (restoreState() returns false and leaves the .ui's own
+// default arrangement in place) instead of being force-applied onto a
+// mismatched widget set, which could leave the saved QDockAreaLayoutInfo for
+// one area (e.g. Left) internally inconsistent - it looked exactly like
+// "docking to that one side is just broken" until the stale saved state
+// was cleared by hand. Bump this whenever a dock widget or toolbar is
+// added/removed/renamed.
+constexpr int DockStateVersion = 1;
+
 // No bundled icon reads as "snap" the way a magnet does - a plain grid
 // glyph (the obvious alternative) would sit right next to actionShowGrid's
 // own near-identical grid icon and be just as easy to mix up as the two
@@ -154,7 +165,23 @@ MainWindow::MainWindow(QWidget *parent)
     // default arrangement in place.
     const QByteArray dockState = SettingsManager::getInstance().loadSetting("window_dock_state").toByteArray();
     if (!dockState.isEmpty())
-        restoreState(dockState);
+        restoreState(dockState, DockStateVersion);
+
+    // Must run *after* restoreState(): corner ownership is itself part of
+    // the state blob QMainWindow::saveState() writes, so restoring an old
+    // one (saved before this fix, or just Qt's own compiled-in default)
+    // would silently overwrite whatever was set above. Qt's own default
+    // hands both top corners to Qt::TopDockWidgetArea and both bottom
+    // corners to Qt::BottomDockWidgetArea - since this app has no dock
+    // widgets there (only the horizontal toolbar), that pinched the left
+    // edge's actual drop zone thin right where users naturally try to drag a
+    // panel (just below the toolbar), reading as "docking only works on the
+    // right". Explicitly giving each side's corners to that same side fixes
+    // it symmetrically for both left and right.
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
     layerToolBarWidget = new LayerToolBarWidget(this);
     ui->toolBarTools->addWidget(layerToolBarWidget); // add the layer combobox to the toolbar
@@ -813,7 +840,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         // Persists the current dock/toolbar arrangement (Libraries/Properties
         // panel position, size, floating, tabbing) so it's restored exactly
         // as left on the next launch - see the constructor's restoreState().
-        SettingsManager::getInstance().saveSetting("window_dock_state", saveState());
+        SettingsManager::getInstance().saveSetting("window_dock_state", saveState(DockStateVersion));
         // A clean, deliberate exit - nothing left to recover next launch.
         clearAutosave();
         event->accept();
