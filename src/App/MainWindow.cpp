@@ -514,6 +514,7 @@ void MainWindow::setConnections()
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::clickPasteAction);
     connect(ui->actionDuplicate, &QAction::triggered, this, &MainWindow::clickDuplicateAction);
     connect(ui->actionSelectAll, &QAction::triggered, this, &MainWindow::clickSelectAllAction);
+    connect(ui->actionFind, &QAction::triggered, this, &MainWindow::clickFindAction);
     connect(ui->actionAlignLeft, &QAction::triggered, this, &MainWindow::clickAlignLeftAction);
     connect(ui->actionAlignRight, &QAction::triggered, this, &MainWindow::clickAlignRightAction);
     connect(ui->actionAlignTop, &QAction::triggered, this, &MainWindow::clickAlignTopAction);

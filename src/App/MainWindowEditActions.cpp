@@ -38,7 +38,9 @@
 #include "LibraryManager.h"
 #include "PrimitiveMacro.h"
 #include "PrimitiveImage.h"
+#include "PrimitiveText.h"
 #include "DialogCreateMacro.h"
+#include "DialogFind.h"
 #include <QGuiApplication>
 #include <QClipboard>
 #include <QMimeData>
@@ -362,6 +364,79 @@ void MainWindow::clickSelectAllAction()
 {
     for (QGraphicsItem *item : sheetScene->items())
         item->setSelected(true);
+}
+
+void MainWindow::clickFindAction()
+{
+    if (!findDialog) {
+        findDialog = new DialogFind(this);
+        connect(findDialog, &DialogFind::findNext, this, [this](const QString &text) {
+            findInDrawing(text, +1);
+        });
+        connect(findDialog, &DialogFind::findPrevious, this, [this](const QString &text) {
+            findInDrawing(text, -1);
+        });
+    }
+    findDialog->show();
+    findDialog->raise();
+    findDialog->activateWindow();
+}
+
+// Searches every primitive's name()/value() (the FIDOSPECS "TY" attached
+// labels, e.g. a resistor's "R1"/"10k"), PrimitiveText content, and macro
+// display names (not the raw lookup key - the reader wants what's actually
+// shown in the library panel) across the whole sheet, cycling forward/
+// backward through the matches and wrapping around at either end. A new
+// search string always restarts from the first match, matching a typical
+// text editor's Ctrl+F.
+void MainWindow::findInDrawing(const QString &text, int direction)
+{
+    if (text != lastFindText) {
+        lastFindText = text;
+        lastFindIndex = -1;
+    }
+
+    if (text.trimmed().isEmpty()) {
+        findDialog->setStatusText(QString());
+        return;
+    }
+
+    QList<GraphicsPrimitive *> matches;
+    for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
+        // name()/value() are the FIDOSPECS "TY" attached labels (e.g. a
+        // resistor macro's "R1"/"10k") - GraphicsPrimitive base class state,
+        // so checked for every primitive type, not just text/macro.
+        bool matched = primitive->name().contains(text, Qt::CaseInsensitive)
+                || primitive->value().contains(text, Qt::CaseInsensitive);
+
+        if (!matched && primitive->getPrimitiveType() == GraphicsPrimitive::Text) {
+            matched = static_cast<PrimitiveText *>(primitive)->text().contains(text, Qt::CaseInsensitive);
+        } else if (!matched && primitive->getPrimitiveType() == GraphicsPrimitive::PartLib) {
+            auto *macroPrimitive = static_cast<PrimitiveMacro *>(primitive);
+            const MacroDescriptor *descriptor = LibraryManager::getInstance().macro(macroPrimitive->macroName());
+            const QString macroLabel = descriptor ? descriptor->name : macroPrimitive->macroName();
+            matched = macroLabel.contains(text, Qt::CaseInsensitive);
+        }
+
+        if (matched)
+            matches.append(primitive);
+    }
+
+    if (matches.isEmpty()) {
+        sheetScene->clearSelection();
+        findDialog->setStatusText(tr("No matches"));
+        lastFindIndex = -1;
+        return;
+    }
+
+    lastFindIndex = (lastFindIndex + direction + matches.size()) % matches.size();
+    GraphicsPrimitive *match = matches.at(lastFindIndex);
+
+    sheetScene->clearSelection();
+    match->setSelected(true);
+    ui->graphicsView->centerOn(match->sceneBoundingRect().center());
+
+    findDialog->setStatusText(tr("%1 of %2").arg(lastFindIndex + 1).arg(matches.size()));
 }
 
 // Applies each primitive's computed delta as an undoable MovePrimitiveCommand

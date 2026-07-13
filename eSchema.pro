@@ -82,6 +82,7 @@ SOURCES += \
 	src/Dialogs/DialogAbout.cpp \
 	src/Dialogs/DialogCreateMacro.cpp \
 	src/Dialogs/DialogExport.cpp \
+	src/Dialogs/DialogFind.cpp \
 	src/Dialogs/DialogPrintOptions.cpp \
 	src/Dialogs/DialogLayerList.cpp \
 	src/Dialogs/DialogOptions.cpp \
@@ -152,6 +153,7 @@ HEADERS += \
 	src/Dialogs/DialogAbout.h \
 	src/Dialogs/DialogCreateMacro.h \
 	src/Dialogs/DialogExport.h \
+	src/Dialogs/DialogFind.h \
 	src/Dialogs/DialogPrintOptions.h \
 	src/Dialogs/DialogLayerList.h \
 	src/Dialogs/DialogOptions.h \
@@ -178,6 +180,7 @@ FORMS += \
 	gui/DialogAbout.ui \
 	gui/DialogCreateMacro.ui \
 	gui/DialogExport.ui \
+	gui/DialogFind.ui \
 	gui/DialogPrintOptions.ui \
 	gui/DialogLayerList.ui \
 	gui/DialogOptions.ui \

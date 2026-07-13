@@ -53,6 +53,7 @@ class QDropEvent;
 class QMimeData;
 class QTimer;
 class QImage;
+class DialogFind;
 
 class MainWindow : public QMainWindow
 {
@@ -95,6 +96,7 @@ public slots:
     void clickPasteAction();
     void clickDuplicateAction();
     void clickSelectAllAction();
+    void clickFindAction();
     void clickAlignLeftAction();
     void clickAlignRightAction();
     void clickAlignTopAction();
@@ -181,6 +183,12 @@ private:
     // instead of FCD text - builds a new PrimitiveImage from it and adds it
     // the same undo-stack way. See its definition for details.
     void pasteImageFromClipboard(const QImage &image);
+    // Shared by DialogFind's findNext()/findPrevious() signals - direction
+    // is +1 or -1. Searches every primitive's name/value labels, text
+    // content, and macro display names across the whole sheet, wrapping
+    // around, and centers+selects whatever it lands on. See its definition
+    // for the matching/cycling details.
+    void findInDrawing(const QString &text, int direction);
     // Shared tail end of every align/distribute action: applies each
     // primitive's computed delta (skipping no-ops) as an undoable
     // MovePrimitiveCommand, macro-grouped so the whole alignment undoes in
@@ -273,6 +281,9 @@ private:
     DialogAbout *aboutDialog;
     DialogLayerList *layerManager;
     DialogShortcuts *shortcutsDialog;
+    DialogFind *findDialog = nullptr; // created lazily on first Ctrl+F
+    QString lastFindText;
+    int lastFindIndex = -1;
     LayerToolBarWidget *layerToolBarWidget;
     PrimitivePlacementController *placementController;
     SelectionHandleController *selectionHandleController;
