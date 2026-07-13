@@ -1249,6 +1249,7 @@
     <addaction name="actionRulersVisible"/>
     <addaction name="separator"/>
     <addaction name="actionAdjustView"/>
+    <addaction name="actionZoomToSelection"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -1992,6 +1993,21 @@
    </property>
    <property name="toolTip">
     <string>Adatta la vista del disegno</string>
+   </property>
+  </action>
+  <action name="actionZoomToSelection">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/zoom-in-line.png</normaloff>:/res/resources/remix/zoom-in-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Adatta la vista alla selezione</string>
+   </property>
+   <property name="toolTip">
+    <string>Adatta la vista al riquadro degli elementi selezionati</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F</string>
    </property>
   </action>
   <action name="actionShortcuts">

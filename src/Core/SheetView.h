@@ -92,6 +92,10 @@ private:
 public slots:
     void settingChanged();
     void adjustView();
+    // Fits the view to the bounding box of the current selection - a no-op
+    // when nothing is selected, so it never surprises the user by silently
+    // falling back to fit-all.
+    void adjustViewToSelection();
 
 signals:
     void mouseMoved(QPointF point);

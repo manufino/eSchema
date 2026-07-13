@@ -233,6 +233,7 @@ void MainWindow::setConnections()
         ui->statusbar->primitiveCounts(sheetScene->primitives().size(), macroCount);
     });
     connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::adjustView);
+    connect(ui->actionZoomToSelection, &QAction::triggered, ui->graphicsView, &SheetView::adjustViewToSelection);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
     connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);

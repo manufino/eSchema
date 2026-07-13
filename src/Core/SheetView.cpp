@@ -353,6 +353,23 @@ void SheetView::adjustView()
     emit viewTransformChanged();
 }
 
+void SheetView::adjustViewToSelection()
+{
+    const QList<QGraphicsItem *> selected = scene()->selectedItems();
+    if (selected.isEmpty())
+        return;
+
+    QRectF bounds;
+    bool first = true;
+    for (QGraphicsItem *item : selected) {
+        bounds = first ? item->sceneBoundingRect() : bounds.united(item->sceneBoundingRect());
+        first = false;
+    }
+    fitInView(bounds, Qt::KeepAspectRatio);
+    zoomUpdate();
+    emit viewTransformChanged();
+}
+
 void SheetView::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
