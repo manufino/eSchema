@@ -273,5 +273,11 @@ private:
     SelectionHandleController *selectionHandleController;
     QString currentFilePath; // empty = new/unsaved drawing
     QTimer *autosaveTimer;
+    // Set by clickPrintAction() from the just-accepted DialogPrintOptions,
+    // read back by renderForPrint() - see its own comment for why these
+    // can't just be local variables passed as arguments.
+    bool m_printMirror = false;
+    bool m_printBlackWhite = false;
+    Layer *m_printOneLayer = nullptr; // non-null = print only this layer
 };
 #endif // MAINWINDOW_H

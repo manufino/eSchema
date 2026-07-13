@@ -29,6 +29,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "DialogExport.h"
+#include "DialogPrintOptions.h"
 #include "DxfReader.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
@@ -938,6 +939,17 @@ void MainWindow::clickPrintAction()
         return;
     }
 
+    DialogPrintOptions optionsDialog(this);
+    if (optionsDialog.exec() != QDialog::Accepted)
+        return;
+
+    // Read once here and stashed in members for renderForPrint() (a slot
+    // invoked once per repaint by QPrintPreviewDialog, with no way to pass
+    // extra arguments through paintRequested()) to read back.
+    m_printMirror = optionsDialog.mirror();
+    m_printBlackWhite = optionsDialog.blackWhite();
+    m_printOneLayer = optionsDialog.singleLayer();
+
     // Selection highlighting (the selected-primitive green blend) and resize
     // handles are editor chrome, not part of the drawing - hide them for the
     // whole preview/print session by clearing the selection up front (rather
@@ -948,6 +960,15 @@ void MainWindow::clickPrintAction()
     sheetScene->clearSelection();
 
     QPrinter printer(QPrinter::HighResolution);
+    printer.setPageOrientation(optionsDialog.landscape() ? QPageLayout::Landscape
+                                                          : QPageLayout::Portrait);
+    double marginTop, marginBottom, marginLeft, marginRight;
+    optionsDialog.margins(&marginTop, &marginBottom, &marginLeft, &marginRight);
+    // QPageLayout::Unit has no Centimeter value - convert from the dialog's
+    // centimeters to millimeters.
+    printer.setPageMargins(QMarginsF(marginLeft, marginTop, marginRight, marginBottom) * 10.0,
+                            QPageLayout::Millimeter);
+
     QPrintPreviewDialog preview(&printer, this);
     preview.setWindowTitle(tr("Anteprima di stampa"));
     connect(&preview, &QPrintPreviewDialog::paintRequested, this, &MainWindow::renderForPrint);
@@ -959,24 +980,62 @@ void MainWindow::clickPrintAction()
 
 void MainWindow::renderForPrint(QPrinter *printer)
 {
+    // "Print only this layer": hide every other layer's primitives for this
+    // render pass, through the same primitive-owned visibility flag the CLI/
+    // export split-layer paths already use (paint() early-returns on it -
+    // independent of the real QGraphicsItem visibility layer hiding drives,
+    // so it doesn't disturb the editor view underneath the preview dialog).
+    const QList<GraphicsPrimitive *> primitives = sheetScene->primitives();
+    if (m_printOneLayer) {
+        for (GraphicsPrimitive *primitive : primitives)
+            primitive->setVisible(primitive->layer() == m_printOneLayer);
+    }
+
+    // Black & white: temporarily paint every layer black - primitives read
+    // their layer's color live at paint time (GraphicsPrimitive::drawColor()).
+    QList<Layer *> *layers = LayerList::getInstance().getList();
+    QHash<Layer *, QColor> savedColors;
+    if (m_printBlackWhite) {
+        for (Layer *layer : *layers) {
+            savedColors.insert(layer, layer->color());
+            layer->setColor(QColor(Qt::black));
+        }
+    }
+
     const QRectF sourceRect = sheetScene->itemsBoundingRect();
-    if (sourceRect.isEmpty())
-        return;
+    if (!sourceRect.isEmpty()) {
+        const QRect targetRect = printer->pageLayout().paintRectPixels(printer->resolution());
 
-    const QRect targetRect = printer->pageLayout().paintRectPixels(printer->resolution());
+        // Fit the drawing within the printable area, preserving aspect ratio
+        // and centering it - a schematic's shape rarely matches the page's,
+        // and stretching it unevenly would distort right angles and text.
+        const qreal scale = qMin(targetRect.width() / sourceRect.width(),
+                                  targetRect.height() / sourceRect.height());
+        const QSizeF scaledSize = sourceRect.size() * scale;
+        const QRectF centeredTarget(targetRect.left() + (targetRect.width() - scaledSize.width()) / 2.0,
+                                     targetRect.top() + (targetRect.height() - scaledSize.height()) / 2.0,
+                                     scaledSize.width(), scaledSize.height());
 
-    // Fit the drawing within the printable area, preserving aspect ratio and
-    // centering it - a schematic's shape rarely matches the page's, and
-    // stretching it unevenly would distort right angles and text.
-    const qreal scale = qMin(targetRect.width() / sourceRect.width(),
-                              targetRect.height() / sourceRect.height());
-    const QSizeF scaledSize = sourceRect.size() * scale;
-    const QRectF centeredTarget(targetRect.left() + (targetRect.width() - scaledSize.width()) / 2.0,
-                                 targetRect.top() + (targetRect.height() - scaledSize.height()) / 2.0,
-                                 scaledSize.width(), scaledSize.height());
+        QPainter painter(printer);
+        if (m_printMirror) {
+            // Flips left-right around the printed area's own center, keeping
+            // it in the same place on the page rather than jumping to the
+            // opposite side - useful for iron-on toner-transfer PCB etching.
+            painter.translate(centeredTarget.center());
+            painter.scale(-1, 1);
+            painter.translate(-centeredTarget.center());
+        }
+        sheetScene->render(&painter, centeredTarget, sourceRect);
+    }
 
-    QPainter painter(printer);
-    sheetScene->render(&painter, centeredTarget, sourceRect);
+    if (m_printBlackWhite) {
+        for (auto it = savedColors.constBegin(); it != savedColors.constEnd(); ++it)
+            it.key()->setColor(it.value());
+    }
+    if (m_printOneLayer) {
+        for (GraphicsPrimitive *primitive : primitives)
+            primitive->setVisible(true);
+    }
 }
 
 void MainWindow::clickExportAction()

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogPrintOptions</class>
+ <widget class="QDialog" name="DialogPrintOptions">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>360</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Opzioni di stampa</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="chkMirror">
+     <property name="text">
+      <string>Specchia</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="chkBlackWhite">
+     <property name="text">
+      <string>Bianco e nero</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="chkLandscape">
+     <property name="text">
+      <string>Orizzontale</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupMargins">
+     <property name="title">
+      <string>Margini (cm)</string>
+     </property>
+     <layout class="QGridLayout" name="gridMargins">
+      <item row="0" column="0">
+       <widget class="QLabel" name="lblMarginTop">
+        <property name="text">
+         <string>Superiore</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QDoubleSpinBox" name="spinMarginTop">
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="lblMarginBottom">
+        <property name="text">
+         <string>Inferiore</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QDoubleSpinBox" name="spinMarginBottom">
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lblMarginLeft">
+        <property name="text">
+         <string>Sinistro</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spinMarginLeft">
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="lblMarginRight">
+        <property name="text">
+         <string>Destro</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QDoubleSpinBox" name="spinMarginRight">
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="layoutOneLayer">
+     <item>
+      <widget class="QCheckBox" name="chkOneLayer">
+       <property name="text">
+        <string>Stampa solo il layer:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="LayerComboBox" name="cbPrintLayer">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LayerComboBox</class>
+   <extends>QComboBox</extends>
+   <header>LayerComboBox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DialogPrintOptions</receiver>
+   <slot>accept()</slot>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DialogPrintOptions</receiver>
+   <slot>reject()</slot>
+  </connection>
+  <connection>
+   <sender>chkOneLayer</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>cbPrintLayer</receiver>
+   <slot>setEnabled(bool)</slot>
+  </connection>
+ </connections>
+</ui>
