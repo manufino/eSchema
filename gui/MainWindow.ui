@@ -85,7 +85,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>Librerie</string>
+    <string>Libraries</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -119,7 +119,7 @@
         <string notr="true"/>
        </property>
        <property name="placeholderText">
-        <string>Cerca nelle librerie ...</string>
+        <string>Search libraries ...</string>
        </property>
        <property name="clearButtonEnabled">
         <bool>true</bool>
@@ -230,7 +230,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>Proprietà</string>
+    <string>Properties</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -264,7 +264,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Nome</string>
+        <string>Name</string>
        </property>
       </widget>
      </item>
@@ -305,7 +305,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Font testo</string>
+        <string>Text font</string>
        </property>
       </widget>
      </item>
@@ -337,7 +337,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Stile linea</string>
+        <string>Line style</string>
        </property>
       </widget>
      </item>
@@ -350,7 +350,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Riempimento</string>
+        <string>Fill</string>
        </property>
       </widget>
      </item>
@@ -417,7 +417,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Valore</string>
+        <string>Value</string>
        </property>
       </widget>
      </item>
@@ -459,7 +459,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Opacità</string>
+        <string>Opacity</string>
        </property>
       </widget>
      </item>
@@ -503,7 +503,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Mantieni proporzioni</string>
+        <string>Keep aspect ratio</string>
        </property>
       </widget>
      </item>
@@ -526,7 +526,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Bianco e nero</string>
+        <string>Black and white</string>
        </property>
       </widget>
      </item>
@@ -546,7 +546,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Freccia iniziale</string>
+        <string>Start arrow</string>
        </property>
       </widget>
      </item>
@@ -566,7 +566,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Freccia finale</string>
+        <string>End arrow</string>
        </property>
       </widget>
      </item>
@@ -586,7 +586,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Freccia vuota</string>
+        <string>Hollow arrow</string>
        </property>
       </widget>
      </item>
@@ -606,7 +606,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Barra limitatrice</string>
+        <string>Limiter bar</string>
        </property>
       </widget>
      </item>
@@ -626,7 +626,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Lunghezza freccia</string>
+        <string>Arrow length</string>
        </property>
       </widget>
      </item>
@@ -670,7 +670,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Larghezza freccia</string>
+        <string>Arrow width</string>
        </property>
       </widget>
      </item>
@@ -714,7 +714,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Curva chiusa</string>
+        <string>Closed curve</string>
        </property>
       </widget>
      </item>
@@ -734,7 +734,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Larghezza traccia</string>
+        <string>Track width</string>
        </property>
       </widget>
      </item>
@@ -778,7 +778,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Larghezza pad</string>
+        <string>Pad width</string>
        </property>
       </widget>
      </item>
@@ -822,7 +822,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Altezza pad</string>
+        <string>Pad height</string>
        </property>
       </widget>
      </item>
@@ -866,7 +866,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Diametro foro</string>
+        <string>Hole diameter</string>
        </property>
       </widget>
      </item>
@@ -910,7 +910,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Stile pad</string>
+        <string>Pad style</string>
        </property>
       </widget>
      </item>
@@ -930,17 +930,17 @@
        </property>
        <item>
         <property name="text">
-         <string>Tondo</string>
+         <string>Round</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Rettangolare</string>
+         <string>Rectangular</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Rettangolare arrotondato</string>
+         <string>Rounded rectangular</string>
         </property>
        </item>
       </widget>
@@ -954,7 +954,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Testo</string>
+        <string>Text</string>
        </property>
       </widget>
      </item>
@@ -973,7 +973,7 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>Usa ^ per l'apice e _ per il pedice (es. R^2, V_out); ogni ^ o _ in più annida di un livello. Usa \^ e \_ per scrivere i caratteri ^ e _.</string>
+        <string>Use ^ for superscript and _ for subscript (e.g. R^2, V_out); each extra ^ or _ nests one level deeper. Use \^ and \_ to write the literal ^ and _ characters.</string>
        </property>
       </widget>
      </item>
@@ -986,7 +986,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Larghezza carattere</string>
+        <string>Character width</string>
        </property>
       </widget>
      </item>
@@ -1024,7 +1024,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Altezza carattere</string>
+        <string>Character height</string>
        </property>
       </widget>
      </item>
@@ -1062,7 +1062,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Orientamento</string>
+        <string>Orientation</string>
        </property>
       </widget>
      </item>
@@ -1106,7 +1106,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Grassetto</string>
+        <string>Bold</string>
        </property>
       </widget>
      </item>
@@ -1126,7 +1126,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Corsivo</string>
+        <string>Italic</string>
        </property>
       </widget>
      </item>
@@ -1146,7 +1146,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Specchiato</string>
+        <string>Mirrored</string>
        </property>
       </widget>
      </item>
@@ -1201,7 +1201,7 @@
    </widget>
    <widget class="QMenu" name="menuRecentFiles">
     <property name="title">
-     <string>Apri recenti</string>
+     <string>Open recent</string>
     </property>
     <property name="icon">
      <iconset resource="../resources.qrc">
@@ -1210,7 +1210,7 @@
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Modifica</string>
+     <string>Edit</string>
     </property>
     <addaction name="actionUndo"/>
     <addaction name="actionRestore"/>
@@ -1242,7 +1242,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>Visualizza</string>
+     <string>View</string>
     </property>
     <addaction name="actionToolBarBaseVisible"/>
     <addaction name="actionToolBarPrimitiveVisible"/>
@@ -1253,7 +1253,7 @@
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>Strumenti</string>
+     <string>Tools</string>
     </property>
     <addaction name="actionLayerManager"/>
     <addaction name="separator"/>
@@ -1261,7 +1261,7 @@
    </widget>
    <widget class="QMenu" name="menuInformation">
     <property name="title">
-     <string>Informazioni</string>
+     <string>Help</string>
     </property>
     <addaction name="actionInformation"/>
     <addaction name="actionAbout_Qt"/>
@@ -1382,7 +1382,7 @@
      <normaloff>:/res/resources/remix/sticky-note-add-line.png</normaloff>:/res/resources/remix/sticky-note-add-line.png</iconset>
    </property>
    <property name="text">
-    <string>Nuovo disegno</string>
+    <string>New drawing</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -1397,7 +1397,7 @@
      <normaloff>:/res/resources/remix/folder-open-line.png</normaloff>:/res/resources/remix/folder-open-line.png</iconset>
    </property>
    <property name="text">
-    <string>Apri un file</string>
+    <string>Open a file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -1409,7 +1409,7 @@
      <normaloff>:/res/resources/remix/folder-add-line.png</normaloff>:/res/resources/remix/folder-add-line.png</iconset>
    </property>
    <property name="text">
-    <string>Importa da DXF...</string>
+    <string>Import from DXF...</string>
    </property>
   </action>
   <action name="actionSave">
@@ -1421,7 +1421,7 @@
      <normaloff>:/res/resources/remix/save-3-line.png</normaloff>:/res/resources/remix/save-3-line.png</iconset>
    </property>
    <property name="text">
-    <string>Salva</string>
+    <string>Save</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -1436,7 +1436,7 @@
      <normaloff>:/res/resources/remix/save-3-fill.png</normaloff>:/res/resources/remix/save-3-fill.png</iconset>
    </property>
    <property name="text">
-    <string>Salva con nome</string>
+    <string>Save as</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
@@ -1448,7 +1448,7 @@
      <normaloff>:/res/resources/remix/printer-line.png</normaloff>:/res/resources/remix/printer-line.png</iconset>
    </property>
    <property name="text">
-    <string>Stampa</string>
+    <string>Print</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
@@ -1460,7 +1460,7 @@
      <normaloff>:/res/resources/remix/close-line.png</normaloff>:/res/resources/remix/close-line.png</iconset>
    </property>
    <property name="text">
-    <string>Chiudi</string>
+    <string>Close</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
@@ -1472,10 +1472,10 @@
      <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
    </property>
    <property name="text">
-    <string>Esporta...</string>
+    <string>Export...</string>
    </property>
    <property name="toolTip">
-    <string>Esporta il disegno come PNG, JPG, SVG, PDF, EPS o DXF</string>
+    <string>Export the drawing as PNG, JPG, SVG, PDF, EPS, or DXF</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
@@ -1490,7 +1490,7 @@
      <normaloff>:/res/resources/remix/arrow-go-back-line.png</normaloff>:/res/resources/remix/arrow-go-back-line.png</iconset>
    </property>
    <property name="text">
-    <string>Annulla</string>
+    <string>Undo</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Z</string>
@@ -1505,7 +1505,7 @@
      <normaloff>:/res/resources/remix/arrow-go-forward-line.png</normaloff>:/res/resources/remix/arrow-go-forward-line.png</iconset>
    </property>
    <property name="text">
-    <string>Ripristina</string>
+    <string>Redo</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+Z</string>
@@ -1520,7 +1520,7 @@
      <normaloff>:/res/resources/remix/scissors-cut-fill.png</normaloff>:/res/resources/remix/scissors-cut-fill.png</iconset>
    </property>
    <property name="text">
-    <string>Taglia</string>
+    <string>Cut</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
@@ -1535,7 +1535,7 @@
      <normaloff>:/res/resources/remix/file-copy-2-fill.png</normaloff>:/res/resources/remix/file-copy-2-fill.png</iconset>
    </property>
    <property name="text">
-    <string>Copia</string>
+    <string>Copy</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
@@ -1547,10 +1547,10 @@
      <normaloff>:/res/resources/remix/image-2-line.png</normaloff>:/res/resources/remix/image-2-line.png</iconset>
    </property>
    <property name="text">
-    <string>Copia come immagine</string>
+    <string>Copy as image</string>
    </property>
    <property name="toolTip">
-    <string>Copia la selezione (o tutto il disegno) negli appunti come immagine</string>
+    <string>Copy the selection (or the whole drawing) to the clipboard as an image</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
@@ -1565,7 +1565,7 @@
      <normaloff>:/res/resources/remix/clipboard-fill.png</normaloff>:/res/resources/remix/clipboard-fill.png</iconset>
    </property>
    <property name="text">
-    <string>Incolla</string>
+    <string>Paste</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
@@ -1580,7 +1580,7 @@
      <normaloff>:/res/resources/remix/file-copy-line.png</normaloff>:/res/resources/remix/file-copy-line.png</iconset>
    </property>
    <property name="text">
-    <string>Duplica</string>
+    <string>Duplicate</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
@@ -1595,7 +1595,7 @@
      <normaloff>:/res/resources/remix/clockwise-fill.png</normaloff>:/res/resources/remix/clockwise-fill.png</iconset>
    </property>
    <property name="text">
-    <string>Ruota</string>
+    <string>Rotate</string>
    </property>
    <property name="shortcut">
     <string>R</string>
@@ -1610,7 +1610,7 @@
      <normaloff>:/res/resources/symmetry.png</normaloff>:/res/resources/symmetry.png</iconset>
    </property>
    <property name="text">
-    <string>Specchia</string>
+    <string>Mirror</string>
    </property>
    <property name="shortcut">
     <string>S</string>
@@ -1622,7 +1622,7 @@
      <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
    </property>
    <property name="text">
-    <string>Converti macro in primitive</string>
+    <string>Convert macro to primitives</string>
    </property>
   </action>
   <action name="actionCreateMacro">
@@ -1634,7 +1634,7 @@
      <normaloff>:/res/resources/remix/folder-add-line.png</normaloff>:/res/resources/remix/folder-add-line.png</iconset>
    </property>
    <property name="text">
-    <string>Crea macro dalla selezione...</string>
+    <string>Create macro from selection...</string>
    </property>
   </action>
   <action name="actionAlignLeft">
@@ -1643,7 +1643,7 @@
      <normaloff>:/res/resources/align/align_left.png</normaloff>:/res/resources/align/align_left.png</iconset>
    </property>
    <property name="text">
-    <string>Allinea a sinistra</string>
+    <string>Align left</string>
    </property>
   </action>
   <action name="actionAlignRight">
@@ -1652,7 +1652,7 @@
      <normaloff>:/res/resources/align/align_right.png</normaloff>:/res/resources/align/align_right.png</iconset>
    </property>
    <property name="text">
-    <string>Allinea a destra</string>
+    <string>Align right</string>
    </property>
   </action>
   <action name="actionAlignTop">
@@ -1661,7 +1661,7 @@
      <normaloff>:/res/resources/align/align_top.png</normaloff>:/res/resources/align/align_top.png</iconset>
    </property>
    <property name="text">
-    <string>Allinea in alto</string>
+    <string>Align top</string>
    </property>
   </action>
   <action name="actionAlignBottom">
@@ -1670,7 +1670,7 @@
      <normaloff>:/res/resources/align/align_bottom.png</normaloff>:/res/resources/align/align_bottom.png</iconset>
    </property>
    <property name="text">
-    <string>Allinea in basso</string>
+    <string>Align bottom</string>
    </property>
   </action>
   <action name="actionAlignCenterHorizontal">
@@ -1679,7 +1679,7 @@
      <normaloff>:/res/resources/align/align_horizontal_center.png</normaloff>:/res/resources/align/align_horizontal_center.png</iconset>
    </property>
    <property name="text">
-    <string>Allinea al centro orizzontale</string>
+    <string>Align horizontal center</string>
    </property>
   </action>
   <action name="actionAlignCenterVertical">
@@ -1688,7 +1688,7 @@
      <normaloff>:/res/resources/align/align_vertical_center.png</normaloff>:/res/resources/align/align_vertical_center.png</iconset>
    </property>
    <property name="text">
-    <string>Allinea al centro verticale</string>
+    <string>Align vertical center</string>
    </property>
   </action>
   <action name="actionDistributeHorizontal">
@@ -1697,7 +1697,7 @@
      <normaloff>:/res/resources/align/distribute_horizontal.png</normaloff>:/res/resources/align/distribute_horizontal.png</iconset>
    </property>
    <property name="text">
-    <string>Distribuisci orizzontalmente</string>
+    <string>Distribute horizontally</string>
    </property>
   </action>
   <action name="actionDistributeVertical">
@@ -1706,7 +1706,7 @@
      <normaloff>:/res/resources/align/distribute_vertical.png</normaloff>:/res/resources/align/distribute_vertical.png</iconset>
    </property>
    <property name="text">
-    <string>Distribuisci verticalmente</string>
+    <string>Distribute vertically</string>
    </property>
   </action>
   <action name="actionSelectAll">
@@ -1718,7 +1718,7 @@
      <normaloff>:/res/resources/remix/check-double-line.png</normaloff>:/res/resources/remix/check-double-line.png</iconset>
    </property>
    <property name="text">
-    <string>Seleziona tutto</string>
+    <string>Select all</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
@@ -1733,7 +1733,7 @@
      <normaloff>:/res/resources/remix/chat-delete-line.png</normaloff>:/res/resources/remix/chat-delete-line.png</iconset>
    </property>
    <property name="text">
-    <string>Elimina</string>
+    <string>Delete</string>
    </property>
    <property name="shortcut">
     <string>Del</string>
@@ -1748,7 +1748,7 @@
      <normaloff>:/res/resources/remix/settings-3-line.png</normaloff>:/res/resources/remix/settings-3-line.png</iconset>
    </property>
    <property name="text">
-    <string>Opzioni</string>
+    <string>Options</string>
    </property>
   </action>
   <action name="actionInformation">
@@ -1757,12 +1757,12 @@
      <normaloff>:/res/resources/data-structure.png</normaloff>:/res/resources/data-structure.png</iconset>
    </property>
    <property name="text">
-    <string>Informazioni su eSchema</string>
+    <string>About eSchema</string>
    </property>
   </action>
   <action name="actionAbout_Qt">
    <property name="text">
-    <string>Informazioni su Qt</string>
+    <string>About Qt</string>
    </property>
   </action>
   <action name="actionLine">
@@ -1939,10 +1939,10 @@
      <normaloff>:/res/resources/pcbline.png</normaloff>:/res/resources/pcbline.png</iconset>
    </property>
    <property name="text">
-    <string>PCB Track</string>
+    <string>PCB track</string>
    </property>
    <property name="toolTip">
-    <string>PCB Track</string>
+    <string>PCB track</string>
    </property>
    <property name="shortcut">
     <string>I</string>
@@ -1957,10 +1957,10 @@
      <normaloff>:/res/resources/pcbpad.png</normaloff>:/res/resources/pcbpad.png</iconset>
    </property>
    <property name="text">
-    <string>PCB Pad</string>
+    <string>PCB pad</string>
    </property>
    <property name="toolTip">
-    <string>PCB Pad</string>
+    <string>PCB pad</string>
    </property>
    <property name="shortcut">
     <string>Z</string>
@@ -1975,10 +1975,10 @@
      <normaloff>:/res/resources/image.png</normaloff>:/res/resources/image.png</iconset>
    </property>
    <property name="text">
-    <string>Immagine</string>
+    <string>Image</string>
    </property>
    <property name="toolTip">
-    <string>Immagine</string>
+    <string>Image</string>
    </property>
    <property name="shortcut">
     <string>M</string>
@@ -1993,10 +1993,10 @@
      <normaloff>:/res/resources/adjustView.png</normaloff>:/res/resources/adjustView.png</iconset>
    </property>
    <property name="text">
-    <string>Adatta la vista</string>
+    <string>Fit view</string>
    </property>
    <property name="toolTip">
-    <string>Adatta la vista del disegno</string>
+    <string>Fit the drawing view</string>
    </property>
   </action>
   <action name="actionZoomToSelection">
@@ -2005,10 +2005,10 @@
      <normaloff>:/res/resources/remix/zoom-in-line.png</normaloff>:/res/resources/remix/zoom-in-line.png</iconset>
    </property>
    <property name="text">
-    <string>Adatta la vista alla selezione</string>
+    <string>Fit the view to the selection</string>
    </property>
    <property name="toolTip">
-    <string>Adatta la vista al riquadro degli elementi selezionati</string>
+    <string>Fit the view to the bounding box of the selected elements</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+F</string>
@@ -2023,10 +2023,10 @@
      <normaloff>:/res/resources/remix/grid-line.png</normaloff>:/res/resources/remix/grid-line.png</iconset>
    </property>
    <property name="text">
-    <string>Mostra griglia</string>
+    <string>Show grid</string>
    </property>
    <property name="toolTip">
-    <string>Attiva o disattiva la griglia</string>
+    <string>Toggle the grid</string>
    </property>
   </action>
   <action name="actionSnapToGrid">
@@ -2034,10 +2034,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Aggancia alla griglia</string>
+    <string>Snap to grid</string>
    </property>
    <property name="toolTip">
-    <string>Attiva o disattiva l'aggancio alla griglia</string>
+    <string>Toggle snap to grid</string>
    </property>
   </action>
   <action name="actionShortcuts">
@@ -2046,7 +2046,7 @@
      <normaloff>:/res/resources/remix/question-line.png</normaloff>:/res/resources/remix/question-line.png</iconset>
    </property>
    <property name="text">
-    <string>Tasti rapidi</string>
+    <string>Keyboard shortcuts</string>
    </property>
   </action>
   <action name="actionLayerManager">
@@ -2058,10 +2058,10 @@
      <normaloff>:/res/resources/remix/list-settings-line.png</normaloff>:/res/resources/remix/list-settings-line.png</iconset>
    </property>
    <property name="text">
-    <string>Gestione layer</string>
+    <string>Layer management</string>
    </property>
    <property name="toolTip">
-    <string>Gestione layer</string>
+    <string>Layer management</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -2079,7 +2079,7 @@
      <normaloff>:/res/resources/remix/tools-fill.png</normaloff>:/res/resources/remix/tools-fill.png</iconset>
    </property>
    <property name="text">
-    <string>Strumenti base</string>
+    <string>Basic tools</string>
    </property>
   </action>
   <action name="actionToolBarPrimitiveVisible">
@@ -2094,7 +2094,7 @@
      <normaloff>:/res/resources/remix/git-repository-commits-fill.png</normaloff>:/res/resources/remix/git-repository-commits-fill.png</iconset>
    </property>
    <property name="text">
-    <string>Strumenti di disegno</string>
+    <string>Drawing tools</string>
    </property>
   </action>
   <action name="actionRulersVisible">
@@ -2105,7 +2105,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Mostra righelli</string>
+    <string>Show rulers</string>
    </property>
   </action>
  </widget>

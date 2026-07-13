@@ -149,11 +149,11 @@ private:
     void deleteCategoryInteractive(const QString &filename, const QString &category);
     void renameMacroInteractive(const QString &key);
     void deleteMacroInteractive(const QString &key);
-    // Syncs the Proprietà panel to the current selection: populates every
+    // Syncs the Properties panel to the current selection: populates every
     // field from the first selected primitive (a representative value for a
     // mixed-type multi-selection) and enables/disables each one by whether
-    // that primitive type actually uses it (e.g. "Riempimento" only applies
-    // to closed shapes, "Font testo" only to text) - wired to
+    // that primitive type actually uses it (e.g. "Fill" only applies
+    // to closed shapes, "Text font" only to text) - wired to
     // sheetScene's selectionChanged(). Widgets are updated with their
     // signals blocked, since this reflects the selection rather than being
     // an edit itself.

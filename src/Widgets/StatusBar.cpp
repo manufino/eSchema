@@ -27,7 +27,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     lblPos->setMinimumWidth(350);
 
     lblZoomLevel->setText(tr("Zoom 7%"));
-    lblPrimitiveCount->setText(tr("Primitive 0  Macro 0"));
+    lblPrimitiveCount->setText(tr("Primitives 0  Macros 0"));
     lblPrimitiveCount->setMinimumWidth(150);
 
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
@@ -82,6 +82,6 @@ void StatusBar::settingChanged()
 
 void StatusBar::primitiveCounts(int totalPrimitives, int macroCount)
 {
-    lblPrimitiveCount->setText(tr("Primitive %1  Macro %2").arg(totalPrimitives).arg(macroCount));
+    lblPrimitiveCount->setText(tr("Primitives %1  Macros %2").arg(totalPrimitives).arg(macroCount));
 }
 

@@ -28,17 +28,17 @@
 #include <QSplashScreen>
 
 namespace {
-// Every language eSchema ships a translation for, besides "it" (the source
+// Every language eSchema ships a translation for, besides "en" (the source
 // language the UI strings are written in, so it needs no QTranslator at all).
 const QStringList SupportedLanguages = {
-    "en", "de", "fr", "es", "ru", "zh", "pl", "ja", "pt", "ar", "hi"
+    "it", "de", "fr", "es", "ru", "zh", "pl", "ja", "pt", "ar", "hi"
 };
 
 // Reads the user's saved language choice (see DialogOptions), or - on the
 // very first run, before that setting exists - derives one from the OS
 // locale and persists it, so the app then keeps opening in that language
 // regardless of later OS locale changes until the user picks a different one
-// from Opzioni.
+// from Options.
 QString resolveLanguageCode()
 {
     const QVariant saved = SettingsManager::getInstance().loadSetting("language");
@@ -48,7 +48,7 @@ QString resolveLanguageCode()
     QString detected = QStringLiteral("it");
     for (const QString &uiLanguage : QLocale::system().uiLanguages()) {
         const QString code = QLocale(uiLanguage).name().section('_', 0, 0);
-        if (code == QStringLiteral("it") || SupportedLanguages.contains(code)) {
+        if (code == QStringLiteral("en") || SupportedLanguages.contains(code)) {
             detected = code;
             break;
         }
@@ -92,14 +92,14 @@ int main(int argc, char *argv[])
 
     QSplashScreen splash(resizedPixmap);
     splash.show();
-    splash.showMessage("Caricamento ...");
+    splash.showMessage("Loading ...");
 
     // The command line's -l overrides (without persisting) the saved
     // language choice, matching FidoCadJ's own -l semantics.
     QTranslator translator;
     const QString languageCode = commandLine.wantedLanguage().isEmpty()
             ? resolveLanguageCode() : commandLine.wantedLanguage();
-    if (languageCode != QStringLiteral("it") && translator.load(":/i18n/eSchema_" + languageCode))
+    if (languageCode != QStringLiteral("en") && translator.load(":/i18n/eSchema_" + languageCode))
         a.installTranslator(&translator);
 
     MainWindow w;

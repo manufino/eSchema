@@ -45,7 +45,7 @@ public:
     ~DialogExport();
 
     GraphicExporter::Options options() const;
-    // The chosen format's file-dialog filter, e.g. "File PNG (*.png)".
+    // The chosen format's file-dialog filter, e.g. "PNG file (*.png)".
     QString fileFilter() const;
     // The chosen format's canonical extension without the dot, e.g. "png".
     QString defaultSuffix() const;

@@ -283,18 +283,18 @@ bool LibraryManager::addUserMacro(const QString &libraryFilename, const QString 
 
     const QString trimmedFilename = libraryFilename.trimmed();
     if (trimmedFilename.isEmpty())
-        return fail(QObject::tr("Nome libreria mancante."));
+        return fail(QObject::tr("Missing library name."));
     if (isStandardLibraryFilename(trimmedFilename))
-        return fail(QObject::tr("Non è possibile salvare in una libreria standard."));
+        return fail(QObject::tr("Cannot save into a standard library."));
 
     const QString trimmedKey = key.trimmed();
     if (trimmedKey.isEmpty() || trimmedKey.contains(QLatin1Char('[')) || trimmedKey.contains(QLatin1Char(']'))
             || trimmedKey.contains(QLatin1Char(' ')))
-        return fail(QObject::tr("Chiave macro non valida."));
+        return fail(QObject::tr("Invalid macro key."));
 
     const QString fullKey = (trimmedFilename + QLatin1Char('.') + trimmedKey).toLower();
     if (m_macrosByKey.contains(fullKey))
-        return fail(QObject::tr("Esiste già una macro con questa chiave in questa libreria."));
+        return fail(QObject::tr("A macro with this key already exists in this library."));
 
     const QDir libDir(QCoreApplication::applicationDirPath() + QStringLiteral("/lib"));
     const QString filePath = libDir.filePath(trimmedFilename + QStringLiteral(".fcl"));
@@ -302,7 +302,7 @@ bool LibraryManager::addUserMacro(const QString &libraryFilename, const QString 
 
     QFile file(filePath);
     if (!file.open(QIODevice::Append | QIODevice::Text))
-        return fail(QObject::tr("Impossibile scrivere il file %1").arg(filePath));
+        return fail(QObject::tr("Unable to write the file %1").arg(filePath));
 
     const QString displayName = libraryDisplayName.trimmed().isEmpty() ? trimmedFilename
                                                                         : libraryDisplayName.trimmed();
@@ -366,7 +366,7 @@ bool LibraryManager::writeLibraryFile(const MacroLibrary &library, QString *erro
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         if (errorMessage)
-            *errorMessage = QObject::tr("Impossibile scrivere il file %1").arg(filePath);
+            *errorMessage = QObject::tr("Unable to write the file %1").arg(filePath);
         return false;
     }
 
@@ -407,13 +407,13 @@ bool LibraryManager::renameLibrary(const QString &filename, const QString &newDi
     };
 
     if (isStandardLibraryFilename(filename))
-        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+        return fail(QObject::tr("Cannot modify a standard library."));
     MacroLibrary *library = findLibrary(filename);
     if (!library)
-        return fail(QObject::tr("Libreria non trovata."));
+        return fail(QObject::tr("Library not found."));
     const QString trimmedName = newDisplayName.trimmed();
     if (trimmedName.isEmpty())
-        return fail(QObject::tr("Il nome della libreria non può essere vuoto."));
+        return fail(QObject::tr("The library name cannot be empty."));
 
     MacroLibrary updated = *library;
     updated.displayName = trimmedName;
@@ -433,14 +433,14 @@ bool LibraryManager::deleteLibrary(const QString &filename, QString *errorMessag
     };
 
     if (isStandardLibraryFilename(filename))
-        return fail(QObject::tr("Non è possibile eliminare una libreria standard."));
+        return fail(QObject::tr("Cannot delete a standard library."));
     if (!findLibrary(filename))
-        return fail(QObject::tr("Libreria non trovata."));
+        return fail(QObject::tr("Library not found."));
 
     const QDir libDir(QCoreApplication::applicationDirPath() + QStringLiteral("/lib"));
     const QString filePath = libDir.filePath(filename + QStringLiteral(".fcl"));
     if (QFile::exists(filePath) && !QFile::remove(filePath))
-        return fail(QObject::tr("Impossibile eliminare il file %1").arg(filePath));
+        return fail(QObject::tr("Unable to delete the file %1").arg(filePath));
 
     loadLibraries();
     return true;
@@ -456,15 +456,15 @@ bool LibraryManager::renameCategory(const QString &filename, const QString &oldC
     };
 
     if (isStandardLibraryFilename(filename))
-        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+        return fail(QObject::tr("Cannot modify a standard library."));
     MacroLibrary *library = findLibrary(filename);
     if (!library)
-        return fail(QObject::tr("Libreria non trovata."));
+        return fail(QObject::tr("Library not found."));
     const QString trimmedNew = newCategory.trimmed();
     if (trimmedNew.isEmpty())
-        return fail(QObject::tr("Il nome della categoria non può essere vuoto."));
+        return fail(QObject::tr("The category name cannot be empty."));
     if (!library->macrosByCategory.contains(oldCategory))
-        return fail(QObject::tr("Categoria non trovata."));
+        return fail(QObject::tr("Category not found."));
 
     MacroLibrary updated = *library;
     QList<MacroDescriptor> moved = updated.macrosByCategory.take(oldCategory);
@@ -491,12 +491,12 @@ bool LibraryManager::deleteCategory(const QString &filename, const QString &cate
     };
 
     if (isStandardLibraryFilename(filename))
-        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+        return fail(QObject::tr("Cannot modify a standard library."));
     MacroLibrary *library = findLibrary(filename);
     if (!library)
-        return fail(QObject::tr("Libreria non trovata."));
+        return fail(QObject::tr("Library not found."));
     if (!library->macrosByCategory.contains(category))
-        return fail(QObject::tr("Categoria non trovata."));
+        return fail(QObject::tr("Category not found."));
 
     MacroLibrary updated = *library;
     updated.macrosByCategory.remove(category);
@@ -519,16 +519,16 @@ bool LibraryManager::renameMacro(const QString &key, const QString &newName, QSt
     const QString normalizedKey = key.trimmed().toLower();
     const MacroDescriptor *descriptor = macro(normalizedKey);
     if (!descriptor)
-        return fail(QObject::tr("Macro non trovata."));
+        return fail(QObject::tr("Macro not found."));
     if (isStandardLibraryFilename(descriptor->filename))
-        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+        return fail(QObject::tr("Cannot modify a standard library."));
     const QString trimmedName = newName.trimmed();
     if (trimmedName.isEmpty())
-        return fail(QObject::tr("Il nome della macro non può essere vuoto."));
+        return fail(QObject::tr("The macro name cannot be empty."));
 
     MacroLibrary *library = findLibrary(descriptor->filename);
     if (!library)
-        return fail(QObject::tr("Libreria non trovata."));
+        return fail(QObject::tr("Library not found."));
 
     MacroLibrary updated = *library;
     QList<MacroDescriptor> &list = updated.macrosByCategory[descriptor->category];
@@ -556,13 +556,13 @@ bool LibraryManager::deleteMacro(const QString &key, QString *errorMessage)
     const QString normalizedKey = key.trimmed().toLower();
     const MacroDescriptor *descriptor = macro(normalizedKey);
     if (!descriptor)
-        return fail(QObject::tr("Macro non trovata."));
+        return fail(QObject::tr("Macro not found."));
     if (isStandardLibraryFilename(descriptor->filename))
-        return fail(QObject::tr("Non è possibile modificare una libreria standard."));
+        return fail(QObject::tr("Cannot modify a standard library."));
 
     MacroLibrary *library = findLibrary(descriptor->filename);
     if (!library)
-        return fail(QObject::tr("Libreria non trovata."));
+        return fail(QObject::tr("Library not found."));
 
     MacroLibrary updated = *library;
     QList<MacroDescriptor> &list = updated.macrosByCategory[descriptor->category];

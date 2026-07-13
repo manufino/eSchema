@@ -25,7 +25,7 @@
 DeletePrimitiveCommand::DeletePrimitiveCommand(Sheet *sheet, GraphicsPrimitive *primitive)
     : m_sheet(sheet), m_primitive(primitive)
 {
-    setText(QObject::tr("Elimina"));
+    setText(QObject::tr("Delete"));
 }
 
 DeletePrimitiveCommand::~DeletePrimitiveCommand()

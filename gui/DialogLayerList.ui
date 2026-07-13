@@ -26,7 +26,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>&lt; Gestione Layer &gt;</string>
+   <string>&lt; Layer management &gt;</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../resources.qrc">
@@ -80,7 +80,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Mostra tutti</string>
+        <string>Show all</string>
        </property>
        <property name="text">
         <string/>
@@ -115,7 +115,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Nascondi tutti</string>
+        <string>Hide all</string>
        </property>
        <property name="text">
         <string/>
@@ -150,7 +150,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Blocca tutti</string>
+        <string>Lock all</string>
        </property>
        <property name="text">
         <string/>
@@ -175,7 +175,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Sblocca tutti</string>
+        <string>Unlock all</string>
        </property>
        <property name="text">
         <string/>
@@ -213,7 +213,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Sposta in alto</string>
+        <string>Move up</string>
        </property>
        <property name="text">
         <string/>
@@ -248,7 +248,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Sposta in basso</string>
+        <string>Move down</string>
        </property>
        <property name="text">
         <string/>
@@ -296,7 +296,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Aggiungi un layer</string>
+        <string>Add a layer</string>
        </property>
        <property name="text">
         <string/>
@@ -331,7 +331,7 @@
         <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
-        <string>Elimina selezionato</string>
+        <string>Delete selected</string>
        </property>
        <property name="text">
         <string/>

@@ -312,7 +312,7 @@ void MainWindow::setConnections()
 
     connect(ui->graphicsView, &SheetView::contextMenuRequested, this, &MainWindow::showCanvasContextMenu);
 
-    // Proprietà panel: reflects the selection, and each field applies its
+    // Properties panel: reflects the selection, and each field applies its
     // edit back to every selected primitive when the user actually changes
     // it (editingFinished()/activated()-style signals, not textChanged() -
     // so partially-typed text or a value the sync itself just set doesn't
@@ -540,10 +540,10 @@ void MainWindow::setConnections()
     connect(undo, &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
     connect(undo, &QUndoStack::canRedoChanged, ui->actionRestore, &QAction::setEnabled);
     connect(undo, &QUndoStack::undoTextChanged, this, [this](const QString &text) {
-        ui->actionUndo->setText(text.isEmpty() ? tr("Annulla") : tr("Annulla: %1").arg(text));
+        ui->actionUndo->setText(text.isEmpty() ? tr("Undo") : tr("Undo: %1").arg(text));
     });
     connect(undo, &QUndoStack::redoTextChanged, this, [this](const QString &text) {
-        ui->actionRestore->setText(text.isEmpty() ? tr("Ripristina") : tr("Ripristina: %1").arg(text));
+        ui->actionRestore->setText(text.isEmpty() ? tr("Redo") : tr("Redo: %1").arg(text));
     });
     ui->actionUndo->setEnabled(undo->canUndo());
     ui->actionRestore->setEnabled(undo->canRedo());
@@ -599,7 +599,7 @@ void MainWindow::clickLayerManagerAction()
 void MainWindow::updateWindowTitle()
 {
     const QString name = currentFilePath.isEmpty()
-            ? tr("Nuovo disegno* (non salvato)")
+            ? tr("New drawing* (unsaved)")
             : QFileInfo(currentFilePath).fileName();
     setWindowTitle(QString("  eSchema  [ Ver. ") + APP_VERSION + QString(" ]  -  ") + name);
 }
@@ -646,8 +646,8 @@ void MainWindow::updateRecentFilesMenu()
         QAction *action = ui->menuRecentFiles->addAction(path);
         connect(action, &QAction::triggered, this, [this, path]() {
             if (!QFileInfo::exists(path)) {
-                QMessageBox::warning(this, tr("Apri recenti"),
-                                      tr("Il file non esiste piu':\n%1").arg(path));
+                QMessageBox::warning(this, tr("Open recent"),
+                                      tr("The file no longer exists:\n%1").arg(path));
                 QStringList recents = SettingsManager::getInstance().loadSetting("recent_files").toStringList();
                 recents.removeAll(path);
                 SettingsManager::getInstance().saveSetting("recent_files", recents);
@@ -661,7 +661,7 @@ void MainWindow::updateRecentFilesMenu()
     }
 
     ui->menuRecentFiles->addSeparator();
-    QAction *clearAction = ui->menuRecentFiles->addAction(tr("Svuota elenco"));
+    QAction *clearAction = ui->menuRecentFiles->addAction(tr("Clear list"));
     connect(clearAction, &QAction::triggered, this, [this]() {
         SettingsManager::getInstance().saveSetting("recent_files", QStringList());
         updateRecentFilesMenu();
@@ -707,7 +707,7 @@ bool MainWindow::saveToPath(const QString &filePath)
 {
     QString error;
     if (!FidoCadWriter::writeFile(sheetScene, filePath, &error)) {
-        QMessageBox::warning(this, tr("Errore"), tr("Impossibile salvare il file:\n%1").arg(error));
+        QMessageBox::warning(this, tr("Error"), tr("Unable to save the file:\n%1").arg(error));
         return false;
     }
     // Marks the undo stack's current position as "the saved state" - isClean()
@@ -729,8 +729,8 @@ bool MainWindow::confirmDiscardChanges()
         return true;
 
     const auto answer = QMessageBox::question(
-                this, tr("Modifiche non salvate"),
-                tr("Ci sono modifiche non salvate. Vuoi salvarle?"),
+                this, tr("Unsaved changes"),
+                tr("There are unsaved changes. Do you want to save them?"),
                 QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
                 QMessageBox::Save);
 
@@ -824,13 +824,13 @@ void MainWindow::checkForAutosaveRecovery()
     }
 
     const QString original = SettingsManager::getInstance().loadSetting("pending_autosave_original").toString();
-    const QString description = original.isEmpty() ? tr("un disegno senza nome")
+    const QString description = original.isEmpty() ? tr("an untitled drawing")
                                                      : QFileInfo(original).fileName();
     const auto answer = QMessageBox::question(
-                this, tr("Ripristino automatico"),
-                tr("eSchema non e' stato chiuso correttamente l'ultima volta.\n"
-                   "E' stato trovato un salvataggio automatico di %1.\n\n"
-                   "Vuoi recuperarlo?").arg(description),
+                this, tr("Autosave recovery"),
+                tr("eSchema wasn't closed properly last time.\n"
+                   "An autosave was found for %1.\n\n"
+                   "Do you want to recover it?").arg(description),
                 QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 
     if (answer != QMessageBox::Yes) {
@@ -840,8 +840,8 @@ void MainWindow::checkForAutosaveRecovery()
 
     QString error;
     if (!FidoCadReader::readFile(path, sheetScene, &error)) {
-        QMessageBox::warning(this, tr("Errore"),
-                              tr("Impossibile recuperare il salvataggio automatico:\n%1").arg(error));
+        QMessageBox::warning(this, tr("Error"),
+                              tr("Could not recover the autosave:\n%1").arg(error));
         clearAutosave();
         return;
     }
@@ -851,7 +851,7 @@ void MainWindow::checkForAutosaveRecovery()
     // Recovered content was never actually written to the real file (if
     // any) - readFile()'s bulk load leaves the stack clean like a normal
     // Open, so push a no-op command purely to flip isClean() to false.
-    sheetScene->undoStack()->push(new QUndoCommand(tr("Ripristino automatico")));
+    sheetScene->undoStack()->push(new QUndoCommand(tr("Autosave recovery")));
     clearAutosave();
 }
 
@@ -873,7 +873,7 @@ void MainWindow::clickOpenAction()
     if (!confirmDiscardChanges())
         return;
 
-    const QString path = QFileDialog::getOpenFileName(this, tr("Apri disegno"), QString(),
+    const QString path = QFileDialog::getOpenFileName(this, tr("Open drawing"), QString(),
                                                         tr("FidoCadJ (*.fcd)"));
     if (path.isEmpty())
         return;
@@ -885,7 +885,7 @@ bool MainWindow::openFile(const QString &filePath)
 {
     QString error;
     if (!FidoCadReader::readFile(filePath, sheetScene, &error)) {
-        QMessageBox::warning(this, tr("Errore"), tr("Impossibile aprire il file:\n%1").arg(error));
+        QMessageBox::warning(this, tr("Error"), tr("Unable to open the file:\n%1").arg(error));
         return false;
     }
     sheetScene->undoStack()->setClean();
@@ -901,7 +901,7 @@ void MainWindow::clickImportDxfAction()
     if (!confirmDiscardChanges())
         return;
 
-    const QString path = QFileDialog::getOpenFileName(this, tr("Importa da DXF"), QString(),
+    const QString path = QFileDialog::getOpenFileName(this, tr("Import from DXF"), QString(),
                                                         tr("DXF (*.dxf)"));
     if (path.isEmpty())
         return;
@@ -917,7 +917,7 @@ bool MainWindow::importDxfFile(const QString &filePath)
     QString error;
     QStringList warnings;
     if (!DxfReader::readFile(filePath, sheetScene, &error, &warnings)) {
-        QMessageBox::warning(this, tr("Errore"), tr("Impossibile aprire il file:\n%1").arg(error));
+        QMessageBox::warning(this, tr("Error"), tr("Unable to open the file:\n%1").arg(error));
         return false;
     }
     sheetScene->undoStack()->setClean();
@@ -928,8 +928,8 @@ bool MainWindow::importDxfFile(const QString &filePath)
     clearAutosave();
 
     if (!warnings.isEmpty()) {
-        QMessageBox::information(this, tr("Importa da DXF"),
-                                  tr("Alcuni elementi del file DXF non sono stati importati:\n\n%1")
+        QMessageBox::information(this, tr("Import from DXF"),
+                                  tr("Some elements of the DXF file were not imported:\n\n%1")
                                           .arg(warnings.join(QLatin1Char('\n'))));
     }
     return true;
@@ -983,7 +983,7 @@ void MainWindow::clickSaveAction()
 
 void MainWindow::clickSaveAsAction()
 {
-    QString path = QFileDialog::getSaveFileName(this, tr("Salva disegno con nome"), QString(),
+    QString path = QFileDialog::getSaveFileName(this, tr("Save drawing as"), QString(),
                                                  tr("FidoCadJ (*.fcd)"));
     if (path.isEmpty())
         return;
@@ -997,7 +997,7 @@ void MainWindow::clickSaveAsAction()
 void MainWindow::clickPrintAction()
 {
     if (sheetScene->itemsBoundingRect().isEmpty()) {
-        QMessageBox::information(this, tr("Stampa"), tr("Il disegno e' vuoto."));
+        QMessageBox::information(this, tr("Print"), tr("The drawing is empty."));
         return;
     }
 
@@ -1032,7 +1032,7 @@ void MainWindow::clickPrintAction()
                             QPageLayout::Millimeter);
 
     QPrintPreviewDialog preview(&printer, this);
-    preview.setWindowTitle(tr("Anteprima di stampa"));
+    preview.setWindowTitle(tr("Print preview"));
     connect(&preview, &QPrintPreviewDialog::paintRequested, this, &MainWindow::renderForPrint);
     preview.exec();
 
@@ -1103,7 +1103,7 @@ void MainWindow::renderForPrint(QPrinter *printer)
 void MainWindow::clickExportAction()
 {
     if (sheetScene->itemsBoundingRect().isEmpty()) {
-        QMessageBox::information(this, tr("Esporta"), tr("Il disegno e' vuoto."));
+        QMessageBox::information(this, tr("Export"), tr("The drawing is empty."));
         return;
     }
 
@@ -1111,7 +1111,7 @@ void MainWindow::clickExportAction()
     if (dialog.exec() != QDialog::Accepted)
         return;
 
-    QString path = QFileDialog::getSaveFileName(this, tr("Esporta disegno"), QString(),
+    QString path = QFileDialog::getSaveFileName(this, tr("Export drawing"), QString(),
                                                   dialog.fileFilter());
     if (path.isEmpty())
         return;
@@ -1133,6 +1133,6 @@ void MainWindow::clickExportAction()
         item->setSelected(true);
 
     if (!ok)
-        QMessageBox::warning(this, tr("Errore"),
-                              tr("Impossibile esportare il file:\n%1").arg(error));
+        QMessageBox::warning(this, tr("Error"),
+                              tr("Could not export the file:\n%1").arg(error));
 }

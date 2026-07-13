@@ -189,11 +189,11 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     if (selected.size() == 1 && selected.first()->supportsNodeEditing()) {
         GraphicsPrimitive *primitive = selected.first();
         menu.addSeparator();
-        QAction *addNodeAction = menu.addAction(tr("Aggiungi nodo"));
+        QAction *addNodeAction = menu.addAction(tr("Add node"));
         connect(addNodeAction, &QAction::triggered, this, [this, primitive, scenePos]() {
             addNodeToPrimitive(primitive, scenePos);
         });
-        QAction *removeNodeAction = menu.addAction(tr("Rimuovi nodo"));
+        QAction *removeNodeAction = menu.addAction(tr("Remove node"));
         removeNodeAction->setEnabled(primitive->controlPointCount() > 2);
         connect(removeNodeAction, &QAction::triggered, this, [this, primitive, scenePos]() {
             removeNodeFromPrimitive(primitive, scenePos);
@@ -218,7 +218,7 @@ void MainWindow::clickMirrorAction()
     QUndoStack *undo = sheetScene->undoStack();
     const bool multiple = selected.size() > 1;
     if (multiple)
-        undo->beginMacro(tr("Specchia"));
+        undo->beginMacro(tr("Mirror"));
     for (QGraphicsItem *item : selected) {
         if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
             undo->push(new MirrorPrimitiveCommand(primitive, Qt::Horizontal, pivot));
@@ -238,7 +238,7 @@ void MainWindow::clickRotateAction()
     QUndoStack *undo = sheetScene->undoStack();
     const bool multiple = selected.size() > 1;
     if (multiple)
-        undo->beginMacro(tr("Ruota"));
+        undo->beginMacro(tr("Rotate"));
     for (QGraphicsItem *item : selected) {
         if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
             undo->push(new RotatePrimitiveCommand(primitive, pivot));
@@ -261,7 +261,7 @@ void MainWindow::clickConvertMacroToPrimitivesAction()
     QUndoStack *undo = sheetScene->undoStack();
     // Always grouped, even for a single macro: converting one already means
     // one delete plus N creates, and all of it must undo as one step.
-    undo->beginMacro(tr("Converti macro in primitive"));
+    undo->beginMacro(tr("Convert macro to primitives"));
     for (PrimitiveMacro *macro : macros) {
         const QList<GraphicsPrimitive *> expanded = macro->convertToPrimitives(sheetScene);
         for (GraphicsPrimitive *primitive : expanded) {
@@ -336,7 +336,7 @@ void MainWindow::clickCreateMacroAction()
                 libraryFilename, dialog.libraryDisplayName(),
                 key, dialog.macroName(), dialog.category(), body, &errorMessage);
     if (!ok)
-        QMessageBox::warning(this, tr("Crea macro"), errorMessage);
+        QMessageBox::warning(this, tr("Create macro"), errorMessage);
 }
 
 void MainWindow::clickDeleteAction()
@@ -345,7 +345,7 @@ void MainWindow::clickDeleteAction()
     QUndoStack *undo = sheetScene->undoStack();
     const bool multiple = selected.size() > 1;
     if (multiple)
-        undo->beginMacro(tr("Elimina"));
+        undo->beginMacro(tr("Delete"));
     for (QGraphicsItem *item : selected) {
         if (auto *primitive = dynamic_cast<GraphicsPrimitive *>(item))
             undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
@@ -400,7 +400,7 @@ void MainWindow::nudgeSelection(const QPointF &direction)
     QHash<GraphicsPrimitive *, QPointF> deltas;
     for (GraphicsPrimitive *primitive : selected)
         deltas.insert(primitive, direction * step);
-    moveSelectedPrimitives(deltas, tr("Sposta selezione"));
+    moveSelectedPrimitives(deltas, tr("Move selection"));
 }
 
 void MainWindow::addNodeToPrimitive(GraphicsPrimitive *primitive, const QPointF &scenePos)
@@ -439,7 +439,7 @@ void MainWindow::clickAlignLeftAction()
     QHash<GraphicsPrimitive *, QPointF> deltas;
     for (GraphicsPrimitive *primitive : selected)
         deltas.insert(primitive, QPointF(leftmost - primitive->boundingRect().left(), 0));
-    moveSelectedPrimitives(deltas, tr("Allinea a sinistra"));
+    moveSelectedPrimitives(deltas, tr("Align left"));
 }
 
 void MainWindow::clickAlignRightAction()
@@ -455,7 +455,7 @@ void MainWindow::clickAlignRightAction()
     QHash<GraphicsPrimitive *, QPointF> deltas;
     for (GraphicsPrimitive *primitive : selected)
         deltas.insert(primitive, QPointF(rightmost - primitive->boundingRect().right(), 0));
-    moveSelectedPrimitives(deltas, tr("Allinea a destra"));
+    moveSelectedPrimitives(deltas, tr("Align right"));
 }
 
 void MainWindow::clickAlignTopAction()
@@ -471,7 +471,7 @@ void MainWindow::clickAlignTopAction()
     QHash<GraphicsPrimitive *, QPointF> deltas;
     for (GraphicsPrimitive *primitive : selected)
         deltas.insert(primitive, QPointF(0, topmost - primitive->boundingRect().top()));
-    moveSelectedPrimitives(deltas, tr("Allinea in alto"));
+    moveSelectedPrimitives(deltas, tr("Align top"));
 }
 
 void MainWindow::clickAlignBottomAction()
@@ -487,7 +487,7 @@ void MainWindow::clickAlignBottomAction()
     QHash<GraphicsPrimitive *, QPointF> deltas;
     for (GraphicsPrimitive *primitive : selected)
         deltas.insert(primitive, QPointF(0, bottommost - primitive->boundingRect().bottom()));
-    moveSelectedPrimitives(deltas, tr("Allinea in basso"));
+    moveSelectedPrimitives(deltas, tr("Align bottom"));
 }
 
 // Aligns every selected primitive's own vertical center to a shared
@@ -512,7 +512,7 @@ void MainWindow::clickAlignCenterHorizontalAction()
     QHash<GraphicsPrimitive *, QPointF> deltas;
     for (GraphicsPrimitive *primitive : selected)
         deltas.insert(primitive, QPointF(0, verticalCenter - primitive->boundingRect().center().y()));
-    moveSelectedPrimitives(deltas, tr("Allinea al centro orizzontale"));
+    moveSelectedPrimitives(deltas, tr("Align horizontal center"));
 }
 
 // Aligns every selected primitive's own horizontal center to a shared
@@ -536,7 +536,7 @@ void MainWindow::clickAlignCenterVerticalAction()
     QHash<GraphicsPrimitive *, QPointF> deltas;
     for (GraphicsPrimitive *primitive : selected)
         deltas.insert(primitive, QPointF(horizontalCenter - primitive->boundingRect().center().x(), 0));
-    moveSelectedPrimitives(deltas, tr("Allinea al centro verticale"));
+    moveSelectedPrimitives(deltas, tr("Align vertical center"));
 }
 
 // Distributes selected primitives evenly by their left edges, keeping the
@@ -563,7 +563,7 @@ void MainWindow::clickDistributeHorizontalAction()
         const qreal targetX = leftmostX + i * spacing;
         deltas.insert(primitive, QPointF(targetX - primitive->boundingRect().left(), 0));
     }
-    moveSelectedPrimitives(deltas, tr("Distribuisci orizzontalmente"));
+    moveSelectedPrimitives(deltas, tr("Distribute horizontally"));
 }
 
 void MainWindow::clickDistributeVerticalAction()
@@ -586,7 +586,7 @@ void MainWindow::clickDistributeVerticalAction()
         const qreal targetY = topmostY + i * spacing;
         deltas.insert(primitive, QPointF(0, targetY - primitive->boundingRect().top()));
     }
-    moveSelectedPrimitives(deltas, tr("Distribuisci verticalmente"));
+    moveSelectedPrimitives(deltas, tr("Distribute vertically"));
 }
 
 // Copy/Cut put the selection on the system clipboard as FidoCadJ text
@@ -605,7 +605,7 @@ void MainWindow::clickCopyAction()
 void MainWindow::clickCopyAsImageAction()
 {
     if (sheetScene->itemsBoundingRect().isEmpty()) {
-        QMessageBox::information(this, tr("Copia come immagine"), tr("Il disegno e' vuoto."));
+        QMessageBox::information(this, tr("Copy as image"), tr("The drawing is empty."));
         return;
     }
 
@@ -663,7 +663,7 @@ void MainWindow::clickCutAction()
     QUndoStack *undo = sheetScene->undoStack();
     const bool multiple = selected.size() > 1;
     if (multiple)
-        undo->beginMacro(tr("Taglia"));
+        undo->beginMacro(tr("Cut"));
     for (GraphicsPrimitive *primitive : selected)
         undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
     if (multiple)
@@ -711,7 +711,7 @@ void MainWindow::clickPasteAction()
     const QString text = QGuiApplication::clipboard()->text();
     if (text.isEmpty())
         return;
-    pasteFromText(text, tr("Incolla"));
+    pasteFromText(text, tr("Paste"));
 }
 
 void MainWindow::clickDuplicateAction()
@@ -719,5 +719,5 @@ void MainWindow::clickDuplicateAction()
     const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
     if (selected.isEmpty())
         return;
-    pasteFromText(FidoCadWriter::writeSelection(selected), tr("Duplica"));
+    pasteFromText(FidoCadWriter::writeSelection(selected), tr("Duplicate"));
 }

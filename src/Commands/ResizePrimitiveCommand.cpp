@@ -25,7 +25,7 @@ ResizePrimitiveCommand::ResizePrimitiveCommand(GraphicsPrimitive *primitive, int
                                                 const QPointF &before, const QPointF &after)
     : m_primitive(primitive), m_index(controlPointIndex), m_before(before), m_after(after)
 {
-    setText(QObject::tr("Ridimensiona"));
+    setText(QObject::tr("Resize"));
 }
 
 void ResizePrimitiveCommand::undo()

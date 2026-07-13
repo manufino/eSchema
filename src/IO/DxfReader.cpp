@@ -593,8 +593,8 @@ QHash<QString, Layer *> remapLayers(const QStringList &usedLayerNamesInOrder,
     }
 
     if (overflow > 0 && warnings) {
-        warnings->append(QObject::tr("%1 layer del DXF oltre il limite di 16 sono stati uniti "
-                                      "nell'ultimo layer disponibile.").arg(overflow));
+        warnings->append(QObject::tr("%1 DXF layers beyond the 16-layer limit were merged "
+                                      "into the last available layer.").arg(overflow));
     }
 
     LayerList::getInstance().update();
@@ -637,19 +637,19 @@ bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage, QStr
 
     if (warnings) {
         for (auto it = iface.ctx.unsupportedCounts.constBegin(); it != iface.ctx.unsupportedCounts.constEnd(); ++it) {
-            warnings->append(QObject::tr("%1 entità %2 non supportate sono state ignorate.")
+            warnings->append(QObject::tr("%1 unsupported %2 entities were ignored.")
                                       .arg(it.value()).arg(it.key()));
         }
         if (iface.ctx.truncatedVertexCount > 0) {
-            warnings->append(QObject::tr("%1 elementi con più di %2 vertici sono stati troncati.")
+            warnings->append(QObject::tr("%1 elements with more than %2 vertices were truncated.")
                                       .arg(iface.ctx.truncatedVertexCount).arg(PrimitivePolygon::MaxVertices));
         }
         if (iface.ctx.rotatedEllipseCount > 0) {
-            warnings->append(QObject::tr("%1 ellissi ruotate sono state importate come non ruotate "
+            warnings->append(QObject::tr("%1 rotated ellipses were imported as unrotated "
                                           "(bounding box).").arg(iface.ctx.rotatedEllipseCount));
         }
         if (iface.ctx.missingBlockCount > 0) {
-            warnings->append(QObject::tr("%1 riferimenti INSERT a blocchi non trovati sono stati ignorati.")
+            warnings->append(QObject::tr("%1 INSERT references to missing blocks were ignored.")
                                       .arg(iface.ctx.missingBlockCount));
         }
     }

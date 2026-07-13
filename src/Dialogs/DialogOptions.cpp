@@ -51,7 +51,7 @@ DialogOptions::DialogOptions(QWidget *parent) :
     connect(ui->btnRestore, &QPushButton::clicked, this, &DialogOptions::restore);
     connect(ui->cboxStyle, &QComboBox::currentIndexChanged, this, &DialogOptions::updateStylesheetPathEnabled);
     connect(ui->btnOpenStylesheetPath, &QPushButton::clicked, this, [this]() {
-        const QString path = QFileDialog::getOpenFileName(this, tr("Seleziona stylesheet"),
+        const QString path = QFileDialog::getOpenFileName(this, tr("Select stylesheet"),
                                                             ui->txtStylesheetPath->text(),
                                                             tr("Stylesheet (*.qss)"));
         if (!path.isEmpty())
@@ -187,8 +187,8 @@ void DialogOptions::apply()
     // the combo box selection did nothing.
     if (ui->cboxLanguage->currentIndex() != m_initialLanguageIndex) {
         m_initialLanguageIndex = ui->cboxLanguage->currentIndex();
-        QMessageBox::information(this, tr("Lingua"),
-                                  tr("La nuova lingua sarà attiva al prossimo riavvio di eSchema."));
+        QMessageBox::information(this, tr("Language"),
+                                  tr("The new language will take effect the next time eSchema starts."));
     }
 }
 
@@ -202,9 +202,9 @@ void DialogOptions::updateStylesheetPathEnabled()
 void DialogOptions::restore()
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, tr("Attenzione !"),
-                                  tr("Tutti i settaggi verranno sovrascritti.\n\n"
-                                  "Procedere con il ripristino dei valori ?\n"),
+    reply = QMessageBox::question(this, tr("Warning!"),
+                                  tr("All settings will be overwritten.\n\n"
+                                  "Proceed with restoring the defaults?\n"),
                                   QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         SettingsManager::getInstance().restoreDefaultSettings();

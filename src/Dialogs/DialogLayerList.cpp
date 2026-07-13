@@ -129,7 +129,7 @@ void DialogLayerList::addNewLayer()
 {
     QString ln = QString("%1").arg(ui->listWidget->count());
 
-    Layer *layer = new Layer("Nuovo layer " + ln);
+    Layer *layer = new Layer("New layer " + ln);
     LayerList::getInstance().addLayer(layer);
     ui->listWidget->updateList();
 }

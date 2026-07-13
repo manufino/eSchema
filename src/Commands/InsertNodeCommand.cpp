@@ -24,7 +24,7 @@
 InsertNodeCommand::InsertNodeCommand(GraphicsPrimitive *primitive, int index, const QPointF &scenePos)
     : m_primitive(primitive), m_index(index), m_point(scenePos)
 {
-    setText(QObject::tr("Aggiungi nodo"));
+    setText(QObject::tr("Add node"));
 }
 
 void InsertNodeCommand::undo()

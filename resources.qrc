@@ -136,7 +136,7 @@
         <file>resources/align/distribute_vertical.png</file>
     </qresource>
     <qresource prefix="/i18n">
-        <file alias="eSchema_en.qm">translations/eSchema_en.qm</file>
+        <file alias="eSchema_it.qm">translations/eSchema_it.qm</file>
         <file alias="eSchema_de.qm">translations/eSchema_de.qm</file>
         <file alias="eSchema_fr.qm">translations/eSchema_fr.qm</file>
         <file alias="eSchema_es.qm">translations/eSchema_es.qm</file>

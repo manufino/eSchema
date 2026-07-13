@@ -25,7 +25,7 @@
 CreatePrimitiveCommand::CreatePrimitiveCommand(Sheet *sheet, GraphicsPrimitive *primitive)
     : m_sheet(sheet), m_primitive(primitive)
 {
-    setText(QObject::tr("Crea"));
+    setText(QObject::tr("Create"));
 }
 
 CreatePrimitiveCommand::~CreatePrimitiveCommand()

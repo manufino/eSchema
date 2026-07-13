@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Esporta disegno</string>
+   <string>Export drawing</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -22,7 +22,7 @@
      <item>
       <widget class="QLabel" name="lblFormat">
        <property name="text">
-        <string>Formato:</string>
+        <string>Format:</string>
        </property>
       </widget>
      </item>
@@ -34,13 +34,13 @@
    <item>
     <widget class="QGroupBox" name="groupSizing">
      <property name="title">
-      <string>Dimensioni</string>
+      <string>Size</string>
      </property>
      <layout class="QGridLayout" name="gridSizing">
       <item row="0" column="0">
        <widget class="QRadioButton" name="rbResolution">
         <property name="text">
-         <string>Risoluzione (pixel per unità):</string>
+         <string>Resolution (pixels per unit):</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -66,7 +66,7 @@
       <item row="1" column="0">
        <widget class="QRadioButton" name="rbSize">
         <property name="text">
-         <string>Dimensioni esatte (pixel):</string>
+         <string>Exact size (pixels):</string>
         </property>
        </widget>
       </item>
@@ -120,7 +120,7 @@
    <item>
     <widget class="QGroupBox" name="groupOptions">
      <property name="title">
-      <string>Opzioni</string>
+      <string>Options</string>
      </property>
      <layout class="QVBoxLayout" name="layoutOptions">
       <item>
@@ -136,14 +136,14 @@
       <item>
        <widget class="QCheckBox" name="chkBlackWhite">
         <property name="text">
-         <string>Bianco e nero</string>
+         <string>Black and white</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="chkSplitLayers">
         <property name="text">
-         <string>Un file per ogni layer</string>
+         <string>One file per layer</string>
         </property>
        </widget>
       </item>

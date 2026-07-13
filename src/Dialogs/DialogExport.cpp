@@ -84,16 +84,16 @@ QString DialogExport::fileFilter() const
 {
     const QString format = selectedFormat();
     if (format == QLatin1String("png"))
-        return tr("File PNG (*.png)");
+        return tr("PNG file (*.png)");
     if (format == QLatin1String("jpg"))
-        return tr("File JPG (*.jpg *.jpeg)");
+        return tr("JPG file (*.jpg *.jpeg)");
     if (format == QLatin1String("svg"))
-        return tr("File SVG (*.svg)");
+        return tr("SVG file (*.svg)");
     if (format == QLatin1String("pdf"))
-        return tr("File PDF (*.pdf)");
+        return tr("PDF file (*.pdf)");
     if (format == QLatin1String("eps"))
-        return tr("File EPS (*.eps)");
-    return tr("File DXF (*.dxf)");
+        return tr("EPS file (*.eps)");
+    return tr("DXF file (*.dxf)");
 }
 
 QString DialogExport::defaultSuffix() const
@@ -175,7 +175,7 @@ void DialogExport::updateResultLabel()
         size = m_drawingSize * ui->spinResolution->value();
     else
         size = QSizeF(ui->spinSizeX->value(), ui->spinSizeY->value());
-    ui->lblResult->setText(tr("Immagine risultante: %1 x %2 pixel")
+    ui->lblResult->setText(tr("Resulting image: %1 x %2 pixels")
                                    .arg(qCeil(size.width()))
                                    .arg(qCeil(size.height())));
 }

@@ -150,8 +150,8 @@ void MainWindow::showLibraryContextMenu(QTreeWidget *tree, const QString &librar
     QMenu menu(this);
 
     if (!item) {
-        QAction *renameAction = menu.addAction(tr("Rinomina libreria..."));
-        QAction *deleteAction = menu.addAction(tr("Elimina libreria..."));
+        QAction *renameAction = menu.addAction(tr("Rename library..."));
+        QAction *deleteAction = menu.addAction(tr("Delete library..."));
         QAction *chosen = menu.exec(tree->viewport()->mapToGlobal(pos));
         if (chosen == renameAction)
             renameLibraryInteractive(libraryFilename);
@@ -162,8 +162,8 @@ void MainWindow::showLibraryContextMenu(QTreeWidget *tree, const QString &librar
 
     if (!item->parent()) {
         const QString category = item->text(0);
-        QAction *renameAction = menu.addAction(tr("Rinomina categoria..."));
-        QAction *deleteAction = menu.addAction(tr("Elimina categoria..."));
+        QAction *renameAction = menu.addAction(tr("Rename category..."));
+        QAction *deleteAction = menu.addAction(tr("Delete category..."));
         QAction *chosen = menu.exec(tree->viewport()->mapToGlobal(pos));
         if (chosen == renameAction)
             renameCategoryInteractive(libraryFilename, category);
@@ -173,8 +173,8 @@ void MainWindow::showLibraryContextMenu(QTreeWidget *tree, const QString &librar
     }
 
     const QString key = item->data(0, Qt::UserRole).toString();
-    QAction *renameAction = menu.addAction(tr("Rinomina macro..."));
-    QAction *deleteAction = menu.addAction(tr("Elimina macro..."));
+    QAction *renameAction = menu.addAction(tr("Rename macro..."));
+    QAction *deleteAction = menu.addAction(tr("Delete macro..."));
     QAction *chosen = menu.exec(tree->viewport()->mapToGlobal(pos));
     if (chosen == renameAction)
         renameMacroInteractive(key);
@@ -193,55 +193,55 @@ void MainWindow::renameLibraryInteractive(const QString &filename)
     }
 
     bool ok = false;
-    const QString newName = QInputDialog::getText(this, tr("Rinomina libreria"), tr("Nome libreria:"),
+    const QString newName = QInputDialog::getText(this, tr("Rename library"), tr("Library name:"),
                                                     QLineEdit::Normal, currentName, &ok);
     if (!ok || newName.trimmed().isEmpty())
         return;
 
     QString errorMessage;
     if (!LibraryManager::getInstance().renameLibrary(filename, newName, &errorMessage))
-        QMessageBox::warning(this, tr("Rinomina libreria"), errorMessage);
+        QMessageBox::warning(this, tr("Rename library"), errorMessage);
 }
 
 void MainWindow::deleteLibraryInteractive(const QString &filename)
 {
     const auto answer = QMessageBox::question(
-                this, tr("Elimina libreria"),
-                tr("Eliminare definitivamente questa libreria e tutte le macro che contiene?"),
+                this, tr("Delete library"),
+                tr("Permanently delete this library and all the macros it contains?"),
                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer != QMessageBox::Yes)
         return;
 
     QString errorMessage;
     if (!LibraryManager::getInstance().deleteLibrary(filename, &errorMessage))
-        QMessageBox::warning(this, tr("Elimina libreria"), errorMessage);
+        QMessageBox::warning(this, tr("Delete library"), errorMessage);
 }
 
 void MainWindow::renameCategoryInteractive(const QString &filename, const QString &category)
 {
     bool ok = false;
-    const QString newName = QInputDialog::getText(this, tr("Rinomina categoria"), tr("Nome categoria:"),
+    const QString newName = QInputDialog::getText(this, tr("Rename category"), tr("Category name:"),
                                                     QLineEdit::Normal, category, &ok);
     if (!ok || newName.trimmed().isEmpty())
         return;
 
     QString errorMessage;
     if (!LibraryManager::getInstance().renameCategory(filename, category, newName, &errorMessage))
-        QMessageBox::warning(this, tr("Rinomina categoria"), errorMessage);
+        QMessageBox::warning(this, tr("Rename category"), errorMessage);
 }
 
 void MainWindow::deleteCategoryInteractive(const QString &filename, const QString &category)
 {
     const auto answer = QMessageBox::question(
-                this, tr("Elimina categoria"),
-                tr("Eliminare la categoria \"%1\" e tutte le macro che contiene?").arg(category),
+                this, tr("Delete category"),
+                tr("Delete category \"%1\" and all macros it contains?").arg(category),
                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer != QMessageBox::Yes)
         return;
 
     QString errorMessage;
     if (!LibraryManager::getInstance().deleteCategory(filename, category, &errorMessage))
-        QMessageBox::warning(this, tr("Elimina categoria"), errorMessage);
+        QMessageBox::warning(this, tr("Delete category"), errorMessage);
 }
 
 void MainWindow::renameMacroInteractive(const QString &key)
@@ -251,14 +251,14 @@ void MainWindow::renameMacroInteractive(const QString &key)
         return;
 
     bool ok = false;
-    const QString newName = QInputDialog::getText(this, tr("Rinomina macro"), tr("Nome macro:"),
+    const QString newName = QInputDialog::getText(this, tr("Rename macro"), tr("Macro name:"),
                                                     QLineEdit::Normal, descriptor->name, &ok);
     if (!ok || newName.trimmed().isEmpty())
         return;
 
     QString errorMessage;
     if (!LibraryManager::getInstance().renameMacro(key, newName, &errorMessage))
-        QMessageBox::warning(this, tr("Rinomina macro"), errorMessage);
+        QMessageBox::warning(this, tr("Rename macro"), errorMessage);
 }
 
 void MainWindow::deleteMacroInteractive(const QString &key)
@@ -267,13 +267,13 @@ void MainWindow::deleteMacroInteractive(const QString &key)
     const QString name = descriptor ? descriptor->name : key;
 
     const auto answer = QMessageBox::question(
-                this, tr("Elimina macro"),
-                tr("Eliminare definitivamente la macro \"%1\"?").arg(name),
+                this, tr("Delete macro"),
+                tr("Permanently delete macro \"%1\"?").arg(name),
                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
     if (answer != QMessageBox::Yes)
         return;
 
     QString errorMessage;
     if (!LibraryManager::getInstance().deleteMacro(key, &errorMessage))
-        QMessageBox::warning(this, tr("Elimina macro"), errorMessage);
+        QMessageBox::warning(this, tr("Delete macro"), errorMessage);
 }

@@ -27,7 +27,7 @@ namespace {
 // instead of naming an existing one.
 QString newLibrarySentinel()
 {
-    return QObject::tr("Nuova libreria...");
+    return QObject::tr("New library...");
 }
 }
 
@@ -91,8 +91,8 @@ void DialogCreateMacro::handleLibrarySelected(int index)
         return;
     }
 
-    const QString name = QInputDialog::getText(this, tr("Nuova libreria"),
-                                                 tr("Nome della nuova libreria:")).trimmed();
+    const QString name = QInputDialog::getText(this, tr("New library"),
+                                                 tr("Name of the new library:")).trimmed();
     if (name.isEmpty()) {
         ui->cboxLibrary->setCurrentIndex(m_previousLibraryIndex);
         return;
@@ -109,21 +109,21 @@ void DialogCreateMacro::validateAndAccept()
     ui->labelError->clear();
 
     if (macroName().isEmpty()) {
-        ui->labelError->setText(tr("Il nome è obbligatorio."));
+        ui->labelError->setText(tr("Name is required."));
         return;
     }
     const QString display = libraryDisplayName();
     if (display.isEmpty()) {
-        ui->labelError->setText(tr("Seleziona o crea una libreria."));
+        ui->labelError->setText(tr("Select or create a library."));
         return;
     }
     const QString filename = libraryFilename();
     if (filename.isEmpty()) {
-        ui->labelError->setText(tr("Nome libreria non valido: usa lettere, numeri o underscore."));
+        ui->labelError->setText(tr("Invalid library name: use letters, numbers or underscores."));
         return;
     }
     if (LibraryManager::getInstance().isStandardLibraryFilename(filename)) {
-        ui->labelError->setText(tr("Non è possibile salvare in una libreria standard."));
+        ui->labelError->setText(tr("Cannot save into a standard library."));
         return;
     }
 

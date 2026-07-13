@@ -25,7 +25,7 @@ MirrorPrimitiveCommand::MirrorPrimitiveCommand(GraphicsPrimitive *primitive, Qt:
                                                 const QPointF &pivot)
     : m_primitive(primitive), m_axis(axis), m_pivot(pivot)
 {
-    setText(QObject::tr("Specchia"));
+    setText(QObject::tr("Mirror"));
 }
 
 void MirrorPrimitiveCommand::undo()

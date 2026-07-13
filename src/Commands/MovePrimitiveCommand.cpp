@@ -25,7 +25,7 @@ MovePrimitiveCommand::MovePrimitiveCommand(GraphicsPrimitive *primitive, const Q
                                             const QVector<QPointF> &after)
     : m_primitive(primitive), m_before(before), m_after(after)
 {
-    setText(QObject::tr("Sposta"));
+    setText(QObject::tr("Move"));
 }
 
 void MovePrimitiveCommand::undo()

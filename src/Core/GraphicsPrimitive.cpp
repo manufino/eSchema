@@ -366,7 +366,7 @@ void GraphicsPrimitive::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (sheet) {
         const bool multiple = m_dragStartSnapshots.size() > 1;
         if (multiple)
-            sheet->undoStack()->beginMacro(tr("Sposta"));
+            sheet->undoStack()->beginMacro(tr("Move"));
         for (auto it = m_dragStartSnapshots.constBegin(); it != m_dragStartSnapshots.constEnd(); ++it) {
             const QVector<QPointF> after = it.key()->controlPointSnapshot();
             if (after != it.value())

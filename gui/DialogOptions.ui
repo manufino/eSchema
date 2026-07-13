@@ -40,7 +40,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Opzioni</string>
+   <string>Options</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -76,7 +76,7 @@
         <normaloff>:/res/resources/remix/settings-3-line.png</normaloff>:/res/resources/remix/settings-3-line.png</iconset>
       </attribute>
       <attribute name="title">
-       <string>Generale</string>
+       <string>General</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
@@ -154,7 +154,7 @@
          <item row="3" column="1">
           <widget class="QLabel" name="label_14">
            <property name="text">
-            <string>Percorso stylesheet</string>
+            <string>Stylesheet path</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -164,7 +164,7 @@
          <item row="7" column="1" colspan="2">
           <widget class="QCheckBox" name="chkAutosaveEnabled">
            <property name="text">
-            <string>Salvataggio automatico</string>
+            <string>Autosave</string>
            </property>
           </widget>
          </item>
@@ -289,7 +289,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Lingua</string>
+            <string>Language</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -306,17 +306,17 @@
            </property>
            <item>
             <property name="text">
-             <string>Chiaro</string>
+             <string>Light</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Scuro</string>
+             <string>Dark</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Sistema</string>
+             <string>System</string>
             </property>
            </item>
            <item>
@@ -329,7 +329,7 @@
          <item row="6" column="1">
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Percorso librerie</string>
+            <string>Library path</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -345,7 +345,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Stile interfaccia</string>
+            <string>Interface style</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -388,7 +388,7 @@
         <normaloff>:/res/resources/remix/grid-line.png</normaloff>:/res/resources/remix/grid-line.png</iconset>
       </attribute>
       <attribute name="title">
-       <string>Griglia</string>
+       <string>Grid</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <property name="spacing">
@@ -426,7 +426,7 @@
          <item row="16" column="0">
           <widget class="QLabel" name="label_15">
            <property name="text">
-            <string>Snap alla griglia</string>
+            <string>Snap to grid</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -446,7 +446,7 @@
          <item row="17" column="0">
           <widget class="QLabel" name="label_16">
            <property name="text">
-            <string>Passo snap (unità griglia)</string>
+            <string>Snap step (grid units)</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -485,7 +485,7 @@
          <item row="1" column="0">
           <widget class="QLabel" name="label_6">
            <property name="text">
-            <string>Passo griglia (Pixel) </string>
+            <string>Grid step (Pixels) </string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -527,7 +527,7 @@
          <item row="15" column="0">
           <widget class="QLabel" name="label_9">
            <property name="text">
-            <string>Colore linea marcata</string>
+            <string>Marked line color</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -537,7 +537,7 @@
          <item row="2" column="0">
           <widget class="QLabel" name="label_13">
            <property name="text">
-            <string>Dimensioni passo (in mm)</string>
+            <string>Step size (in mm)</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -554,17 +554,17 @@
            </property>
            <item>
             <property name="text">
-             <string>LINEE+PUNTI</string>
+             <string>LINES+DOTS</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>PUNTI</string>
+             <string>DOTS</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>LINEE</string>
+             <string>LINES</string>
             </property>
            </item>
           </widget>
@@ -588,7 +588,7 @@
          <item row="6" column="0">
           <widget class="QLabel" name="label_12">
            <property name="text">
-            <string>Spessore linea marcata</string>
+            <string>Marked line width</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -614,7 +614,7 @@
          <item row="14" column="0">
           <widget class="QLabel" name="label_8">
            <property name="text">
-            <string>Colore linea normale</string>
+            <string>Normal line color</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -694,7 +694,7 @@
          <item row="5" column="0">
           <widget class="QLabel" name="label_11">
            <property name="text">
-            <string>Spessore linea</string>
+            <string>Line width</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -704,7 +704,7 @@
          <item row="4" column="0">
           <widget class="QLabel" name="label_10">
            <property name="text">
-            <string>Passo marcatura</string>
+            <string>Mark step</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -749,7 +749,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Tipo di griglia</string>
+            <string>Grid type</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -772,7 +772,7 @@
          <item row="12" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
-            <string>Colore punti</string>
+            <string>Dot color</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -782,7 +782,7 @@
          <item row="8" column="0">
           <widget class="QLabel" name="label_7">
            <property name="text">
-            <string>Colore background</string>
+            <string>Background color</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -799,7 +799,7 @@
         <normaloff>:/res/resources/remix/tools-fill.png</normaloff>:/res/resources/remix/tools-fill.png</iconset>
       </attribute>
       <attribute name="title">
-       <string>Disegno</string>
+       <string>Drawing</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="spacing">
@@ -837,7 +837,7 @@
          <item row="0" column="0">
           <widget class="QLabel" name="label_18">
            <property name="text">
-            <string>Spessore linea disegno</string>
+            <string>Drawing line width</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -869,7 +869,7 @@
          <item row="1" column="0">
           <widget class="QLabel" name="label_19">
            <property name="text">
-            <string>Tolleranza selezione</string>
+            <string>Selection tolerance</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -904,7 +904,7 @@
          <item row="2" column="0">
           <widget class="QLabel" name="label_17">
            <property name="text">
-            <string>Dimensione anteprime macro</string>
+            <string>Macro preview size</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -936,7 +936,7 @@
          <item row="3" column="0">
           <widget class="QLabel" name="label_21">
            <property name="text">
-            <string>Dimensione pallino di connessione</string>
+            <string>Connection dot size</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1011,7 +1011,7 @@
       <item>
        <widget class="QPushButton" name="btnRestore">
         <property name="text">
-         <string>Ripristina valori</string>
+         <string>Restore defaults</string>
         </property>
        </widget>
       </item>
@@ -1025,14 +1025,14 @@
       <item>
        <widget class="QPushButton" name="btnCancel">
         <property name="text">
-         <string>Annulla</string>
+         <string>Cancel</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btnApply">
         <property name="text">
-         <string>Applica</string>
+         <string>Apply</string>
         </property>
        </widget>
       </item>

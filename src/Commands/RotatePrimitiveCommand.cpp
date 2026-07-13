@@ -24,7 +24,7 @@
 RotatePrimitiveCommand::RotatePrimitiveCommand(GraphicsPrimitive *primitive, const QPointF &pivot)
     : m_primitive(primitive), m_pivot(pivot)
 {
-    setText(QObject::tr("Ruota"));
+    setText(QObject::tr("Rotate"));
 }
 
 void RotatePrimitiveCommand::undo()

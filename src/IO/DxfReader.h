@@ -37,7 +37,7 @@ namespace DxfReader {
 // (up to 16) actually used by a supported entity rename/recolor the
 // existing global LayerList slots to match. `warnings`, if given, collects
 // one human-readable summary line per kind of skipped/unmapped content
-// (e.g. "12 entità HATCH non supportate").
+// (e.g. "12 unsupported HATCH entities").
 void read(const QString &text, Sheet *sheet, QStringList *warnings = nullptr);
 
 // Reads from disk. Returns false and sets *errorMessage if the file can't be

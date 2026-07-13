@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Opzioni di stampa</string>
+   <string>Print options</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -20,34 +20,34 @@
    <item>
     <widget class="QCheckBox" name="chkMirror">
      <property name="text">
-      <string>Specchia</string>
+      <string>Mirror</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="chkBlackWhite">
      <property name="text">
-      <string>Bianco e nero</string>
+      <string>Black and white</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="chkLandscape">
      <property name="text">
-      <string>Orizzontale</string>
+      <string>Landscape</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="groupMargins">
      <property name="title">
-      <string>Margini (cm)</string>
+      <string>Margins (cm)</string>
      </property>
      <layout class="QGridLayout" name="gridMargins">
       <item row="0" column="0">
        <widget class="QLabel" name="lblMarginTop">
         <property name="text">
-         <string>Superiore</string>
+         <string>Top</string>
         </property>
        </widget>
       </item>
@@ -67,7 +67,7 @@
       <item row="0" column="2">
        <widget class="QLabel" name="lblMarginBottom">
         <property name="text">
-         <string>Inferiore</string>
+         <string>Bottom</string>
         </property>
        </widget>
       </item>
@@ -87,7 +87,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="lblMarginLeft">
         <property name="text">
-         <string>Sinistro</string>
+         <string>Left</string>
         </property>
        </widget>
       </item>
@@ -107,7 +107,7 @@
       <item row="1" column="2">
        <widget class="QLabel" name="lblMarginRight">
         <property name="text">
-         <string>Destro</string>
+         <string>Right</string>
         </property>
        </widget>
       </item>
@@ -132,7 +132,7 @@
      <item>
       <widget class="QCheckBox" name="chkOneLayer">
        <property name="text">
-        <string>Stampa solo il layer:</string>
+        <string>Print only layer:</string>
        </property>
       </widget>
      </item>

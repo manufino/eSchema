@@ -174,7 +174,7 @@
                <cursorShape>PointingHandCursor</cursorShape>
               </property>
               <property name="text">
-               <string>eSchema su Github</string>
+               <string>eSchema on GitHub</string>
               </property>
              </widget>
             </item>
@@ -194,7 +194,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Set di icone:</string>
+               <string>Icon set:</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -250,7 +250,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Autore:</string>
+               <string>Author:</string>
               </property>
              </widget>
             </item>
@@ -263,7 +263,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Pagina web:</string>
+               <string>Website:</string>
               </property>
              </widget>
             </item>
@@ -316,7 +316,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Data compilazione:</string>
+               <string>Build date:</string>
               </property>
              </widget>
             </item>
@@ -557,7 +557,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Versione Qt: </string>
+               <string>Qt version: </string>
               </property>
              </widget>
             </item>
@@ -622,7 +622,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Versione software: </string>
+               <string>Software version: </string>
               </property>
              </widget>
             </item>

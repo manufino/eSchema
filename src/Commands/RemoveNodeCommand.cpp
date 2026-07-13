@@ -24,7 +24,7 @@
 RemoveNodeCommand::RemoveNodeCommand(GraphicsPrimitive *primitive, int index)
     : m_primitive(primitive), m_index(index), m_point(primitive->controlPoint(index))
 {
-    setText(QObject::tr("Rimuovi nodo"));
+    setText(QObject::tr("Remove node"));
 }
 
 void RemoveNodeCommand::undo()

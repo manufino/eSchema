@@ -99,7 +99,7 @@
         </font>
        </property>
        <property name="text">
-        <string>TASTI</string>
+        <string>KEYS</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -128,7 +128,7 @@
         </font>
        </property>
        <property name="text">
-        <string>AZIONE</string>
+        <string>ACTION</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -218,7 +218,7 @@
          <item row="1" column="2">
           <widget class="QLabel" name="action1">
            <property name="text">
-            <string>Nuovo disegno</string>
+            <string>New drawing</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -245,7 +245,7 @@
          <item row="2" column="2">
           <widget class="QLabel" name="action2">
            <property name="text">
-            <string>Apri un file</string>
+            <string>Open a file</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -272,7 +272,7 @@
          <item row="3" column="2">
           <widget class="QLabel" name="action3">
            <property name="text">
-            <string>Salva disegno</string>
+            <string>Save drawing</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -299,7 +299,7 @@
          <item row="4" column="2">
           <widget class="QLabel" name="action4">
            <property name="text">
-            <string>Salva con nome</string>
+            <string>Save as</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -326,7 +326,7 @@
          <item row="5" column="2">
           <widget class="QLabel" name="action5">
            <property name="text">
-            <string>Stampa</string>
+            <string>Print</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -353,7 +353,7 @@
          <item row="6" column="2">
           <widget class="QLabel" name="actionExportLabel">
            <property name="text">
-            <string>Esporta</string>
+            <string>Export</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -380,7 +380,7 @@
          <item row="7" column="2">
           <widget class="QLabel" name="action6">
            <property name="text">
-            <string>Chiudi</string>
+            <string>Close</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -397,7 +397,7 @@
             </font>
            </property>
            <property name="text">
-            <string>MODIFICA</string>
+            <string>EDIT</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -424,7 +424,7 @@
          <item row="9" column="2">
           <widget class="QLabel" name="action7">
            <property name="text">
-            <string>Annulla</string>
+            <string>Undo</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -451,7 +451,7 @@
          <item row="10" column="2">
           <widget class="QLabel" name="action8">
            <property name="text">
-            <string>Ripristina</string>
+            <string>Redo</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -478,7 +478,7 @@
          <item row="11" column="2">
           <widget class="QLabel" name="action9">
            <property name="text">
-            <string>Taglia</string>
+            <string>Cut</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -505,7 +505,7 @@
          <item row="12" column="2">
           <widget class="QLabel" name="action10">
            <property name="text">
-            <string>Copia</string>
+            <string>Copy</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -532,7 +532,7 @@
          <item row="13" column="2">
           <widget class="QLabel" name="actionCopyImage">
            <property name="text">
-            <string>Copia come immagine</string>
+            <string>Copy as image</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -559,7 +559,7 @@
          <item row="14" column="2">
           <widget class="QLabel" name="action11">
            <property name="text">
-            <string>Incolla</string>
+            <string>Paste</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -586,7 +586,7 @@
          <item row="15" column="2">
           <widget class="QLabel" name="action12">
            <property name="text">
-            <string>Duplica</string>
+            <string>Duplicate</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -613,7 +613,7 @@
          <item row="16" column="2">
           <widget class="QLabel" name="action13">
            <property name="text">
-            <string>Seleziona tutto</string>
+            <string>Select all</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -640,7 +640,7 @@
          <item row="17" column="2">
           <widget class="QLabel" name="action14">
            <property name="text">
-            <string>Elimina</string>
+            <string>Delete</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -667,7 +667,7 @@
          <item row="18" column="2">
           <widget class="QLabel" name="action15">
            <property name="text">
-            <string>Ruota</string>
+            <string>Rotate</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -694,7 +694,7 @@
          <item row="19" column="2">
           <widget class="QLabel" name="action16">
            <property name="text">
-            <string>Specchia</string>
+            <string>Mirror</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -721,7 +721,7 @@
          <item row="20" column="2">
           <widget class="QLabel" name="action17">
            <property name="text">
-            <string>Gestione layer</string>
+            <string>Layer management</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -731,7 +731,7 @@
          <item row="21" column="0">
           <widget class="QLabel" name="keyNudge">
            <property name="text">
-            <string>ALT + FRECCE</string>
+            <string>ALT + ARROWS</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -748,7 +748,7 @@
          <item row="21" column="2">
           <widget class="QLabel" name="actionNudge">
            <property name="text">
-            <string>Sposta la selezione di un passo</string>
+            <string>Move the selection by one step</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -765,7 +765,7 @@
             </font>
            </property>
            <property name="text">
-            <string>STRUMENTI DI DISEGNO</string>
+            <string>DRAWING TOOLS</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -792,7 +792,7 @@
          <item row="23" column="2">
           <widget class="QLabel" name="action18">
            <property name="text">
-            <string>Seleziona</string>
+            <string>Select</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -819,7 +819,7 @@
          <item row="24" column="2">
           <widget class="QLabel" name="action19">
            <property name="text">
-            <string>Linea</string>
+            <string>Line</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -846,7 +846,7 @@
          <item row="25" column="2">
           <widget class="QLabel" name="action20">
            <property name="text">
-            <string>Rettangolo</string>
+            <string>Rectangle</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -873,7 +873,7 @@
          <item row="26" column="2">
           <widget class="QLabel" name="action21">
            <property name="text">
-            <string>Poligono</string>
+            <string>Polygon</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -900,7 +900,7 @@
          <item row="27" column="2">
           <widget class="QLabel" name="action22">
            <property name="text">
-            <string>Ellisse</string>
+            <string>Ellipse</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -927,7 +927,7 @@
          <item row="28" column="2">
           <widget class="QLabel" name="action23">
            <property name="text">
-            <string>Curva Bézier</string>
+            <string>Bezier curve</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -954,7 +954,7 @@
          <item row="29" column="2">
           <widget class="QLabel" name="action24">
            <property name="text">
-            <string>Curva complessa</string>
+            <string>Complex curve</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -981,7 +981,7 @@
          <item row="30" column="2">
           <widget class="QLabel" name="action25">
            <property name="text">
-            <string>Testo</string>
+            <string>Text</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1008,7 +1008,7 @@
          <item row="31" column="2">
           <widget class="QLabel" name="action26">
            <property name="text">
-            <string>Connessione</string>
+            <string>Connection</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1035,7 +1035,7 @@
          <item row="32" column="2">
           <widget class="QLabel" name="action27">
            <property name="text">
-            <string>Traccia PCB</string>
+            <string>PCB track</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1062,7 +1062,7 @@
          <item row="33" column="2">
           <widget class="QLabel" name="action28">
            <property name="text">
-            <string>Pad PCB</string>
+            <string>PCB pad</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1089,7 +1089,7 @@
          <item row="34" column="2">
           <widget class="QLabel" name="action29">
            <property name="text">
-            <string>Immagine</string>
+            <string>Image</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1106,7 +1106,7 @@
             </font>
            </property>
            <property name="text">
-            <string>DURANTE IL DISEGNO</string>
+            <string>WHILE DRAWING</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -1116,7 +1116,7 @@
          <item row="36" column="0">
           <widget class="QLabel" name="key30">
            <property name="text">
-            <string>INVIO</string>
+            <string>ENTER</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -1133,7 +1133,7 @@
          <item row="36" column="2">
           <widget class="QLabel" name="action30">
            <property name="text">
-            <string>Termina poligono / curva</string>
+            <string>Finish polygon / curve</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1160,7 +1160,7 @@
          <item row="37" column="2">
           <widget class="QLabel" name="action31">
            <property name="text">
-            <string>Annulla / esci dallo strumento</string>
+            <string>Cancel / exit the tool</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1177,7 +1177,7 @@
             </font>
            </property>
            <property name="text">
-            <string>VISTA</string>
+            <string>VIEW</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -1252,7 +1252,7 @@
          <item row="40" column="2">
           <widget class="QLabel" name="action33">
            <property name="text">
-            <string>Trascina la vista</string>
+            <string>Pan the view</string>
            </property>
           </widget>
          </item>
@@ -1276,7 +1276,7 @@
          <item row="41" column="2">
           <widget class="QLabel" name="actionZoomSelectionLabel">
            <property name="text">
-            <string>Adatta la vista alla selezione</string>
+            <string>Fit the view to the selection</string>
            </property>
           </widget>
          </item>

@@ -167,7 +167,7 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         return;
 
     if (m_activeTool == Tool::Text) {
-        const QString text = QInputDialog::getText(m_view, tr("Testo"), tr("Contenuto:"));
+        const QString text = QInputDialog::getText(m_view, tr("Text"), tr("Content:"));
         if (text.isEmpty()) {
             m_activeTool = Tool::Select;
             return; // user cancelled - nothing to place
@@ -309,8 +309,8 @@ void PrimitivePlacementController::handleToolBarActionTriggered(QAction *action)
 void PrimitivePlacementController::armImagePlacement()
 {
     const QString path = QFileDialog::getOpenFileName(
-                m_view, tr("Inserisci immagine"), QString(),
-                tr("Immagini (*.png *.jpg *.jpeg *.bmp *.gif)"));
+                m_view, tr("Insert image"), QString(),
+                tr("Images (*.png *.jpg *.jpeg *.bmp *.gif)"));
     if (path.isEmpty()) {
         switchToolBarToSelectTool();
         return; // user cancelled - nothing to place
@@ -318,8 +318,8 @@ void PrimitivePlacementController::armImagePlacement()
 
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::warning(m_view, tr("Inserisci immagine"),
-                              tr("Impossibile leggere il file:\n%1").arg(path));
+        QMessageBox::warning(m_view, tr("Insert image"),
+                              tr("Unable to read the file:\n%1").arg(path));
         switchToolBarToSelectTool();
         return;
     }
