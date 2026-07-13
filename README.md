@@ -83,7 +83,7 @@ eSchema's interface is available in:
 | 🇪🇸 Español | 🇷🇺 Русский | 🇨🇳 中文 | 🇵🇱 Polski |
 | 🇯🇵 日本語 | 🇵🇹 Português | 🇸🇦 العربية | 🇮🇳 हिन्दी |
 
-English is the language the interface is natively written in, and Italian is maintained natively by the project too (this is originally an Italian-authored app). The other 10 translations were produced with the help of **Claude** (Anthropic's AI assistant) and have **not** all been reviewed by native speakers — some strings may be missing, awkward, or plain wrong. If you spot an incorrect translation, please [open an issue](https://github.com/manufino/eSchema/issues) or a pull request against the corresponding `translations/eSchema_<lang>.ts` file; corrections from native speakers are very welcome.
+English is the language the interface is natively written in, and Italian is maintained natively by the project too (this is originally an Italian-authored app). The other 10 translations are complete but were produced with the help of **Claude** (Anthropic's AI assistant) and have **not** been reviewed by native speakers — some strings may be awkward or plain wrong. If you spot an incorrect translation, please [open an issue](https://github.com/manufino/eSchema/issues) or a pull request against the corresponding `translations/eSchema_<lang>.ts` file; corrections from native speakers are very welcome.
 
 ---
 
