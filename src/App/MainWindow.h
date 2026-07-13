@@ -88,6 +88,13 @@ public slots:
     void clickShortcutsAction();
     void clickCheckUpdatesAction();
     void clickLayerManagerAction();
+    // FCD code dock (dockFcdCode): Apply re-parses the text box and replaces
+    // the whole drawing with it as one undo step; Refresh discards any local
+    // edit and regenerates the text from the current drawing. See
+    // syncFcdCodeFromSheet()/refreshFcdCodeIfClean() for the auto-refresh
+    // side of it.
+    void clickApplyFcdCodeAction();
+    void clickRefreshFcdCodeAction();
     void clickMirrorAction();
     void clickRotateAction();
     void clickConvertMacroToPrimitivesAction();
@@ -297,6 +304,18 @@ private:
     void handleUpdateAvailable(const QString &version, const QUrl &releaseUrl);
     void handleUpdateUpToDate();
     void handleUpdateCheckFailed();
+    // Unconditionally overwrites the FCD code dock's text with a fresh
+    // FidoCadWriter::write(sheetScene) and clears its "modified" flag -
+    // used by both the Refresh button and clickApplyFcdCodeAction() (which
+    // wants the canonical re-serialization of what it just applied, not
+    // whatever the user happened to type).
+    void syncFcdCodeFromSheet();
+    // Wired to the undo stack's indexChanged() - resyncs the code dock from
+    // the sheet on every external change (drawing on the canvas, undo/redo),
+    // but only while the user hasn't started editing the text themselves;
+    // otherwise their in-progress edit would keep getting silently
+    // discarded out from under them.
+    void refreshFcdCodeIfClean();
 
 private:
     Ui::MainWindow *ui;

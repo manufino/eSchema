@@ -42,6 +42,8 @@
 #include "PrimitiveComplexCurve.h"
 #include "ThemeManager.h"
 #include "UpdateChecker.h"
+#include "CreatePrimitiveCommand.h"
+#include "DeletePrimitiveCommand.h"
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QUrl>
@@ -143,6 +145,7 @@ MainWindow::MainWindow(QWidget *parent)
     // were still one fixed sidebar.
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockProperties->toggleViewAction());
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockLibraries->toggleViewAction());
+    ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockFcdCode->toggleViewAction());
     // Restores whatever dock/toolbar arrangement (position, size, floating,
     // tabbing) was in effect when the window was last closed - see
     // closeEvent(), which is what actually saves it. Silently does nothing
@@ -313,6 +316,8 @@ void MainWindow::setConnections()
     connect(ui->actionZoomToSelection, &QAction::triggered, ui->graphicsView, &SheetView::adjustViewToSelection);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
+    connect(ui->btnApplyFcdCode, &QPushButton::clicked, this, &MainWindow::clickApplyFcdCodeAction);
+    connect(ui->btnRefreshFcdCode, &QPushButton::clicked, this, &MainWindow::clickRefreshFcdCodeAction);
     connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
     connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
@@ -564,6 +569,9 @@ void MainWindow::setConnections()
     });
     ui->actionUndo->setEnabled(undo->canUndo());
     ui->actionRestore->setEnabled(undo->canRedo());
+
+    connect(undo, &QUndoStack::indexChanged, this, &MainWindow::refreshFcdCodeIfClean);
+    syncFcdCodeFromSheet();
 
     connect(ui->txtSearch, &QLineEdit::textChanged, this, &MainWindow::filterLibraryPanel);
 
@@ -919,6 +927,9 @@ void MainWindow::clickNewAction()
     // confirmDiscardChanges() above already resolved (saved or discarded)
     // whatever the previous document's autosave might have been tracking.
     clearAutosave();
+    // setClean() alone doesn't fire indexChanged() - the FCD code dock would
+    // otherwise keep showing the previous document.
+    syncFcdCodeFromSheet();
 }
 
 void MainWindow::clickOpenAction()
@@ -946,6 +957,7 @@ bool MainWindow::openFile(const QString &filePath)
     // Whatever the previous document's autosave was tracking is moot now -
     // its callers already resolved it via confirmDiscardChanges().
     clearAutosave();
+    syncFcdCodeFromSheet(); // setClean() alone doesn't fire indexChanged()
     return true;
 }
 
@@ -979,6 +991,7 @@ bool MainWindow::importDxfFile(const QString &filePath)
     // As rather than silently overwriting the .dxf with .fcd content.
     setCurrentFilePath(QString());
     clearAutosave();
+    syncFcdCodeFromSheet(); // setClean() alone doesn't fire indexChanged()
 
     if (!warnings.isEmpty()) {
         QMessageBox::information(this, tr("Import from DXF"),
@@ -986,6 +999,62 @@ bool MainWindow::importDxfFile(const QString &filePath)
                                           .arg(warnings.join(QLatin1Char('\n'))));
     }
     return true;
+}
+
+void MainWindow::syncFcdCodeFromSheet()
+{
+    // setPlainText() doesn't clear the modified flag on its own - block
+    // signals so this programmatic change doesn't itself trigger anything
+    // (e.g. a spell-checker/undo-stack hookup some style sheet might add).
+    const QSignalBlocker blocker(ui->txtFcdCode);
+    ui->txtFcdCode->setPlainText(FidoCadWriter::write(sheetScene));
+    ui->txtFcdCode->document()->setModified(false);
+}
+
+void MainWindow::refreshFcdCodeIfClean()
+{
+    if (!ui->txtFcdCode->document()->isModified())
+        syncFcdCodeFromSheet();
+}
+
+void MainWindow::clickRefreshFcdCodeAction()
+{
+    syncFcdCodeFromSheet();
+}
+
+void MainWindow::clickApplyFcdCodeAction()
+{
+    // FidoCadReader::parse() never fails (malformed/unrecognized lines are
+    // just skipped per FIDOSPECS.md's robustness contract) - so there's
+    // nothing to validate before replacing the drawing with the result.
+    // Document-wide FJC config lines (connection diameter/line width/layer
+    // locks) in the text are silently ignored here, same as parse() already
+    // does for Paste - those have their own dedicated UI (Options, Layer
+    // manager) rather than being round-tripped through this box.
+    const QList<GraphicsPrimitive *> parsed = FidoCadReader::parse(ui->txtFcdCode->toPlainText(), sheetScene);
+
+    // Copied, not a live reference: DeletePrimitiveCommand::redo() (from the
+    // push() calls below) mutates sheetScene's own primitive list as it
+    // goes, which would otherwise invalidate this loop mid-iteration.
+    const QList<GraphicsPrimitive *> oldPrimitives = sheetScene->primitives();
+
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(tr("Edit FCD code"));
+    for (GraphicsPrimitive *primitive : oldPrimitives)
+        undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+    for (GraphicsPrimitive *primitive : parsed) {
+        undo->push(new CreatePrimitiveCommand(sheetScene, primitive));
+        primitive->setSelected(true);
+    }
+    undo->endMacro();
+
+    // Resyncs with the canonical re-serialization of what was just applied
+    // (e.g. reformatted numbers) rather than leaving the user's raw typed
+    // text in place - endMacro() above already fired indexChanged(), but
+    // refreshFcdCodeIfClean() would have skipped it since the text still
+    // reads as modified at that point.
+    syncFcdCodeFromSheet();
 }
 
 QString MainWindow::droppableFilePath(const QMimeData *mimeData)
