@@ -26,14 +26,14 @@ DialogFind::DialogFind(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->txtSearch, &QLineEdit::returnPressed, this, [this]() {
-        emit findNext(ui->txtSearch->text());
+    connect(ui->txtFindSearch, &QLineEdit::returnPressed, this, [this]() {
+        emit findNext(ui->txtFindSearch->text());
     });
     connect(ui->btnNext, &QPushButton::clicked, this, [this]() {
-        emit findNext(ui->txtSearch->text());
+        emit findNext(ui->txtFindSearch->text());
     });
     connect(ui->btnPrevious, &QPushButton::clicked, this, [this]() {
-        emit findPrevious(ui->txtSearch->text());
+        emit findPrevious(ui->txtFindSearch->text());
     });
 }
 

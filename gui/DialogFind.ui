@@ -36,7 +36,7 @@
     <number>8</number>
    </property>
    <item>
-    <widget class="QLineEdit" name="txtSearch">
+    <widget class="QLineEdit" name="txtFindSearch">
      <property name="placeholderText">
       <string>Text or macro name ...</string>
      </property>
