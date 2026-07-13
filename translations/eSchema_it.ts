@@ -572,8 +572,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </message>
     <message>
         <location filename="../gui/DialogOptions.ui" line="984"/>
+        <source>Show icons in the library tree</source>
+        <translation>Mostra le icone nell'albero delle librerie</translation>
+    </message>
+    <message>
         <source>Show macro previews in the library tree</source>
-        <translation>Mostra le anteprime delle macro nell&apos;albero delle librerie</translation>
+        <translation type="vanished">Mostra le anteprime delle macro nell&apos;albero delle librerie</translation>
     </message>
     <message>
         <location filename="../gui/DialogOptions.ui" line="1034"/>

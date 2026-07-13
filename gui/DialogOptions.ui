@@ -981,7 +981,7 @@
          <item row="4" column="0" colspan="3">
           <widget class="QCheckBox" name="chkMacroTreeIcons">
            <property name="text">
-            <string>Show macro previews in the library tree</string>
+            <string>Show icons in the library tree</string>
            </property>
           </widget>
          </item>
