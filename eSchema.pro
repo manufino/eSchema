@@ -1,7 +1,7 @@
 # eSchema Version
 VERSION = 1.0.3
 
-QT += core gui printsupport svg
+QT += core gui printsupport svg network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -48,6 +48,7 @@ SOURCES += \
 	src/Core/Sheet.cpp \
 	src/Core/SheetView.cpp \
 	src/Core/ThemeManager.cpp \
+	src/Core/UpdateChecker.cpp \
 	src/Primitives/PrimitiveBezier.cpp \
 	src/Primitives/PrimitiveComplexCurve.cpp \
 	src/Primitives/PrimitiveConnection.cpp \
@@ -118,6 +119,7 @@ HEADERS += \
 	src/Core/Sheet.h \
 	src/Core/SheetView.h \
 	src/Core/ThemeManager.h \
+	src/Core/UpdateChecker.h \
 	src/Primitives/PrimitiveArrowUtils.h \
 	src/Primitives/PrimitiveBezier.h \
 	src/Primitives/PrimitiveComplexCurve.h \

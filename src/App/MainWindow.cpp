@@ -41,7 +41,10 @@
 #include "PrimitivePcbTrack.h"
 #include "PrimitiveComplexCurve.h"
 #include "ThemeManager.h"
+#include "UpdateChecker.h"
 #include <QFileDialog>
+#include <QDesktopServices>
+#include <QUrl>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QGuiApplication>
@@ -249,6 +252,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &MainWindow::restartAutosaveTimer);
 
+    updateChecker = new UpdateChecker(this);
+    connect(updateChecker, &UpdateChecker::updateAvailable, this, &MainWindow::handleUpdateAvailable);
+    connect(updateChecker, &UpdateChecker::upToDate, this, &MainWindow::handleUpdateUpToDate);
+    connect(updateChecker, &UpdateChecker::checkFailed, this, &MainWindow::handleUpdateCheckFailed);
+    // Silent unless an update is actually found (see handleUpdateUpToDate()/
+    // handleUpdateCheckFailed()) - manualUpdateCheck defaults to false, so
+    // this startup check reads as "automatic" to both of those.
+    if (SettingsManager::getInstance().loadSetting("check_updates_on_startup").toBool())
+        updateChecker->checkForUpdates();
+
     // Must run before main.cpp's own w.openFile(commandLineFile) call, which
     // happens synchronously right after this constructor returns - so this
     // stays a plain synchronous call here rather than a deferred/queued one,
@@ -269,6 +282,7 @@ void MainWindow::setConnections()
     connect(ui->actionOptions, &QAction::triggered, this, &MainWindow::clickOptionAction);
     connect(ui->actionInformation, &QAction::triggered, this, &MainWindow::clickAboutAction);
     connect(ui->actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
+    connect(ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::clickCheckUpdatesAction);
     connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
     connect(ui->graphicsView, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
     connect(ui->graphicsView, &SheetView::mouseMoved, this, [this](QPointF scenePos) {
@@ -590,6 +604,42 @@ void MainWindow::clickShortcutsAction()
     shortcutsDialog = new DialogShortcuts(this);
     connect(shortcutsDialog, &QDialog::finished, shortcutsDialog, &QObject::deleteLater);
     shortcutsDialog->show();
+}
+
+void MainWindow::clickCheckUpdatesAction()
+{
+    manualUpdateCheck = true;
+    updateChecker->checkForUpdates();
+}
+
+void MainWindow::handleUpdateAvailable(const QString &version, const QUrl &releaseUrl)
+{
+    manualUpdateCheck = false;
+    const auto answer = QMessageBox::question(
+                this, tr("Update available"),
+                tr("A new version of eSchema is available (%1).\nDo you want to download it now?").arg(version),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+    if (answer == QMessageBox::Yes)
+        QDesktopServices::openUrl(releaseUrl);
+}
+
+void MainWindow::handleUpdateUpToDate()
+{
+    if (manualUpdateCheck)
+        QMessageBox::information(this, tr("Check for updates"),
+                                  tr("eSchema is already up to date."));
+    manualUpdateCheck = false;
+}
+
+void MainWindow::handleUpdateCheckFailed()
+{
+    // Silent when triggered by the startup check - no connection or a
+    // firewall blocking it is completely normal and shouldn't nag the user
+    // on every launch.
+    if (manualUpdateCheck)
+        QMessageBox::information(this, tr("Check for updates"),
+                                  tr("Could not check for updates. Check your internet connection."));
+    manualUpdateCheck = false;
 }
 
 void MainWindow::clickLayerManagerAction()

@@ -53,7 +53,9 @@ class QDropEvent;
 class QMimeData;
 class QTimer;
 class QImage;
+class QUrl;
 class DialogFind;
+class UpdateChecker;
 
 class MainWindow : public QMainWindow
 {
@@ -84,6 +86,7 @@ public slots:
     void clickOptionAction();
     void clickAboutAction();
     void clickShortcutsAction();
+    void clickCheckUpdatesAction();
     void clickLayerManagerAction();
     void clickMirrorAction();
     void clickRotateAction();
@@ -286,6 +289,14 @@ private:
     // any) - QUndoCommand's base redo()/undo() are no-ops, so this changes
     // nothing about the drawing itself, only isClean()'s answer.
     void checkForAutosaveRecovery();
+    // Reactions to UpdateChecker's signals - shared by both the silent
+    // startup check and the manual "Check for updates" action. Only the
+    // manual one shows anything for upToDate()/checkFailed(); an available
+    // update is always offered, regardless of which triggered the check.
+    // See manualUpdateCheck's own comment for how they tell which is which.
+    void handleUpdateAvailable(const QString &version, const QUrl &releaseUrl);
+    void handleUpdateUpToDate();
+    void handleUpdateCheckFailed();
 
 private:
     Ui::MainWindow *ui;
@@ -297,6 +308,12 @@ private:
     DialogFind *findDialog = nullptr; // created lazily on first Ctrl+F
     QString lastFindText;
     int lastFindIndex = -1;
+    UpdateChecker *updateChecker;
+    // Only one check is ever in flight at a time (UpdateChecker itself
+    // no-ops a second call), so a single flag - set right before calling
+    // checkForUpdates() - is enough to tell the manual action's check apart
+    // from the silent startup one when the result comes back.
+    bool manualUpdateCheck = false;
     LayerToolBarWidget *layerToolBarWidget;
     PrimitivePlacementController *placementController;
     SelectionHandleController *selectionHandleController;

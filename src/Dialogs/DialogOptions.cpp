@@ -141,6 +141,9 @@ void DialogOptions::loadSettings()
 
     val = SettingsManager::getInstance().loadSetting("autosave_interval_minutes");
     ui->spinAutosaveInterval->setValue(val.toInt() > 0 ? val.toInt() : 5);
+
+    val = SettingsManager::getInstance().loadSetting("check_updates_on_startup");
+    ui->chkCheckUpdatesOnStartup->setChecked(val.isValid() ? val.toBool() : true);
 }
 
 void DialogOptions::saveSettings()
@@ -168,6 +171,7 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("language", LanguageCodes.at(ui->cboxLanguage->currentIndex()));
     SettingsManager::getInstance().saveSetting("autosave_enabled", ui->chkAutosaveEnabled->isChecked());
     SettingsManager::getInstance().saveSetting("autosave_interval_minutes", ui->spinAutosaveInterval->value());
+    SettingsManager::getInstance().saveSetting("check_updates_on_startup", ui->chkCheckUpdatesOnStartup->isChecked());
 }
 
 void DialogOptions::accept()

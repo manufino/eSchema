@@ -114,6 +114,11 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("autosave_enabled", true);
     saveSetting("autosave_interval_minutes", 5);
 
+    // UPDATE CHECK - a single HTTPS request to GitHub's releases API at
+    // startup (see UpdateChecker), silent unless a newer version is found.
+    // The manual "Check for updates" menu action ignores this setting.
+    saveSetting("check_updates_on_startup", true);
+
     // COLORS
     saveSetting("background_color", QColor("white").name());
     saveSetting("grid_dot_color", QColor("blue").name());

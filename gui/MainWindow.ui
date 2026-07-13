@@ -1296,6 +1296,8 @@
     <addaction name="actionInformation"/>
     <addaction name="actionAbout_Qt"/>
     <addaction name="separator"/>
+    <addaction name="actionCheckUpdates"/>
+    <addaction name="separator"/>
     <addaction name="actionShortcuts"/>
    </widget>
    <addaction name="menuFile"/>
@@ -1830,6 +1832,15 @@
    </property>
    <property name="text">
     <string>About eSchema</string>
+   </property>
+  </action>
+  <action name="actionCheckUpdates">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/down.png</normaloff>:/res/resources/down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Check for updates</string>
    </property>
   </action>
   <action name="actionAbout_Qt">
