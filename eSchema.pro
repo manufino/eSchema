@@ -97,6 +97,7 @@ SOURCES += \
 	src/Widgets/LayerLockButton.cpp \
 	src/Widgets/LayerToolBarWidget.cpp \
 	src/Widgets/LayerVisibilityButton.cpp \
+	src/Widgets/MacroPreviewWidget.cpp \
 	src/Widgets/PenStyleComboBox.cpp \
 	src/Widgets/RulerWidget.cpp \
 	src/Widgets/StatusBar.cpp \
@@ -167,6 +168,7 @@ HEADERS += \
 	src/Widgets/LayerToolBarWidget.h \
 	src/Widgets/LayerVisibilityButton.h \
 	src/Widgets/LinkLabel.h \
+	src/Widgets/MacroPreviewWidget.h \
 	src/Widgets/PenStyleComboBox.h \
 	src/Widgets/RulerWidget.h \
 	src/Widgets/StatusBar.h \

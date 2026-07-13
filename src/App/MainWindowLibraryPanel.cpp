@@ -137,6 +137,8 @@ void MainWindow::filterLibraryPanel(const QString &text)
 void MainWindow::clickLibraryMacroItem(QTreeWidgetItem *item)
 {
     const QString key = item->data(0, Qt::UserRole).toString();
+    ui->macroPreview->setMacroKey(key);
+    ui->lblMacroPreviewName->setText(key.isEmpty() ? QString() : item->text(0));
     if (!key.isEmpty())
         placementController->armMacroPlacement(key);
 }
