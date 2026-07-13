@@ -1470,7 +1470,7 @@
     <string>Esporta...</string>
    </property>
    <property name="toolTip">
-    <string>Esporta il disegno come PNG, JPG, SVG, PDF o DXF</string>
+    <string>Esporta il disegno come PNG, JPG, SVG, PDF, EPS o DXF</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>

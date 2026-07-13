@@ -224,11 +224,11 @@ int CommandLine::doConvert(Sheet *sheet)
 {
     static const QStringList supportedFormats = {
         QStringLiteral("png"), QStringLiteral("jpg"), QStringLiteral("jpeg"),
-        QStringLiteral("svg"), QStringLiteral("pdf"), QStringLiteral("dxf"),
-        QStringLiteral("fcd")
+        QStringLiteral("svg"), QStringLiteral("pdf"), QStringLiteral("eps"),
+        QStringLiteral("dxf"), QStringLiteral("fcd")
     };
     if (!supportedFormats.contains(m_exportFormat)) {
-        fprintf(stderr, "Unsupported format: %s (use png|jpg|svg|pdf|dxf|fcd)\n",
+        fprintf(stderr, "Unsupported format: %s (use png|jpg|svg|pdf|eps|dxf|fcd)\n",
                 qPrintable(m_exportFormat));
         return 1;
     }
@@ -284,7 +284,7 @@ void CommandLine::printHelp() const
         "        where 'dir' is the path of the directory you want to use.\n\n"
 
         " -c     Convert the given file to a graphical format.\n"
-        "        Usage: -c sx sy png|jpg|svg|pdf|dxf|fcd outfile\n"
+        "        Usage: -c sx sy png|jpg|svg|pdf|eps|dxf|fcd outfile\n"
         "        If you use this command line option, you *must* specify an eSchema/\n"
         "        FidoCadJ (.fcd) file to convert.\n"
         "        An alternative is to specify the resolution in pixels per logical unit\n"

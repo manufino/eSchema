@@ -72,6 +72,7 @@ SOURCES += \
 	src/IO/DxfCommon.cpp \
 	src/IO/DxfReader.cpp \
 	src/IO/DxfWriter.cpp \
+	src/IO/EpsGenerator.cpp \
 	src/IO/FidoCadReader.cpp \
 	src/IO/FidoCadTokenUtils.cpp \
 	src/IO/FidoCadWriter.cpp \
@@ -137,6 +138,7 @@ HEADERS += \
 	src/IO/DxfCommon.h \
 	src/IO/DxfReader.h \
 	src/IO/DxfWriter.h \
+	src/IO/EpsGenerator.h \
 	src/IO/FidoCadReader.h \
 	src/IO/FidoCadTokenUtils.h \
 	src/IO/FidoCadWriter.h \

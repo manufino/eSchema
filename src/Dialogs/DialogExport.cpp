@@ -36,6 +36,7 @@ DialogExport::DialogExport(const QSizeF &drawingSize, QWidget *parent)
     ui->cbFormat->addItem(QStringLiteral("JPG (bitmap)"), QStringLiteral("jpg"));
     ui->cbFormat->addItem(QStringLiteral("SVG (vettoriale)"), QStringLiteral("svg"));
     ui->cbFormat->addItem(QStringLiteral("PDF (vettoriale)"), QStringLiteral("pdf"));
+    ui->cbFormat->addItem(QStringLiteral("EPS (vettoriale)"), QStringLiteral("eps"));
     ui->cbFormat->addItem(QStringLiteral("DXF (AutoCAD)"), QStringLiteral("dxf"));
 
     loadSavedOptions();
@@ -90,6 +91,8 @@ QString DialogExport::fileFilter() const
         return tr("File SVG (*.svg)");
     if (format == QLatin1String("pdf"))
         return tr("File PDF (*.pdf)");
+    if (format == QLatin1String("eps"))
+        return tr("File EPS (*.eps)");
     return tr("File DXF (*.dxf)");
 }
 

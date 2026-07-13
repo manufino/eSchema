@@ -18,6 +18,7 @@
  */
 
 #include "GraphicExporter.h"
+#include "EpsGenerator.h"
 #include "Sheet.h"
 #include "GraphicsPrimitive.h"
 #include "Layer.h"
@@ -96,6 +97,23 @@ bool exportOneFile(Sheet *sheet, const QString &path,
         generator.setFileName(path);
         generator.setSize(targetSize.toSize());
         generator.setViewBox(target);
+        generator.setTitle(QStringLiteral("eSchema drawing"));
+        QPainter painter;
+        if (!painter.begin(&generator)) {
+            if (error)
+                *error = QStringLiteral("unable to write \"%1\"").arg(path);
+            return false;
+        }
+        sheet->render(&painter, drawTarget, source);
+        painter.end();
+        return true;
+    }
+
+    if (format == QLatin1String("eps")) {
+        // Same 1-pt-per-pixel convention as the PDF branch below.
+        EpsGenerator generator;
+        generator.setFileName(path);
+        generator.setSize(targetSize.toSize());
         generator.setTitle(QStringLiteral("eSchema drawing"));
         QPainter painter;
         if (!painter.begin(&generator)) {
