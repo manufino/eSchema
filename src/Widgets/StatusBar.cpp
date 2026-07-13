@@ -18,7 +18,6 @@
  */
 
 #include "StatusBar.h"
-#include <QSignalBlocker>
 
 
 StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
@@ -26,34 +25,6 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     lblPos->setText(tr("X 0  Y 0 (X 0.0mm Y 0.0mm)"));
 
     lblPos->setMinimumWidth(350);
-
-    btnGrid->setCheckable(true);
-    QIcon icon(":/res/resources/remix/grid-line.png");
-    btnGrid->setIcon(icon);
-    btnGrid->setIconSize(QSize(24,24));
-    btnGrid->setMinimumSize(QSize(24,24));
-    btnGrid->setMaximumSize(QSize(24,24));
-    btnGrid->setToolTip(tr("Attiva o disattiva la griglia"));
-    // Persists across restarts (see loadSettings()'s own read of the same
-    // key) - toggled() only fires on an actual state change, so the initial
-    // setChecked() below can't be relied on to also save it back.
-    connect(btnGrid, &QPushButton::toggled, this, [](bool checked) {
-        SettingsManager::getInstance().saveSetting("grid_visible", checked);
-    });
-
-    btnSnapGrid->setCheckable(true);
-    QIcon icon2(":/res/resources/remix/grid-fill.png");
-    btnSnapGrid->setIcon(icon2);
-    btnSnapGrid->setIconSize(QSize(24,24));
-    btnSnapGrid->setMinimumSize(QSize(24,24));
-    btnSnapGrid->setMaximumSize(QSize(24,24));
-    btnSnapGrid->setToolTip(tr("Attiva o disattiva \nil snap sulla griglia"));
-    // Same "snap_enabled" key the Options dialog's own checkbox reads/writes
-    // (GlobalUtils.h's snapToGrid() is what actually consults it) - this
-    // button is just a second, quicker way to flip the very same setting.
-    connect(btnSnapGrid, &QPushButton::toggled, this, [](bool checked) {
-        SettingsManager::getInstance().saveSetting("snap_enabled", checked);
-    });
 
     lblZoomLevel->setText(tr("Zoom 7%"));
     lblPrimitiveCount->setText(tr("Primitive 0  Macro 0"));
@@ -64,23 +35,9 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 
     loadSettings();
 
-    // Reflects whatever was last saved (or the compiled-in default, for a
-    // setting file saved before this button persisted anything) rather than
-    // always starting checked, now that both buttons actually persist.
-    // Signals blocked: this is loading the saved state, not the user
-    // changing it, so it must not immediately re-trigger a save.
-    QVariant gridVisible = SettingsManager::getInstance().loadSetting("grid_visible");
-    const QSignalBlocker blockGrid(btnGrid);
-    btnGrid->setChecked(gridVisible.isValid() ? gridVisible.toBool() : true);
-    QVariant snapEnabled = SettingsManager::getInstance().loadSetting("snap_enabled");
-    const QSignalBlocker blockSnap(btnSnapGrid);
-    btnSnapGrid->setChecked(snapEnabled.isValid() ? snapEnabled.toBool() : true);
-
     this->addPermanentWidget(lblZoomLevel);
     this->addPermanentWidget(lblPrimitiveCount);
     this->addPermanentWidget(lblPos);
-    this->addPermanentWidget(btnGrid);
-    this->addPermanentWidget(btnSnapGrid);
 }
 
 void StatusBar::loadSettings()

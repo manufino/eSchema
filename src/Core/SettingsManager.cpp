@@ -86,8 +86,8 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("grid_step_mark", 50);
     saveSetting("grid_line_width", 0.20);
     saveSetting("grid_line_mark_width", 0.20);
-    // Whether the grid is actually drawn - toggled via the status bar's grid
-    // button (StatusBar::btnGrid), independent of the grid's own appearance
+    // Whether the grid is actually drawn - toggled via the main toolbar's
+    // grid button (actionShowGrid), independent of the grid's own appearance
     // settings above.
     saveSetting("grid_visible", true);
 

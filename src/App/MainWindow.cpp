@@ -59,6 +59,48 @@
 #include <QDir>
 #include <QFile>
 #include <QUndoCommand>
+#include <QPainterPath>
+
+namespace {
+// No bundled icon reads as "snap" the way a magnet does - a plain grid
+// glyph (the obvious alternative) would sit right next to actionShowGrid's
+// own near-identical grid icon and be just as easy to mix up as the two
+// status-bar buttons this action replaces used to be. Rendered at runtime
+// the same way the layer lock icons are (see LayerIcons.cpp) rather than
+// adding a one-off PNG asset for a single toolbar action.
+QIcon renderMagnetIcon(int size = 24)
+{
+    QPixmap pixmap(size, size);
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    const qreal scale = size / 24.0;
+    painter.scale(scale, scale);
+
+    // Horseshoe body: two legs joined by a rounded top arc.
+    QPainterPath body;
+    body.moveTo(6.5, 20.0);
+    body.lineTo(6.5, 10.0);
+    body.arcTo(QRectF(6.5, 2.0, 11.0, 16.0), 180.0, -180.0);
+    body.lineTo(17.5, 20.0);
+
+    QPen bodyPen(QColor(110, 110, 115), 4.2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin);
+    painter.setPen(bodyPen);
+    painter.drawPath(body);
+
+    // The classic red/silver pole banding is what reads as "magnet" at a
+    // glance.
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor(196, 58, 48));
+    painter.drawRoundedRect(QRectF(4.0, 17.3, 5.0, 4.4), 1.0, 1.0);
+    painter.setBrush(QColor(180, 180, 185));
+    painter.drawRoundedRect(QRectF(15.0, 17.3, 5.0, 4.4), 1.0, 1.0);
+
+    painter.end();
+    return QIcon(pixmap);
+}
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -171,10 +213,30 @@ MainWindow::MainWindow(QWidget *parent)
     // settings file saved before this action persisted anything) rather than
     // always starting checked. Signals blocked: this is loading the saved
     // state, not the user changing it, so it must not immediately re-trigger
-    // a save (same pattern as StatusBar's grid/snap toggle buttons).
+    // a save (same pattern as the grid/snap toolbar actions right below).
     const QVariant rulersVisible = SettingsManager::getInstance().loadSetting("rulers_visible");
     const QSignalBlocker blockRulersAction(ui->actionRulersVisible);
     ui->actionRulersVisible->setChecked(rulersVisible.isValid() ? rulersVisible.toBool() : true);
+
+    // No bundled iconset for this one - see renderMagnetIcon()'s own comment.
+    ui->actionSnapToGrid->setIcon(renderMagnetIcon());
+
+    const QVariant gridVisible = SettingsManager::getInstance().loadSetting("grid_visible");
+    const QSignalBlocker blockGridAction(ui->actionShowGrid);
+    ui->actionShowGrid->setChecked(gridVisible.isValid() ? gridVisible.toBool() : true);
+    connect(ui->actionShowGrid, &QAction::toggled, this, [](bool checked) {
+        SettingsManager::getInstance().saveSetting("grid_visible", checked);
+    });
+
+    // Same "snap_enabled" key the Options dialog's own checkbox reads/writes
+    // (GlobalUtils.h's snapToGrid() is what actually consults it) - this
+    // toolbar button is just a quicker way to flip the very same setting.
+    const QVariant snapEnabled = SettingsManager::getInstance().loadSetting("snap_enabled");
+    const QSignalBlocker blockSnapAction(ui->actionSnapToGrid);
+    ui->actionSnapToGrid->setChecked(snapEnabled.isValid() ? snapEnabled.toBool() : true);
+    connect(ui->actionSnapToGrid, &QAction::toggled, this, [](bool checked) {
+        SettingsManager::getInstance().saveSetting("snap_enabled", checked);
+    });
 
     setConnections();
     updateRecentFilesMenu();

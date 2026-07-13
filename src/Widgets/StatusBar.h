@@ -23,7 +23,6 @@
 #include <QStatusBar>
 #include <QLabel>
 #include <QMouseEvent>
-#include <QPushButton>
 
 #include "SettingsManager.h"
 
@@ -32,8 +31,6 @@ class StatusBar : public QStatusBar
     Q_OBJECT
 public:
     StatusBar(QWidget *parent = nullptr);
-    QPushButton *btnGrid = new QPushButton(this);
-    QPushButton *btnSnapGrid = new QPushButton(this);
 
 private:
     void loadSettings();

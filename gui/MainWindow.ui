@@ -1326,6 +1326,10 @@
    <addaction name="actionMirror"/>
    <addaction name="separator"/>
    <addaction name="actionAdjustView"/>
+   <addaction name="separator"/>
+   <addaction name="actionShowGrid"/>
+   <addaction name="actionSnapToGrid"/>
+   <addaction name="separator"/>
    <addaction name="actionOptions"/>
    <addaction name="separator"/>
    <addaction name="actionLayerManager"/>
@@ -2008,6 +2012,32 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+F</string>
+   </property>
+  </action>
+  <action name="actionShowGrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/grid-line.png</normaloff>:/res/resources/remix/grid-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mostra griglia</string>
+   </property>
+   <property name="toolTip">
+    <string>Attiva o disattiva la griglia</string>
+   </property>
+  </action>
+  <action name="actionSnapToGrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Aggancia alla griglia</string>
+   </property>
+   <property name="toolTip">
+    <string>Attiva o disattiva l'aggancio alla griglia</string>
    </property>
   </action>
   <action name="actionShortcuts">
