@@ -115,11 +115,16 @@ void writeDocumentConfig(QStringList &lines, const Sheet *sheet)
 
 QString write(const Sheet *sheet)
 {
+    return writeExpanded(sheet, sheet->primitives());
+}
+
+QString writeExpanded(const Sheet *sheet, const QList<GraphicsPrimitive *> &primitives)
+{
     QStringList lines;
     lines << QStringLiteral("[FIDOCAD]");
     writeDocumentConfig(lines, sheet);
 
-    for (GraphicsPrimitive *primitive : sheet->primitives())
+    for (GraphicsPrimitive *primitive : primitives)
         writePrimitive(lines, primitive);
 
     return lines.join(QLatin1Char('\n'));
@@ -135,6 +140,12 @@ QString writeSelection(const QList<GraphicsPrimitive *> &primitives)
 
 bool writeFile(const Sheet *sheet, const QString &filePath, QString *errorMessage)
 {
+    return writeExpandedFile(sheet, sheet->primitives(), filePath, errorMessage);
+}
+
+bool writeExpandedFile(const Sheet *sheet, const QList<GraphicsPrimitive *> &primitives,
+                        const QString &filePath, QString *errorMessage)
+{
     // No QIODevice::Text: that flag makes Qt translate '\n' to the platform
     // newline (CRLF on Windows) on write. FIDOSPECS.md 2.1 accepts either
     // ending, but writing plain LF avoids rewriting every line ending of an
@@ -147,7 +158,7 @@ bool writeFile(const Sheet *sheet, const QString &filePath, QString *errorMessag
     }
 
     QTextStream stream(&file);
-    stream << write(sheet);
+    stream << writeExpanded(sheet, primitives);
     return true;
 }
 

@@ -130,6 +130,7 @@ void MainWindow::updateEditActionsState()
 
     ui->actionCut->setEnabled(hasSelection);
     ui->actionCopy->setEnabled(hasSelection);
+    ui->actionCopySplit->setEnabled(hasSelection);
     ui->actionDuplicate->setEnabled(hasSelection);
     ui->actionDelete->setEnabled(hasSelection);
     ui->actionMirror->setEnabled(hasSelection);
@@ -679,6 +680,35 @@ void MainWindow::clickCopyAction()
     if (selected.isEmpty())
         return;
     QGuiApplication::clipboard()->setText(FidoCadWriter::writeSelection(selected));
+}
+
+QList<GraphicsPrimitive *> MainWindow::expandMacrosOneLevel(const QList<GraphicsPrimitive *> &source,
+                                                              QList<GraphicsPrimitive *> &owned) const
+{
+    QList<GraphicsPrimitive *> result;
+    for (GraphicsPrimitive *primitive : source) {
+        if (primitive->getPrimitiveType() == GraphicsPrimitive::PartLib) {
+            const QList<GraphicsPrimitive *> expanded =
+                    static_cast<PrimitiveMacro *>(primitive)->convertToPrimitives(sheetScene);
+            owned.append(expanded);
+            result.append(expanded);
+        } else {
+            result.append(primitive);
+        }
+    }
+    return result;
+}
+
+void MainWindow::clickCopySplitAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+
+    QList<GraphicsPrimitive *> owned;
+    const QList<GraphicsPrimitive *> expanded = expandMacrosOneLevel(selected, owned);
+    QGuiApplication::clipboard()->setText(FidoCadWriter::writeSelection(expanded));
+    qDeleteAll(owned);
 }
 
 void MainWindow::clickCopyAsImageAction()

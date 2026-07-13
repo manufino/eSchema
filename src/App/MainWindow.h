@@ -92,6 +92,7 @@ public slots:
     void clickDeleteAction();
     void clickCutAction();
     void clickCopyAction();
+    void clickCopySplitAction();
     void clickCopyAsImageAction();
     void clickPasteAction();
     void clickDuplicateAction();
@@ -110,6 +111,7 @@ public slots:
     void clickImportDxfAction();
     void clickSaveAction();
     void clickSaveAsAction();
+    void clickSaveSplitAction();
     void clickPrintAction();
     void clickExportAction();
     // Builds and execs the right-click menu at `globalPos` - wired to
@@ -189,6 +191,17 @@ private:
     // around, and centers+selects whatever it lands on. See its definition
     // for the matching/cycling details.
     void findInDrawing(const QString &text, int direction);
+    // Shared by "Copy split"/"Save split as...": replaces every PrimitiveMacro
+    // in `source` with its convertToPrimitives() expansion (single level -
+    // same depth clickConvertMacroToPrimitivesAction() itself commits to the
+    // sheet, matching one convention across both features), leaving
+    // non-macro primitives untouched. The returned list mixes borrowed (the
+    // untouched originals - never delete these) and freshly-allocated
+    // primitives; every newly-allocated one is also appended to `owned` so
+    // the caller can qDeleteAll() it once done, since none of them are ever
+    // added to any Sheet.
+    QList<GraphicsPrimitive *> expandMacrosOneLevel(const QList<GraphicsPrimitive *> &source,
+                                                      QList<GraphicsPrimitive *> &owned) const;
     // Shared tail end of every align/distribute action: applies each
     // primitive's computed delta (skipping no-ops) as an undoable
     // MovePrimitiveCommand, macro-grouped so the whole alignment undoes in

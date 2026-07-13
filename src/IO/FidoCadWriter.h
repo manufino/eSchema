@@ -35,9 +35,21 @@ namespace FidoCadWriter {
 // Returns the full file contents (including the "[FIDOCAD]" header line).
 QString write(const Sheet *sheet);
 
+// Like write(), but serializes `primitives` instead of sheet->primitives() -
+// `sheet` is only consulted for its document-wide FJC config (connection
+// diameter/line widths) and the global LayerList's lock state, never
+// iterated itself. Used by "Copy/Save split" to substitute a macro-expanded
+// primitive list without needing those primitives to actually belong to a
+// Sheet (GraphicsPrimitive::convertToPrimitives()'s result never is one).
+QString writeExpanded(const Sheet *sheet, const QList<GraphicsPrimitive *> &primitives);
+
 // Writes to disk. Returns false and sets *errorMessage on failure to open
 // the file for writing.
 bool writeFile(const Sheet *sheet, const QString &filePath, QString *errorMessage = nullptr);
+
+// writeExpanded()'s equivalent of writeFile().
+bool writeExpandedFile(const Sheet *sheet, const QList<GraphicsPrimitive *> &primitives,
+                        const QString &filePath, QString *errorMessage = nullptr);
 
 // Serializes just the given primitives (in the given order), with no
 // "[FIDOCAD]" header and no document-wide FJC config line - used by Copy/Cut

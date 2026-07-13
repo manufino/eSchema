@@ -510,6 +510,7 @@ void MainWindow::setConnections()
     connect(ui->actionDelete, &QAction::triggered, this, &MainWindow::clickDeleteAction);
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::clickCutAction);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::clickCopyAction);
+    connect(ui->actionCopySplit, &QAction::triggered, this, &MainWindow::clickCopySplitAction);
     connect(ui->actionCopyAsImage, &QAction::triggered, this, &MainWindow::clickCopyAsImageAction);
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::clickPasteAction);
     connect(ui->actionDuplicate, &QAction::triggered, this, &MainWindow::clickDuplicateAction);
@@ -528,6 +529,7 @@ void MainWindow::setConnections()
     connect(ui->actionImportDxf, &QAction::triggered, this, &MainWindow::clickImportDxfAction);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
+    connect(ui->actionSaveSplit, &QAction::triggered, this, &MainWindow::clickSaveSplitAction);
     connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::clickPrintAction);
     connect(ui->actionExport, &QAction::triggered, this, &MainWindow::clickExportAction);
     // QWidget::close() reaches closeEvent(), which does the unsaved-changes
@@ -993,6 +995,28 @@ void MainWindow::clickSaveAsAction()
 
     if (saveToPath(path))
         setCurrentFilePath(path);
+}
+
+// Always prompts for a path and never touches currentFilePath/the undo
+// stack's clean state - unlike Save/Save As, this writes a throwaway
+// alternate copy of the drawing, not a new "current file".
+void MainWindow::clickSaveSplitAction()
+{
+    QString path = QFileDialog::getSaveFileName(this, tr("Save split as"), QString(),
+                                                 tr("FidoCadJ (*.fcd)"));
+    if (path.isEmpty())
+        return;
+    if (!path.endsWith(QStringLiteral(".fcd"), Qt::CaseInsensitive))
+        path += QStringLiteral(".fcd");
+
+    QList<GraphicsPrimitive *> owned;
+    const QList<GraphicsPrimitive *> expanded = expandMacrosOneLevel(sheetScene->primitives(), owned);
+    QString error;
+    const bool ok = FidoCadWriter::writeExpandedFile(sheetScene, expanded, path, &error);
+    qDeleteAll(owned);
+
+    if (!ok)
+        QMessageBox::warning(this, tr("Error"), tr("Unable to save the file:\n%1").arg(error));
 }
 
 void MainWindow::clickPrintAction()

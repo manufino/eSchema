@@ -1219,6 +1219,7 @@
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveSplit"/>
     <addaction name="separator"/>
     <addaction name="actionPrint"/>
     <addaction name="actionExport"/>
@@ -1243,6 +1244,7 @@
     <addaction name="separator"/>
     <addaction name="actionCut"/>
     <addaction name="actionCopy"/>
+    <addaction name="actionCopySplit"/>
     <addaction name="actionCopyAsImage"/>
     <addaction name="actionPaste"/>
     <addaction name="actionDuplicate"/>
@@ -1470,6 +1472,21 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
+  <action name="actionSaveSplit">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save split as...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save a copy of the drawing with every macro expanded into raw primitives</string>
+   </property>
+  </action>
   <action name="actionPrint">
    <property name="icon">
     <iconset resource="../resources.qrc">
@@ -1567,6 +1584,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionCopySplit">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy split</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy the selection with every macro expanded into raw primitives</string>
    </property>
   </action>
   <action name="actionCopyAsImage">
