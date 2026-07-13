@@ -33,6 +33,8 @@
 #include "DeletePrimitiveCommand.h"
 #include "CreatePrimitiveCommand.h"
 #include "MovePrimitiveCommand.h"
+#include "InsertNodeCommand.h"
+#include "RemoveNodeCommand.h"
 #include "LibraryManager.h"
 #include "PrimitiveMacro.h"
 #include "DialogCreateMacro.h"
@@ -45,6 +47,62 @@
 #include <QRandomGenerator>
 #include <algorithm>
 #include <limits>
+
+namespace {
+// Squared distance from `p` to the segment [a, b] - squared (not the actual
+// distance) since only relative comparisons are needed below, avoiding a
+// sqrt per candidate segment.
+qreal pointToSegmentDistanceSq(const QPointF &p, const QPointF &a, const QPointF &b)
+{
+    const QPointF ab = b - a;
+    const qreal lengthSq = QPointF::dotProduct(ab, ab);
+    qreal t = lengthSq > 0 ? QPointF::dotProduct(p - a, ab) / lengthSq : 0.0;
+    t = qBound<qreal>(0.0, t, 1.0);
+    const QPointF closest = a + ab * t;
+    const QPointF diff = p - closest;
+    return QPointF::dotProduct(diff, diff);
+}
+
+// The vertex index of `primitive` closest to `scenePos` - candidate for
+// "remove node".
+int nearestVertexIndex(GraphicsPrimitive *primitive, const QPointF &scenePos)
+{
+    int nearest = 0;
+    qreal bestDistSq = std::numeric_limits<qreal>::max();
+    for (int i = 0; i < primitive->controlPointCount(); ++i) {
+        const QPointF diff = primitive->controlPoint(i) - scenePos;
+        const qreal distSq = QPointF::dotProduct(diff, diff);
+        if (distSq < bestDistSq) {
+            bestDistSq = distSq;
+            nearest = i;
+        }
+    }
+    return nearest;
+}
+
+// The index at which a new vertex nearest `scenePos` should be inserted -
+// found via point-to-segment distance to every existing edge (wrapping for a
+// closed polygon/curve), so the new vertex lands on whichever edge the click
+// actually landed nearest to, rather than just between the two nearest
+// vertices by index.
+int nearestSegmentInsertIndex(GraphicsPrimitive *primitive, const QPointF &scenePos)
+{
+    const int count = primitive->controlPointCount();
+    const int segments = primitive->isClosedShape() ? count : count - 1;
+    int bestIndex = count;
+    qreal bestDistSq = std::numeric_limits<qreal>::max();
+    for (int i = 0; i < segments; ++i) {
+        const QPointF a = primitive->controlPoint(i);
+        const QPointF b = primitive->controlPoint((i + 1) % count);
+        const qreal distSq = pointToSegmentDistanceSq(scenePos, a, b);
+        if (distSq < bestDistSq) {
+            bestDistSq = distSq;
+            bestIndex = i + 1;
+        }
+    }
+    return bestIndex;
+}
+}
 
 // Mirror/Rotate/Delete/SelectAll all operate on the current scene selection.
 // Mirror and Rotate pivot around controlPoint(0) of the first selected
@@ -93,7 +151,7 @@ void MainWindow::updateEditActionsState()
 // built from (rather than a second, parallel set wired to the same slots),
 // so this menu's content, enabled state, shortcuts and icons can never drift
 // out of sync with the menu bar - see updateEditActionsState().
-void MainWindow::showCanvasContextMenu(const QPoint &globalPos)
+void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &scenePos)
 {
     QMenu menu(this);
     menu.addAction(ui->actionUndo);
@@ -122,6 +180,26 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos)
     menu.addAction(ui->actionDistributeVertical);
     menu.addSeparator();
     menu.addAction(ui->actionSelectAll);
+
+    // Only meaningful for a single selected polygon/complex curve - added
+    // here as plain transient QActions (the menu is rebuilt fresh every
+    // time) rather than as ui-> actions, since whether they even appear
+    // depends on what's selected.
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() == 1 && selected.first()->supportsNodeEditing()) {
+        GraphicsPrimitive *primitive = selected.first();
+        menu.addSeparator();
+        QAction *addNodeAction = menu.addAction(tr("Aggiungi nodo"));
+        connect(addNodeAction, &QAction::triggered, this, [this, primitive, scenePos]() {
+            addNodeToPrimitive(primitive, scenePos);
+        });
+        QAction *removeNodeAction = menu.addAction(tr("Rimuovi nodo"));
+        removeNodeAction->setEnabled(primitive->controlPointCount() > 2);
+        connect(removeNodeAction, &QAction::triggered, this, [this, primitive, scenePos]() {
+            removeNodeFromPrimitive(primitive, scenePos);
+        });
+    }
+
     menu.exec(globalPos);
 }
 
@@ -323,6 +401,22 @@ void MainWindow::nudgeSelection(const QPointF &direction)
     for (GraphicsPrimitive *primitive : selected)
         deltas.insert(primitive, direction * step);
     moveSelectedPrimitives(deltas, tr("Sposta selezione"));
+}
+
+void MainWindow::addNodeToPrimitive(GraphicsPrimitive *primitive, const QPointF &scenePos)
+{
+    if (!primitive->supportsNodeEditing() || primitive->controlPointCount() < 2)
+        return;
+    const int index = nearestSegmentInsertIndex(primitive, scenePos);
+    sheetScene->undoStack()->push(new InsertNodeCommand(primitive, index, scenePos));
+}
+
+void MainWindow::removeNodeFromPrimitive(GraphicsPrimitive *primitive, const QPointF &scenePos)
+{
+    if (!primitive->supportsNodeEditing() || primitive->controlPointCount() <= 2)
+        return;
+    const int index = nearestVertexIndex(primitive, scenePos);
+    sheetScene->undoStack()->push(new RemoveNodeCommand(primitive, index));
 }
 
 // Align/distribute operate on each primitive's own bounding box (in scene

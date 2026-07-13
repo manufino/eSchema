@@ -45,6 +45,11 @@ public:
     void removeLastVertex();
     int vertexCount() const { return m_vertices.size(); }
 
+    bool supportsNodeEditing() const override { return true; }
+    void insertControlPoint(int index, const QPointF &scenePos) override;
+    void removeControlPointAt(int index) override;
+    bool isClosedShape() const override { return true; }
+
     bool isDegenerate() const override;
     QStringList toTokens() const override;
 

@@ -111,8 +111,10 @@ public slots:
     void clickExportAction();
     // Builds and execs the right-click menu at `globalPos` - wired to
     // SheetView::contextMenuRequested(), which has already adjusted the
-    // selection (if needed) by the time this runs.
-    void showCanvasContextMenu(const QPoint &globalPos);
+    // selection (if needed) by the time this runs. `scenePos` is where on
+    // the drawing the click landed, used for context-dependent entries like
+    // add/remove node.
+    void showCanvasContextMenu(const QPoint &globalPos, const QPointF &scenePos);
 
 private:
     // Renders the drawing onto the printer/preview page, scaled (preserving
@@ -184,6 +186,15 @@ private:
     // setConnections(), matching the reference FidoCadJ editor's own
     // Alt+arrows nudge.
     void nudgeSelection(const QPointF &direction);
+    // Inserts a new vertex into `primitive` (a polygon or complex curve, per
+    // GraphicsPrimitive::supportsNodeEditing()) at the edge nearest
+    // `scenePos`, as one undoable step - wired to the canvas context menu's
+    // add-node entry.
+    void addNodeToPrimitive(GraphicsPrimitive *primitive, const QPointF &scenePos);
+    // Removes `primitive`'s vertex nearest `scenePos`, as one undoable step -
+    // wired to the canvas context menu's remove-node entry. A no-op if only
+    // two vertices remain (removing one more would leave a degenerate point).
+    void removeNodeFromPrimitive(GraphicsPrimitive *primitive, const QPointF &scenePos);
     // Replaces the sheet's contents with `filePath`'s (same bulk-load
     // contract as openFile(), but as an import: the document stays untitled
     // so the next Save goes through Save As). Shared by File > Importa da

@@ -132,6 +132,20 @@ void PrimitiveComplexCurve::removeLastVertex()
     m_vertices.removeLast();
 }
 
+void PrimitiveComplexCurve::insertControlPoint(int index, const QPointF &scenePos)
+{
+    if (m_vertices.size() >= MaxVertices)
+        return;
+    prepareGeometryChange();
+    m_vertices.insert(index, scenePos);
+}
+
+void PrimitiveComplexCurve::removeControlPointAt(int index)
+{
+    prepareGeometryChange();
+    m_vertices.remove(index);
+}
+
 bool PrimitiveComplexCurve::isDegenerate() const
 {
     return m_vertices.size() < 2 && objName.isEmpty() && objValue.isEmpty();

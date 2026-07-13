@@ -65,8 +65,10 @@ SOURCES += \
 	src/Primitives/SelectionHandleController.cpp \
 	src/Commands/CreatePrimitiveCommand.cpp \
 	src/Commands/DeletePrimitiveCommand.cpp \
+	src/Commands/InsertNodeCommand.cpp \
 	src/Commands/MirrorPrimitiveCommand.cpp \
 	src/Commands/MovePrimitiveCommand.cpp \
+	src/Commands/RemoveNodeCommand.cpp \
 	src/Commands/ResizePrimitiveCommand.cpp \
 	src/Commands/RotatePrimitiveCommand.cpp \
 	src/IO/DxfCommon.cpp \
@@ -131,8 +133,10 @@ HEADERS += \
 	src/Primitives/SelectionHandleController.h \
 	src/Commands/CreatePrimitiveCommand.h \
 	src/Commands/DeletePrimitiveCommand.h \
+	src/Commands/InsertNodeCommand.h \
 	src/Commands/MirrorPrimitiveCommand.h \
 	src/Commands/MovePrimitiveCommand.h \
+	src/Commands/RemoveNodeCommand.h \
 	src/Commands/ResizePrimitiveCommand.h \
 	src/Commands/RotatePrimitiveCommand.h \
 	src/IO/DxfCommon.h \

@@ -266,7 +266,7 @@ void SheetView::contextMenuEvent(QContextMenuEvent *event)
             primitive->setSelected(true);
         }
     }
-    emit contextMenuRequested(event->globalPos());
+    emit contextMenuRequested(event->globalPos(), mapToScene(event->pos()));
 }
 
 void SheetView::keyPressEvent(QKeyEvent *event)

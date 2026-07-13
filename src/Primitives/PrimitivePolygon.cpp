@@ -95,6 +95,20 @@ void PrimitivePolygon::removeLastVertex()
     m_vertices.removeLast();
 }
 
+void PrimitivePolygon::insertControlPoint(int index, const QPointF &scenePos)
+{
+    if (m_vertices.size() >= MaxVertices)
+        return;
+    prepareGeometryChange();
+    m_vertices.insert(index, scenePos);
+}
+
+void PrimitivePolygon::removeControlPointAt(int index)
+{
+    prepareGeometryChange();
+    m_vertices.remove(index);
+}
+
 bool PrimitivePolygon::isDegenerate() const
 {
     return m_vertices.size() < 2 && objName.isEmpty() && objValue.isEmpty();

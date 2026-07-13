@@ -139,6 +139,26 @@ public:
     virtual QPointF controlPoint(int index) const = 0;
     virtual void setControlPoint(int index, const QPointF &scenePos) = 0;
 
+    // Whether this primitive supports inserting/removing individual vertices
+    // after placement, via the canvas right-click menu's add/remove node
+    // actions - only PrimitivePolygon and PrimitiveComplexCurve override
+    // this trio, matching the reference FidoCadJ editor's own canvas actions
+    // (HandleActions), which are likewise offered only for those two
+    // primitive types. Every other primitive keeps the default false/no-op
+    // trio.
+    virtual bool supportsNodeEditing() const { return false; }
+    // Inserts a new vertex at `index` (0..controlPointCount()), shifting
+    // every following vertex one position later.
+    virtual void insertControlPoint(int index, const QPointF &scenePos) { Q_UNUSED(index); Q_UNUSED(scenePos); }
+    // Removes the vertex at `index`.
+    virtual void removeControlPointAt(int index) { Q_UNUSED(index); }
+    // Whether the control-point chain wraps from the last point back to the
+    // first when drawn - PrimitivePolygon always does (FCD "PV"/"PP" are
+    // inherently closed outlines); PrimitiveComplexCurve only when
+    // isClosed(). Used to decide whether the segment from the last vertex
+    // back to the first is a candidate for a new inserted node.
+    virtual bool isClosedShape() const { return false; }
+
     // Mirrors/rotates the primitive's control points around a pivot (scene coords).
     // Default implementation applies the transform to every control point in turn;
     // primitives with extra scalar orientation fields (e.g. PrimitiveMacro's

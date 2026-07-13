@@ -99,8 +99,10 @@ signals:
     void mousePosChanged();
     // MainWindow builds and execs the actual QMenu (it owns the ui->action*
     // objects the menu reuses) - SheetView only decides where/on-what the
-    // click landed.
-    void contextMenuRequested(const QPoint &globalPos);
+    // click landed. scenePos is also passed through for context-dependent
+    // entries that need where on the drawing the click landed (e.g. add/
+    // remove node on a polygon/complex curve), not just where to pop up.
+    void contextMenuRequested(const QPoint &globalPos, const QPointF &scenePos);
     // Fired whenever pan, zoom, or resize changes the mapping between scene
     // and viewport coordinates - MainWindow reads transform()/mapFromScene()
     // in response to this to keep the rulers' tick spacing and origin in

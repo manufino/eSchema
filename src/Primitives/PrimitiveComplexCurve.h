@@ -46,6 +46,11 @@ public:
     void removeLastVertex();
     int vertexCount() const { return m_vertices.size(); }
 
+    bool supportsNodeEditing() const override { return true; }
+    void insertControlPoint(int index, const QPointF &scenePos) override;
+    void removeControlPointAt(int index) override;
+    bool isClosedShape() const override { return m_closed; }
+
     bool isClosed() const { return m_closed; }
     // prepareGeometryChange()/update(): can now be changed live from the
     // Properties panel - closing the curve changes both its fill/shape and
