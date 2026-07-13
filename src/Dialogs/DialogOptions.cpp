@@ -132,6 +132,12 @@ void DialogOptions::loadSettings()
     const int languageIndex = LanguageCodes.indexOf(val.toString());
     ui->cboxLanguage->setCurrentIndex(languageIndex >= 0 ? languageIndex : 0);
     m_initialLanguageIndex = ui->cboxLanguage->currentIndex();
+
+    val = SettingsManager::getInstance().loadSetting("autosave_enabled");
+    ui->chkAutosaveEnabled->setChecked(val.isValid() ? val.toBool() : true);
+
+    val = SettingsManager::getInstance().loadSetting("autosave_interval_minutes");
+    ui->spinAutosaveInterval->setValue(val.toInt() > 0 ? val.toInt() : 5);
 }
 
 void DialogOptions::saveSettings()
@@ -156,6 +162,8 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("selection_tolerance", ui->spinSelectionTolerance->value());
     SettingsManager::getInstance().saveSetting("connection_diameter", ui->spinConnectionDiameter->value());
     SettingsManager::getInstance().saveSetting("language", LanguageCodes.at(ui->cboxLanguage->currentIndex()));
+    SettingsManager::getInstance().saveSetting("autosave_enabled", ui->chkAutosaveEnabled->isChecked());
+    SettingsManager::getInstance().saveSetting("autosave_interval_minutes", ui->spinAutosaveInterval->value());
 }
 
 void DialogOptions::accept()

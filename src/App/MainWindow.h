@@ -51,6 +51,7 @@ class QTreeWidgetItem;
 class QDragEnterEvent;
 class QDropEvent;
 class QMimeData;
+class QTimer;
 
 class MainWindow : public QMainWindow
 {
@@ -218,6 +219,37 @@ private:
     // chose to discard them) and false if the user cancelled.
     bool confirmDiscardChanges();
 
+    // Where autosaveTick() writes the recovery sidecar for the document
+    // currently open: "<name>.autosave.fcd" next to a named file, or one
+    // fixed slot under the app data directory for an untitled document
+    // (there is only ever one open document in this single-document app,
+    // so no collision risk).
+    QString autosaveTargetPath() const;
+    // Deletes the sidecar file (if any) and forgets it in the settings -
+    // called whenever the document transitions away from needing recovery:
+    // a successful Save, New, Open/Import (the previous document's context
+    // is gone either way), or a clean, deliberate close.
+    void clearAutosave();
+    // (Re)starts the autosave timer per the "autosave_enabled"/
+    // "autosave_interval_minutes" settings - wired to
+    // SettingsManager::settingIsChanged so a change in the Options dialog
+    // takes effect immediately, not just on the next launch.
+    void restartAutosaveTimer();
+    // Writes the open drawing to autosaveTargetPath() if there are unsaved
+    // changes (a clean document is already safe, nothing to recover) and
+    // records the sidecar's path in the settings - wired to the autosave
+    // timer's timeout().
+    void autosaveTick();
+    // Called once at the tail of the constructor, before main.cpp can open
+    // any command-line file: if a previous run left a recovery sidecar
+    // behind (i.e. it wasn't cleared by a clean shutdown - see
+    // clearAutosave()), offers to load it. A plain QUndoCommand is pushed
+    // after a successful recovery purely to make the stack report dirty
+    // (recovered content was never actually written to the real file, if
+    // any) - QUndoCommand's base redo()/undo() are no-ops, so this changes
+    // nothing about the drawing itself, only isClean()'s answer.
+    void checkForAutosaveRecovery();
+
 private:
     Ui::MainWindow *ui;
     Sheet *sheetScene;
@@ -229,5 +261,6 @@ private:
     PrimitivePlacementController *placementController;
     SelectionHandleController *selectionHandleController;
     QString currentFilePath; // empty = new/unsaved drawing
+    QTimer *autosaveTimer;
 };
 #endif // MAINWINDOW_H

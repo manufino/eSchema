@@ -102,6 +102,13 @@ void SettingsManager::restoreDefaultSettings()
     // area (RulerWidget), toggled from the Options dialog.
     saveSetting("rulers_visible", true);
 
+    // AUTOSAVE - periodically writes the open drawing to a recovery sidecar
+    // file so a crash doesn't lose unsaved work (see MainWindow::
+    // autosaveTick()). Does not touch the document's own save path/undo
+    // clean state.
+    saveSetting("autosave_enabled", true);
+    saveSetting("autosave_interval_minutes", 5);
+
     // COLORS
     saveSetting("background_color", QColor("white").name());
     saveSetting("grid_dot_color", QColor("blue").name());

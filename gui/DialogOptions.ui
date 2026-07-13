@@ -161,6 +161,29 @@
            </property>
           </widget>
          </item>
+         <item row="7" column="1" colspan="2">
+          <widget class="QCheckBox" name="chkAutosaveEnabled">
+           <property name="text">
+            <string>Salvataggio automatico</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="3">
+          <widget class="QSpinBox" name="spinAutosaveInterval">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>60</number>
+           </property>
+           <property name="value">
+            <number>5</number>
+           </property>
+           <property name="suffix">
+            <string> min</string>
+           </property>
+          </widget>
+         </item>
          <item row="9" column="1">
           <spacer name="verticalSpacer">
            <property name="orientation">
