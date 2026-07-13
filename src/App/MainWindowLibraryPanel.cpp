@@ -47,6 +47,13 @@ void MainWindow::buildLibraryPanel()
         iconSize = 32;
     const QSize iconQSize(iconSize, iconSize);
 
+    // Independent of the always-on MacroPreviewWidget panel below the tree -
+    // this only toggles the small per-row icon, for users who find a long
+    // library faster to scan as plain text (or just prefer the tree
+    // uncluttered now that clicking a row shows a full-size preview anyway).
+    const QVariant treeIconsSetting = SettingsManager::getInstance().loadSetting("macro_tree_icons_enabled");
+    const bool showTreeIcons = treeIconsSetting.isValid() ? treeIconsSetting.toBool() : true;
+
     for (const MacroLibrary &library : LibraryManager::getInstance().libraries()) {
         // A tree (library page -> category node -> macro leaf) instead of a
         // flat icon list, so a library's categories - the second grouping
@@ -55,7 +62,7 @@ void MainWindow::buildLibraryPanel()
         // an icon grid.
         auto *tree = new QTreeWidget(ui->toolBoxLib);
         tree->setHeaderHidden(true);
-        tree->setIconSize(iconQSize);
+        tree->setIconSize(showTreeIcons ? iconQSize : QSize(0, 0));
         tree->setIndentation(12);
         // NOT uniform: category rows (text-only) and macro rows (icon-sized,
         // which the user can set anywhere from 16 to 128px) are genuinely
@@ -77,13 +84,17 @@ void MainWindow::buildLibraryPanel()
 
             for (const MacroDescriptor &descriptor : library.macrosByCategory.value(category)) {
                 auto *item = new QTreeWidgetItem(categoryItem, QStringList(descriptor.name));
-                item->setIcon(0, LibraryManager::getInstance().icon(descriptor.key, iconSize));
+                if (showTreeIcons)
+                    item->setIcon(0, LibraryManager::getInstance().icon(descriptor.key, iconSize));
                 item->setData(0, Qt::UserRole, descriptor.key);
                 item->setToolTip(0, descriptor.name);
                 // An explicit size hint, not just the icon size passed to the
                 // tree above: some styles' default item delegate doesn't
-                // reliably grow the row to fit a large icon on its own.
-                item->setSizeHint(0, QSize(iconSize + 24, iconSize + 4));
+                // reliably grow the row to fit a large icon on its own. With
+                // icons off, let the delegate size the row from the text
+                // alone instead of reserving icon-sized space for nothing.
+                if (showTreeIcons)
+                    item->setSizeHint(0, QSize(iconSize + 24, iconSize + 4));
             }
         }
 

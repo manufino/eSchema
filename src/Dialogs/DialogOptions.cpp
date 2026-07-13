@@ -119,6 +119,9 @@ void DialogOptions::loadSettings()
     val = SettingsManager::getInstance().loadSetting("macro_icon_size");
     ui->spinMacroIconSize->setValue(val.toInt() > 0 ? val.toInt() : 32);
 
+    val = SettingsManager::getInstance().loadSetting("macro_tree_icons_enabled");
+    ui->chkMacroTreeIcons->setChecked(val.isValid() ? val.toBool() : true);
+
     val = SettingsManager::getInstance().loadSetting("line_width");
     ui->spinLineWidth->setValue(val.toDouble() > 0 ? val.toDouble() : 0.5);
 
@@ -158,6 +161,7 @@ void DialogOptions::saveSettings()
     SettingsManager::getInstance().saveSetting("snap_enabled", ui->chkSnapEnabled->isChecked());
     SettingsManager::getInstance().saveSetting("snap_step", ui->spinSnapStep->value());
     SettingsManager::getInstance().saveSetting("macro_icon_size", ui->spinMacroIconSize->value());
+    SettingsManager::getInstance().saveSetting("macro_tree_icons_enabled", ui->chkMacroTreeIcons->isChecked());
     SettingsManager::getInstance().saveSetting("line_width", ui->spinLineWidth->value());
     SettingsManager::getInstance().saveSetting("selection_tolerance", ui->spinSelectionTolerance->value());
     SettingsManager::getInstance().saveSetting("connection_diameter", ui->spinConnectionDiameter->value());

@@ -54,6 +54,11 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("stylesheet_path", "");
     saveSetting("lib_path", "");
     saveSetting("macro_icon_size", 32);
+    // Whether the library tree also renders a small preview icon per macro
+    // row (LibraryManager::icon()) or just its name - independent of the
+    // large MacroPreviewWidget panel below the tree, which always shows the
+    // currently-clicked macro regardless of this setting.
+    saveSetting("macro_tree_icons_enabled", true);
     // Matches the reference FidoCadJ editor's own compiled-in default
     // (Globals.lineWidthDefault) - the single width every schematic
     // primitive (Line/Bezier/Rectangle/Ellipse/Polygon/ComplexCurve) draws
