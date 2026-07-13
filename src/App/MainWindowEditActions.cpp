@@ -37,10 +37,13 @@
 #include "RemoveNodeCommand.h"
 #include "LibraryManager.h"
 #include "PrimitiveMacro.h"
+#include "PrimitiveImage.h"
 #include "DialogCreateMacro.h"
 #include <QGuiApplication>
 #include <QClipboard>
+#include <QMimeData>
 #include <QImage>
+#include <QBuffer>
 #include <QPainter>
 #include <QMenu>
 #include <QMessageBox>
@@ -132,7 +135,8 @@ void MainWindow::updateEditActionsState()
     ui->actionCreateMacro->setEnabled(hasSelection);
     ui->actionConvertMacroToPrimitives->setEnabled(hasMacro);
 
-    ui->actionPaste->setEnabled(!QGuiApplication::clipboard()->text().isEmpty());
+    const QClipboard *clipboard = QGuiApplication::clipboard();
+    ui->actionPaste->setEnabled(!clipboard->text().isEmpty() || clipboard->mimeData()->hasImage());
 
     const bool hasAtLeastTwo = selected.size() >= 2;
     ui->actionAlignLeft->setEnabled(hasAtLeastTwo);
@@ -706,9 +710,54 @@ void MainWindow::pasteFromText(const QString &text, const QString &undoLabel)
         undo->endMacro();
 }
 
+// Companion to pasteFromText(): the clipboard holds a bitmap (e.g. from
+// "Copy as image", a screenshot tool, or another application) rather than
+// FCD text. Mirrors PrimitivePlacementController::armImagePlacement()'s
+// construction of a PrimitiveImage (same base64 storage, same 100-unit
+// max-dimension scaling), but pushed straight onto the undo stack instead
+// of going through interactive placement, since there's no "click to drop
+// it" step here - Ctrl+V just puts it where armImagePlacement() seeds a
+// freshly-armed image tool: the view's current center.
+void MainWindow::pasteImageFromClipboard(const QImage &image)
+{
+    QByteArray data;
+    QBuffer buffer(&data);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG");
+
+    auto *primitiveImage = new PrimitiveImage();
+    const QString base64Data = QString::fromLatin1(data.toBase64());
+    primitiveImage->setImageData(QStringLiteral("png"), base64Data);
+
+    constexpr qreal MaxDimension = 100.0;
+    qreal width = MaxDimension, height = MaxDimension;
+    if (image.width() > 0 && image.height() > 0) {
+        const qreal scale = MaxDimension / qMax(image.width(), image.height());
+        width = image.width() * scale;
+        height = image.height() * scale;
+    }
+    const QPointF halfSize(width / 2.0, height / 2.0);
+    const QPointF center = ui->graphicsView->mapToScene(ui->graphicsView->viewport()->rect().center());
+    primitiveImage->setControlPoint(0, center - halfSize);
+    primitiveImage->setControlPoint(1, center + halfSize);
+
+    sheetScene->clearSelection();
+    sheetScene->undoStack()->push(new CreatePrimitiveCommand(sheetScene, primitiveImage));
+    primitiveImage->setSelected(true);
+}
+
 void MainWindow::clickPasteAction()
 {
-    const QString text = QGuiApplication::clipboard()->text();
+    const QClipboard *clipboard = QGuiApplication::clipboard();
+    if (clipboard->mimeData()->hasImage()) {
+        const QImage image = clipboard->image();
+        if (!image.isNull()) {
+            pasteImageFromClipboard(image);
+            return;
+        }
+    }
+
+    const QString text = clipboard->text();
     if (text.isEmpty())
         return;
     pasteFromText(text, tr("Paste"));

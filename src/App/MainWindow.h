@@ -52,6 +52,7 @@ class QDragEnterEvent;
 class QDropEvent;
 class QMimeData;
 class QTimer;
+class QImage;
 
 class MainWindow : public QMainWindow
 {
@@ -176,6 +177,10 @@ private:
     // Paste and Duplicate (see pasteFromText()'s doc comment for why they
     // share this instead of Duplicate routing through the clipboard).
     void pasteFromText(const QString &text, const QString &undoLabel);
+    // Companion to pasteFromText() for when the clipboard holds a bitmap
+    // instead of FCD text - builds a new PrimitiveImage from it and adds it
+    // the same undo-stack way. See its definition for details.
+    void pasteImageFromClipboard(const QImage &image);
     // Shared tail end of every align/distribute action: applies each
     // primitive's computed delta (skipping no-ops) as an undoable
     // MovePrimitiveCommand, macro-grouped so the whole alignment undoes in
