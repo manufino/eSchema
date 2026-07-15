@@ -20,6 +20,7 @@
 #include "ObjectSnap.h"
 #include "Sheet.h"
 #include "GraphicsPrimitive.h"
+#include "SettingsManager.h"
 #include <QLineF>
 #include <QRectF>
 #include <QVector>
@@ -42,12 +43,25 @@ qreal pointToSegmentDistanceSq(const QPointF &p, const QPointF &a, const QPointF
     return distanceSq(p, a + ab * t);
 }
 
+bool snapKindEnabled(const char *key)
+{
+    const QVariant value = SettingsManager::getInstance().loadSetting(key);
+    return value.isValid() ? value.toBool() : true;
+}
+
 }
 
 std::optional<QPointF> ObjectSnap::snapPoint(const Sheet *sheet, const QPointF &scenePos,
                                              qreal radius,
                                              const QList<const GraphicsPrimitive *> &excluded)
 {
+    // Each candidate kind can be turned off individually from the Options
+    // dialog's Snap page.
+    const bool wantEndpoints = snapKindEnabled("object_snap_endpoints");
+    const bool wantMidpoints = snapKindEnabled("object_snap_midpoints");
+    const bool wantCenters = snapKindEnabled("object_snap_centers");
+    const bool wantIntersections = snapKindEnabled("object_snap_intersections");
+
     const qreal radiusSq = radius * radius;
     std::optional<QPointF> best;
     qreal bestSq = radiusSq;
@@ -58,6 +72,14 @@ std::optional<QPointF> ObjectSnap::snapPoint(const Sheet *sheet, const QPointF &
             best = candidate;
         }
     };
+    auto considerEndpoint = [&](const QPointF &candidate) {
+        if (wantEndpoints)
+            consider(candidate);
+    };
+    auto considerCenter = [&](const QPointF &candidate) {
+        if (wantCenters)
+            consider(candidate);
+    };
 
     // Straight segments passing near the cursor, collected while walking the
     // primitives - any pairwise crossing among them is an intersection
@@ -66,8 +88,9 @@ std::optional<QPointF> ObjectSnap::snapPoint(const Sheet *sheet, const QPointF &
     // the pairwise loop tiny.
     QVector<QLineF> nearbySegments;
     auto considerSegment = [&](const QPointF &a, const QPointF &b) {
-        consider((a + b) / 2.0); // midpoint
-        if (pointToSegmentDistanceSq(scenePos, a, b) <= radiusSq)
+        if (wantMidpoints)
+            consider((a + b) / 2.0);
+        if (wantIntersections && pointToSegmentDistanceSq(scenePos, a, b) <= radiusSq)
             nearbySegments.append(QLineF(a, b));
     };
 
@@ -86,53 +109,53 @@ std::optional<QPointF> ObjectSnap::snapPoint(const Sheet *sheet, const QPointF &
             // Only the endpoints actually lie on the curve - the two inner
             // control points are off-curve guides, meaningless as targets.
             if (count >= 2) {
-                consider(primitive->controlPoint(0));
-                consider(primitive->controlPoint(count - 1));
+                considerEndpoint(primitive->controlPoint(0));
+                considerEndpoint(primitive->controlPoint(count - 1));
             }
             break;
         case GraphicsPrimitive::Line:
         case GraphicsPrimitive::PcbTrack:
             if (count >= 2) {
-                consider(primitive->controlPoint(0));
-                consider(primitive->controlPoint(1));
+                considerEndpoint(primitive->controlPoint(0));
+                considerEndpoint(primitive->controlPoint(1));
                 considerSegment(primitive->controlPoint(0), primitive->controlPoint(1));
             }
             break;
         case GraphicsPrimitive::Polyline: {
             for (int i = 0; i < count; ++i)
-                consider(primitive->controlPoint(i));
+                considerEndpoint(primitive->controlPoint(i));
             for (int i = 0; i < count; ++i) // closed ring - wrap the last edge
                 considerSegment(primitive->controlPoint(i), primitive->controlPoint((i + 1) % count));
             break;
         }
         case GraphicsPrimitive::Rectangle: {
             const QRectF rect = QRectF(primitive->controlPoint(0), primitive->controlPoint(1)).normalized();
-            consider(rect.center());
+            considerCenter(rect.center());
             considerSegment(rect.topLeft(), rect.topRight());
             considerSegment(rect.topRight(), rect.bottomRight());
             considerSegment(rect.bottomRight(), rect.bottomLeft());
             considerSegment(rect.bottomLeft(), rect.topLeft());
-            consider(rect.topLeft());
-            consider(rect.topRight());
-            consider(rect.bottomLeft());
-            consider(rect.bottomRight());
+            considerEndpoint(rect.topLeft());
+            considerEndpoint(rect.topRight());
+            considerEndpoint(rect.bottomLeft());
+            considerEndpoint(rect.bottomRight());
             break;
         }
         case GraphicsPrimitive::Ellipse: {
             const QRectF rect = QRectF(primitive->controlPoint(0), primitive->controlPoint(1)).normalized();
-            consider(rect.center());
+            considerCenter(rect.center());
             // The four quadrant points - where the ellipse meets its axes.
-            consider(QPointF(rect.center().x(), rect.top()));
-            consider(QPointF(rect.center().x(), rect.bottom()));
-            consider(QPointF(rect.left(), rect.center().y()));
-            consider(QPointF(rect.right(), rect.center().y()));
+            considerEndpoint(QPointF(rect.center().x(), rect.top()));
+            considerEndpoint(QPointF(rect.center().x(), rect.bottom()));
+            considerEndpoint(QPointF(rect.left(), rect.center().y()));
+            considerEndpoint(QPointF(rect.right(), rect.center().y()));
             break;
         }
         default:
             // Spline vertices, macro/text/pad/connection anchors, image
             // corners: the control points themselves are the natural targets.
             for (int i = 0; i < count; ++i)
-                consider(primitive->controlPoint(i));
+                considerEndpoint(primitive->controlPoint(i));
             break;
         }
     }

@@ -265,6 +265,11 @@ private:
     // findChildren<QTabBar*>() is the accepted workaround - called after
     // every dock move/re-tab, see the constructor's dock signal wiring.
     void refreshDockTabIcons();
+    // Re-applies the settings that map onto live widget/scene state (toolbar
+    // icon size, object snap, the "smooth boolean results" toggle) - wired
+    // to SettingsManager::settingIsChanged() so the Options dialog's Apply
+    // takes effect immediately, and called once at startup.
+    void applyLiveSettings();
     // Inserts a new vertex into `primitive` (a polygon or complex curve, per
     // GraphicsPrimitive::supportsNodeEditing()) at the edge nearest
     // `scenePos`, as one undoable step - wired to the canvas context menu's

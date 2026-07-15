@@ -52,6 +52,7 @@ private:
         QLabel *lblPrimitiveCount = new QLabel(this);
         int gridSize;
         double mm_step;
+        int unitsDisplay = 0; // 0 = both, 1 = drawing units, 2 = millimeters
 
 };
 

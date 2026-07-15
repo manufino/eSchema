@@ -1360,9 +1360,13 @@ void MainWindow::nudgeSelection(const QPointF &direction)
     if (selected.isEmpty())
         return;
 
-    // One snap step per press, whether or not snapping is currently enabled -
-    // the point of a keyboard nudge is a predictable, grid-friendly move.
-    const int step = qMax(1, SettingsManager::getInstance().loadSetting("snap_step").toInt());
+    // One snap step per press (times the configurable multiplier), whether
+    // or not snapping is currently enabled - the point of a keyboard nudge
+    // is a predictable, grid-friendly move.
+    const int multiplier = qMax(1, SettingsManager::getInstance()
+                                .loadSetting("nudge_step_multiplier").toInt());
+    const int step = multiplier
+            * qMax(1, SettingsManager::getInstance().loadSetting("snap_step").toInt());
 
     QHash<GraphicsPrimitive *, QPointF> deltas;
     for (GraphicsPrimitive *primitive : selected)

@@ -29,6 +29,12 @@ namespace Ui {
 class DialogOptions;
 }
 
+// The application options, organized as a sidebar of pages (General/
+// Interface/Grid/Snap/Drawing) with a search field that filters the sidebar
+// down to the pages containing a matching option. The Grid page carries a
+// live preview (GridPreviewWidget) fed straight from its own controls.
+// "Restore page defaults" resets only the current page's widgets - nothing
+// is written to disk until Apply/OK.
 class DialogOptions : public QDialog
 {
     Q_OBJECT
@@ -53,6 +59,15 @@ private slots:
     void updateStylesheetPathEnabled();
 
 private:
+    // Pushes the Grid page's current control values into the live preview.
+    void syncGridPreview();
+    // Hides sidebar entries whose page contains no label/checkbox/group
+    // matching `text` (case-insensitive); an empty text shows everything.
+    void filterPages(const QString &text);
+    // Sets the given page's widgets back to the built-in defaults (without
+    // saving - Apply/OK still decides).
+    void restorePageDefaults(int pageIndex);
+
     Ui::DialogOptions *ui;
     // cboxLanguage's index when the dialog was opened (or last applied) - compared
     // against the current index on apply()/accept() to decide whether to warn that

@@ -39,7 +39,8 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 
     setMouseTracking(true);
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
-    setRenderHint(QPainter::Antialiasing); //TODO: da valutare
+    // Antialiasing is applied by loadSettings() per the "render_antialias"
+    // setting (Options > Interface).
     setTransformationAnchor(QGraphicsView::NoAnchor);
     // Native rubber-band selection: clicking empty canvas and dragging draws
     // the selection rectangle and selects the primitives it touches. Clicking
@@ -162,7 +163,11 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 
 void SheetView::wheelEvent(QWheelEvent *event)
 {
-    if (event->modifiers() & Qt::ControlModifier) {
+    // Optionally (Options > Interface) the bare wheel zooms directly,
+    // CAD-style, instead of scrolling - Ctrl+wheel always zooms either way.
+    const bool wheelZoomsDirectly =
+            SettingsManager::getInstance().loadSetting("wheel_zoom_direct").toBool();
+    if (wheelZoomsDirectly || (event->modifiers() & Qt::ControlModifier)) {
         // zoom
         const ViewportAnchor anchor = transformationAnchor();
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
@@ -362,6 +367,11 @@ void SheetView::loadSettings()
     // existed (or none at all yet, on first run) still shows the grid.
     val = SettingsManager::getInstance().loadSetting("grid_visible");
     gridEnabled = val.isValid() ? val.toBool() : true;
+
+    // Rendering quality (Options > Interface) - turning antialiasing off
+    // can noticeably speed up very large drawings.
+    val = SettingsManager::getInstance().loadSetting("render_antialias");
+    setRenderHint(QPainter::Antialiasing, val.isValid() ? val.toBool() : true);
 }
 
 void SheetView::zoomUpdate()

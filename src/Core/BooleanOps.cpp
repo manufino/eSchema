@@ -21,6 +21,7 @@
 #include "GraphicsPrimitive.h"
 #include "PrimitivePolygon.h"
 #include "PrimitiveComplexCurve.h"
+#include "SettingsManager.h"
 #include <QLineF>
 #include <QPainterPath>
 #include <QPolygonF>
@@ -48,8 +49,14 @@ constexpr qreal CoincidentDistance = 0.01;
 // curve result. Also used to subdivide its straight runs: the FCD complex
 // curve interpolates *all* its points with one smooth spline, so straight
 // stretches only stay visually straight (and corners only stay visually
-// sharp) if the sampled points sit this densely.
-constexpr qreal SmoothSampleStep = 5.0;
+// sharp) if the sampled points sit this densely. User-tunable from the
+// Options dialog's Drawing page ("curve_sampling_step").
+qreal smoothSampleStep()
+{
+    const qreal value = SettingsManager::getInstance()
+            .loadSetting("curve_sampling_step").toDouble();
+    return value > 0 ? qBound(1.0, value, 50.0) : 5.0;
+}
 
 void appendUnique(QVector<QPointF> &points, const QPointF &point)
 {
@@ -119,9 +126,10 @@ QVector<QPointF> straightContourVertices(const QPainterPath &contour)
 
 // Points sampled along a (possibly curved) contour, dense enough that the
 // interpolating spline drawn through them stays visually faithful to the
-// original outline - see SmoothSampleStep.
+// original outline - see smoothSampleStep().
 QVector<QPointF> sampledContourVertices(const QPainterPath &contour)
 {
+    const qreal sampleStep = smoothSampleStep();
     QVector<QPointF> points;
     QPointF current;
     for (int i = 0; i < contour.elementCount(); ++i) {
@@ -133,7 +141,7 @@ QVector<QPointF> sampledContourVertices(const QPainterPath &contour)
             break;
         case QPainterPath::LineToElement: {
             const QPointF end = element;
-            const int steps = qMax(1, qRound(distance(current, end) / SmoothSampleStep));
+            const int steps = qMax(1, qRound(distance(current, end) / sampleStep));
             for (int s = 1; s <= steps; ++s)
                 appendUnique(points, current + (end - current) * (qreal(s) / steps));
             current = end;
@@ -148,7 +156,7 @@ QVector<QPointF> sampledContourVertices(const QPainterPath &contour)
             // curve's - good enough to pick a sampling density.
             const qreal lengthBound = distance(current, control1)
                     + distance(control1, control2) + distance(control2, end);
-            const int steps = qBound(4, qRound(lengthBound / SmoothSampleStep), 200);
+            const int steps = qBound(4, qRound(lengthBound / sampleStep), 200);
             for (int s = 1; s <= steps; ++s)
                 appendUnique(points, cubicPointAt(current, control1, control2, end,
                                                   qreal(s) / steps));

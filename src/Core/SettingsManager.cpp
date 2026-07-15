@@ -119,6 +119,31 @@ void SettingsManager::restoreDefaultSettings()
     // The manual "Check for updates" menu action ignores this setting.
     saveSetting("check_updates_on_startup", true);
 
+    // OBJECT SNAP - see ObjectSnap.h/Sheet::snapPosition().
+    saveSetting("snap_objects", true);
+    saveSetting("object_snap_radius", 12);
+    saveSetting("object_snap_endpoints", true);
+    saveSetting("object_snap_midpoints", true);
+    saveSetting("object_snap_centers", true);
+    saveSetting("object_snap_intersections", true);
+    saveSetting("snap_indicator_color", QColor(255, 128, 0).name());
+    saveSetting("handle_color", QColor(Qt::red).name());
+
+    // BEHAVIOR/INTERFACE extras (see DialogOptions' pages).
+    saveSetting("save_backup", false);
+    saveSetting("undo_limit", 0);
+    saveSetting("startup_reopen_last", false);
+    saveSetting("recent_files_max", 10);
+    saveSetting("toolbar_icon_size", 25);
+    saveSetting("render_antialias", true);
+    saveSetting("units_display", 0);
+    saveSetting("wheel_zoom_direct", false);
+    saveSetting("regular_polygon_sides", 6);
+    saveSetting("curve_sampling_step", 5.0);
+    saveSetting("boolean_smooth_results", false);
+    saveSetting("text_default_font", "Courier New");
+    saveSetting("nudge_step_multiplier", 1);
+
     // COLORS
     saveSetting("background_color", QColor("white").name());
     saveSetting("grid_dot_color", QColor("blue").name());

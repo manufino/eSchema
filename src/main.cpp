@@ -23,6 +23,7 @@
 #include "ThemeManager.h"
 
 #include <QApplication>
+#include <QFileInfo>
 #include <QLocale>
 #include <QTranslator>
 #include <QSplashScreen>
@@ -107,9 +108,16 @@ int main(int argc, char *argv[])
     splash.finish(&w);
 
     // "eschema drawing.fcd" opens that file directly, matching FidoCadJ's
-    // command-line behaviour.
-    if (!commandLine.loadFileName().isEmpty())
+    // command-line behaviour. Otherwise, optionally (Options > General)
+    // reopen whatever was worked on last.
+    if (!commandLine.loadFileName().isEmpty()) {
         w.openFile(commandLine.loadFileName());
+    } else if (SettingsManager::getInstance().loadSetting("startup_reopen_last").toBool()) {
+        const QStringList recents =
+                SettingsManager::getInstance().loadSetting("recent_files").toStringList();
+        if (!recents.isEmpty() && QFileInfo::exists(recents.first()))
+            w.openFile(recents.first());
+    }
 
     return a.exec();
 }

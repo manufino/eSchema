@@ -42,9 +42,13 @@ QRectF PrimitiveHandleItem::boundingRect() const
 void PrimitiveHandleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     // Matches the reference FidoCadJ editor, which draws every control-point
-    // handle as a small solid red square (GraphicPrimitive.drawHandles).
+    // handle as a small solid red square (GraphicPrimitive.drawHandles) -
+    // recolorable from the Options dialog's Snap page.
+    QColor handleColor(SettingsManager::getInstance().loadSetting("handle_color").toString());
+    if (!handleColor.isValid())
+        handleColor = Qt::red;
     painter->setPen(Qt::NoPen);
-    painter->setBrush(QBrush(Qt::red));
+    painter->setBrush(QBrush(handleColor));
     painter->drawRect(boundingRect());
 }
 

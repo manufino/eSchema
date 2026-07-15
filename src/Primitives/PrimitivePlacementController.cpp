@@ -90,7 +90,10 @@ QVector<QPointF> sampleArcThrough(const QPointF &from, const QPointF &via, const
     const qreal sweep = (sweepVia <= sweepTo) ? sweepTo : sweepTo - 2.0 * M_PI;
 
     const qreal arcLength = radius * qAbs(sweep);
-    const int steps = qBound(8, qRound(arcLength / 5.0), 120);
+    const qreal sampleValue = SettingsManager::getInstance()
+            .loadSetting("curve_sampling_step").toDouble();
+    const qreal sampleStep = sampleValue > 0 ? qBound(1.0, sampleValue, 50.0) : 5.0;
+    const int steps = qBound(8, qRound(arcLength / sampleStep), 120);
     QVector<QPointF> points;
     points.reserve(steps + 1);
     for (int i = 0; i <= steps; ++i) {
@@ -253,6 +256,10 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         }
         auto *primitiveText = static_cast<PrimitiveText *>(createPrimitiveForTool(Tool::Text));
         primitiveText->setText(text);
+        const QString defaultFont = SettingsManager::getInstance()
+                .loadSetting("text_default_font").toString();
+        if (!defaultFont.isEmpty())
+            primitiveText->setFontName(defaultFont);
         m_activePrimitive = primitiveText;
     } else if (m_activeTool == Tool::RegularPolygon) {
         // Same ask-at-first-click pattern as the Text tool, remembering the
@@ -405,11 +412,26 @@ QString PrimitivePlacementController::measureText(const QPointF &from, const QPo
     const qreal dy = to.y() - from.y();
     const qreal length = std::hypot(dx, dy);
     const qreal angle = qRadiansToDegrees(std::atan2(-dy, dx));
-    return tr("dx: %1   dy: %2   length: %3 (%4 mm)   angle: %5°")
+    // Same unit preference as the status bar's coordinates readout
+    // (Options > Interface > Coordinates display).
+    const int unitsDisplay = qBound(0, SettingsManager::getInstance()
+                                    .loadSetting("units_display").toInt(), 2);
+    QString lengthText;
+    switch (unitsDisplay) {
+    case 1:
+        lengthText = QString::number(length, 'f', 1);
+        break;
+    case 2:
+        lengthText = tr("%1 mm").arg(length * 0.127, 0, 'f', 2);
+        break;
+    default:
+        lengthText = tr("%1 (%2 mm)").arg(length, 0, 'f', 1).arg(length * 0.127, 0, 'f', 2);
+        break;
+    }
+    return tr("dx: %1   dy: %2   length: %3   angle: %4°")
             .arg(dx, 0, 'f', 1)
             .arg(dy, 0, 'f', 1)
-            .arg(length, 0, 'f', 1)
-            .arg(length * 0.127, 0, 'f', 2)
+            .arg(lengthText)
             .arg(angle, 0, 'f', 1);
 }
 

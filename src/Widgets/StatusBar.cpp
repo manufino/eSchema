@@ -47,6 +47,11 @@ void StatusBar::loadSettings()
 
     val = SettingsManager::getInstance().loadSetting("mm_step");
     mm_step = val.toDouble();
+
+    // 0 = units and millimeters, 1 = drawing units only, 2 = millimeters
+    // only (Options > Interface > Coordinates display).
+    val = SettingsManager::getInstance().loadSetting("units_display");
+    unitsDisplay = qBound(0, val.toInt(), 2);
 }
 
 void StatusBar::sceneMousePos(QPointF point)
@@ -63,8 +68,18 @@ void StatusBar::sceneMousePos(QPointF point)
     double xmm = mm_step * (x/gridSize);
     double ymm = mm_step * (y/gridSize);
 
-    QString pos = tr("X %1 Y %2 (X %3mm Y %4mm)")
-                      .arg(x).arg(y).arg(xmm).arg(ymm);
+    QString pos;
+    switch (unitsDisplay) {
+    case 1:
+        pos = tr("X %1 Y %2").arg(x).arg(y);
+        break;
+    case 2:
+        pos = tr("X %1mm Y %2mm").arg(xmm).arg(ymm);
+        break;
+    default:
+        pos = tr("X %1 Y %2 (X %3mm Y %4mm)").arg(x).arg(y).arg(xmm).arg(ymm);
+        break;
+    }
     lblPos->setText(pos);
 }
 

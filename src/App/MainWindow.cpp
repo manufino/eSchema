@@ -333,6 +333,18 @@ MainWindow::MainWindow(QWidget *parent)
         sheetScene->setObjectSnapEnabled(checked);
     });
 
+    // Options-dialog settings that map onto live widget state (toolbar icon
+    // size, mirrored toggles, ...) - see applyLiveSettings().
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, &MainWindow::applyLiveSettings);
+    applyLiveSettings();
+
+    // 0 = unlimited (QUndoStack's own default). Only effective while the
+    // stack is empty, hence set once here; a change from the Options dialog
+    // takes effect at the next start (its tooltip says so).
+    sheetScene->undoStack()->setUndoLimit(
+            qMax(0, SettingsManager::getInstance().loadSetting("undo_limit").toInt()));
+
     setConnections();
     updateRecentFilesMenu();
     updateRulers();
@@ -858,7 +870,9 @@ void MainWindow::addToRecentFiles(const QString &filePath)
             recents.removeAt(i);
     }
     recents.prepend(absolute);
-    while (recents.size() > 10)
+    const int maxSetting = SettingsManager::getInstance().loadSetting("recent_files_max").toInt();
+    const int maxRecents = maxSetting > 0 ? qBound(1, maxSetting, 30) : 10;
+    while (recents.size() > maxRecents)
         recents.removeLast();
     SettingsManager::getInstance().saveSetting("recent_files", recents);
     updateRecentFilesMenu();
@@ -938,6 +952,15 @@ void MainWindow::updateRulersVisibility()
 
 bool MainWindow::saveToPath(const QString &filePath)
 {
+    // Optional safety net (Options > General): keep the previous on-disk
+    // version as <name>.fcd.bak before overwriting it.
+    if (SettingsManager::getInstance().loadSetting("save_backup").toBool()
+            && QFile::exists(filePath)) {
+        const QString backupPath = filePath + QStringLiteral(".bak");
+        QFile::remove(backupPath);
+        QFile::copy(filePath, backupPath);
+    }
+
     QString error;
     if (!FidoCadWriter::writeFile(sheetScene, filePath, &error)) {
         QMessageBox::warning(this, tr("Error"), tr("Unable to save the file:\n%1").arg(error));
@@ -997,6 +1020,33 @@ void MainWindow::refreshDockTabIcons()
                     tabBar->setTabIcon(i, dock->windowIcon());
             }
         }
+    }
+}
+
+void MainWindow::applyLiveSettings()
+{
+    const int iconSizeSetting = SettingsManager::getInstance()
+            .loadSetting("toolbar_icon_size").toInt();
+    const int iconSize = iconSizeSetting > 0 ? qBound(16, iconSizeSetting, 64) : 25;
+    for (QToolBar *toolBar : { static_cast<QToolBar *>(ui->toolBarTools),
+                               static_cast<QToolBar *>(ui->toolBarModify),
+                               static_cast<QToolBar *>(ui->toolBarPrimitive) })
+        toolBar->setIconSize(QSize(iconSize, iconSize));
+
+    // Toggles that mirror a setting editable from the Options dialog too -
+    // signals blocked, or re-checking them would save the setting right
+    // back and loop through settingIsChanged() forever.
+    {
+        const QSignalBlocker blocker(ui->actionBooleanSmooth);
+        ui->actionBooleanSmooth->setChecked(
+                SettingsManager::getInstance().loadSetting("boolean_smooth_results").toBool());
+    }
+    {
+        const QVariant objectSnap = SettingsManager::getInstance().loadSetting("snap_objects");
+        const bool enabled = objectSnap.isValid() ? objectSnap.toBool() : true;
+        const QSignalBlocker blocker(ui->actionSnapToObjects);
+        ui->actionSnapToObjects->setChecked(enabled);
+        sheetScene->setObjectSnapEnabled(enabled);
     }
 }
 

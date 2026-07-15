@@ -139,11 +139,16 @@ void Sheet::drawForeground(QPainter *painter, const QRectF &)
     }
 
     // The captured object-snap point, as a small constant-screen-size open
-    // square - orange, so it can't be confused with the red resize handles.
+    // square - orange by default, so it can't be confused with the resize
+    // handles; recolorable from the Options dialog's Snap page.
     if (m_snapIndicatorVisible) {
         const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
         const qreal half = 5.0 / qMax(0.01, scale);
-        QPen pen(QColor(255, 128, 0));
+        QColor indicatorColor(SettingsManager::getInstance()
+                              .loadSetting("snap_indicator_color").toString());
+        if (!indicatorColor.isValid())
+            indicatorColor = QColor(255, 128, 0);
+        QPen pen(indicatorColor);
         pen.setWidthF(2.0 / qMax(0.01, scale));
         painter->setPen(pen);
         painter->setBrush(Qt::NoBrush);
@@ -156,9 +161,12 @@ QPointF Sheet::snapPosition(const QPointF &scenePos,
                             const QList<const GraphicsPrimitive *> &excluded)
 {
     if (m_objectSnapEnabled) {
-        // ~12 screen pixels of capture radius, whatever the current zoom.
+        // Capture radius in screen pixels (Options > Snap), whatever the
+        // current zoom.
+        const int radiusPx = SettingsManager::getInstance()
+                .loadSetting("object_snap_radius").toInt();
         const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
-        const qreal radius = 12.0 / qMax(0.01, scale);
+        const qreal radius = (radiusPx > 0 ? radiusPx : 12.0) / qMax(0.01, scale);
         const std::optional<QPointF> captured =
                 ObjectSnap::snapPoint(this, scenePos, radius, excluded);
         if (captured) {
