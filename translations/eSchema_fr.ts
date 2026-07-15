@@ -1372,8 +1372,8 @@ Continuer avec la restauration des valeurs par défaut ?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="983" />
-        <location filename="../gui/MainWindow.ui" line="2125" />
-        <location filename="../gui/MainWindow.ui" line="2128" />
+        <location filename="../gui/MainWindow.ui" line="2259" />
+        <location filename="../gui/MainWindow.ui" line="2262" />
         <source>Text</source>
         <translation>Texte</translation>
     </message>
@@ -1418,412 +1418,427 @@ Continuer avec la restauration des valeurs par défaut ?
         <translation>Reflété</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1210" />
+        <location filename="../gui/MainWindow.ui" line="1195" />
+        <source>Length</source>
+        <translation>Longueur</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1239" />
+        <source>Width</source>
+        <translation>Largeur</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1283" />
+        <source>Height</source>
+        <translation>Hauteur</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1342" />
         <source>FCD code</source>
         <translation>Code FCD</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1249" />
+        <location filename="../gui/MainWindow.ui" line="1381" />
         <source>Re-parse the text above and replace the whole drawing with it, as one undo step</source>
         <translation>Réanalyser le texte ci-dessus et remplacer tout le dessin par celui-ci, comme une seule étape annulable</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1252" />
+        <location filename="../gui/MainWindow.ui" line="1384" />
         <source>Apply</source>
         <translation>Appliquer</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1259" />
+        <location filename="../gui/MainWindow.ui" line="1391" />
         <source>Discard the text above and regenerate it from the current drawing</source>
         <translation>Annuler le texte ci-dessus et le régénérer à partir du dessin actuel</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1262" />
+        <location filename="../gui/MainWindow.ui" line="1394" />
         <source>Refresh</source>
         <translation>Actualiser</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1295" />
+        <location filename="../gui/MainWindow.ui" line="1427" />
         <source>File</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1313" />
-        <location filename="../src/App/MainWindow.cpp" line="773" />
+        <location filename="../gui/MainWindow.ui" line="1445" />
+        <location filename="../src/App/MainWindow.cpp" line="808" />
         <source>Open recent</source>
         <translation>Ouvrir récent</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1322" />
+        <location filename="../gui/MainWindow.ui" line="1454" />
         <source>Edit</source>
         <translation>Édition</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1357" />
+        <location filename="../gui/MainWindow.ui" line="1489" />
         <source>Boolean operations</source>
         <translation>Opérations booléennes</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1368" />
+        <location filename="../gui/MainWindow.ui" line="1500" />
         <source>View</source>
         <translation>Affichage</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1380" />
+        <location filename="../gui/MainWindow.ui" line="1512" />
         <source>Tools</source>
         <translation>Outils</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1389" />
+        <location filename="../gui/MainWindow.ui" line="1521" />
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1414" />
+        <location filename="../gui/MainWindow.ui" line="1546" />
         <source>ToolBarStandard</source>
         <translation>ToolBarStandard</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1463" />
+        <location filename="../gui/MainWindow.ui" line="1595" />
         <source>ToolBarModify</source>
         <translation>ToolBarModify</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1507" />
+        <location filename="../gui/MainWindow.ui" line="1641" />
         <source>ToolBarPrimitive</source>
         <translation>ToolBarPrimitive</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1553" />
+        <location filename="../gui/MainWindow.ui" line="1687" />
         <source>New drawing</source>
         <translation>Nouveau dessin</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1556" />
+        <location filename="../gui/MainWindow.ui" line="1690" />
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1568" />
+        <location filename="../gui/MainWindow.ui" line="1702" />
         <source>Open a file</source>
         <translation>Ouvrir un fichier</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1571" />
+        <location filename="../gui/MainWindow.ui" line="1705" />
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1580" />
+        <location filename="../gui/MainWindow.ui" line="1714" />
         <source>Import from DXF...</source>
         <translation>Importer depuis DXF...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1592" />
+        <location filename="../gui/MainWindow.ui" line="1726" />
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1595" />
+        <location filename="../gui/MainWindow.ui" line="1729" />
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1607" />
+        <location filename="../gui/MainWindow.ui" line="1741" />
         <source>Save as</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1610" />
+        <location filename="../gui/MainWindow.ui" line="1744" />
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1622" />
+        <location filename="../gui/MainWindow.ui" line="1756" />
         <source>Save split as...</source>
         <translation>Enregistrer éclaté sous...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1625" />
+        <location filename="../gui/MainWindow.ui" line="1759" />
         <source>Save a copy of the drawing with every macro expanded into raw primitives</source>
         <translation>Enregistrer une copie du dessin avec chaque macro développée en primitives brutes</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1634" />
-        <location filename="../src/App/MainWindow.cpp" line="1207" />
+        <location filename="../gui/MainWindow.ui" line="1768" />
+        <location filename="../src/App/MainWindow.cpp" line="1242" />
         <source>Print</source>
         <translation>Imprimer</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1637" />
+        <location filename="../gui/MainWindow.ui" line="1771" />
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1646" />
+        <location filename="../gui/MainWindow.ui" line="1780" />
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1649" />
+        <location filename="../gui/MainWindow.ui" line="1783" />
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1658" />
+        <location filename="../gui/MainWindow.ui" line="1792" />
         <source>Export...</source>
         <translation>Exporter...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1661" />
+        <location filename="../gui/MainWindow.ui" line="1795" />
         <source>Export the drawing as PNG, JPG, SVG, PDF, EPS, or DXF</source>
         <translation>Exporter le dessin en PNG, JPG, SVG, PDF, EPS ou DXF</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1664" />
+        <location filename="../gui/MainWindow.ui" line="1798" />
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1676" />
-        <location filename="../src/App/MainWindow.cpp" line="604" />
+        <location filename="../gui/MainWindow.ui" line="1810" />
+        <location filename="../src/App/MainWindow.cpp" line="635" />
         <source>Undo</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1679" />
+        <location filename="../gui/MainWindow.ui" line="1813" />
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1691" />
-        <location filename="../src/App/MainWindow.cpp" line="607" />
+        <location filename="../gui/MainWindow.ui" line="1825" />
+        <location filename="../src/App/MainWindow.cpp" line="638" />
         <source>Redo</source>
         <translation>Rétablir</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1694" />
+        <location filename="../gui/MainWindow.ui" line="1828" />
         <source>Ctrl+Shift+Z</source>
         <translation>Ctrl+Shift+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1706" />
+        <location filename="../gui/MainWindow.ui" line="1840" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="845" />
         <source>Cut</source>
         <translation>Couper</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1709" />
+        <location filename="../gui/MainWindow.ui" line="1843" />
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1721" />
+        <location filename="../gui/MainWindow.ui" line="1855" />
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1724" />
+        <location filename="../gui/MainWindow.ui" line="1858" />
         <source>Ctrl+C</source>
         <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1736" />
+        <location filename="../gui/MainWindow.ui" line="1870" />
         <source>Copy split</source>
         <translation>Copier éclaté</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1739" />
+        <location filename="../gui/MainWindow.ui" line="1873" />
         <source>Copy the selection with every macro expanded into raw primitives</source>
         <translation>Copier la sélection avec chaque macro développée en primitives brutes</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1748" />
+        <location filename="../gui/MainWindow.ui" line="1882" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="787" />
         <source>Copy as image</source>
         <translation>Copier comme image</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1751" />
+        <location filename="../gui/MainWindow.ui" line="1885" />
         <source>Copy the selection (or the whole drawing) to the clipboard as an image</source>
         <translation>Copier la sélection (ou tout le dessin) dans le presse-papiers sous forme d'image</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1754" />
+        <location filename="../gui/MainWindow.ui" line="1888" />
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1766" />
+        <location filename="../gui/MainWindow.ui" line="1900" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="938" />
         <source>Paste</source>
         <translation>Coller</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1769" />
+        <location filename="../gui/MainWindow.ui" line="1903" />
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1781" />
+        <location filename="../gui/MainWindow.ui" line="1915" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="946" />
         <source>Duplicate</source>
         <translation>Dupliquer</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1784" />
+        <location filename="../gui/MainWindow.ui" line="1918" />
         <source>Ctrl+D</source>
         <translation>Ctrl+D</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1796" />
+        <location filename="../gui/MainWindow.ui" line="1930" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="266" />
         <source>Rotate</source>
         <translation>Rotation</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1799" />
+        <location filename="../gui/MainWindow.ui" line="1933" />
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1811" />
+        <location filename="../gui/MainWindow.ui" line="1945" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="246" />
         <source>Mirror</source>
         <translation>Miroir</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1814" />
+        <location filename="../gui/MainWindow.ui" line="1948" />
         <source>S</source>
         <translation>S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1823" />
+        <location filename="../gui/MainWindow.ui" line="1957" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="341" />
         <source>Convert macro to primitives</source>
         <translation>Convertir la macro en primitives</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1835" />
+        <location filename="../gui/MainWindow.ui" line="1969" />
         <source>Create macro from selection...</source>
         <translation>Créer une macro à partir de la sélection...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1844" />
+        <location filename="../gui/MainWindow.ui" line="1978" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="592" />
         <source>Align left</source>
         <translation>Aligner à gauche</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1853" />
+        <location filename="../gui/MainWindow.ui" line="1987" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="608" />
         <source>Align right</source>
         <translation>Aligner à droite</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1862" />
+        <location filename="../gui/MainWindow.ui" line="1996" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="624" />
         <source>Align top</source>
         <translation>Aligner en haut</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1871" />
+        <location filename="../gui/MainWindow.ui" line="2005" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="640" />
         <source>Align bottom</source>
         <translation>Aligner en bas</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1880" />
+        <location filename="../gui/MainWindow.ui" line="2014" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="665" />
         <source>Align horizontal center</source>
         <translation>Aligner au centre horizontal</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1889" />
+        <location filename="../gui/MainWindow.ui" line="2023" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="689" />
         <source>Align vertical center</source>
         <translation>Aligner au centre vertical</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1898" />
+        <location filename="../gui/MainWindow.ui" line="2032" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="716" />
         <source>Distribute horizontally</source>
         <translation>Distribuer horizontalement</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1907" />
+        <location filename="../gui/MainWindow.ui" line="2041" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="739" />
         <source>Distribute vertically</source>
         <translation>Distribuer verticalement</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1919" />
+        <location filename="../gui/MainWindow.ui" line="2053" />
         <source>Select all</source>
         <translation>Tout sélectionner</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1922" />
+        <location filename="../gui/MainWindow.ui" line="2056" />
         <source>Ctrl+A</source>
         <translation>Ctrl+A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1931" />
+        <location filename="../gui/MainWindow.ui" line="2065" />
         <source>Find...</source>
         <translation>Rechercher...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1934" />
+        <location filename="../gui/MainWindow.ui" line="2068" />
         <source>Ctrl+F</source>
         <translation>Ctrl+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1946" />
+        <location filename="../gui/MainWindow.ui" line="2080" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="425" />
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1949" />
+        <location filename="../gui/MainWindow.ui" line="2083" />
         <source>Del</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1984" />
+        <location filename="../gui/MainWindow.ui" line="2118" />
         <source>About Qt</source>
         <translation>À propos de Qt</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2227" />
+        <location filename="../gui/MainWindow.ui" line="2361" />
         <source>Fit the view to the selection</source>
         <translation>Ajuster la vue à la sélection</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2230" />
+        <location filename="../gui/MainWindow.ui" line="2364" />
         <source>Fit the view to the bounding box of the selected elements</source>
         <translation>Ajuster la vue au cadre englobant des éléments sélectionnés</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2233" />
+        <location filename="../gui/MainWindow.ui" line="2367" />
         <source>Ctrl+Shift+F</source>
         <translation>Ctrl+Shift+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2245" />
+        <location filename="../gui/MainWindow.ui" line="2379" />
         <source>Show grid</source>
         <translation>Afficher la grille</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2248" />
+        <location filename="../gui/MainWindow.ui" line="2382" />
         <source>Toggle the grid</source>
         <translation>Afficher/masquer la grille</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2256" />
+        <location filename="../gui/MainWindow.ui" line="2390" />
         <source>Snap to grid</source>
         <translation>Aligner sur la grille</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2259" />
+        <location filename="../gui/MainWindow.ui" line="2393" />
         <source>Toggle snap to grid</source>
         <translation>Activer/désactiver l'alignement sur la grille</translation>
     </message>
@@ -1832,12 +1847,12 @@ Continuer avec la restauration des valeurs par défaut ?
         <translation type="vanished">Bitmap d'arrière-plan</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1961" />
+        <location filename="../gui/MainWindow.ui" line="2095" />
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1970" />
+        <location filename="../gui/MainWindow.ui" line="2104" />
         <source>About eSchema</source>
         <translation>À propos d'eSchema</translation>
     </message>
@@ -1846,332 +1861,332 @@ Continuer avec la restauration des valeurs par défaut ?
         <translation type="vanished">Calques</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1996" />
-        <location filename="../gui/MainWindow.ui" line="1999" />
+        <location filename="../gui/MainWindow.ui" line="2130" />
+        <location filename="../gui/MainWindow.ui" line="2133" />
         <source>Line</source>
         <translation>Ligne</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2002" />
+        <location filename="../gui/MainWindow.ui" line="2136" />
         <source>L</source>
         <translation>L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2014" />
-        <location filename="../gui/MainWindow.ui" line="2017" />
+        <location filename="../gui/MainWindow.ui" line="2148" />
+        <location filename="../gui/MainWindow.ui" line="2151" />
         <source>Rectangle</source>
         <translation>Rectangle</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2020" />
+        <location filename="../gui/MainWindow.ui" line="2154" />
         <source>G</source>
         <translation>G</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2032" />
-        <location filename="../gui/MainWindow.ui" line="2035" />
+        <location filename="../gui/MainWindow.ui" line="2166" />
+        <location filename="../gui/MainWindow.ui" line="2169" />
         <source>Polygon</source>
         <translation>Polygone</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2038" />
+        <location filename="../gui/MainWindow.ui" line="2172" />
         <source>P</source>
         <translation>P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2050" />
-        <location filename="../gui/MainWindow.ui" line="2053" />
+        <location filename="../gui/MainWindow.ui" line="2184" />
+        <location filename="../gui/MainWindow.ui" line="2187" />
         <source>Ellipse</source>
         <translation>Ellipse</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2056" />
+        <location filename="../gui/MainWindow.ui" line="2190" />
         <source>E</source>
         <translation>E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2071" />
-        <location filename="../gui/MainWindow.ui" line="2074" />
+        <location filename="../gui/MainWindow.ui" line="2205" />
+        <location filename="../gui/MainWindow.ui" line="2208" />
         <source>Select</source>
         <translation>Sélectionner</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2077" />
+        <location filename="../gui/MainWindow.ui" line="2211" />
         <source>A</source>
         <translation>A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2089" />
-        <location filename="../gui/MainWindow.ui" line="2092" />
+        <location filename="../gui/MainWindow.ui" line="2223" />
+        <location filename="../gui/MainWindow.ui" line="2226" />
         <source>Bezier</source>
         <translation>Bézier</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2095" />
+        <location filename="../gui/MainWindow.ui" line="2229" />
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2107" />
-        <location filename="../gui/MainWindow.ui" line="2110" />
+        <location filename="../gui/MainWindow.ui" line="2241" />
+        <location filename="../gui/MainWindow.ui" line="2244" />
         <source>Curve</source>
         <translation>Courbe</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2113" />
+        <location filename="../gui/MainWindow.ui" line="2247" />
         <source>O</source>
         <translation>O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2131" />
+        <location filename="../gui/MainWindow.ui" line="2265" />
         <source>T</source>
         <translation>T</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2143" />
-        <location filename="../gui/MainWindow.ui" line="2146" />
+        <location filename="../gui/MainWindow.ui" line="2277" />
+        <location filename="../gui/MainWindow.ui" line="2280" />
         <source>Connection</source>
         <translation>Connexion</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2149" />
+        <location filename="../gui/MainWindow.ui" line="2283" />
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2161" />
-        <location filename="../gui/MainWindow.ui" line="2164" />
+        <location filename="../gui/MainWindow.ui" line="2295" />
+        <location filename="../gui/MainWindow.ui" line="2298" />
         <source>PCB track</source>
         <translation>Piste PCB</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2167" />
+        <location filename="../gui/MainWindow.ui" line="2301" />
         <source>I</source>
         <translation>I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2179" />
-        <location filename="../gui/MainWindow.ui" line="2182" />
+        <location filename="../gui/MainWindow.ui" line="2313" />
+        <location filename="../gui/MainWindow.ui" line="2316" />
         <source>PCB pad</source>
         <translation>Pastille PCB</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2185" />
+        <location filename="../gui/MainWindow.ui" line="2319" />
         <source>Z</source>
         <translation>Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2197" />
-        <location filename="../gui/MainWindow.ui" line="2200" />
+        <location filename="../gui/MainWindow.ui" line="2331" />
+        <location filename="../gui/MainWindow.ui" line="2334" />
         <source>Image</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2203" />
+        <location filename="../gui/MainWindow.ui" line="2337" />
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2215" />
+        <location filename="../gui/MainWindow.ui" line="2349" />
         <source>Fit view</source>
         <translation>Ajuster la vue</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2218" />
+        <location filename="../gui/MainWindow.ui" line="2352" />
         <source>Fit the drawing view</source>
         <translation>Ajuster la vue du dessin</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1979" />
-        <location filename="../src/App/MainWindow.cpp" line="676" />
-        <location filename="../src/App/MainWindow.cpp" line="687" />
+        <location filename="../gui/MainWindow.ui" line="2113" />
+        <location filename="../src/App/MainWindow.cpp" line="711" />
+        <location filename="../src/App/MainWindow.cpp" line="722" />
         <source>Check for updates</source>
         <translation>Vérifier les mises à jour</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2268" />
+        <location filename="../gui/MainWindow.ui" line="2402" />
         <source>Keyboard shortcuts</source>
         <translation>Raccourcis clavier</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2280" />
-        <location filename="../gui/MainWindow.ui" line="2283" />
+        <location filename="../gui/MainWindow.ui" line="2414" />
+        <location filename="../gui/MainWindow.ui" line="2417" />
         <source>Layer management</source>
         <translation>Gestion des calques</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2286" />
+        <location filename="../gui/MainWindow.ui" line="2420" />
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2295" />
+        <location filename="../gui/MainWindow.ui" line="2429" />
         <source>Tracing image...</source>
         <translation>Image de calque...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2298" />
+        <location filename="../gui/MainWindow.ui" line="2432" />
         <source>Attach or remove a reference image drawn under the grid, for tracing over</source>
         <translation>Joindre ou retirer une image de référence dessinée sous la grille, pour la calquer</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2313" />
+        <location filename="../gui/MainWindow.ui" line="2447" />
         <source>Basic tools</source>
         <translation>Outils de base</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2328" />
+        <location filename="../gui/MainWindow.ui" line="2462" />
         <source>Drawing tools</source>
         <translation>Outils de dessin</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2343" />
+        <location filename="../gui/MainWindow.ui" line="2477" />
         <source>Modify tools</source>
         <translation>Outils de modification</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2355" />
+        <location filename="../gui/MainWindow.ui" line="2489" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="314" />
         <source>Union</source>
         <translation>Union</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2358" />
+        <location filename="../gui/MainWindow.ui" line="2492" />
         <source>Merge the selected closed shapes into a single shape</source>
         <translation>Fusionne les formes fermées sélectionnées en une seule forme</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2370" />
+        <location filename="../gui/MainWindow.ui" line="2504" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="319" />
         <source>Subtraction</source>
         <translation>Soustraction</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2373" />
+        <location filename="../gui/MainWindow.ui" line="2507" />
         <source>Subtract the other selected closed shapes from the first one (in drawing order)</source>
         <translation>Soustrait les autres formes fermées sélectionnées de la première (dans l'ordre du dessin)</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2385" />
+        <location filename="../gui/MainWindow.ui" line="2519" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="324" />
         <source>Intersection</source>
         <translation>Intersection</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2388" />
+        <location filename="../gui/MainWindow.ui" line="2522" />
         <source>Keep only the area shared by all the selected closed shapes</source>
         <translation>Ne conserve que la zone commune à toutes les formes fermées sélectionnées</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2396" />
+        <location filename="../gui/MainWindow.ui" line="2530" />
         <source>Smooth curved results</source>
         <translation>Résultats courbes lissés</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2399" />
+        <location filename="../gui/MainWindow.ui" line="2533" />
         <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
         <translation>Transforme les résultats courbes en courbes complexes (beaucoup moins de nœuds, coins légèrement arrondis) au lieu de polygones aplatis</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2410" />
+        <location filename="../gui/MainWindow.ui" line="2544" />
         <source>Show rulers</source>
         <translation>Afficher les règles</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="604" />
+        <location filename="../src/App/MainWindow.cpp" line="635" />
         <source>Undo: %1</source>
         <translation>Annuler : %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="607" />
+        <location filename="../src/App/MainWindow.cpp" line="638" />
         <source>Redo: %1</source>
         <translation>Rétablir : %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="666" />
+        <location filename="../src/App/MainWindow.cpp" line="701" />
         <source>Update available</source>
         <translation>Mise à jour disponible</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="667" />
+        <location filename="../src/App/MainWindow.cpp" line="702" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>Une nouvelle version d'eSchema est disponible (%1).
 Voulez-vous la télécharger maintenant ?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="677" />
+        <location filename="../src/App/MainWindow.cpp" line="712" />
         <source>eSchema is already up to date.</source>
         <translation>eSchema est déjà à jour.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="688" />
+        <location filename="../src/App/MainWindow.cpp" line="723" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>Impossible de vérifier les mises à jour. Vérifiez votre connexion Internet.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="720" />
+        <location filename="../src/App/MainWindow.cpp" line="755" />
         <source>Attach tracing image</source>
         <translation>Joindre une image de calque</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="726" />
+        <location filename="../src/App/MainWindow.cpp" line="761" />
         <source>New drawing* (unsaved)</source>
         <translation>Nouveau dessin* (non enregistré)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="774" />
+        <location filename="../src/App/MainWindow.cpp" line="809" />
         <source>The file no longer exists:
 %1</source>
         <translation>Le fichier n'existe plus :
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="788" />
+        <location filename="../src/App/MainWindow.cpp" line="823" />
         <source>Clear list</source>
         <translation>Effacer la liste</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="834" />
-        <location filename="../src/App/MainWindow.cpp" line="967" />
-        <location filename="../src/App/MainWindow.cpp" line="1015" />
-        <location filename="../src/App/MainWindow.cpp" line="1048" />
-        <location filename="../src/App/MainWindow.cpp" line="1201" />
-        <location filename="../src/App/MainWindow.cpp" line="1343" />
+        <location filename="../src/App/MainWindow.cpp" line="869" />
+        <location filename="../src/App/MainWindow.cpp" line="1002" />
+        <location filename="../src/App/MainWindow.cpp" line="1050" />
+        <location filename="../src/App/MainWindow.cpp" line="1083" />
+        <location filename="../src/App/MainWindow.cpp" line="1236" />
+        <location filename="../src/App/MainWindow.cpp" line="1378" />
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="834" />
-        <location filename="../src/App/MainWindow.cpp" line="1201" />
+        <location filename="../src/App/MainWindow.cpp" line="869" />
+        <location filename="../src/App/MainWindow.cpp" line="1236" />
         <source>Unable to save the file:
 %1</source>
         <translation>Impossible d'enregistrer le fichier :
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="856" />
+        <location filename="../src/App/MainWindow.cpp" line="891" />
         <source>Unsaved changes</source>
         <translation>Modifications non enregistrées</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="857" />
+        <location filename="../src/App/MainWindow.cpp" line="892" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>Il y a des modifications non enregistrées. Voulez-vous les enregistrer ?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="951" />
+        <location filename="../src/App/MainWindow.cpp" line="986" />
         <source>an untitled drawing</source>
         <translation>un dessin sans titre</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="954" />
-        <location filename="../src/App/MainWindow.cpp" line="978" />
+        <location filename="../src/App/MainWindow.cpp" line="989" />
+        <location filename="../src/App/MainWindow.cpp" line="1013" />
         <source>Autosave recovery</source>
         <translation>Récupération de l'enregistrement automatique</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="955" />
+        <location filename="../src/App/MainWindow.cpp" line="990" />
         <source>eSchema wasn't closed properly last time.
 An autosave was found for %1.
 
@@ -2182,45 +2197,45 @@ Un enregistrement automatique a été trouvé pour %1.
 Voulez-vous le récupérer ?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="968" />
+        <location filename="../src/App/MainWindow.cpp" line="1003" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>Impossible de récupérer l'enregistrement automatique :
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1003" />
+        <location filename="../src/App/MainWindow.cpp" line="1038" />
         <source>Open drawing</source>
         <translation>Ouvrir un dessin</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1004" />
-        <location filename="../src/App/MainWindow.cpp" line="1172" />
-        <location filename="../src/App/MainWindow.cpp" line="1188" />
+        <location filename="../src/App/MainWindow.cpp" line="1039" />
+        <location filename="../src/App/MainWindow.cpp" line="1207" />
+        <location filename="../src/App/MainWindow.cpp" line="1223" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1015" />
-        <location filename="../src/App/MainWindow.cpp" line="1048" />
+        <location filename="../src/App/MainWindow.cpp" line="1050" />
+        <location filename="../src/App/MainWindow.cpp" line="1083" />
         <source>Unable to open the file:
 %1</source>
         <translation>Impossible d'ouvrir le fichier :
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1032" />
-        <location filename="../src/App/MainWindow.cpp" line="1060" />
+        <location filename="../src/App/MainWindow.cpp" line="1067" />
+        <location filename="../src/App/MainWindow.cpp" line="1095" />
         <source>Import from DXF</source>
         <translation>Importer depuis DXF</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1033" />
+        <location filename="../src/App/MainWindow.cpp" line="1068" />
         <source>DXF (*.dxf)</source>
         <translation>DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1061" />
+        <location filename="../src/App/MainWindow.cpp" line="1096" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -2229,44 +2244,44 @@ Voulez-vous le récupérer ?</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1106" />
+        <location filename="../src/App/MainWindow.cpp" line="1141" />
         <source>Edit FCD code</source>
         <translation>Modifier le code FCD</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1171" />
+        <location filename="../src/App/MainWindow.cpp" line="1206" />
         <source>Save drawing as</source>
         <translation>Enregistrer le dessin sous</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1187" />
+        <location filename="../src/App/MainWindow.cpp" line="1222" />
         <source>Save split as</source>
         <translation>Enregistrer éclaté sous</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1207" />
-        <location filename="../src/App/MainWindow.cpp" line="1313" />
+        <location filename="../src/App/MainWindow.cpp" line="1242" />
+        <location filename="../src/App/MainWindow.cpp" line="1348" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="787" />
         <source>The drawing is empty.</source>
         <translation>Le dessin est vide.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1242" />
+        <location filename="../src/App/MainWindow.cpp" line="1277" />
         <source>Print preview</source>
         <translation>Aperçu avant impression</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1313" />
+        <location filename="../src/App/MainWindow.cpp" line="1348" />
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1321" />
+        <location filename="../src/App/MainWindow.cpp" line="1356" />
         <source>Export drawing</source>
         <translation>Exporter le dessin</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1344" />
+        <location filename="../src/App/MainWindow.cpp" line="1379" />
         <source>Could not export the file:
 %1</source>
         <translation>Impossible d'exporter le fichier :
