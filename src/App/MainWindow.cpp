@@ -174,6 +174,14 @@ MainWindow::MainWindow(QWidget *parent)
     // (no saved state yet), or if the saved layout no longer matches the
     // current set of dock widgets, the three panels are instead stacked as
     // tabs on the right edge, Libraries in front.
+    // Window size/position from the previous session - separate from the
+    // dock state below: saveState() covers toolbars/docks only, never the
+    // window's own geometry. Empty on the very first launch, which keeps
+    // the .ui's default size.
+    const QByteArray windowGeometry = SettingsManager::getInstance().loadSetting("window_geometry").toByteArray();
+    if (!windowGeometry.isEmpty())
+        restoreGeometry(windowGeometry);
+
     const QByteArray dockState = SettingsManager::getInstance().loadSetting("window_dock_state").toByteArray();
     bool dockStateRestored = false;
     if (!dockState.isEmpty())
@@ -999,6 +1007,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         // panel position, size, floating, tabbing) so it's restored exactly
         // as left on the next launch - see the constructor's restoreState().
         SettingsManager::getInstance().saveSetting("window_dock_state", saveState(DockStateVersion));
+        SettingsManager::getInstance().saveSetting("window_geometry", saveGeometry());
         // A clean, deliberate exit - nothing left to recover next launch.
         clearAutosave();
         event->accept();
