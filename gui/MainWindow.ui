@@ -1496,6 +1496,7 @@
     <addaction name="separator"/>
     <addaction name="actionDistributeHorizontal"/>
     <addaction name="actionDistributeVertical"/>
+    <addaction name="actionSnapSelectionToGrid"/>
     <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
     <addaction name="actionInvertSelection"/>
@@ -2741,6 +2742,17 @@
    </property>
    <property name="toolTip">
     <string>Cut every corner of the selected polygons and rectangles at the given distance</string>
+   </property>
+  </action>
+  <action name="actionSnapSelectionToGrid">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Snap selection to grid</string>
+   </property>
+   <property name="toolTip">
+    <string>Round every point of the selection to the snap step - handy after a DXF import or drawing with snapping off</string>
    </property>
   </action>
   <action name="actionOffsetOutline">

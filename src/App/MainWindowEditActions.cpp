@@ -424,6 +424,7 @@ void MainWindow::updateEditActionsState()
     ui->actionScaleSelection->setEnabled(hasSelection);
     ui->actionRotateByAngle->setEnabled(hasSelection);
     ui->actionArray->setEnabled(hasSelection);
+    ui->actionSnapSelectionToGrid->setEnabled(hasSelection);
     ui->actionSelectSameType->setEnabled(hasSelection);
 }
 
@@ -466,6 +467,7 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     menu.addSeparator();
     menu.addAction(ui->actionDistributeHorizontal);
     menu.addAction(ui->actionDistributeVertical);
+    menu.addAction(ui->actionSnapSelectionToGrid);
     menu.addSeparator();
     menu.addAction(ui->actionSelectAll);
     menu.addAction(ui->actionInvertSelection);
@@ -976,6 +978,41 @@ void MainWindow::clickArrayAction()
         }
     }
     undo->endMacro();
+}
+
+// Rounds every point of the selection to the configured snap step - for
+// tidying up primitives drawn with snapping off or imported from DXF.
+// Deliberately ignores the "snap_enabled" toggle (being off is precisely
+// why things ended up off-grid) and uses the raw step instead.
+void MainWindow::clickSnapSelectionToGridAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+
+    const int step = qMax(1, SettingsManager::getInstance().loadSetting("snap_step").toInt());
+    auto snapped = [step](const QPointF &point) {
+        return QPointF(qRound(point.x() / step) * qreal(step),
+                       qRound(point.y() / step) * qreal(step));
+    };
+
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = selected.size() > 1;
+    if (multiple)
+        undo->beginMacro(tr("Snap selection to grid"));
+    for (GraphicsPrimitive *primitive : selected) {
+        const QVector<QPointF> before = primitive->controlPointSnapshot();
+        QVector<QPointF> after;
+        after.reserve(before.size());
+        for (const QPointF &point : before)
+            after.append(snapped(point));
+        if (after == before)
+            continue;
+        primitive->restoreControlPoints(after);
+        undo->push(new MovePrimitiveCommand(primitive, before, after));
+    }
+    if (multiple)
+        undo->endMacro();
 }
 
 void MainWindow::clickSelectSameTypeAction()

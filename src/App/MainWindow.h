@@ -135,6 +135,7 @@ public slots:
     void clickScaleSelectionAction();
     void clickRotateByAngleAction();
     void clickArrayAction();
+    void clickSnapSelectionToGridAction();
     // Selection conveniences.
     void clickSelectSameTypeAction();
     void clickInvertSelectionAction();
