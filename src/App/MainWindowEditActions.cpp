@@ -887,7 +887,7 @@ void MainWindow::clickArrayAction()
     for (GraphicsPrimitive *primitive : selected)
         bounds = bounds.united(primitive->sceneBoundingRect());
 
-    DialogArray dialog(this);
+    DialogArray dialog(ui->graphicsView, this);
     dialog.setSuggestedCenter(bounds.center());
     if (dialog.exec() != QDialog::Accepted)
         return;

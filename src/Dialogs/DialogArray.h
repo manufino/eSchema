@@ -24,11 +24,15 @@
 #include <QPointF>
 
 namespace Ui { class DialogArray; }
+class SheetView;
 
 // Parameters for Edit > Array of copies. Two layouts: a columns x rows grid
 // with configurable steps, or a circular (polar) series of instances around
 // a center - AutoCAD-style: `copies()` total instances spread over
 // `totalAngle()` degrees, each optionally rotated to follow the circle.
+// The circular center can be typed in, or picked directly on the canvas
+// ("Pick from canvas" hides the dialog until the next click - see
+// eventFilter()).
 class DialogArray : public QDialog
 {
     Q_OBJECT
@@ -36,7 +40,9 @@ class DialogArray : public QDialog
 public:
     enum class Mode { Grid, Circular };
 
-    explicit DialogArray(QWidget *parent = nullptr);
+    // `view` is the canvas used by the center-picking button; the dialog
+    // does not take ownership.
+    explicit DialogArray(SheetView *view, QWidget *parent = nullptr);
     ~DialogArray();
 
     Mode mode() const;
@@ -56,10 +62,22 @@ public:
     // bounding-box center as a sensible starting point.
     void setSuggestedCenter(const QPointF &center);
 
+protected:
+    // Captures the canvas click while picking the circular center: left
+    // click takes the (object/grid-snapped) point, right click or Escape
+    // cancels; mouse moves keep the object-snap highlight live. Installed
+    // on the view and its viewport only between startCenterPick() and
+    // endCenterPick().
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private:
     void syncModeVisibility();
+    void startCenterPick();
+    void endCenterPick();
 
     Ui::DialogArray *ui;
+    SheetView *m_view;
+    bool m_picking = false;
 };
 
 #endif // DIALOGARRAY_H
