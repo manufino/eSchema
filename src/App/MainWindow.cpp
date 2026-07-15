@@ -242,6 +242,10 @@ MainWindow::MainWindow(QWidget *parent)
                                                              ui->toolBarPrimitive, ui->cbPropLayer,
                                                              ui->checkBox, this);
     ui->graphicsView->setPlacementController(placementController);
+    // Measure-tool readout goes to the status bar's message area (see
+    // PrimitivePlacementController::measureUpdated()).
+    connect(placementController, &PrimitivePlacementController::measureUpdated,
+            this, [this](const QString &text) { ui->statusbar->showMessage(text); });
 
     selectionHandleController = new SelectionHandleController(sheetScene, this);
 

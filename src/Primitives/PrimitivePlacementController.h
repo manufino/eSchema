@@ -95,9 +95,15 @@ private slots:
     // whichever tool the user just picked, Select or otherwise.
     void handleToolBarActionTriggered(QAction *action);
 
+signals:
+    // Live readout of the Measure tool (distance/angle between its two
+    // points) - MainWindow routes it to the status bar. Emitted on every
+    // mouse move while measuring and once more, final, at the second click.
+    void measureUpdated(const QString &text);
+
 private:
     enum class Tool { Select, Line, Rectangle, Polygon, RegularPolygon, Ellipse, Bezier, Curve, Arc,
-                      Text, Connection, PcbTrack, Pad, Macro, Image };
+                      Text, Connection, PcbTrack, Pad, Macro, Image, Measure };
 
     Tool currentTool() const;
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count
@@ -179,6 +185,11 @@ private:
     void updateRegularPolygonVertices(const QPointF &vertexPos);
     QPointF m_regularPolygonCenter;
     int m_regularPolygonSides = 6;
+    // Measure tool: m_activePrimitive is a dashed rubber line that never
+    // reaches the undo stack - the second click removes it again and leaves
+    // only the status-bar readout (see measureUpdated()).
+    QString measureText(const QPointF &from, const QPointF &to) const;
+    QPointF m_measureStart;
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H

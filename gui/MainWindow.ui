@@ -1711,6 +1711,7 @@
    <addaction name="actionPad"/>
    <addaction name="actionImage"/>
    <addaction name="separator"/>
+   <addaction name="actionMeasure"/>
   </widget>
   <action name="actionNewDraw">
    <property name="enabled">
@@ -2225,6 +2226,24 @@
    </property>
    <property name="shortcut">
     <string>E</string>
+   </property>
+  </action>
+  <action name="actionMeasure">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/measure.png</normaloff>:/res/resources/measure.png</iconset>
+   </property>
+   <property name="text">
+    <string>Measure</string>
+   </property>
+   <property name="toolTip">
+    <string>Measure: click two points to read their distance and angle in the status bar</string>
+   </property>
+   <property name="shortcut">
+    <string>W</string>
    </property>
   </action>
   <action name="actionRegularPolygon">

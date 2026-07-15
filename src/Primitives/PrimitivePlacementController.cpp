@@ -45,6 +45,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QLineF>
+#include <QtMath>
 #include <cmath>
 
 namespace {
@@ -147,6 +148,7 @@ PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() c
     if (name == QStringLiteral("actionPcbTrack")) return Tool::PcbTrack;
     if (name == QStringLiteral("actionPad")) return Tool::Pad;
     if (name == QStringLiteral("actionImage")) return Tool::Image;
+    if (name == QStringLiteral("actionMeasure")) return Tool::Measure;
     return Tool::Select;
 }
 
@@ -164,6 +166,7 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::Bezier: return 4;
     case Tool::Arc: return 3;
     case Tool::RegularPolygon: return 2; // center, then a vertex
+    case Tool::Measure: return 2;
     case Tool::Connection: return 1;
     case Tool::Text: return 1;
     case Tool::PcbTrack: return 2;
@@ -201,6 +204,7 @@ GraphicsPrimitive *PrimitivePlacementController::createPrimitiveForTool(Tool too
     case Tool::RegularPolygon: return new PrimitivePolygon();
     case Tool::Curve: return new PrimitiveComplexCurve();
     case Tool::Arc: return new PrimitiveComplexCurve(); // open, resampled along the arc while placing
+    case Tool::Measure: return new PrimitiveLine(); // dashed rubber line, removed at the second click
     case Tool::Text: return new PrimitiveText(); // caller sets its text content
     case Tool::Macro: return new PrimitiveMacro(); // caller sets its macro key
     case Tool::Image: return new PrimitiveImage(); // caller sets its image data
@@ -287,6 +291,12 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         m_regularPolygonCenter = scenePos;
         for (int i = 0; i < m_regularPolygonSides; ++i)
             polygon->appendVertex(scenePos);
+    } else if (m_activeTool == Tool::Measure) {
+        m_measureStart = scenePos;
+        m_activePrimitive->penStyleIsChanged(Qt::DashLine);
+        m_activePrimitive->setControlPoint(0, scenePos);
+        m_activePrimitive->setControlPoint(1, scenePos);
+        emit measureUpdated(measureText(scenePos, scenePos));
     } else if (isVariableVertexTool(m_activeTool)) {
         // vertex 0 is fixed at the click; vertex 1 is the "live" preview vertex
         // that mouse-move updates until the next click.
@@ -384,6 +394,23 @@ void PrimitivePlacementController::startChainedSegment(Tool tool, const QPointF 
     m_activePrimitive->setControlPoint(1, startPoint);
     m_pointsPlaced = 1;
     m_sheet->addPrimitive(m_activePrimitive);
+}
+
+// The measure readout: deltas, distance (drawing units and millimeters -
+// one unit is 1/200 inch = 0.127 mm, FIDOSPECS.md 3), and the visual angle
+// (y grows downward on screen, hence the sign flip).
+QString PrimitivePlacementController::measureText(const QPointF &from, const QPointF &to) const
+{
+    const qreal dx = to.x() - from.x();
+    const qreal dy = to.y() - from.y();
+    const qreal length = std::hypot(dx, dy);
+    const qreal angle = qRadiansToDegrees(std::atan2(-dy, dx));
+    return tr("dx: %1   dy: %2   length: %3 (%4 mm)   angle: %5°")
+            .arg(dx, 0, 'f', 1)
+            .arg(dy, 0, 'f', 1)
+            .arg(length, 0, 'f', 1)
+            .arg(length * 0.127, 0, 'f', 2)
+            .arg(angle, 0, 'f', 1);
 }
 
 // Fans the polygon's vertices out around the fixed center, with the cursor
@@ -565,6 +592,16 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &scenePos)
         return true;
     }
 
+    if (m_activeTool == Tool::Measure) {
+        // Second click: freeze the readout, discard the rubber line (it
+        // never touches the undo stack), stay armed for the next measure.
+        emit measureUpdated(measureText(m_measureStart, scenePos));
+        m_sheet->removePrimitive(m_activePrimitive);
+        m_activePrimitive = nullptr;
+        m_pointsPlaced = 0;
+        return true;
+    }
+
     if (isVariableVertexTool(m_activeTool)) {
         // Fix the current live vertex, then start a new live vertex for the
         // next segment.
@@ -613,6 +650,12 @@ bool PrimitivePlacementController::handleMouseMove(const QPointF &scenePos)
 
     if (m_activeTool == Tool::RegularPolygon) {
         updateRegularPolygonVertices(scenePos);
+        return true;
+    }
+
+    if (m_activeTool == Tool::Measure) {
+        m_activePrimitive->setControlPoint(1, scenePos);
+        emit measureUpdated(measureText(m_measureStart, scenePos));
         return true;
     }
 
