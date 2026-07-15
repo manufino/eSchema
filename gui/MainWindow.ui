@@ -1466,6 +1466,9 @@
     <addaction name="separator"/>
     <addaction name="actionRotate"/>
     <addaction name="actionMirror"/>
+    <addaction name="actionRotateByAngle"/>
+    <addaction name="actionScaleSelection"/>
+    <addaction name="actionArray"/>
     <addaction name="menuBoolean"/>
     <addaction name="menuShape"/>
     <addaction name="separator"/>
@@ -1632,6 +1635,9 @@
    </attribute>
    <addaction name="actionRotate"/>
    <addaction name="actionMirror"/>
+   <addaction name="actionRotateByAngle"/>
+   <addaction name="actionScaleSelection"/>
+   <addaction name="actionArray"/>
    <addaction name="separator"/>
    <addaction name="actionBooleanUnion"/>
    <addaction name="actionBooleanSubtract"/>
@@ -2563,6 +2569,51 @@
    </property>
    <property name="toolTip">
     <string>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</string>
+   </property>
+  </action>
+  <action name="actionRotateByAngle">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/rotate_angle.png</normaloff>:/res/resources/rotate_angle.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate by angle...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate the selection by an arbitrary angle; rectangles and ellipses are converted to polygons/curves first</string>
+   </property>
+  </action>
+  <action name="actionScaleSelection">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/scale.png</normaloff>:/res/resources/scale.png</iconset>
+   </property>
+   <property name="text">
+    <string>Scale...</string>
+   </property>
+   <property name="toolTip">
+    <string>Scale the selection by a percentage around the first selected primitive's first point</string>
+   </property>
+  </action>
+  <action name="actionArray">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/array.png</normaloff>:/res/resources/array.png</iconset>
+   </property>
+   <property name="text">
+    <string>Array of copies...</string>
+   </property>
+   <property name="toolTip">
+    <string>Replicate the selection on a grid of rows and columns</string>
    </property>
   </action>
   <action name="actionConvertToPolygon">

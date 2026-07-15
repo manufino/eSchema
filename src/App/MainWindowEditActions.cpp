@@ -27,6 +27,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "BooleanOps.h"
+#include "DialogArray.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
 #include "PrimitiveComplexCurve.h"
@@ -55,6 +56,7 @@
 #include <QRandomGenerator>
 #include <QInputDialog>
 #include <QLineF>
+#include <QtMath>
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -416,6 +418,10 @@ void MainWindow::updateEditActionsState()
     ui->actionSimplifyNodes->setEnabled(canSimplify);
     ui->actionFilletCorners->setEnabled(canRound);
     ui->actionChamferCorners->setEnabled(canRound);
+
+    ui->actionScaleSelection->setEnabled(hasSelection);
+    ui->actionRotateByAngle->setEnabled(hasSelection);
+    ui->actionArray->setEnabled(hasSelection);
 }
 
 // Reuses the very same ui->action* objects the Edit menu bar entry is
@@ -436,6 +442,9 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     menu.addSeparator();
     menu.addAction(ui->actionRotate);
     menu.addAction(ui->actionMirror);
+    menu.addAction(ui->actionRotateByAngle);
+    menu.addAction(ui->actionScaleSelection);
+    menu.addAction(ui->actionArray);
     menu.addSeparator();
     menu.addAction(ui->actionBooleanUnion);
     menu.addAction(ui->actionBooleanSubtract);
@@ -710,6 +719,136 @@ void MainWindow::clickFilletCornersAction()
 void MainWindow::clickChamferCornersAction()
 {
     roundSelectedCorners(true);
+}
+
+// Scales every control point (labels included - they travel with the shape,
+// like a move) around the first selected primitive's first point, matching
+// Mirror/Rotate's pivot convention. Per-primitive scalar sizes (text
+// character size, pad size, track width) are deliberately left alone.
+void MainWindow::clickScaleSelectionAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+
+    bool ok = false;
+    const double percent = QInputDialog::getDouble(
+                this, tr("Scale"), tr("Scale factor (%):"), 100.0, 1.0, 10000.0, 1, &ok);
+    if (!ok || qFuzzyCompare(percent, 100.0))
+        return;
+    const qreal factor = percent / 100.0;
+    const QPointF pivot = selected.first()->controlPoint(0);
+
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = selected.size() > 1;
+    if (multiple)
+        undo->beginMacro(tr("Scale"));
+    for (GraphicsPrimitive *primitive : selected) {
+        const QVector<QPointF> before = primitive->controlPointSnapshot();
+        QVector<QPointF> after;
+        after.reserve(before.size());
+        for (const QPointF &point : before)
+            after.append(pivot + (point - pivot) * factor);
+        primitive->restoreControlPoints(after);
+        undo->push(new MovePrimitiveCommand(primitive, before, after));
+    }
+    if (multiple)
+        undo->endMacro();
+}
+
+// Rotates the selection by an arbitrary angle around the first selected
+// primitive's first point. Point-based primitives rotate exactly; a
+// rectangle/ellipse can't (the format keeps them axis-aligned), so they are
+// first rewritten as a polygon/closed complex curve and then rotated - same
+// delete+create undo step as an explicit conversion.
+void MainWindow::clickRotateByAngleAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+
+    bool ok = false;
+    const double degrees = QInputDialog::getDouble(
+                this, tr("Rotate by angle"), tr("Angle (degrees, counterclockwise):"),
+                45.0, -360.0, 360.0, 1, &ok);
+    if (!ok || qFuzzyIsNull(degrees))
+        return;
+
+    // Y grows downward on the sheet, so a visually counterclockwise rotation
+    // needs the sign of the sine flipped relative to the textbook formula.
+    const qreal radians = qDegreesToRadians(degrees);
+    const qreal cosine = std::cos(radians);
+    const qreal sine = std::sin(radians);
+    const QPointF pivot = selected.first()->controlPoint(0);
+    auto rotated = [&](const QPointF &point) {
+        const QPointF delta = point - pivot;
+        return pivot + QPointF(delta.x() * cosine + delta.y() * sine,
+                               -delta.x() * sine + delta.y() * cosine);
+    };
+
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(tr("Rotate by angle"));
+    for (GraphicsPrimitive *primitive : selected) {
+        const GraphicsPrimitive::PrimitiveTypes type = primitive->getPrimitiveType();
+        if (type == GraphicsPrimitive::Rectangle || type == GraphicsPrimitive::Ellipse) {
+            const bool asCurve = type == GraphicsPrimitive::Ellipse;
+            QVector<QPointF> vertices = conversionVertices(primitive, asCurve);
+            for (QPointF &vertex : vertices)
+                vertex = rotated(vertex);
+            GraphicsPrimitive *replacement = makeShapeLike(primitive, vertices, asCurve);
+            if (!replacement)
+                continue;
+            primitive->setSelected(false);
+            undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+            undo->push(new CreatePrimitiveCommand(sheetScene, replacement));
+            replacement->setSelected(true);
+        } else {
+            const QVector<QPointF> before = primitive->controlPointSnapshot();
+            QVector<QPointF> after;
+            after.reserve(before.size());
+            for (const QPointF &point : before)
+                after.append(rotated(point));
+            primitive->restoreControlPoints(after);
+            undo->push(new MovePrimitiveCommand(primitive, before, after));
+        }
+    }
+    undo->endMacro();
+}
+
+// Replicates the selection on a grid: for every cell except the original's
+// a fresh parse of the selection is dropped at the corresponding offset, all
+// as one undo step - same serialize/re-parse round trip Duplicate uses.
+void MainWindow::clickArrayAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+
+    DialogArray dialog(this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+    const int columns = dialog.columns();
+    const int rows = dialog.rows();
+    if (columns * rows <= 1)
+        return;
+
+    const QString serialized = FidoCadWriter::writeSelection(selected);
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(tr("Array of copies"));
+    for (int row = 0; row < rows; ++row) {
+        for (int column = 0; column < columns; ++column) {
+            if (row == 0 && column == 0)
+                continue; // that's the original itself
+            const QPointF offset(column * dialog.spacingX(), row * dialog.spacingY());
+            const QList<GraphicsPrimitive *> copies = FidoCadReader::parse(serialized, sheetScene);
+            for (GraphicsPrimitive *copy : copies) {
+                copy->translateControlPoints(offset);
+                undo->push(new CreatePrimitiveCommand(sheetScene, copy));
+                copy->setSelected(true);
+            }
+        }
+    }
+    undo->endMacro();
 }
 
 void MainWindow::clickConvertMacroToPrimitivesAction()

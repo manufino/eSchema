@@ -362,6 +362,9 @@ void MainWindow::setConnections()
     connect(ui->actionBooleanSmooth, &QAction::toggled, this, [](bool on) {
         SettingsManager::getInstance().saveSetting("boolean_smooth_results", on);
     });
+    connect(ui->actionRotateByAngle, &QAction::triggered, this, &MainWindow::clickRotateByAngleAction);
+    connect(ui->actionScaleSelection, &QAction::triggered, this, &MainWindow::clickScaleSelectionAction);
+    connect(ui->actionArray, &QAction::triggered, this, &MainWindow::clickArrayAction);
     connect(ui->actionConvertToPolygon, &QAction::triggered, this, &MainWindow::clickConvertToPolygonAction);
     connect(ui->actionConvertToCurve, &QAction::triggered, this, &MainWindow::clickConvertToCurveAction);
     connect(ui->actionSimplifyNodes, &QAction::triggered, this, &MainWindow::clickSimplifyNodesAction);

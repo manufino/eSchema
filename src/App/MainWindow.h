@@ -130,6 +130,10 @@ public slots:
     void clickSimplifyNodesAction();
     void clickFilletCornersAction();
     void clickChamferCornersAction();
+    // Whole-selection transforms and replication.
+    void clickScaleSelectionAction();
+    void clickRotateByAngleAction();
+    void clickArrayAction();
     void clickNewAction();
     void clickOpenAction();
     void clickImportDxfAction();

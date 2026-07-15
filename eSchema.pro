@@ -82,6 +82,7 @@ SOURCES += \
 	src/IO/FidoCadWriter.cpp \
 	src/IO/GraphicExporter.cpp \
 	src/Dialogs/DialogAbout.cpp \
+	src/Dialogs/DialogArray.cpp \
 	src/Dialogs/DialogAttachImage.cpp \
 	src/Dialogs/DialogCreateMacro.cpp \
 	src/Dialogs/DialogExport.cpp \
@@ -156,6 +157,7 @@ HEADERS += \
 	src/IO/FidoCadWriter.h \
 	src/IO/GraphicExporter.h \
 	src/Dialogs/DialogAbout.h \
+	src/Dialogs/DialogArray.h \
 	src/Dialogs/DialogAttachImage.h \
 	src/Dialogs/DialogCreateMacro.h \
 	src/Dialogs/DialogExport.h \
@@ -184,6 +186,7 @@ HEADERS += \
 
 FORMS += \
 	gui/DialogAbout.ui \
+	gui/DialogArray.ui \
 	gui/DialogAttachImage.ui \
 	gui/DialogCreateMacro.ui \
 	gui/DialogExport.ui \

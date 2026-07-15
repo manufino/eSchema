@@ -12,6 +12,9 @@
         <file>resources/boolean_union.png</file>
         <file>resources/boolean_subtract.png</file>
         <file>resources/boolean_intersect.png</file>
+        <file>resources/rotate_angle.png</file>
+        <file>resources/scale.png</file>
+        <file>resources/array.png</file>
         <file>resources/arrow.png</file>
         <file>resources/bezier.png</file>
         <file>resources/complexcurve.png</file>
