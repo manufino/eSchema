@@ -558,205 +558,387 @@ li.checked::marker { content: "\2612"; }
 <context>
     <name>DialogOptions</name>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="43" />
+        <location filename="../gui/DialogOptions.ui" line="14" />
         <source>Options</source>
         <translation>विकल्प</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="79" />
+        <location filename="../gui/DialogOptions.ui" line="47" />
         <source>General</source>
         <translation>सामान्य</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="148" />
-        <location filename="../gui/DialogOptions.ui" line="397" />
+        <location filename="../gui/DialogOptions.ui" line="101" />
+        <location filename="../gui/DialogOptions.ui" line="338" />
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="157" />
+        <location filename="../gui/DialogOptions.ui" line="320" />
         <source>Stylesheet path</source>
         <translation>स्टाइलशीट पथ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="180" />
+        <location filename="../gui/DialogOptions.ui" line="110" />
         <source>Autosave</source>
         <translation>स्वतः सहेजें</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="196" />
+        <location filename="../gui/DialogOptions.ui" line="30" />
+        <source>Search options...</source>
+        <translation>विकल्प खोजें...</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="52" />
+        <source>Interface</source>
+        <translation>इंटरफ़ेस</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="62" />
+        <source>Snap</source>
+        <translation>स्नैप</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="117" />
         <source> min</source>
         <translation> min</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="203" />
+        <location filename="../gui/DialogOptions.ui" line="133" />
+        <source>Keep a backup copy (.bak) when saving</source>
+        <translation>सहेजते समय बैकअप प्रति (.bak) रखें</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="140" />
+        <source>Undo history limit</source>
+        <translation>पूर्ववत इतिहास की सीमा</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="147" />
+        <source>0 = unlimited; takes effect the next time eSchema starts</source>
+        <translation>0 = असीमित; eSchema के अगले आरंभ पर प्रभावी होगा</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="163" />
         <source>Check for updates on startup</source>
         <translation>स्टार्टअप पर अपडेट जाँचें</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="312" />
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="198" />
+        <location filename="../gui/DialogOptions.ui" line="170" />
+        <source>Reopen the last file on startup</source>
+        <translation>आरंभ पर पिछली फ़ाइल फिर खोलें</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="177" />
+        <source>Maximum recent files</source>
+        <translation>हाल की फ़ाइलों की अधिकतम संख्या</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="218" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="418" />
         <source>Language</source>
         <translation>भाषा</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="329" />
+        <location filename="../gui/DialogOptions.ui" line="297" />
         <source>Light</source>
         <translation>हल्का</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="334" />
+        <location filename="../gui/DialogOptions.ui" line="302" />
         <source>Dark</source>
         <translation>गहरा</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="339" />
+        <location filename="../gui/DialogOptions.ui" line="307" />
         <source>System</source>
         <translation>सिस्टम</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="344" />
+        <location filename="../gui/DialogOptions.ui" line="312" />
         <source>Stylesheet</source>
         <translation>स्टाइलशीट</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="352" />
+        <location filename="../gui/DialogOptions.ui" line="932" />
+        <source>Default polygon sides</source>
+        <translation>बहुभुज की डिफ़ॉल्ट भुजाएँ</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="952" />
+        <source>Curve sampling step (units)</source>
+        <translation>वक्र सैंपलिंग अंतराल (इकाइयाँ)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="959" />
+        <source>Spacing of the points generated along arcs, boolean results, and shape conversions - smaller is smoother but heavier</source>
+        <translation>चाप, बूलियन परिणामों और आकृति रूपांतरण के साथ बनाए गए बिंदुओं की दूरी - छोटी अधिक चिकनी पर भारी होती है</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="978" />
+        <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
+        <translation>वक्र वाले परिणामों को चपटे बहुभुजों के बजाय जटिल वक्रों में बदल देता है (बहुत कम नोड, कोने थोड़े गोल)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="981" />
+        <source>Smooth curved results</source>
+        <translation>चिकने वक्र परिणाम</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="988" />
+        <source>Default text font</source>
+        <translation>टेक्स्ट का डिफ़ॉल्ट फ़ॉन्ट</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="998" />
+        <source>Nudge step (Alt+arrows)</source>
+        <translation>खिसकाने का अंतराल (Alt+तीर)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="1005" />
+        <source>How many snap steps one Alt+arrow press moves the selection</source>
+        <translation>Alt+तीर की एक दबाव पर चयन कितने स्नैप अंतराल खिसकता है</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="1044" />
+        <source>Restore page defaults</source>
+        <translation>इस पृष्ठ के डिफ़ॉल्ट बहाल करें</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="83" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="71" />
         <source>Library path</source>
         <translation>लाइब्रेरी पथ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="368" />
+        <location filename="../gui/DialogOptions.ui" line="289" />
         <source>Interface style</source>
         <translation>इंटरफ़ेस शैली</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="411" />
+        <location filename="../gui/DialogOptions.ui" line="57" />
         <source>Grid</source>
         <translation>ग्रिड</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="449" />
+        <location filename="../gui/DialogOptions.ui" line="548" />
         <source>Snap to grid</source>
         <translation>ग्रिड पर स्नैप करें</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="469" />
+        <location filename="../gui/DialogOptions.ui" line="562" />
         <source>Snap step (grid units)</source>
         <translation>स्नैप चरण (ग्रिड इकाइयाँ)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="508" />
+        <location filename="../gui/DialogOptions.ui" line="494" />
         <source>Grid step (Pixels) </source>
         <translation>ग्रिड चरण (पिक्सेल) </translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="550" />
+        <location filename="../gui/DialogOptions.ui" line="671" />
         <source>Marked line color</source>
         <translation>चिह्नित रेखा रंग</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="560" />
+        <location filename="../gui/DialogOptions.ui" line="528" />
         <source>Step size (in mm)</source>
         <translation>चरण आकार (मिमी में)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="577" />
+        <location filename="../gui/DialogOptions.ui" line="347" />
+        <source>Toolbar icon size</source>
+        <translation>टूलबार आइकन का आकार</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="370" />
+        <source>Turning it off can speed up very large drawings</source>
+        <translation>इसे बंद करने से बहुत बड़े चित्र तेज़ हो सकते हैं</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="373" />
+        <source>Antialiasing</source>
+        <translation>एंटीअलायसिंग</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="380" />
+        <source>Coordinates display</source>
+        <translation>निर्देशांक प्रदर्शन</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="388" />
+        <source>Units and millimeters</source>
+        <translation>इकाइयाँ और मिलीमीटर</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="393" />
+        <source>Drawing units</source>
+        <translation>आरेखण इकाइयाँ</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="398" />
+        <source>Millimeters</source>
+        <translation>मिलीमीटर</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="406" />
+        <source>Zoom with the mouse wheel (without Ctrl)</source>
+        <translation>माउस व्हील से ज़ूम (Ctrl के बिना)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="462" />
+        <source>Geometry</source>
+        <translation>ज्यामिति</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="476" />
         <source>LINES+DOTS</source>
         <translation>लाइन+डॉट</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="582" />
+        <location filename="../gui/DialogOptions.ui" line="481" />
         <source>DOTS</source>
         <translation>डॉट</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="587" />
+        <location filename="../gui/DialogOptions.ui" line="486" />
         <source>LINES</source>
         <translation>लाइन</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="611" />
+        <location filename="../gui/DialogOptions.ui" line="582" />
+        <source>Appearance</source>
+        <translation>रूप</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="691" />
         <source>Marked line width</source>
         <translation>चिह्नित रेखा मोटाई</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="637" />
+        <location filename="../gui/DialogOptions.ui" line="628" />
         <source>Normal line color</source>
         <translation>सामान्य रेखा रंग</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="717" />
+        <location filename="../gui/DialogOptions.ui" line="648" />
         <source>Line width</source>
         <translation>रेखा मोटाई</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="727" />
+        <location filename="../gui/DialogOptions.ui" line="511" />
         <source>Mark step</source>
         <translation>चिह्न चरण</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="772" />
+        <location filename="../gui/DialogOptions.ui" line="468" />
         <source>Grid type</source>
         <translation>ग्रिड प्रकार</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="795" />
+        <location filename="../gui/DialogOptions.ui" line="588" />
         <source>Dot color</source>
         <translation>डॉट रंग</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="805" />
+        <location filename="../gui/DialogOptions.ui" line="608" />
         <source>Background color</source>
         <translation>पृष्ठभूमि रंग</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="822" />
+        <location filename="../gui/DialogOptions.ui" line="67" />
         <source>Drawing</source>
         <translation>ड्रॉइंग</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="860" />
+        <location filename="../gui/DialogOptions.ui" line="717" />
+        <source>Preview</source>
+        <translation>पूर्वावलोकन</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="735" />
+        <source>Snap to objects</source>
+        <translation>वस्तुओं से स्नैप करें</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="742" />
+        <source>Capture radius</source>
+        <translation>पकड़ त्रिज्या</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="765" />
+        <source>Endpoints and vertices</source>
+        <translation>सिरे और शीर्ष</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="775" />
+        <source>Segment midpoints</source>
+        <translation>खंडों के मध्य-बिंदु</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="785" />
+        <source>Shape centers</source>
+        <translation>आकृतियों के केंद्र</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="795" />
+        <source>Segment intersections</source>
+        <translation>खंडों के प्रतिच्छेदन</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="805" />
+        <source>Snap marker color</source>
+        <translation>स्नैप चिह्न का रंग</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="825" />
+        <source>Handle color</source>
+        <translation>हैंडल का रंग</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="866" />
         <source>Drawing line width</source>
         <translation>ड्रॉइंग रेखा मोटाई</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="892" />
+        <location filename="../gui/DialogOptions.ui" line="889" />
         <source>Selection tolerance</source>
         <translation>चयन सहनशीलता</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="905" />
-        <location filename="../gui/DialogOptions.ui" line="940" />
+        <location filename="../gui/DialogOptions.ui" line="354" />
+        <location filename="../gui/DialogOptions.ui" line="420" />
+        <location filename="../gui/DialogOptions.ui" line="749" />
+        <location filename="../gui/DialogOptions.ui" line="896" />
         <source> px</source>
         <translation> px</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="927" />
+        <location filename="../gui/DialogOptions.ui" line="413" />
         <source>Macro preview size</source>
         <translation>मैक्रो पूर्वावलोकन आकार</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="959" />
+        <location filename="../gui/DialogOptions.ui" line="912" />
         <source>Connection dot size</source>
         <translation>कनेक्शन बिंदु का आकार</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="991" />
+        <location filename="../gui/DialogOptions.ui" line="436" />
         <source>Show icons in the library tree</source>
         <translation>लाइब्रेरी ट्री में आइकन दिखाएँ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1041" />
         <source>Restore defaults</source>
-        <translation>डिफ़ॉल्ट पुनर्स्थापित करें</translation>
+        <translation type="vanished">डिफ़ॉल्ट पुनर्स्थापित करें</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1048" />
+        <location filename="../gui/DialogOptions.ui" line="1064" />
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1055" />
+        <location filename="../gui/DialogOptions.ui" line="1071" />
         <source>Cancel</source>
         <translation>रद्द करें</translation>
     </message>
@@ -765,37 +947,35 @@ li.checked::marker { content: "\2612"; }
         <translation type="vanished">रद्द करें</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1062" />
+        <location filename="../gui/DialogOptions.ui" line="1078" />
         <source>Apply</source>
         <translation>लागू करें</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="54" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="64" />
         <source>Select stylesheet</source>
         <translation>स्टाइलशीट चुनें</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="56" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="66" />
         <source>Stylesheet (*.qss)</source>
         <translation>स्टाइलशीट (*.qss)</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="199" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="419" />
         <source>The new language will take effect the next time eSchema starts.</source>
         <translation>नई भाषा eSchema के अगली बार शुरू होने पर सक्रिय होगी।</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="213" />
         <source>Warning!</source>
-        <translation>चेतावनी!</translation>
+        <translation type="vanished">चेतावनी!</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="214" />
         <source>All settings will be overwritten.
 
 Proceed with restoring the defaults?
 </source>
-        <translation>सभी सेटिंग्स अधिलेखित हो जाएँगी।
+        <translation type="vanished">सभी सेटिंग्स अधिलेखित हो जाएँगी।
 
 क्या डिफ़ॉल्ट मान पुनर्स्थापित करना जारी रखें?
 </translation>
@@ -1346,665 +1526,665 @@ Proceed with restoring the default values?
         <translation>eSchema</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="92" />
+        <location filename="../gui/MainWindow.ui" line="95" />
         <source>Libraries</source>
         <translation>लाइब्रेरी</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="126" />
+        <location filename="../gui/MainWindow.ui" line="129" />
         <source>Search libraries ...</source>
         <translation>लाइब्रेरी में खोजें ...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="267" />
+        <location filename="../gui/MainWindow.ui" line="270" />
         <source>Properties</source>
         <translation>गुण</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="301" />
+        <location filename="../gui/MainWindow.ui" line="318" />
         <source>Name</source>
         <translation>नाम</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="342" />
+        <location filename="../gui/MainWindow.ui" line="359" />
         <source>Text font</source>
         <translation>टेक्स्ट फ़ॉन्ट</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="374" />
+        <location filename="../gui/MainWindow.ui" line="391" />
         <source>Line style</source>
         <translation>रेखा शैली</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="387" />
+        <location filename="../gui/MainWindow.ui" line="404" />
         <source>Fill</source>
         <translation>भराव</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="454" />
+        <location filename="../gui/MainWindow.ui" line="471" />
         <source>Value</source>
         <translation>मान</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="483" />
+        <location filename="../gui/MainWindow.ui" line="500" />
         <source>Layer</source>
         <translation>लेयर</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="496" />
+        <location filename="../gui/MainWindow.ui" line="513" />
         <source>Opacity</source>
         <translation>अपारदर्शिता</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="518" />
+        <location filename="../gui/MainWindow.ui" line="535" />
         <source>%</source>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="540" />
+        <location filename="../gui/MainWindow.ui" line="557" />
         <source>Keep aspect ratio</source>
         <translation>पहलू अनुपात बनाए रखें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="563" />
+        <location filename="../gui/MainWindow.ui" line="580" />
         <source>Black and white</source>
         <translation>काला और सफ़ेद</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="583" />
+        <location filename="../gui/MainWindow.ui" line="600" />
         <source>Start arrow</source>
         <translation>आरंभिक तीर</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="603" />
+        <location filename="../gui/MainWindow.ui" line="620" />
         <source>End arrow</source>
         <translation>अंतिम तीर</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="623" />
+        <location filename="../gui/MainWindow.ui" line="640" />
         <source>Hollow arrow</source>
         <translation>खोखला तीर</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="643" />
+        <location filename="../gui/MainWindow.ui" line="660" />
         <source>Limiter bar</source>
         <translation>सीमक पट्टी</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="663" />
+        <location filename="../gui/MainWindow.ui" line="680" />
         <source>Arrow length</source>
         <translation>तीर की लंबाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="707" />
+        <location filename="../gui/MainWindow.ui" line="724" />
         <source>Arrow width</source>
         <translation>तीर की चौड़ाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="751" />
+        <location filename="../gui/MainWindow.ui" line="768" />
         <source>Closed curve</source>
         <translation>बंद वक्र</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="771" />
+        <location filename="../gui/MainWindow.ui" line="788" />
         <source>Track width</source>
         <translation>ट्रैक चौड़ाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="815" />
+        <location filename="../gui/MainWindow.ui" line="832" />
         <source>Pad width</source>
         <translation>पैड चौड़ाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="859" />
+        <location filename="../gui/MainWindow.ui" line="876" />
         <source>Pad height</source>
         <translation>पैड ऊँचाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="903" />
+        <location filename="../gui/MainWindow.ui" line="920" />
         <source>Hole diameter</source>
         <translation>छेद का व्यास</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="947" />
+        <location filename="../gui/MainWindow.ui" line="964" />
         <source>Pad style</source>
         <translation>पैड शैली</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="967" />
+        <location filename="../gui/MainWindow.ui" line="984" />
         <source>Round</source>
         <translation>गोल</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="972" />
+        <location filename="../gui/MainWindow.ui" line="989" />
         <source>Rectangular</source>
         <translation>आयताकार</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="977" />
+        <location filename="../gui/MainWindow.ui" line="994" />
         <source>Rounded rectangular</source>
         <translation>गोल कोनों वाला आयताकार</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="991" />
-        <location filename="../gui/MainWindow.ui" line="2352" />
-        <location filename="../gui/MainWindow.ui" line="2355" />
+        <location filename="../gui/MainWindow.ui" line="1008" />
+        <location filename="../gui/MainWindow.ui" line="2370" />
+        <location filename="../gui/MainWindow.ui" line="2373" />
         <source>Text</source>
         <translation>टेक्स्ट</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1010" />
+        <location filename="../gui/MainWindow.ui" line="1027" />
         <source>Use ^ for superscript and _ for subscript (e.g. R^2, V_out); each extra ^ or _ nests one level deeper. Use \^ and \_ to write the literal ^ and _ characters.</source>
         <translation>सुपरस्क्रिप्ट के लिए ^ और सबस्क्रिप्ट के लिए _ का उपयोग करें (जैसे R^2, V_out); प्रत्येक अतिरिक्त ^ या _ एक स्तर और अंदर नेस्ट करता है। ^ और _ अक्षर स्वयं लिखने के लिए \^ और \_ का उपयोग करें।</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1023" />
+        <location filename="../gui/MainWindow.ui" line="1040" />
         <source>Character width</source>
         <translation>अक्षर चौड़ाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1061" />
+        <location filename="../gui/MainWindow.ui" line="1078" />
         <source>Character height</source>
         <translation>अक्षर ऊँचाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1099" />
+        <location filename="../gui/MainWindow.ui" line="1116" />
         <source>Orientation</source>
         <translation>अभिविन्यास</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1121" />
+        <location filename="../gui/MainWindow.ui" line="1138" />
         <source>°</source>
         <translation>°</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1143" />
+        <location filename="../gui/MainWindow.ui" line="1160" />
         <source>Bold</source>
         <translation>बोल्ड</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1163" />
+        <location filename="../gui/MainWindow.ui" line="1180" />
         <source>Italic</source>
         <translation>इटैलिक</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1183" />
+        <location filename="../gui/MainWindow.ui" line="1200" />
         <source>Mirrored</source>
         <translation>मिरर किया गया</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1203" />
+        <location filename="../gui/MainWindow.ui" line="1220" />
         <source>Length</source>
         <translation>लंबाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1247" />
+        <location filename="../gui/MainWindow.ui" line="1264" />
         <source>Width</source>
         <translation>चौड़ाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1291" />
+        <location filename="../gui/MainWindow.ui" line="1308" />
         <source>Height</source>
         <translation>ऊँचाई</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1354" />
+        <location filename="../gui/MainWindow.ui" line="1372" />
         <source>FCD code</source>
         <translation>FCD कोड</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1393" />
+        <location filename="../gui/MainWindow.ui" line="1411" />
         <source>Re-parse the text above and replace the whole drawing with it, as one undo step</source>
         <translation>ऊपर दिए गए टेक्स्ट को फिर से पार्स करें और पूरे चित्र को इससे बदलें, एक पूर्ववत करने योग्य चरण के रूप में</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1396" />
+        <location filename="../gui/MainWindow.ui" line="1414" />
         <source>Apply</source>
         <translation>लागू करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1403" />
+        <location filename="../gui/MainWindow.ui" line="1421" />
         <source>Discard the text above and regenerate it from the current drawing</source>
         <translation>ऊपर दिए गए टेक्स्ट को छोड़ें और इसे वर्तमान चित्र से फिर से बनाएँ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1406" />
+        <location filename="../gui/MainWindow.ui" line="1424" />
         <source>Refresh</source>
         <translation>ताज़ा करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1439" />
+        <location filename="../gui/MainWindow.ui" line="1457" />
         <source>File</source>
         <translation>फ़ाइल</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1457" />
-        <location filename="../src/App/MainWindow.cpp" line="874" />
+        <location filename="../gui/MainWindow.ui" line="1475" />
+        <location filename="../src/App/MainWindow.cpp" line="896" />
         <source>Open recent</source>
         <translation>हाल की फ़ाइलें खोलें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1466" />
+        <location filename="../gui/MainWindow.ui" line="1484" />
         <source>Edit</source>
         <translation>संपादन</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1508" />
+        <location filename="../gui/MainWindow.ui" line="1526" />
         <source>Shape</source>
         <translation>आकृति</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1521" />
+        <location filename="../gui/MainWindow.ui" line="1539" />
         <source>Boolean operations</source>
         <translation>बूलियन संक्रियाएँ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1532" />
+        <location filename="../gui/MainWindow.ui" line="1550" />
         <source>View</source>
         <translation>दृश्य</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1544" />
+        <location filename="../gui/MainWindow.ui" line="1562" />
         <source>Tools</source>
         <translation>उपकरण</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1553" />
+        <location filename="../gui/MainWindow.ui" line="1571" />
         <source>Help</source>
         <translation>सहायता</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1578" />
+        <location filename="../gui/MainWindow.ui" line="1596" />
         <source>ToolBarStandard</source>
         <translation>ToolBarStandard</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1628" />
+        <location filename="../gui/MainWindow.ui" line="1646" />
         <source>ToolBarModify</source>
         <translation>ToolBarModify</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1677" />
+        <location filename="../gui/MainWindow.ui" line="1695" />
         <source>ToolBarPrimitive</source>
         <translation>ToolBarPrimitive</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1726" />
+        <location filename="../gui/MainWindow.ui" line="1744" />
         <source>New drawing</source>
         <translation>नया ड्रॉइंग</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1729" />
+        <location filename="../gui/MainWindow.ui" line="1747" />
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1741" />
+        <location filename="../gui/MainWindow.ui" line="1759" />
         <source>Open a file</source>
         <translation>फ़ाइल खोलें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1744" />
+        <location filename="../gui/MainWindow.ui" line="1762" />
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1753" />
+        <location filename="../gui/MainWindow.ui" line="1771" />
         <source>Import from DXF...</source>
         <translation>DXF से आयात करें...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1765" />
+        <location filename="../gui/MainWindow.ui" line="1783" />
         <source>Save</source>
         <translation>सहेजें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1768" />
+        <location filename="../gui/MainWindow.ui" line="1786" />
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1780" />
+        <location filename="../gui/MainWindow.ui" line="1798" />
         <source>Save as</source>
         <translation>इस रूप में सहेजें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1783" />
+        <location filename="../gui/MainWindow.ui" line="1801" />
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1795" />
+        <location filename="../gui/MainWindow.ui" line="1813" />
         <source>Save split as...</source>
         <translation>विभाजित रूप में सहेजें...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1798" />
+        <location filename="../gui/MainWindow.ui" line="1816" />
         <source>Save a copy of the drawing with every macro expanded into raw primitives</source>
         <translation>चित्र की एक प्रति सहेजें जिसमें हर मैक्रो को मूल प्रिमिटिव में विस्तारित किया गया हो</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1807" />
-        <location filename="../src/App/MainWindow.cpp" line="1329" />
+        <location filename="../gui/MainWindow.ui" line="1825" />
+        <location filename="../src/App/MainWindow.cpp" line="1388" />
         <source>Print</source>
         <translation>प्रिंट करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1810" />
+        <location filename="../gui/MainWindow.ui" line="1828" />
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1819" />
+        <location filename="../gui/MainWindow.ui" line="1837" />
         <source>Close</source>
         <translation>बंद करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1822" />
+        <location filename="../gui/MainWindow.ui" line="1840" />
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1831" />
+        <location filename="../gui/MainWindow.ui" line="1849" />
         <source>Export...</source>
         <translation>निर्यात करें...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1834" />
+        <location filename="../gui/MainWindow.ui" line="1852" />
         <source>Export the drawing as PNG, JPG, SVG, PDF, EPS, or DXF</source>
         <translation>चित्र को PNG, JPG, SVG, PDF, EPS, या DXF के रूप में निर्यात करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1837" />
+        <location filename="../gui/MainWindow.ui" line="1855" />
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1849" />
-        <location filename="../src/App/MainWindow.cpp" line="701" />
+        <location filename="../gui/MainWindow.ui" line="1867" />
+        <location filename="../src/App/MainWindow.cpp" line="721" />
         <source>Undo</source>
         <translation>पूर्ववत करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1852" />
+        <location filename="../gui/MainWindow.ui" line="1870" />
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1864" />
-        <location filename="../src/App/MainWindow.cpp" line="704" />
+        <location filename="../gui/MainWindow.ui" line="1882" />
+        <location filename="../src/App/MainWindow.cpp" line="724" />
         <source>Redo</source>
         <translation>दोबारा करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1867" />
+        <location filename="../gui/MainWindow.ui" line="1885" />
         <source>Ctrl+Shift+Z</source>
         <translation>Ctrl+Shift+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1879" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1578" />
+        <location filename="../gui/MainWindow.ui" line="1897" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1666" />
         <source>Cut</source>
         <translation>काटें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1882" />
+        <location filename="../gui/MainWindow.ui" line="1900" />
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1894" />
+        <location filename="../gui/MainWindow.ui" line="1912" />
         <source>Copy</source>
         <translation>कॉपी करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1897" />
+        <location filename="../gui/MainWindow.ui" line="1915" />
         <source>Ctrl+C</source>
         <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1909" />
+        <location filename="../gui/MainWindow.ui" line="1927" />
         <source>Copy split</source>
         <translation>विभाजित रूप में कॉपी करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1912" />
+        <location filename="../gui/MainWindow.ui" line="1930" />
         <source>Copy the selection with every macro expanded into raw primitives</source>
         <translation>हर मैक्रो को मूल प्रिमिटिव में विस्तारित करते हुए चयन कॉपी करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1921" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1520" />
+        <location filename="../gui/MainWindow.ui" line="1939" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1608" />
         <source>Copy as image</source>
         <translation>छवि के रूप में कॉपी करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1924" />
+        <location filename="../gui/MainWindow.ui" line="1942" />
         <source>Copy the selection (or the whole drawing) to the clipboard as an image</source>
         <translation>चयन (या पूरे चित्र) को छवि के रूप में क्लिपबोर्ड पर कॉपी करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1927" />
+        <location filename="../gui/MainWindow.ui" line="1945" />
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1939" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1671" />
+        <location filename="../gui/MainWindow.ui" line="1957" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1759" />
         <source>Paste</source>
         <translation>पेस्ट करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1942" />
+        <location filename="../gui/MainWindow.ui" line="1960" />
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1954" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1053" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1679" />
+        <location filename="../gui/MainWindow.ui" line="1972" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1137" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1767" />
         <source>Duplicate</source>
         <translation>डुप्लिकेट करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1957" />
+        <location filename="../gui/MainWindow.ui" line="1975" />
         <source>Ctrl+D</source>
         <translation>Ctrl+D</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1969" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="533" />
+        <location filename="../gui/MainWindow.ui" line="1987" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="606" />
         <source>Rotate</source>
         <translation>घुमाएँ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1972" />
+        <location filename="../gui/MainWindow.ui" line="1990" />
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1984" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="513" />
+        <location filename="../gui/MainWindow.ui" line="2002" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="586" />
         <source>Mirror</source>
         <translation>मिरर करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1987" />
+        <location filename="../gui/MainWindow.ui" line="2005" />
         <source>S</source>
         <translation>S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1996" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1074" />
+        <location filename="../gui/MainWindow.ui" line="2014" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1158" />
         <source>Convert macro to primitives</source>
         <translation>मैक्रो को प्रिमिटिव में बदलें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2008" />
+        <location filename="../gui/MainWindow.ui" line="2026" />
         <source>Create macro from selection...</source>
         <translation>चयन से मैक्रो बनाएँ...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2017" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1325" />
+        <location filename="../gui/MainWindow.ui" line="2035" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1413" />
         <source>Align left</source>
         <translation>बाएँ संरेखित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2026" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1341" />
+        <location filename="../gui/MainWindow.ui" line="2044" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1429" />
         <source>Align right</source>
         <translation>दाएँ संरेखित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2035" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1357" />
+        <location filename="../gui/MainWindow.ui" line="2053" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1445" />
         <source>Align top</source>
         <translation>ऊपर संरेखित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2044" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1373" />
+        <location filename="../gui/MainWindow.ui" line="2062" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1461" />
         <source>Align bottom</source>
         <translation>नीचे संरेखित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2053" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1398" />
+        <location filename="../gui/MainWindow.ui" line="2071" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1486" />
         <source>Align horizontal center</source>
         <translation>क्षैतिज केंद्र संरेखित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2062" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1422" />
+        <location filename="../gui/MainWindow.ui" line="2080" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1510" />
         <source>Align vertical center</source>
         <translation>लंबवत केंद्र संरेखित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2071" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1449" />
+        <location filename="../gui/MainWindow.ui" line="2089" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1537" />
         <source>Distribute horizontally</source>
         <translation>क्षैतिज रूप से वितरित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2080" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1472" />
+        <location filename="../gui/MainWindow.ui" line="2098" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1560" />
         <source>Distribute vertically</source>
         <translation>लंबवत वितरित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2092" />
+        <location filename="../gui/MainWindow.ui" line="2110" />
         <source>Select all</source>
         <translation>सभी चुनें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2095" />
+        <location filename="../gui/MainWindow.ui" line="2113" />
         <source>Ctrl+A</source>
         <translation>Ctrl+A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2104" />
+        <location filename="../gui/MainWindow.ui" line="2122" />
         <source>Find...</source>
         <translation>खोजें...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2107" />
+        <location filename="../gui/MainWindow.ui" line="2125" />
         <source>Ctrl+F</source>
         <translation>Ctrl+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2119" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1158" />
+        <location filename="../gui/MainWindow.ui" line="2137" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1242" />
         <source>Delete</source>
         <translation>हटाएँ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2122" />
+        <location filename="../gui/MainWindow.ui" line="2140" />
         <source>Del</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2157" />
+        <location filename="../gui/MainWindow.ui" line="2175" />
         <source>About Qt</source>
         <translation>Qt के बारे में</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2241" />
+        <location filename="../gui/MainWindow.ui" line="2259" />
         <source>Measure</source>
         <translation>मापें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2244" />
+        <location filename="../gui/MainWindow.ui" line="2262" />
         <source>Measure: click two points to read their distance and angle in the status bar</source>
         <translation>मापन: दो बिंदुओं पर क्लिक करें, दूरी और कोण स्थिति पट्टी में दिखेंगे</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2247" />
+        <location filename="../gui/MainWindow.ui" line="2265" />
         <source>W</source>
         <translation>W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2259" />
+        <location filename="../gui/MainWindow.ui" line="2277" />
         <source>Regular polygon</source>
         <translation>सम बहुभुज</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2262" />
+        <location filename="../gui/MainWindow.ui" line="2280" />
         <source>Regular polygon: click the center, then a vertex</source>
         <translation>सम बहुभुज: केंद्र पर क्लिक करें, फिर किसी शीर्ष पर</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2265" />
+        <location filename="../gui/MainWindow.ui" line="2283" />
         <source>N</source>
         <translation>N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2277" />
+        <location filename="../gui/MainWindow.ui" line="2295" />
         <source>Arc</source>
         <translation>चाप</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2280" />
+        <location filename="../gui/MainWindow.ui" line="2298" />
         <source>Arc: click the start point, the end point, then a point the arc passes through</source>
         <translation>चाप: आरंभिक बिंदु, अंतिम बिंदु और फिर वह बिंदु क्लिक करें जिससे चाप गुज़रता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2283" />
+        <location filename="../gui/MainWindow.ui" line="2301" />
         <source>U</source>
         <translation>U</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2454" />
+        <location filename="../gui/MainWindow.ui" line="2472" />
         <source>Fit the view to the selection</source>
         <translation>दृश्य को चयन में समायोजित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2457" />
+        <location filename="../gui/MainWindow.ui" line="2475" />
         <source>Fit the view to the bounding box of the selected elements</source>
         <translation>दृश्य को चयनित तत्वों के बाउंडिंग बॉक्स में समायोजित करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2460" />
+        <location filename="../gui/MainWindow.ui" line="2478" />
         <source>Ctrl+Shift+F</source>
         <translation>Ctrl+Shift+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2472" />
+        <location filename="../gui/MainWindow.ui" line="2490" />
         <source>Show grid</source>
         <translation>ग्रिड दिखाएँ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2475" />
+        <location filename="../gui/MainWindow.ui" line="2493" />
         <source>Toggle the grid</source>
         <translation>ग्रिड टॉगल करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2483" />
+        <location filename="../gui/MainWindow.ui" line="2501" />
         <source>Snap to grid</source>
         <translation>ग्रिड से स्नैप करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2486" />
+        <location filename="../gui/MainWindow.ui" line="2504" />
         <source>Toggle snap to grid</source>
         <translation>ग्रिड स्नैप टॉगल करें</translation>
     </message>
@@ -2013,12 +2193,12 @@ Proceed with restoring the default values?
         <translation type="vanished">पृष्ठभूमि बिटमैप</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2134" />
+        <location filename="../gui/MainWindow.ui" line="2152" />
         <source>Options</source>
         <translation>विकल्प</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2143" />
+        <location filename="../gui/MainWindow.ui" line="2161" />
         <source>About eSchema</source>
         <translation>eSchema के बारे में</translation>
     </message>
@@ -2027,465 +2207,465 @@ Proceed with restoring the default values?
         <translation type="vanished">लेयर्स</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2169" />
-        <location filename="../gui/MainWindow.ui" line="2172" />
+        <location filename="../gui/MainWindow.ui" line="2187" />
+        <location filename="../gui/MainWindow.ui" line="2190" />
         <source>Line</source>
         <translation>रेखा</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2175" />
+        <location filename="../gui/MainWindow.ui" line="2193" />
         <source>L</source>
         <translation>L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2187" />
-        <location filename="../gui/MainWindow.ui" line="2190" />
+        <location filename="../gui/MainWindow.ui" line="2205" />
+        <location filename="../gui/MainWindow.ui" line="2208" />
         <source>Rectangle</source>
         <translation>आयत</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2193" />
+        <location filename="../gui/MainWindow.ui" line="2211" />
         <source>G</source>
         <translation>G</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2205" />
-        <location filename="../gui/MainWindow.ui" line="2208" />
+        <location filename="../gui/MainWindow.ui" line="2223" />
+        <location filename="../gui/MainWindow.ui" line="2226" />
         <source>Polygon</source>
         <translation>बहुभुज</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2211" />
+        <location filename="../gui/MainWindow.ui" line="2229" />
         <source>P</source>
         <translation>P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2223" />
-        <location filename="../gui/MainWindow.ui" line="2226" />
+        <location filename="../gui/MainWindow.ui" line="2241" />
+        <location filename="../gui/MainWindow.ui" line="2244" />
         <source>Ellipse</source>
         <translation>दीर्घवृत्त</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2229" />
+        <location filename="../gui/MainWindow.ui" line="2247" />
         <source>E</source>
         <translation>E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2298" />
-        <location filename="../gui/MainWindow.ui" line="2301" />
+        <location filename="../gui/MainWindow.ui" line="2316" />
+        <location filename="../gui/MainWindow.ui" line="2319" />
         <source>Select</source>
         <translation>चयन करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2304" />
+        <location filename="../gui/MainWindow.ui" line="2322" />
         <source>A</source>
         <translation>A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2316" />
-        <location filename="../gui/MainWindow.ui" line="2319" />
+        <location filename="../gui/MainWindow.ui" line="2334" />
+        <location filename="../gui/MainWindow.ui" line="2337" />
         <source>Bezier</source>
         <translation>बेज़ियर</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2322" />
+        <location filename="../gui/MainWindow.ui" line="2340" />
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2334" />
-        <location filename="../gui/MainWindow.ui" line="2337" />
+        <location filename="../gui/MainWindow.ui" line="2352" />
+        <location filename="../gui/MainWindow.ui" line="2355" />
         <source>Curve</source>
         <translation>वक्र</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2340" />
+        <location filename="../gui/MainWindow.ui" line="2358" />
         <source>O</source>
         <translation>O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2358" />
+        <location filename="../gui/MainWindow.ui" line="2376" />
         <source>T</source>
         <translation>T</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2370" />
-        <location filename="../gui/MainWindow.ui" line="2373" />
+        <location filename="../gui/MainWindow.ui" line="2388" />
+        <location filename="../gui/MainWindow.ui" line="2391" />
         <source>Connection</source>
         <translation>कनेक्शन</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2376" />
+        <location filename="../gui/MainWindow.ui" line="2394" />
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2388" />
-        <location filename="../gui/MainWindow.ui" line="2391" />
+        <location filename="../gui/MainWindow.ui" line="2406" />
+        <location filename="../gui/MainWindow.ui" line="2409" />
         <source>PCB track</source>
         <translation>PCB ट्रैक</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2394" />
+        <location filename="../gui/MainWindow.ui" line="2412" />
         <source>I</source>
         <translation>I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2406" />
-        <location filename="../gui/MainWindow.ui" line="2409" />
+        <location filename="../gui/MainWindow.ui" line="2424" />
+        <location filename="../gui/MainWindow.ui" line="2427" />
         <source>PCB pad</source>
         <translation>PCB पैड</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2412" />
+        <location filename="../gui/MainWindow.ui" line="2430" />
         <source>Z</source>
         <translation>Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2424" />
-        <location filename="../gui/MainWindow.ui" line="2427" />
+        <location filename="../gui/MainWindow.ui" line="2442" />
+        <location filename="../gui/MainWindow.ui" line="2445" />
         <source>Image</source>
         <translation>छवि</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2430" />
+        <location filename="../gui/MainWindow.ui" line="2448" />
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2442" />
+        <location filename="../gui/MainWindow.ui" line="2460" />
         <source>Fit view</source>
         <translation>दृश्य फ़िट करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2445" />
+        <location filename="../gui/MainWindow.ui" line="2463" />
         <source>Fit the drawing view</source>
         <translation>ड्रॉइंग दृश्य फ़िट करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2152" />
-        <location filename="../src/App/MainWindow.cpp" line="777" />
-        <location filename="../src/App/MainWindow.cpp" line="788" />
+        <location filename="../gui/MainWindow.ui" line="2170" />
+        <location filename="../src/App/MainWindow.cpp" line="797" />
+        <location filename="../src/App/MainWindow.cpp" line="808" />
         <source>Check for updates</source>
         <translation>अपडेट जाँचें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2495" />
+        <location filename="../gui/MainWindow.ui" line="2513" />
         <source>Keyboard shortcuts</source>
         <translation>कीबोर्ड शॉर्टकट</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2507" />
-        <location filename="../gui/MainWindow.ui" line="2510" />
+        <location filename="../gui/MainWindow.ui" line="2525" />
+        <location filename="../gui/MainWindow.ui" line="2528" />
         <source>Layer management</source>
         <translation>लेयर प्रबंधन</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2513" />
+        <location filename="../gui/MainWindow.ui" line="2531" />
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2522" />
+        <location filename="../gui/MainWindow.ui" line="2540" />
         <source>Tracing image...</source>
         <translation>ट्रेसिंग छवि...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2525" />
+        <location filename="../gui/MainWindow.ui" line="2543" />
         <source>Attach or remove a reference image drawn under the grid, for tracing over</source>
         <translation>ट्रेसिंग के लिए ग्रिड के नीचे बनी संदर्भ छवि संलग्न या हटाएँ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2540" />
+        <location filename="../gui/MainWindow.ui" line="2558" />
         <source>Basic tools</source>
         <translation>बुनियादी उपकरण</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2555" />
+        <location filename="../gui/MainWindow.ui" line="2573" />
         <source>Drawing tools</source>
         <translation>ड्रॉइंग उपकरण</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2570" />
+        <location filename="../gui/MainWindow.ui" line="2588" />
         <source>Snap to objects</source>
         <translation>वस्तुओं से स्नैप करें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2573" />
+        <location filename="../gui/MainWindow.ui" line="2591" />
         <source>Snap clicks and drags to endpoints, midpoints, centers, and intersections of what's already drawn</source>
         <translation>क्लिक और खींचने को पहले से बनी आकृतियों के सिरों, मध्य-बिंदुओं, केंद्रों और प्रतिच्छेदनों से जोड़ता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2588" />
+        <location filename="../gui/MainWindow.ui" line="2606" />
         <source>Modify tools</source>
         <translation>संशोधन उपकरण</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2600" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="581" />
+        <location filename="../gui/MainWindow.ui" line="2618" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="654" />
         <source>Union</source>
         <translation>संयोजन</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2603" />
+        <location filename="../gui/MainWindow.ui" line="2621" />
         <source>Merge the selected closed shapes into a single shape</source>
         <translation>चयनित बंद आकृतियों को एक ही आकृति में मिला देता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2615" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="586" />
+        <location filename="../gui/MainWindow.ui" line="2633" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="659" />
         <source>Subtraction</source>
         <translation>घटाव</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2618" />
+        <location filename="../gui/MainWindow.ui" line="2636" />
         <source>Subtract the other selected closed shapes from the first one (in drawing order)</source>
         <translation>पहली आकृति में से (आरेखण क्रम में) बाकी चयनित बंद आकृतियाँ घटा देता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2630" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="591" />
+        <location filename="../gui/MainWindow.ui" line="2648" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="664" />
         <source>Intersection</source>
         <translation>प्रतिच्छेदन</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2633" />
+        <location filename="../gui/MainWindow.ui" line="2651" />
         <source>Keep only the area shared by all the selected closed shapes</source>
         <translation>केवल वही क्षेत्र रखता है जो सभी चयनित बंद आकृतियों में साझा है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2641" />
+        <location filename="../gui/MainWindow.ui" line="2659" />
         <source>Smooth curved results</source>
         <translation>चिकने वक्र परिणाम</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2644" />
+        <location filename="../gui/MainWindow.ui" line="2662" />
         <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
         <translation>वक्र वाले परिणामों को चपटे बहुभुजों के बजाय जटिल वक्रों में बदल देता है (बहुत कम नोड, कोने थोड़े गोल)</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2656" />
+        <location filename="../gui/MainWindow.ui" line="2674" />
         <source>Rotate by angle...</source>
         <translation>कोण से घुमाएँ...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2659" />
+        <location filename="../gui/MainWindow.ui" line="2677" />
         <source>Rotate the selection by an arbitrary angle; rectangles and ellipses are converted to polygons/curves first</source>
         <translation>चयन को मनचाहे कोण से घुमाता है; आयत और दीर्घवृत्त पहले बहुभुज/वक्रों में बदले जाते हैं</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2671" />
+        <location filename="../gui/MainWindow.ui" line="2689" />
         <source>Scale...</source>
         <translation>स्केल करें...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2674" />
+        <location filename="../gui/MainWindow.ui" line="2692" />
         <source>Scale the selection by a percentage around the first selected primitive's first point</source>
         <translation>पहली चयनित आदिम आकृति के पहले बिंदु के चारों ओर चयन को प्रतिशत से स्केल करता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2686" />
+        <location filename="../gui/MainWindow.ui" line="2704" />
         <source>Array of copies...</source>
         <translation>प्रतियों की सरणी...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2689" />
+        <location filename="../gui/MainWindow.ui" line="2707" />
         <source>Replicate the selection on a grid of rows and columns</source>
         <translation>चयन को पंक्तियों और स्तंभों की ग्रिड पर दोहराता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2697" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="623" />
+        <location filename="../gui/MainWindow.ui" line="2715" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="696" />
         <source>Convert to polygon</source>
         <translation>बहुभुज में बदलें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2700" />
+        <location filename="../gui/MainWindow.ui" line="2718" />
         <source>Rewrite the selected rectangles, ellipses, and closed curves as node-editable polygons</source>
         <translation>चयनित आयतों, दीर्घवृत्तों और बंद वक्रों को संपादन-योग्य नोड वाले बहुभुजों में फिर से लिखता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2708" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="628" />
+        <location filename="../gui/MainWindow.ui" line="2726" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="701" />
         <source>Convert to complex curve</source>
         <translation>जटिल वक्र में बदलें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2711" />
+        <location filename="../gui/MainWindow.ui" line="2729" />
         <source>Rewrite the selected rectangles, ellipses, and polygons as smooth complex curves</source>
         <translation>चयनित आयतों, दीर्घवृत्तों और बहुभुजों को चिकने जटिल वक्रों में फिर से लिखता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2719" />
+        <location filename="../gui/MainWindow.ui" line="2737" />
         <source>Simplify nodes...</source>
         <translation>नोड सरल करें...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2722" />
+        <location filename="../gui/MainWindow.ui" line="2740" />
         <source>Remove nodes that deviate less than the given tolerance from the selected polygons and curves</source>
         <translation>चयनित बहुभुजों और वक्रों से वे नोड हटाता है जो दी गई सह्यता से कम विचलित होते हैं</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2730" />
+        <location filename="../gui/MainWindow.ui" line="2748" />
         <source>Fillet corners...</source>
         <translation>कोने गोल करें...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2733" />
+        <location filename="../gui/MainWindow.ui" line="2751" />
         <source>Round every corner of the selected polygons and rectangles with an arc of the given radius</source>
         <translation>चयनित बहुभुजों और आयतों के हर कोने को दी गई त्रिज्या के चाप से गोल करता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2741" />
+        <location filename="../gui/MainWindow.ui" line="2759" />
         <source>Chamfer corners...</source>
         <translation>कोने काटें (चैम्फ़र)...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2744" />
+        <location filename="../gui/MainWindow.ui" line="2762" />
         <source>Cut every corner of the selected polygons and rectangles at the given distance</source>
         <translation>चयनित बहुभुजों और आयतों के हर कोने को दी गई दूरी पर काट देता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2752" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1002" />
+        <location filename="../gui/MainWindow.ui" line="2770" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1086" />
         <source>Snap selection to grid</source>
         <translation>चयन को ग्रिड से मिलाएँ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2755" />
+        <location filename="../gui/MainWindow.ui" line="2773" />
         <source>Round every point of the selection to the snap step - handy after a DXF import or drawing with snapping off</source>
         <translation>चयन के हर बिंदु को स्नैप अंतराल पर पूर्णांकित करता है - DXF आयात या स्नैप बंद करके बनाए चित्र के बाद उपयोगी</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2763" />
+        <location filename="../gui/MainWindow.ui" line="2781" />
         <source>Offset outline...</source>
         <translation>बाह्यरेखा ऑफ़सेट...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2766" />
+        <location filename="../gui/MainWindow.ui" line="2784" />
         <source>Grow or shrink the selected closed shapes by a parallel offset of their outline</source>
         <translation>चयनित बंद आकृतियों को उनकी बाह्यरेखा के समानांतर ऑफ़सेट से बड़ा या छोटा करता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2771" />
+        <location filename="../gui/MainWindow.ui" line="2789" />
         <source>Invert selection</source>
         <translation>चयन पलटें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2774" />
+        <location filename="../gui/MainWindow.ui" line="2792" />
         <source>Ctrl+Shift+I</source>
         <translation>Ctrl+Shift+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2782" />
+        <location filename="../gui/MainWindow.ui" line="2800" />
         <source>Select same type</source>
         <translation>समान प्रकार चुनें</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2785" />
+        <location filename="../gui/MainWindow.ui" line="2803" />
         <source>Select every primitive of the same type as the current selection</source>
         <translation>वर्तमान चयन के समान प्रकार की सभी आदिम आकृतियाँ चुनता है</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2796" />
+        <location filename="../gui/MainWindow.ui" line="2814" />
         <source>Show rulers</source>
         <translation>रूलर दिखाएँ</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="701" />
+        <location filename="../src/App/MainWindow.cpp" line="721" />
         <source>Undo: %1</source>
         <translation>पूर्ववत करें: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="704" />
+        <location filename="../src/App/MainWindow.cpp" line="724" />
         <source>Redo: %1</source>
         <translation>दोबारा करें: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="767" />
+        <location filename="../src/App/MainWindow.cpp" line="787" />
         <source>Update available</source>
         <translation>अपडेट उपलब्ध है</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="768" />
+        <location filename="../src/App/MainWindow.cpp" line="788" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>eSchema का नया संस्करण उपलब्ध है (%1)।
 क्या आप इसे अभी डाउनलोड करना चाहते हैं?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="778" />
+        <location filename="../src/App/MainWindow.cpp" line="798" />
         <source>eSchema is already up to date.</source>
         <translation>eSchema पहले से ही नवीनतम संस्करण में है।</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="789" />
+        <location filename="../src/App/MainWindow.cpp" line="809" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>अपडेट जाँचे नहीं जा सके। कृपया अपना इंटरनेट कनेक्शन जाँचें।</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="821" />
+        <location filename="../src/App/MainWindow.cpp" line="841" />
         <source>Attach tracing image</source>
         <translation>ट्रेसिंग छवि संलग्न करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="827" />
+        <location filename="../src/App/MainWindow.cpp" line="847" />
         <source>New drawing* (unsaved)</source>
         <translation>नया ड्रॉइंग* (सहेजा नहीं गया)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="875" />
+        <location filename="../src/App/MainWindow.cpp" line="897" />
         <source>The file no longer exists:
 %1</source>
         <translation>फ़ाइल अब मौजूद नहीं है:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="889" />
+        <location filename="../src/App/MainWindow.cpp" line="911" />
         <source>Clear list</source>
         <translation>सूची साफ़ करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="935" />
-        <location filename="../src/App/MainWindow.cpp" line="1089" />
-        <location filename="../src/App/MainWindow.cpp" line="1137" />
-        <location filename="../src/App/MainWindow.cpp" line="1170" />
-        <location filename="../src/App/MainWindow.cpp" line="1323" />
-        <location filename="../src/App/MainWindow.cpp" line="1465" />
+        <location filename="../src/App/MainWindow.cpp" line="966" />
+        <location filename="../src/App/MainWindow.cpp" line="1148" />
+        <location filename="../src/App/MainWindow.cpp" line="1196" />
+        <location filename="../src/App/MainWindow.cpp" line="1229" />
+        <location filename="../src/App/MainWindow.cpp" line="1382" />
+        <location filename="../src/App/MainWindow.cpp" line="1524" />
         <source>Error</source>
         <translation>त्रुटि</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="935" />
-        <location filename="../src/App/MainWindow.cpp" line="1323" />
+        <location filename="../src/App/MainWindow.cpp" line="966" />
+        <location filename="../src/App/MainWindow.cpp" line="1382" />
         <source>Unable to save the file:
 %1</source>
         <translation>फ़ाइल सहेजने में असमर्थ:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="957" />
+        <location filename="../src/App/MainWindow.cpp" line="988" />
         <source>Unsaved changes</source>
         <translation>असहेजे गए परिवर्तन</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="958" />
+        <location filename="../src/App/MainWindow.cpp" line="989" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>असहेजे गए परिवर्तन हैं। क्या आप उन्हें सहेजना चाहते हैं?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1073" />
+        <location filename="../src/App/MainWindow.cpp" line="1132" />
         <source>an untitled drawing</source>
         <translation>एक शीर्षकहीन चित्र</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1076" />
-        <location filename="../src/App/MainWindow.cpp" line="1100" />
+        <location filename="../src/App/MainWindow.cpp" line="1135" />
+        <location filename="../src/App/MainWindow.cpp" line="1159" />
         <source>Autosave recovery</source>
         <translation>स्वतः सहेजी गई फ़ाइल की पुनर्प्राप्ति</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1077" />
+        <location filename="../src/App/MainWindow.cpp" line="1136" />
         <source>eSchema wasn't closed properly last time.
 An autosave was found for %1.
 
@@ -2496,45 +2676,45 @@ Do you want to recover it?</source>
 क्या आप इसे पुनर्प्राप्त करना चाहते हैं?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1090" />
+        <location filename="../src/App/MainWindow.cpp" line="1149" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>स्वतः सहेजी गई फ़ाइल पुनर्प्राप्त नहीं की जा सकी:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1125" />
+        <location filename="../src/App/MainWindow.cpp" line="1184" />
         <source>Open drawing</source>
         <translation>ड्रॉइंग खोलें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1126" />
-        <location filename="../src/App/MainWindow.cpp" line="1294" />
-        <location filename="../src/App/MainWindow.cpp" line="1310" />
+        <location filename="../src/App/MainWindow.cpp" line="1185" />
+        <location filename="../src/App/MainWindow.cpp" line="1353" />
+        <location filename="../src/App/MainWindow.cpp" line="1369" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1137" />
-        <location filename="../src/App/MainWindow.cpp" line="1170" />
+        <location filename="../src/App/MainWindow.cpp" line="1196" />
+        <location filename="../src/App/MainWindow.cpp" line="1229" />
         <source>Unable to open the file:
 %1</source>
         <translation>फ़ाइल खोलने में असमर्थ:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1154" />
-        <location filename="../src/App/MainWindow.cpp" line="1182" />
+        <location filename="../src/App/MainWindow.cpp" line="1213" />
+        <location filename="../src/App/MainWindow.cpp" line="1241" />
         <source>Import from DXF</source>
         <translation>DXF से आयात करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1155" />
+        <location filename="../src/App/MainWindow.cpp" line="1214" />
         <source>DXF (*.dxf)</source>
         <translation>DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1183" />
+        <location filename="../src/App/MainWindow.cpp" line="1242" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -2543,148 +2723,148 @@ Do you want to recover it?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1228" />
+        <location filename="../src/App/MainWindow.cpp" line="1287" />
         <source>Edit FCD code</source>
         <translation>FCD कोड संपादित करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1293" />
+        <location filename="../src/App/MainWindow.cpp" line="1352" />
         <source>Save drawing as</source>
         <translation>ड्रॉइंग इस रूप में सहेजें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1309" />
+        <location filename="../src/App/MainWindow.cpp" line="1368" />
         <source>Save split as</source>
         <translation>विभाजित रूप में सहेजें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1329" />
-        <location filename="../src/App/MainWindow.cpp" line="1435" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1520" />
+        <location filename="../src/App/MainWindow.cpp" line="1388" />
+        <location filename="../src/App/MainWindow.cpp" line="1494" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1608" />
         <source>The drawing is empty.</source>
         <translation>चित्र खाली है।</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1364" />
+        <location filename="../src/App/MainWindow.cpp" line="1423" />
         <source>Print preview</source>
         <translation>प्रिंट पूर्वावलोकन</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1435" />
+        <location filename="../src/App/MainWindow.cpp" line="1494" />
         <source>Export</source>
         <translation>निर्यात करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1443" />
+        <location filename="../src/App/MainWindow.cpp" line="1502" />
         <source>Export drawing</source>
         <translation>चित्र निर्यात करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1466" />
+        <location filename="../src/App/MainWindow.cpp" line="1525" />
         <source>Could not export the file:
 %1</source>
         <translation>फ़ाइल निर्यात नहीं की जा सकी:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="484" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="557" />
         <source>Add node</source>
         <translation>नोड जोड़ें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="488" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="561" />
         <source>Remove node</source>
         <translation>नोड हटाएँ</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="645" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="652" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="718" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="725" />
         <source>Simplify nodes</source>
         <translation>नोड सरल करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="645" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="718" />
         <source>Tolerance (drawing units):</source>
         <translation>सह्यता (आरेखण इकाइयाँ):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="694" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="700" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="767" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="773" />
         <source>Chamfer corners</source>
         <translation>कोने काटें (चैम्फ़र)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="694" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="700" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="767" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="773" />
         <source>Fillet corners</source>
         <translation>कोने गोल करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="695" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="768" />
         <source>Cut distance (drawing units):</source>
         <translation>काटने की दूरी (आरेखण इकाइयाँ):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="695" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="768" />
         <source>Radius (drawing units):</source>
         <translation>त्रिज्या (आरेखण इकाइयाँ):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="745" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="754" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="818" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="827" />
         <source>Offset outline</source>
         <translation>बाह्यरेखा ऑफ़सेट</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="746" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="819" />
         <source>Distance (drawing units, negative for inward):</source>
         <translation>दूरी (आरेखण इकाइयाँ, भीतर की ओर के लिए ऋणात्मक):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="795" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="804" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="868" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="877" />
         <source>Scale</source>
         <translation>स्केल करें</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="795" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="868" />
         <source>Scale factor (%):</source>
         <translation>स्केल गुणांक (%):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="831" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="849" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="904" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="922" />
         <source>Rotate by angle</source>
         <translation>कोण से घुमाएँ</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="831" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="904" />
         <source>Angle (degrees, counterclockwise):</source>
         <translation>कोण (डिग्री, वामावर्त):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="904" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="936" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="988" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1020" />
         <source>Array of copies</source>
         <translation>प्रतियों की सरणी</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1149" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1233" />
         <source>Create macro</source>
         <translation>मैक्रो बनाएँ</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1231" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1315" />
         <source>No matches</source>
         <translation>कोई मेल नहीं मिला</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1243" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1327" />
         <source>%1 of %2</source>
         <translation>%2 में से %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1286" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1374" />
         <source>Move selection</source>
         <translation>चयन को हिलाएँ</translation>
     </message>
@@ -2793,43 +2973,57 @@ Do you want to recover it?</source>
 <context>
     <name>PrimitivePlacementController</name>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="249" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="252" />
         <source>Text</source>
         <translation>टेक्स्ट</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="249" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="252" />
         <source>Content:</source>
         <translation>सामग्री:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="262" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="269" />
         <source>Regular polygon</source>
         <translation>सम बहुभुज</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="262" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="269" />
         <source>Number of sides:</source>
         <translation>भुजाओं की संख्या:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="408" />
-        <source>dx: %1   dy: %2   length: %3 (%4 mm)   angle: %5°</source>
-        <translation>dx: %1   dy: %2   लंबाई: %3 (%4 मिमी)   कोण: %5°</translation>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="425" />
+        <source>%1 mm</source>
+        <translation>%1 mm</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="460" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="469" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="428" />
+        <source>%1 (%2 mm)</source>
+        <translation>%1 (%2 mm)</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="431" />
+        <source>dx: %1   dy: %2   length: %3   angle: %4°</source>
+        <translation>dx: %1   dy: %2   लंबाई: %3   कोण: %4°</translation>
+    </message>
+    <message>
+        <source>dx: %1   dy: %2   length: %3 (%4 mm)   angle: %5°</source>
+        <translation type="vanished">dx: %1   dy: %2   लंबाई: %3 (%4 मिमी)   कोण: %5°</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="482" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="491" />
         <source>Insert image</source>
         <translation>छवि सम्मिलित करें</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="461" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="483" />
         <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
         <translation>छवियाँ (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="470" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="492" />
         <source>Unable to read the file:
 %1</source>
         <translation>फ़ाइल पढ़ने में असमर्थ:
@@ -3019,17 +3213,27 @@ snap to grid</source>
         <translation>प्रिमिटिव 0  मैक्रो 0</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="66" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="74" />
+        <source>X %1 Y %2</source>
+        <translation>X %1 Y %2</translation>
+    </message>
+    <message>
+        <location filename="../src/Widgets/StatusBar.cpp" line="77" />
+        <source>X %1mm Y %2mm</source>
+        <translation>X %1mm Y %2mm</translation>
+    </message>
+    <message>
+        <location filename="../src/Widgets/StatusBar.cpp" line="80" />
         <source>X %1 Y %2 (X %3mm Y %4mm)</source>
         <translation>X %1 Y %2 (X %3mm Y %4mm)</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="73" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="88" />
         <source>Zoom %1%</source>
         <translation>ज़ूम %1%</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="85" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="100" />
         <source>Primitives %1  Macros %2</source>
         <translation>प्रिमिटिव %1  मैक्रो %2</translation>
     </message>
