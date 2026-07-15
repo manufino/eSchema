@@ -21,8 +21,11 @@
 #define BOOLEANOPS_H
 
 #include <QList>
+#include <QPointF>
+#include <QVector>
 
 class GraphicsPrimitive;
+class QPainterPath;
 
 // Boolean path operations (union/subtraction/intersection) between closed
 // shapes, built on QPainterPath's own set operations. The results are always
@@ -57,6 +60,16 @@ enum class Operation {
 //   would smear the seams into visible artifacts.
 QList<GraphicsPrimitive *> combine(const QList<GraphicsPrimitive *> &operands,
                                    Operation operation, bool smoothResults);
+
+// The exact vertices of `path`'s (first) contour when it has only straight
+// edges - no sampling loss at all. Also used by Edit > Convert to polygon.
+QVector<QPointF> exactVertices(const QPainterPath &path);
+
+// Vertices sampled along `path`, densely enough (see the .cpp's
+// SmoothSampleStep) that either a polygon or an interpolating spline through
+// them tracks the original outline faithfully. Shared by the boolean smooth
+// results and Edit > Convert to polygon/complex curve.
+QVector<QPointF> sampledVertices(const QPainterPath &path);
 
 }
 

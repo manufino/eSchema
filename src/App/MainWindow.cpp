@@ -362,6 +362,11 @@ void MainWindow::setConnections()
     connect(ui->actionBooleanSmooth, &QAction::toggled, this, [](bool on) {
         SettingsManager::getInstance().saveSetting("boolean_smooth_results", on);
     });
+    connect(ui->actionConvertToPolygon, &QAction::triggered, this, &MainWindow::clickConvertToPolygonAction);
+    connect(ui->actionConvertToCurve, &QAction::triggered, this, &MainWindow::clickConvertToCurveAction);
+    connect(ui->actionSimplifyNodes, &QAction::triggered, this, &MainWindow::clickSimplifyNodesAction);
+    connect(ui->actionFilletCorners, &QAction::triggered, this, &MainWindow::clickFilletCornersAction);
+    connect(ui->actionChamferCorners, &QAction::triggered, this, &MainWindow::clickChamferCornersAction);
     connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
     connect(ui->actionCreateMacro, &QAction::triggered, this, &MainWindow::clickCreateMacroAction);
     // Keeps every selection/clipboard-dependent Edit action's enabled state

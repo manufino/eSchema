@@ -123,6 +123,13 @@ public slots:
     void clickBooleanUnionAction();
     void clickBooleanSubtractAction();
     void clickBooleanIntersectAction();
+    // Shape submenu: rewriting a primitive's geometry in place (as one
+    // delete+create undo step, like the boolean operations).
+    void clickConvertToPolygonAction();
+    void clickConvertToCurveAction();
+    void clickSimplifyNodesAction();
+    void clickFilletCornersAction();
+    void clickChamferCornersAction();
     void clickNewAction();
     void clickOpenAction();
     void clickImportDxfAction();
@@ -235,6 +242,10 @@ private:
     // selected primitives (macros, images, pads, open shapes, ...) are left
     // untouched on the sheet.
     void applyBooleanOperation(BooleanOps::Operation operation, const QString &undoLabel);
+    // Shared tail end of Convert to polygon / Convert to complex curve.
+    void convertSelectionTo(bool toCurve, const QString &undoLabel);
+    // Shared tail end of Fillet corners / Chamfer corners.
+    void roundSelectedCorners(bool chamfer);
     // Inserts a new vertex into `primitive` (a polygon or complex curve, per
     // GraphicsPrimitive::supportsNodeEditing()) at the edge nearest
     // `scenePos`, as one undoable step - wired to the canvas context menu's

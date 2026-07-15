@@ -208,6 +208,16 @@ GraphicsPrimitive *makeComplexCurve(const QVector<QPointF> &vertices, GraphicsPr
 
 }
 
+QVector<QPointF> BooleanOps::exactVertices(const QPainterPath &path)
+{
+    return straightContourVertices(path);
+}
+
+QVector<QPointF> BooleanOps::sampledVertices(const QPainterPath &path)
+{
+    return sampledContourVertices(path);
+}
+
 QList<GraphicsPrimitive *> BooleanOps::combine(const QList<GraphicsPrimitive *> &operands,
                                                Operation operation, bool smoothResults)
 {

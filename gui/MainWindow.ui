@@ -1467,6 +1467,7 @@
     <addaction name="actionRotate"/>
     <addaction name="actionMirror"/>
     <addaction name="menuBoolean"/>
+    <addaction name="menuShape"/>
     <addaction name="separator"/>
     <addaction name="actionConvertMacroToPrimitives"/>
     <addaction name="actionCreateMacro"/>
@@ -1484,6 +1485,18 @@
     <addaction name="actionSelectAll"/>
     <addaction name="separator"/>
     <addaction name="actionFind"/>
+    <widget class="QMenu" name="menuShape">
+     <property name="title">
+      <string>Shape</string>
+     </property>
+     <addaction name="actionConvertToPolygon"/>
+     <addaction name="actionConvertToCurve"/>
+     <addaction name="separator"/>
+     <addaction name="actionSimplifyNodes"/>
+     <addaction name="separator"/>
+     <addaction name="actionFilletCorners"/>
+     <addaction name="actionChamferCorners"/>
+    </widget>
     <widget class="QMenu" name="menuBoolean">
      <property name="title">
       <string>Boolean operations</string>
@@ -2550,6 +2563,61 @@
    </property>
    <property name="toolTip">
     <string>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</string>
+   </property>
+  </action>
+  <action name="actionConvertToPolygon">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Convert to polygon</string>
+   </property>
+   <property name="toolTip">
+    <string>Rewrite the selected rectangles, ellipses, and closed curves as node-editable polygons</string>
+   </property>
+  </action>
+  <action name="actionConvertToCurve">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Convert to complex curve</string>
+   </property>
+   <property name="toolTip">
+    <string>Rewrite the selected rectangles, ellipses, and polygons as smooth complex curves</string>
+   </property>
+  </action>
+  <action name="actionSimplifyNodes">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Simplify nodes...</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove nodes that deviate less than the given tolerance from the selected polygons and curves</string>
+   </property>
+  </action>
+  <action name="actionFilletCorners">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Fillet corners...</string>
+   </property>
+   <property name="toolTip">
+    <string>Round every corner of the selected polygons and rectangles with an arc of the given radius</string>
+   </property>
+  </action>
+  <action name="actionChamferCorners">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Chamfer corners...</string>
+   </property>
+   <property name="toolTip">
+    <string>Cut every corner of the selected polygons and rectangles at the given distance</string>
    </property>
   </action>
   <action name="actionRulersVisible">

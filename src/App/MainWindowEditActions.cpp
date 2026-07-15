@@ -29,6 +29,8 @@
 #include "BooleanOps.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
+#include "PrimitiveComplexCurve.h"
+#include "PrimitivePolygon.h"
 #include "MirrorPrimitiveCommand.h"
 #include "RotatePrimitiveCommand.h"
 #include "DeletePrimitiveCommand.h"
@@ -51,7 +53,10 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QRandomGenerator>
+#include <QInputDialog>
+#include <QLineF>
 #include <algorithm>
+#include <cmath>
 #include <limits>
 
 namespace {
@@ -107,6 +112,234 @@ int nearestSegmentInsertIndex(GraphicsPrimitive *primitive, const QPointF &scene
         }
     }
     return bestIndex;
+}
+
+// --- Shape rewriting helpers (Convert/Simplify/Fillet/Chamfer) ------------
+
+bool convertibleToPolygon(GraphicsPrimitive *primitive)
+{
+    switch (primitive->getPrimitiveType()) {
+    case GraphicsPrimitive::Rectangle:
+    case GraphicsPrimitive::Ellipse:
+        return true;
+    case GraphicsPrimitive::Spline:
+        return primitive->isClosedShape();
+    default:
+        return false;
+    }
+}
+
+bool convertibleToCurve(GraphicsPrimitive *primitive)
+{
+    switch (primitive->getPrimitiveType()) {
+    case GraphicsPrimitive::Rectangle:
+    case GraphicsPrimitive::Ellipse:
+        return true;
+    case GraphicsPrimitive::Polyline:
+        return primitive->controlPointCount() >= 3;
+    default:
+        return false;
+    }
+}
+
+// The vertex list a conversion should produce for `primitive`:
+// - rectangle: its 4 exact corners (both targets);
+// - ellipse -> curve: a sparse parametric sample - a spline through 16
+//   points tracks an ellipse closely while staying comfortably editable;
+// - ellipse/closed curve -> polygon: densely sampled outline;
+// - polygon -> curve: the very same vertices, reinterpreted as spline nodes
+//   (that's the point: a "smoothed" version of the polygon).
+QVector<QPointF> conversionVertices(GraphicsPrimitive *primitive, bool toCurve)
+{
+    switch (primitive->getPrimitiveType()) {
+    case GraphicsPrimitive::Rectangle:
+        return BooleanOps::exactVertices(primitive->booleanOutline());
+    case GraphicsPrimitive::Ellipse: {
+        if (toCurve) {
+            const QRectF rect = QRectF(primitive->controlPoint(0),
+                                       primitive->controlPoint(1)).normalized();
+            QVector<QPointF> points;
+            constexpr int EllipseCurveNodes = 16;
+            points.reserve(EllipseCurveNodes);
+            for (int i = 0; i < EllipseCurveNodes; ++i) {
+                const qreal angle = 2.0 * M_PI * i / EllipseCurveNodes;
+                points.append(rect.center() + QPointF(rect.width() / 2.0 * std::cos(angle),
+                                                      rect.height() / 2.0 * std::sin(angle)));
+            }
+            return points;
+        }
+        return BooleanOps::sampledVertices(primitive->booleanOutline());
+    }
+    case GraphicsPrimitive::Polyline: {
+        QVector<QPointF> points;
+        points.reserve(primitive->controlPointCount());
+        for (int i = 0; i < primitive->controlPointCount(); ++i)
+            points.append(primitive->controlPoint(i));
+        return points;
+    }
+    case GraphicsPrimitive::Spline:
+        return BooleanOps::sampledVertices(primitive->booleanOutline());
+    default:
+        return {};
+    }
+}
+
+// A fresh polygon (asCurve false) or closed complex curve (asCurve true)
+// through `vertices`, inheriting `source`'s layer, fill, dash style and
+// name/value label - the shared "rewrite this shape" constructor behind
+// Convert/Simplify/Fillet/Chamfer.
+GraphicsPrimitive *makeShapeLike(GraphicsPrimitive *source, const QVector<QPointF> &vertices,
+                                 bool asCurve, bool closed = true)
+{
+    if (vertices.size() < (closed ? 3 : 2))
+        return nullptr;
+    GraphicsPrimitive *shape = nullptr;
+    if (asCurve) {
+        auto *curve = new PrimitiveComplexCurve();
+        for (const QPointF &vertex : vertices)
+            curve->appendVertex(vertex);
+        curve->setClosed(closed);
+        shape = curve;
+    } else {
+        auto *polygon = new PrimitivePolygon();
+        for (const QPointF &vertex : vertices)
+            polygon->appendVertex(vertex);
+        shape = polygon;
+    }
+    shape->setLayer(source->layer());
+    shape->setIsFilled(source->isFilled());
+    shape->penStyleIsChanged(source->lineStyle());
+    shape->setName(source->name());
+    shape->setValue(source->value());
+    return shape;
+}
+
+// --- Ramer-Douglas-Peucker simplification ---------------------------------
+
+void rdpMarkKept(const QVector<QPointF> &points, int first, int last,
+                 qreal toleranceSq, QVector<bool> &keep)
+{
+    qreal maxDistSq = -1.0;
+    int farthest = -1;
+    for (int i = first + 1; i < last; ++i) {
+        const qreal distSq = pointToSegmentDistanceSq(points.at(i), points.at(first), points.at(last));
+        if (distSq > maxDistSq) {
+            maxDistSq = distSq;
+            farthest = i;
+        }
+    }
+    if (farthest >= 0 && maxDistSq > toleranceSq) {
+        keep[farthest] = true;
+        rdpMarkKept(points, first, farthest, toleranceSq, keep);
+        rdpMarkKept(points, farthest, last, toleranceSq, keep);
+    }
+}
+
+QVector<QPointF> simplifiedChain(const QVector<QPointF> &points, qreal tolerance, bool closed)
+{
+    if (points.size() < 3)
+        return points;
+    QVector<bool> keep(points.size(), false);
+    keep.first() = true;
+    keep.last() = true;
+    const qreal toleranceSq = tolerance * tolerance;
+    if (closed) {
+        // Anchor a third point - the one farthest from vertex 0 - so a
+        // closed ring can't collapse onto its own start vertex. The wrap
+        // edge (last back to first) is left as drawn.
+        int farthest = 0;
+        qreal maxDistSq = -1.0;
+        for (int i = 1; i < points.size(); ++i) {
+            const QPointF diff = points.at(i) - points.first();
+            const qreal distSq = QPointF::dotProduct(diff, diff);
+            if (distSq > maxDistSq) {
+                maxDistSq = distSq;
+                farthest = i;
+            }
+        }
+        keep[farthest] = true;
+        rdpMarkKept(points, 0, farthest, toleranceSq, keep);
+        rdpMarkKept(points, farthest, points.size() - 1, toleranceSq, keep);
+    } else {
+        rdpMarkKept(points, 0, points.size() - 1, toleranceSq, keep);
+    }
+    QVector<QPointF> result;
+    for (int i = 0; i < points.size(); ++i) {
+        if (keep.at(i))
+            result.append(points.at(i));
+    }
+    return result;
+}
+
+// --- Corner rounding -------------------------------------------------------
+
+// Rewrites every corner of the closed ring `points`: chamfer replaces the
+// vertex with a straight cut at `amount` along each edge; fillet replaces it
+// with a sampled circular arc of radius `amount` tangent to both edges. The
+// cut/tangent distance is clamped to just under half of each adjacent edge,
+// so neighboring corners never overlap.
+QVector<QPointF> roundedCornerRing(const QVector<QPointF> &points, qreal amount, bool chamfer)
+{
+    const int n = points.size();
+    QVector<QPointF> result;
+    for (int i = 0; i < n; ++i) {
+        const QPointF previous = points.at((i - 1 + n) % n);
+        const QPointF vertex = points.at(i);
+        const QPointF next = points.at((i + 1) % n);
+        const QPointF edge1 = previous - vertex;
+        const QPointF edge2 = next - vertex;
+        const qreal length1 = std::hypot(edge1.x(), edge1.y());
+        const qreal length2 = std::hypot(edge2.x(), edge2.y());
+        if (length1 < 1e-6 || length2 < 1e-6) {
+            result.append(vertex);
+            continue;
+        }
+        const QPointF unit1 = edge1 / length1;
+        const QPointF unit2 = edge2 / length2;
+        const qreal interior = std::acos(qBound(-1.0, QPointF::dotProduct(unit1, unit2), 1.0));
+        if (interior < 1e-3 || interior > M_PI - 1e-3) {
+            result.append(vertex); // straight or degenerate corner - nothing to round
+            continue;
+        }
+        qreal distance = chamfer ? amount : amount / std::tan(interior / 2.0);
+        distance = qMin(distance, qMin(length1, length2) / 2.0 - 0.01);
+        if (distance <= 0.01) {
+            result.append(vertex);
+            continue;
+        }
+        const QPointF tangent1 = vertex + unit1 * distance;
+        const QPointF tangent2 = vertex + unit2 * distance;
+        if (chamfer) {
+            result.append(tangent1);
+            result.append(tangent2);
+            continue;
+        }
+        // Fillet: the arc's center sits on the corner's bisector, at the
+        // distance that makes the circle tangent to both edges at
+        // tangent1/tangent2.
+        QPointF bisector = unit1 + unit2;
+        const qreal bisectorLength = std::hypot(bisector.x(), bisector.y());
+        if (bisectorLength < 1e-6) {
+            result.append(vertex);
+            continue;
+        }
+        bisector /= bisectorLength;
+        const QPointF center = vertex + bisector * (distance / std::cos(interior / 2.0));
+        const qreal radius = QLineF(center, tangent1).length();
+        const qreal angle1 = std::atan2(tangent1.y() - center.y(), tangent1.x() - center.x());
+        const qreal angle2 = std::atan2(tangent2.y() - center.y(), tangent2.x() - center.x());
+        qreal sweep = angle2 - angle1;
+        while (sweep > M_PI)
+            sweep -= 2.0 * M_PI;
+        while (sweep <= -M_PI)
+            sweep += 2.0 * M_PI;
+        const int steps = qBound(2, qRound(radius * qAbs(sweep) / 3.0), 32);
+        for (int k = 0; k <= steps; ++k) {
+            const qreal angle = angle1 + sweep * k / steps;
+            result.append(center + radius * QPointF(std::cos(angle), std::sin(angle)));
+        }
+    }
+    return result;
 }
 }
 
@@ -166,6 +399,23 @@ void MainWindow::updateEditActionsState()
     ui->actionBooleanUnion->setEnabled(canCombine);
     ui->actionBooleanSubtract->setEnabled(canCombine);
     ui->actionBooleanIntersect->setEnabled(canCombine);
+
+    bool canToPolygon = false, canToCurve = false, canSimplify = false, canRound = false;
+    for (GraphicsPrimitive *primitive : selected) {
+        canToPolygon = canToPolygon || convertibleToPolygon(primitive);
+        canToCurve = canToCurve || convertibleToCurve(primitive);
+        const GraphicsPrimitive::PrimitiveTypes type = primitive->getPrimitiveType();
+        canSimplify = canSimplify
+                || ((type == GraphicsPrimitive::Polyline || type == GraphicsPrimitive::Spline)
+                    && primitive->controlPointCount() > 3);
+        canRound = canRound || type == GraphicsPrimitive::Rectangle
+                || (type == GraphicsPrimitive::Polyline && primitive->controlPointCount() >= 3);
+    }
+    ui->actionConvertToPolygon->setEnabled(canToPolygon);
+    ui->actionConvertToCurve->setEnabled(canToCurve);
+    ui->actionSimplifyNodes->setEnabled(canSimplify);
+    ui->actionFilletCorners->setEnabled(canRound);
+    ui->actionChamferCorners->setEnabled(canRound);
 }
 
 // Reuses the very same ui->action* objects the Edit menu bar entry is
@@ -190,6 +440,7 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     menu.addAction(ui->actionBooleanUnion);
     menu.addAction(ui->actionBooleanSubtract);
     menu.addAction(ui->actionBooleanIntersect);
+    menu.addMenu(ui->menuShape);
     menu.addSeparator();
     menu.addAction(ui->actionConvertMacroToPrimitives);
     menu.addAction(ui->actionCreateMacro);
@@ -322,6 +573,143 @@ void MainWindow::clickBooleanSubtractAction()
 void MainWindow::clickBooleanIntersectAction()
 {
     applyBooleanOperation(BooleanOps::Operation::Intersection, tr("Intersection"));
+}
+
+void MainWindow::convertSelectionTo(bool toCurve, const QString &undoLabel)
+{
+    QList<GraphicsPrimitive *> eligible;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+        if (toCurve ? convertibleToCurve(primitive) : convertibleToPolygon(primitive))
+            eligible.append(primitive);
+    }
+    if (eligible.isEmpty())
+        return;
+
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(undoLabel);
+    for (GraphicsPrimitive *primitive : eligible) {
+        GraphicsPrimitive *converted =
+                makeShapeLike(primitive, conversionVertices(primitive, toCurve), toCurve);
+        if (!converted)
+            continue;
+        undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+        // push() calls redo() synchronously, which is what actually adds the
+        // primitive to the scene - only safe to select it afterwards.
+        undo->push(new CreatePrimitiveCommand(sheetScene, converted));
+        converted->setSelected(true);
+    }
+    undo->endMacro();
+}
+
+void MainWindow::clickConvertToPolygonAction()
+{
+    convertSelectionTo(false, tr("Convert to polygon"));
+}
+
+void MainWindow::clickConvertToCurveAction()
+{
+    convertSelectionTo(true, tr("Convert to complex curve"));
+}
+
+void MainWindow::clickSimplifyNodesAction()
+{
+    QList<GraphicsPrimitive *> eligible;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+        const GraphicsPrimitive::PrimitiveTypes type = primitive->getPrimitiveType();
+        if ((type == GraphicsPrimitive::Polyline || type == GraphicsPrimitive::Spline)
+                && primitive->controlPointCount() > 3)
+            eligible.append(primitive);
+    }
+    if (eligible.isEmpty())
+        return;
+
+    bool ok = false;
+    const double tolerance = QInputDialog::getDouble(
+                this, tr("Simplify nodes"), tr("Tolerance (drawing units):"),
+                1.0, 0.05, 100.0, 2, &ok);
+    if (!ok)
+        return;
+
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(tr("Simplify nodes"));
+    for (GraphicsPrimitive *primitive : eligible) {
+        QVector<QPointF> vertices;
+        vertices.reserve(primitive->controlPointCount());
+        for (int i = 0; i < primitive->controlPointCount(); ++i)
+            vertices.append(primitive->controlPoint(i));
+
+        const bool closed = primitive->isClosedShape();
+        const QVector<QPointF> simplified = simplifiedChain(vertices, tolerance, closed);
+        if (simplified.size() >= vertices.size()) {
+            primitive->setSelected(true); // nothing removed - keep it as is
+            continue;
+        }
+
+        const bool asCurve = primitive->getPrimitiveType() == GraphicsPrimitive::Spline;
+        GraphicsPrimitive *replacement = makeShapeLike(primitive, simplified, asCurve, closed);
+        if (!replacement) {
+            primitive->setSelected(true);
+            continue;
+        }
+        undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+        undo->push(new CreatePrimitiveCommand(sheetScene, replacement));
+        replacement->setSelected(true);
+    }
+    undo->endMacro();
+}
+
+void MainWindow::roundSelectedCorners(bool chamfer)
+{
+    QList<GraphicsPrimitive *> eligible;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+        const GraphicsPrimitive::PrimitiveTypes type = primitive->getPrimitiveType();
+        if (type == GraphicsPrimitive::Rectangle
+                || (type == GraphicsPrimitive::Polyline && primitive->controlPointCount() >= 3))
+            eligible.append(primitive);
+    }
+    if (eligible.isEmpty())
+        return;
+
+    bool ok = false;
+    const double amount = QInputDialog::getDouble(
+                this,
+                chamfer ? tr("Chamfer corners") : tr("Fillet corners"),
+                chamfer ? tr("Cut distance (drawing units):") : tr("Radius (drawing units):"),
+                5.0, 0.1, 1000.0, 1, &ok);
+    if (!ok)
+        return;
+
+    const QString undoLabel = chamfer ? tr("Chamfer corners") : tr("Fillet corners");
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(undoLabel);
+    for (GraphicsPrimitive *primitive : eligible) {
+        // A rectangle contributes its 4 exact corners; the result is always
+        // a polygon (fillet arcs are sampled into it).
+        const QVector<QPointF> ring = primitive->getPrimitiveType() == GraphicsPrimitive::Rectangle
+                ? BooleanOps::exactVertices(primitive->booleanOutline())
+                : conversionVertices(primitive, false);
+        GraphicsPrimitive *rounded =
+                makeShapeLike(primitive, roundedCornerRing(ring, amount, chamfer), false);
+        if (!rounded)
+            continue;
+        undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+        undo->push(new CreatePrimitiveCommand(sheetScene, rounded));
+        rounded->setSelected(true);
+    }
+    undo->endMacro();
+}
+
+void MainWindow::clickFilletCornersAction()
+{
+    roundSelectedCorners(false);
+}
+
+void MainWindow::clickChamferCornersAction()
+{
+    roundSelectedCorners(true);
 }
 
 void MainWindow::clickConvertMacroToPrimitivesAction()
