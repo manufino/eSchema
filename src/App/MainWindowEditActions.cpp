@@ -872,37 +872,107 @@ void MainWindow::clickRotateByAngleAction()
     undo->endMacro();
 }
 
-// Replicates the selection on a grid: for every cell except the original's
-// a fresh parse of the selection is dropped at the corresponding offset, all
-// as one undo step - same serialize/re-parse round trip Duplicate uses.
+// Replicates the selection either on a grid (a fresh parse of the selection
+// dropped at each cell's offset - same serialize/re-parse round trip
+// Duplicate uses) or circularly around a center, all as one undo step.
 void MainWindow::clickArrayAction()
 {
     const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
     if (selected.isEmpty())
         return;
 
+    QRectF bounds;
+    for (GraphicsPrimitive *primitive : selected)
+        bounds = bounds.united(primitive->sceneBoundingRect());
+
     DialogArray dialog(this);
+    dialog.setSuggestedCenter(bounds.center());
     if (dialog.exec() != QDialog::Accepted)
-        return;
-    const int columns = dialog.columns();
-    const int rows = dialog.rows();
-    if (columns * rows <= 1)
         return;
 
     const QString serialized = FidoCadWriter::writeSelection(selected);
     QUndoStack *undo = sheetScene->undoStack();
-    undo->beginMacro(tr("Array of copies"));
-    for (int row = 0; row < rows; ++row) {
-        for (int column = 0; column < columns; ++column) {
-            if (row == 0 && column == 0)
-                continue; // that's the original itself
-            const QPointF offset(column * dialog.spacingX(), row * dialog.spacingY());
-            const QList<GraphicsPrimitive *> copies = FidoCadReader::parse(serialized, sheetScene);
-            for (GraphicsPrimitive *copy : copies) {
-                copy->translateControlPoints(offset);
-                undo->push(new CreatePrimitiveCommand(sheetScene, copy));
-                copy->setSelected(true);
+
+    if (dialog.mode() == DialogArray::Mode::Grid) {
+        const int columns = dialog.columns();
+        const int rows = dialog.rows();
+        if (columns * rows <= 1)
+            return;
+
+        undo->beginMacro(tr("Array of copies"));
+        for (int row = 0; row < rows; ++row) {
+            for (int column = 0; column < columns; ++column) {
+                if (row == 0 && column == 0)
+                    continue; // that's the original itself
+                const QPointF offset(column * dialog.spacingX(), row * dialog.spacingY());
+                const QList<GraphicsPrimitive *> copies = FidoCadReader::parse(serialized, sheetScene);
+                for (GraphicsPrimitive *copy : copies) {
+                    copy->translateControlPoints(offset);
+                    undo->push(new CreatePrimitiveCommand(sheetScene, copy));
+                    copy->setSelected(true);
+                }
             }
+        }
+        undo->endMacro();
+        return;
+    }
+
+    // Circular: `total` instances (the original included) spread over the
+    // requested angle. A full 360° divides by the count (first and last
+    // must not overlap); a partial arc divides by count-1 so its ends land
+    // exactly on the arc's bounds - AutoCAD's own polar-array convention.
+    const int total = dialog.copies();
+    if (total < 2)
+        return;
+    const qreal fill = dialog.totalAngle();
+    const bool fullCircle = qFuzzyCompare(qAbs(fill), 360.0);
+    const qreal stepDegrees = fullCircle ? fill / total : fill / (total - 1);
+    const QPointF center = dialog.center();
+    const bool rotateCopies = dialog.rotateCopies();
+    const QPointF anchor = bounds.center();
+
+    undo->beginMacro(tr("Array of copies"));
+    for (int i = 1; i < total; ++i) {
+        const qreal radians = qDegreesToRadians(stepDegrees * i);
+        const qreal cosine = std::cos(radians);
+        const qreal sine = std::sin(radians);
+        // Visual counterclockwise on the y-down sheet, like Rotate by angle.
+        auto rotated = [&](const QPointF &point) {
+            const QPointF delta = point - center;
+            return center + QPointF(delta.x() * cosine + delta.y() * sine,
+                                    -delta.x() * sine + delta.y() * cosine);
+        };
+        const QList<GraphicsPrimitive *> copies = FidoCadReader::parse(serialized, sheetScene);
+        for (GraphicsPrimitive *copy : copies) {
+            GraphicsPrimitive *instance = copy;
+            if (rotateCopies) {
+                const GraphicsPrimitive::PrimitiveTypes type = copy->getPrimitiveType();
+                if (type == GraphicsPrimitive::Rectangle || type == GraphicsPrimitive::Ellipse) {
+                    // Axis-aligned in the format - rewritten as a polygon/
+                    // closed curve before rotating, same as Rotate by angle.
+                    const bool asCurve = type == GraphicsPrimitive::Ellipse;
+                    QVector<QPointF> vertices = conversionVertices(copy, asCurve);
+                    for (QPointF &vertex : vertices)
+                        vertex = rotated(vertex);
+                    if (GraphicsPrimitive *replacement = makeShapeLike(copy, vertices, asCurve)) {
+                        delete copy; // never added to the scene - plain delete is safe
+                        instance = replacement;
+                    }
+                } else {
+                    const QVector<QPointF> before = copy->controlPointSnapshot();
+                    QVector<QPointF> after;
+                    after.reserve(before.size());
+                    for (const QPointF &point : before)
+                        after.append(rotated(point));
+                    copy->restoreControlPoints(after);
+                }
+            } else {
+                // Keep each copy's own orientation: only its position (the
+                // selection's center) travels along the circle.
+                instance->translateControlPoints(rotated(anchor) - anchor);
+            }
+            undo->push(new CreatePrimitiveCommand(sheetScene, instance));
+            instance->setSelected(true);
         }
     }
     undo->endMacro();

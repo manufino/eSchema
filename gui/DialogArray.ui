@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
-    <height>210</height>
+    <width>300</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,94 +15,230 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QFormLayout" name="formLayout">
+    <layout class="QFormLayout" name="formLayoutMode">
      <item row="0" column="0">
-      <widget class="QLabel" name="labelColumns">
+      <widget class="QLabel" name="labelLayout">
        <property name="text">
-        <string>Columns</string>
+        <string>Layout</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="spinColumns">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="value">
-        <number>2</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="labelRows">
-       <property name="text">
-        <string>Rows</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spinRows">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="value">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="labelSpacingX">
-       <property name="text">
-        <string>Horizontal step</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QDoubleSpinBox" name="spinSpacingX">
-       <property name="decimals">
-        <number>1</number>
-       </property>
-       <property name="minimum">
-        <double>-5000.000000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>5000.000000000000000</double>
-       </property>
-       <property name="value">
-        <double>20.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="labelSpacingY">
-       <property name="text">
-        <string>Vertical step</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QDoubleSpinBox" name="spinSpacingY">
-       <property name="decimals">
-        <number>1</number>
-       </property>
-       <property name="minimum">
-        <double>-5000.000000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>5000.000000000000000</double>
-       </property>
-       <property name="value">
-        <double>20.000000000000000</double>
-       </property>
+      <widget class="QComboBox" name="comboLayout">
+       <item>
+        <property name="text">
+         <string>Grid</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Circular</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupGrid">
+     <property name="title">
+      <string>Grid</string>
+     </property>
+     <layout class="QFormLayout" name="formLayoutGrid">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelColumns">
+        <property name="text">
+         <string>Columns</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="spinColumns">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>2</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelRows">
+        <property name="text">
+         <string>Rows</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="spinRows">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelSpacingX">
+        <property name="text">
+         <string>Horizontal step</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="spinSpacingX">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>-5000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>20.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelSpacingY">
+        <property name="text">
+         <string>Vertical step</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDoubleSpinBox" name="spinSpacingY">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>-5000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>20.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupCircular">
+     <property name="title">
+      <string>Circular</string>
+     </property>
+     <layout class="QFormLayout" name="formLayoutCircular">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelCopies">
+        <property name="text">
+         <string>Total instances</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="spinCopies">
+        <property name="minimum">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <number>360</number>
+        </property>
+        <property name="value">
+         <number>6</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelTotalAngle">
+        <property name="text">
+         <string>Angle to fill (°)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spinTotalAngle">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>-360.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>360.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelCenterX">
+        <property name="text">
+         <string>Center X</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="spinCenterX">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>-5000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="labelCenterY">
+        <property name="text">
+         <string>Center Y</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDoubleSpinBox" name="spinCenterY">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>-5000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10000.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="labelRotateCopies">
+        <property name="text">
+         <string>Rotate copies</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="checkRotateCopies">
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="QLabel" name="labelHint">

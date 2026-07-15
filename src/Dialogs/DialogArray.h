@@ -21,25 +21,44 @@
 #define DIALOGARRAY_H
 
 #include <QDialog>
+#include <QPointF>
 
 namespace Ui { class DialogArray; }
 
-// Parameters for Edit > Array of copies: replicate the selection on a
-// columns x rows grid with the given steps (drawing units) between copies.
+// Parameters for Edit > Array of copies. Two layouts: a columns x rows grid
+// with configurable steps, or a circular (polar) series of instances around
+// a center - AutoCAD-style: `copies()` total instances spread over
+// `totalAngle()` degrees, each optionally rotated to follow the circle.
 class DialogArray : public QDialog
 {
     Q_OBJECT
 
 public:
+    enum class Mode { Grid, Circular };
+
     explicit DialogArray(QWidget *parent = nullptr);
     ~DialogArray();
 
+    Mode mode() const;
+
+    // Grid layout.
     int columns() const;
     int rows() const;
     qreal spacingX() const;
     qreal spacingY() const;
 
+    // Circular layout.
+    int copies() const;        // total instances, original included
+    qreal totalAngle() const;  // degrees, counterclockwise; 360 = full circle
+    QPointF center() const;
+    bool rotateCopies() const;
+    // Prefills the center fields - the caller passes the selection's
+    // bounding-box center as a sensible starting point.
+    void setSuggestedCenter(const QPointF &center);
+
 private:
+    void syncModeVisibility();
+
     Ui::DialogArray *ui;
 };
 

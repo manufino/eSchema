@@ -24,11 +24,28 @@ DialogArray::DialogArray(QWidget *parent)
     : QDialog(parent), ui(new Ui::DialogArray)
 {
     ui->setupUi(this);
+    connect(ui->comboLayout, &QComboBox::currentIndexChanged,
+            this, [this]() { syncModeVisibility(); });
+    syncModeVisibility();
 }
 
 DialogArray::~DialogArray()
 {
     delete ui;
+}
+
+void DialogArray::syncModeVisibility()
+{
+    const bool circular = mode() == Mode::Circular;
+    ui->groupGrid->setVisible(!circular);
+    ui->groupCircular->setVisible(circular);
+    ui->labelHint->setVisible(!circular);
+    adjustSize();
+}
+
+DialogArray::Mode DialogArray::mode() const
+{
+    return ui->comboLayout->currentIndex() == 1 ? Mode::Circular : Mode::Grid;
 }
 
 int DialogArray::columns() const
@@ -49,4 +66,30 @@ qreal DialogArray::spacingX() const
 qreal DialogArray::spacingY() const
 {
     return ui->spinSpacingY->value();
+}
+
+int DialogArray::copies() const
+{
+    return ui->spinCopies->value();
+}
+
+qreal DialogArray::totalAngle() const
+{
+    return ui->spinTotalAngle->value();
+}
+
+QPointF DialogArray::center() const
+{
+    return QPointF(ui->spinCenterX->value(), ui->spinCenterY->value());
+}
+
+bool DialogArray::rotateCopies() const
+{
+    return ui->checkRotateCopies->isChecked();
+}
+
+void DialogArray::setSuggestedCenter(const QPointF &center)
+{
+    ui->spinCenterX->setValue(center.x());
+    ui->spinCenterY->setValue(center.y());
 }
