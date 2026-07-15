@@ -24,15 +24,19 @@
 #include <QPointF>
 
 namespace Ui { class DialogArray; }
-class SheetView;
 
 // Parameters for Edit > Array of copies. Two layouts: a columns x rows grid
 // with configurable steps, or a circular (polar) series of instances around
 // a center - AutoCAD-style: `copies()` total instances spread over
 // `totalAngle()` degrees, each optionally rotated to follow the circle.
-// The circular center can be typed in, or picked directly on the canvas
-// ("Pick from canvas" hides the dialog until the next click - see
-// eventFilter()).
+//
+// The circular center can be typed in, or picked directly on the canvas:
+// "Pick from canvas" finishes exec() with the PickRequested result code -
+// the *caller* then runs the actual canvas pick (with no modal window left
+// to block input), stores the point via setSuggestedCenter(), and exec()s
+// this same instance again, every other field preserved. A hidden-but-
+// still-exec()ing modal dialog proved unreliable at releasing its input
+// block, hence this close-pick-reopen round trip instead.
 class DialogArray : public QDialog
 {
     Q_OBJECT
@@ -40,9 +44,11 @@ class DialogArray : public QDialog
 public:
     enum class Mode { Grid, Circular };
 
-    // `view` is the canvas used by the center-picking button; the dialog
-    // does not take ownership.
-    explicit DialogArray(SheetView *view, QWidget *parent = nullptr);
+    // exec() result code (alongside Accepted/Rejected) meaning "the user
+    // asked to pick the circular center on the canvas".
+    static constexpr int PickRequested = 100;
+
+    explicit DialogArray(QWidget *parent = nullptr);
     ~DialogArray();
 
     Mode mode() const;
@@ -62,22 +68,10 @@ public:
     // bounding-box center as a sensible starting point.
     void setSuggestedCenter(const QPointF &center);
 
-protected:
-    // Captures the canvas click while picking the circular center: left
-    // click takes the (object/grid-snapped) point, right click or Escape
-    // cancels; mouse moves keep the object-snap highlight live. Installed
-    // on the view and its viewport only between startCenterPick() and
-    // endCenterPick().
-    bool eventFilter(QObject *watched, QEvent *event) override;
-
 private:
     void syncModeVisibility();
-    void startCenterPick();
-    void endCenterPick();
 
     Ui::DialogArray *ui;
-    SheetView *m_view;
-    bool m_picking = false;
 };
 
 #endif // DIALOGARRAY_H

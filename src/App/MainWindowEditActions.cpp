@@ -58,6 +58,8 @@
 #include <QLineF>
 #include <QSet>
 #include <QtMath>
+#include <QEventLoop>
+#include <QMouseEvent>
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -116,6 +118,73 @@ int nearestSegmentInsertIndex(GraphicsPrimitive *primitive, const QPointF &scene
     }
     return bestIndex;
 }
+
+// One-shot canvas point picker behind the array dialog's "Pick from canvas":
+// crosshair cursor, the same object/grid snapping as a drawing click (live
+// highlight included), left click accepts, right click or Escape cancels.
+// Runs a local event loop so the caller reads the result synchronously; the
+// dialog that asked for the pick has already closed itself, so no modal
+// window is left to block the canvas.
+class ScenePointPicker : public QObject
+{
+public:
+    ScenePointPicker(SheetView *view, Sheet *sheet)
+        : m_view(view), m_sheet(sheet) {}
+
+    bool run(QPointF *picked)
+    {
+        m_view->viewport()->installEventFilter(this);
+        m_view->installEventFilter(this); // Escape lands on the view itself
+        m_view->viewport()->setCursor(Qt::CrossCursor);
+        m_view->setFocus();
+        m_loop.exec();
+        m_view->viewport()->removeEventFilter(this);
+        m_view->removeEventFilter(this);
+        m_view->viewport()->unsetCursor();
+        m_sheet->clearSnapIndicator();
+        if (m_accepted)
+            *picked = m_point;
+        return m_accepted;
+    }
+
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override
+    {
+        if (watched == m_view->viewport()) {
+            if (event->type() == QEvent::MouseButtonPress) {
+                auto *mouse = static_cast<QMouseEvent *>(event);
+                if (mouse->button() == Qt::LeftButton) {
+                    m_point = m_sheet->snapPosition(
+                                m_view->mapToScene(mouse->position().toPoint()));
+                    m_accepted = true;
+                    m_loop.quit();
+                    return true; // the click must not also select/draw anything
+                }
+                if (mouse->button() == Qt::RightButton) {
+                    m_loop.quit();
+                    return true;
+                }
+            } else if (event->type() == QEvent::MouseMove) {
+                // Live object-snap highlight while hunting for the point.
+                m_sheet->snapPosition(m_view->mapToScene(
+                        static_cast<QMouseEvent *>(event)->position().toPoint()));
+            }
+        }
+        if (event->type() == QEvent::KeyPress
+                && static_cast<QKeyEvent *>(event)->key() == Qt::Key_Escape) {
+            m_loop.quit();
+            return true;
+        }
+        return QObject::eventFilter(watched, event);
+    }
+
+private:
+    SheetView *m_view;
+    Sheet *m_sheet;
+    QEventLoop m_loop;
+    QPointF m_point;
+    bool m_accepted = false;
+};
 
 // --- Shape rewriting helpers (Convert/Simplify/Fillet/Chamfer) ------------
 
@@ -887,9 +956,20 @@ void MainWindow::clickArrayAction()
     for (GraphicsPrimitive *primitive : selected)
         bounds = bounds.united(primitive->sceneBoundingRect());
 
-    DialogArray dialog(ui->graphicsView, this);
+    DialogArray dialog(this);
     dialog.setSuggestedCenter(bounds.center());
-    if (dialog.exec() != QDialog::Accepted)
+    // "Pick from canvas" closes the dialog with PickRequested; the pick runs
+    // here with no modal window in the way, then the same dialog instance is
+    // reopened with every field (and the picked center) preserved.
+    int result = dialog.exec();
+    while (result == DialogArray::PickRequested) {
+        ScenePointPicker picker(ui->graphicsView, sheetScene);
+        QPointF picked;
+        if (picker.run(&picked))
+            dialog.setSuggestedCenter(picked);
+        result = dialog.exec();
+    }
+    if (result != QDialog::Accepted)
         return;
 
     const QString serialized = FidoCadWriter::writeSelection(selected);
