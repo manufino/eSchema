@@ -56,6 +56,7 @@ class QImage;
 class QUrl;
 class DialogFind;
 class UpdateChecker;
+namespace BooleanOps { enum class Operation; }
 
 class MainWindow : public QMainWindow
 {
@@ -117,6 +118,11 @@ public slots:
     void clickAlignCenterVerticalAction();
     void clickDistributeHorizontalAction();
     void clickDistributeVerticalAction();
+    // Boolean path operations between the selected closed shapes (rectangle,
+    // ellipse, polygon, closed complex curve) - see BooleanOps::combine().
+    void clickBooleanUnionAction();
+    void clickBooleanSubtractAction();
+    void clickBooleanIntersectAction();
     void clickNewAction();
     void clickOpenAction();
     void clickImportDxfAction();
@@ -223,6 +229,12 @@ private:
     // setConnections(), matching the reference FidoCadJ editor's own
     // Alt+arrows nudge.
     void nudgeSelection(const QPointF &direction);
+    // Shared tail end of the three boolean-operation actions: replaces the
+    // eligible selected shapes (see GraphicsPrimitive::supportsBooleanOps())
+    // with BooleanOps::combine()'s result, as one undoable step. Ineligible
+    // selected primitives (macros, images, pads, open shapes, ...) are left
+    // untouched on the sheet.
+    void applyBooleanOperation(BooleanOps::Operation operation, const QString &undoLabel);
     // Inserts a new vertex into `primitive` (a polygon or complex curve, per
     // GraphicsPrimitive::supportsNodeEditing()) at the edge nearest
     // `scenePos`, as one undoable step - wired to the canvas context menu's

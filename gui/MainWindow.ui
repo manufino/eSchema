@@ -1334,6 +1334,7 @@
     <addaction name="separator"/>
     <addaction name="actionRotate"/>
     <addaction name="actionMirror"/>
+    <addaction name="menuBoolean"/>
     <addaction name="separator"/>
     <addaction name="actionConvertMacroToPrimitives"/>
     <addaction name="actionCreateMacro"/>
@@ -1351,6 +1352,16 @@
     <addaction name="actionSelectAll"/>
     <addaction name="separator"/>
     <addaction name="actionFind"/>
+    <widget class="QMenu" name="menuBoolean">
+     <property name="title">
+      <string>Boolean operations</string>
+     </property>
+     <addaction name="actionBooleanUnion"/>
+     <addaction name="actionBooleanSubtract"/>
+     <addaction name="actionBooleanIntersect"/>
+     <addaction name="separator"/>
+     <addaction name="actionBooleanSmooth"/>
+    </widget>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -2273,6 +2284,62 @@
    </property>
    <property name="text">
     <string>Drawing tools</string>
+   </property>
+  </action>
+  <action name="actionBooleanUnion">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/boolean_union.png</normaloff>:/res/resources/boolean_union.png</iconset>
+   </property>
+   <property name="text">
+    <string>Union</string>
+   </property>
+   <property name="toolTip">
+    <string>Merge the selected closed shapes into a single shape</string>
+   </property>
+  </action>
+  <action name="actionBooleanSubtract">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/boolean_subtract.png</normaloff>:/res/resources/boolean_subtract.png</iconset>
+   </property>
+   <property name="text">
+    <string>Subtraction</string>
+   </property>
+   <property name="toolTip">
+    <string>Subtract the other selected closed shapes from the first one (in drawing order)</string>
+   </property>
+  </action>
+  <action name="actionBooleanIntersect">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/boolean_intersect.png</normaloff>:/res/resources/boolean_intersect.png</iconset>
+   </property>
+   <property name="text">
+    <string>Intersection</string>
+   </property>
+   <property name="toolTip">
+    <string>Keep only the area shared by all the selected closed shapes</string>
+   </property>
+  </action>
+  <action name="actionBooleanSmooth">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Smooth curved results</string>
+   </property>
+   <property name="toolTip">
+    <string>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</string>
    </property>
   </action>
   <action name="actionRulersVisible">

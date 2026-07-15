@@ -50,6 +50,9 @@ public:
     void removeControlPointAt(int index) override;
     bool isClosedShape() const override { return true; }
 
+    bool supportsBooleanOps() const override { return m_vertices.size() >= 3; }
+    QPainterPath booleanOutline() const override;
+
     bool isDegenerate() const override;
     QStringList toTokens() const override;
 

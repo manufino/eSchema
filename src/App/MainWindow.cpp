@@ -349,6 +349,16 @@ void MainWindow::setConnections()
     connect(ui->btnRefreshFcdCode, &QPushButton::clicked, this, &MainWindow::clickRefreshFcdCodeAction);
     connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
+    connect(ui->actionBooleanUnion, &QAction::triggered, this, &MainWindow::clickBooleanUnionAction);
+    connect(ui->actionBooleanSubtract, &QAction::triggered, this, &MainWindow::clickBooleanSubtractAction);
+    connect(ui->actionBooleanIntersect, &QAction::triggered, this, &MainWindow::clickBooleanIntersectAction);
+    // "Smooth results" is a persisted preference, not per-drawing state -
+    // reloaded here and saved on every toggle.
+    ui->actionBooleanSmooth->setChecked(
+            SettingsManager::getInstance().loadSetting("boolean_smooth_results").toBool());
+    connect(ui->actionBooleanSmooth, &QAction::toggled, this, [](bool on) {
+        SettingsManager::getInstance().saveSetting("boolean_smooth_results", on);
+    });
     connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
     connect(ui->actionCreateMacro, &QAction::triggered, this, &MainWindow::clickCreateMacroAction);
     // Keeps every selection/clipboard-dependent Edit action's enabled state

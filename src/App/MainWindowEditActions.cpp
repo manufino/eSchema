@@ -26,6 +26,7 @@
 
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
+#include "BooleanOps.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
 #include "MirrorPrimitiveCommand.h"
@@ -152,6 +153,19 @@ void MainWindow::updateEditActionsState()
     const bool hasAtLeastThree = selected.size() >= 3;
     ui->actionDistributeHorizontal->setEnabled(hasAtLeastThree);
     ui->actionDistributeVertical->setEnabled(hasAtLeastThree);
+
+    // Boolean operations need at least two closed shapes among the selection
+    // - only rectangles, ellipses, polygons and closed complex curves
+    // qualify; macros, images, pads and the open primitives never do.
+    int booleanOperands = 0;
+    for (GraphicsPrimitive *primitive : selected) {
+        if (primitive->supportsBooleanOps())
+            ++booleanOperands;
+    }
+    const bool canCombine = booleanOperands >= 2;
+    ui->actionBooleanUnion->setEnabled(canCombine);
+    ui->actionBooleanSubtract->setEnabled(canCombine);
+    ui->actionBooleanIntersect->setEnabled(canCombine);
 }
 
 // Reuses the very same ui->action* objects the Edit menu bar entry is
@@ -172,6 +186,10 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     menu.addSeparator();
     menu.addAction(ui->actionRotate);
     menu.addAction(ui->actionMirror);
+    menu.addSeparator();
+    menu.addAction(ui->actionBooleanUnion);
+    menu.addAction(ui->actionBooleanSubtract);
+    menu.addAction(ui->actionBooleanIntersect);
     menu.addSeparator();
     menu.addAction(ui->actionConvertMacroToPrimitives);
     menu.addAction(ui->actionCreateMacro);
@@ -252,6 +270,58 @@ void MainWindow::clickRotateAction()
     }
     if (multiple)
         undo->endMacro();
+}
+
+// Replaces the eligible selected shapes with the result of the boolean
+// operation, deleting the operands and creating the result primitives inside
+// one undo macro - same delete+create pattern as Convert macro to primitives.
+// The first operand in document order is the base (what the others are
+// subtracted from) and lends the result its layer, fill and dash style.
+void MainWindow::applyBooleanOperation(BooleanOps::Operation operation, const QString &undoLabel)
+{
+    QList<GraphicsPrimitive *> operands;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+        if (primitive->supportsBooleanOps())
+            operands.append(primitive);
+    }
+    if (operands.size() < 2)
+        return;
+
+    const bool smooth = ui->actionBooleanSmooth->isChecked();
+    const QList<GraphicsPrimitive *> results = BooleanOps::combine(operands, operation, smooth);
+    // An empty region (e.g. intersecting disjoint shapes) produces nothing:
+    // leave the drawing and the selection as they are rather than silently
+    // deleting the operands.
+    if (results.isEmpty())
+        return;
+
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(undoLabel);
+    for (GraphicsPrimitive *operand : operands)
+        undo->push(new DeletePrimitiveCommand(sheetScene, operand));
+    for (GraphicsPrimitive *result : results) {
+        // push() calls redo() synchronously, which is what actually adds the
+        // primitive to the scene - only safe to select it afterwards.
+        undo->push(new CreatePrimitiveCommand(sheetScene, result));
+        result->setSelected(true);
+    }
+    undo->endMacro();
+}
+
+void MainWindow::clickBooleanUnionAction()
+{
+    applyBooleanOperation(BooleanOps::Operation::Union, tr("Union"));
+}
+
+void MainWindow::clickBooleanSubtractAction()
+{
+    applyBooleanOperation(BooleanOps::Operation::Subtraction, tr("Subtraction"));
+}
+
+void MainWindow::clickBooleanIntersectAction()
+{
+    applyBooleanOperation(BooleanOps::Operation::Intersection, tr("Intersection"));
 }
 
 void MainWindow::clickConvertMacroToPrimitivesAction()

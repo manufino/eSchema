@@ -40,6 +40,7 @@ SOURCES += \
 	src/App/MainWindowLibraryPanel.cpp \
 	src/App/MainWindowPropertiesPanel.cpp \
 	src/App/MainWindowEditActions.cpp \
+	src/Core/BooleanOps.cpp \
 	src/Core/DecoratedText.cpp \
 	src/Core/GraphicsPrimitive.cpp \
 	src/Core/LayerList.cpp \
@@ -109,6 +110,7 @@ SOURCES += \
 HEADERS += \
 	src/App/CommandLine.h \
 	src/App/MainWindow.h \
+	src/Core/BooleanOps.h \
 	src/Core/DecoratedText.h \
 	src/Core/GlobalUtils.h \
 	src/Core/GraphicsPrimitive.h \

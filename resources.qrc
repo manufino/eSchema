@@ -9,6 +9,9 @@
         <file>resources/code.png</file>
         <file>resources/data-structure.png</file>
         <file>resources/symmetry.png</file>
+        <file>resources/boolean_union.png</file>
+        <file>resources/boolean_subtract.png</file>
+        <file>resources/boolean_intersect.png</file>
         <file>resources/arrow.png</file>
         <file>resources/bezier.png</file>
         <file>resources/complexcurve.png</file>

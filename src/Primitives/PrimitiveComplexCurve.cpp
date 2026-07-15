@@ -146,6 +146,16 @@ void PrimitiveComplexCurve::removeControlPointAt(int index)
     m_vertices.remove(index);
 }
 
+QPainterPath PrimitiveComplexCurve::booleanOutline() const
+{
+    // buildSplinePath() maps through mapFromScene(), but pos() is pinned at
+    // the origin (see GraphicsPrimitive::translateControlPoints()), so the
+    // result is already in scene coordinates as booleanOutline() requires.
+    if (!supportsBooleanOps())
+        return QPainterPath();
+    return buildSplinePath();
+}
+
 bool PrimitiveComplexCurve::isDegenerate() const
 {
     return m_vertices.size() < 2 && objName.isEmpty() && objValue.isEmpty();

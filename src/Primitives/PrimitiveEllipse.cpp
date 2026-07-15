@@ -75,6 +75,13 @@ void PrimitiveEllipse::setControlPoint(int index, const QPointF &scenePos)
         m_p2 = scenePos;
 }
 
+QPainterPath PrimitiveEllipse::booleanOutline() const
+{
+    QPainterPath path;
+    path.addEllipse(QRectF(m_p1, m_p2).normalized());
+    return path;
+}
+
 bool PrimitiveEllipse::isDegenerate() const
 {
     return m_p1 == m_p2 && objName.isEmpty() && objValue.isEmpty();

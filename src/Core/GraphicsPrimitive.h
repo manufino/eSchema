@@ -159,6 +159,17 @@ public:
     // back to the first is a candidate for a new inserted node.
     virtual bool isClosedShape() const { return false; }
 
+    // Whether this primitive can be an operand of the boolean path
+    // operations (Edit > Boolean operations): true only for the closed
+    // fillable shapes - rectangle, ellipse, polygon, and a *closed* complex
+    // curve - which are the only ones whose "area" is well defined.
+    virtual bool supportsBooleanOps() const { return false; }
+    // The closed geometric outline (scene coordinates - pos() is pinned at
+    // the origin, see translateControlPoints()) used as this primitive's
+    // region by BooleanOps::combine(). Empty for every primitive that
+    // doesn't supportsBooleanOps().
+    virtual QPainterPath booleanOutline() const { return QPainterPath(); }
+
     // Mirrors/rotates the primitive's control points around a pivot (scene coords).
     // Default implementation applies the transform to every control point in turn;
     // primitives with extra scalar orientation fields (e.g. PrimitiveMacro's

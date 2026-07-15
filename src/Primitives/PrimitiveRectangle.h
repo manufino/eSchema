@@ -38,6 +38,9 @@ public:
     QPointF controlPoint(int index) const override;
     void setControlPoint(int index, const QPointF &scenePos) override;
 
+    bool supportsBooleanOps() const override { return true; }
+    QPainterPath booleanOutline() const override;
+
     bool isDegenerate() const override;
     QStringList toTokens() const override;
 

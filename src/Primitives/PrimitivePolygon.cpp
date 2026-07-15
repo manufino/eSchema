@@ -109,6 +109,16 @@ void PrimitivePolygon::removeControlPointAt(int index)
     m_vertices.remove(index);
 }
 
+QPainterPath PrimitivePolygon::booleanOutline() const
+{
+    QPainterPath path;
+    if (m_vertices.size() < 3)
+        return path;
+    path.addPolygon(QPolygonF(m_vertices));
+    path.closeSubpath();
+    return path;
+}
+
 bool PrimitivePolygon::isDegenerate() const
 {
     return m_vertices.size() < 2 && objName.isEmpty() && objValue.isEmpty();

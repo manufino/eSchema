@@ -51,6 +51,9 @@ public:
     void removeControlPointAt(int index) override;
     bool isClosedShape() const override { return m_closed; }
 
+    bool supportsBooleanOps() const override { return m_closed && m_vertices.size() >= 3; }
+    QPainterPath booleanOutline() const override;
+
     bool isClosed() const { return m_closed; }
     // prepareGeometryChange()/update(): can now be changed live from the
     // Properties panel - closing the curve changes both its fill/shape and
