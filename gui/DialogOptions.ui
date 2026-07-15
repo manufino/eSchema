@@ -20,9 +20,15 @@
       <layout class="QVBoxLayout" name="verticalLayoutSidebar">
        <item>
         <widget class="QLineEdit" name="txtOptionsSearch">
+         <property name="minimumSize">
+          <size>
+           <width>180</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>210</width>
            <height>16777215</height>
           </size>
          </property>
@@ -36,9 +42,15 @@
        </item>
        <item>
         <widget class="QListWidget" name="listPages">
+         <property name="minimumSize">
+          <size>
+           <width>180</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
-           <width>150</width>
+           <width>210</width>
            <height>16777215</height>
           </size>
          </property>
