@@ -18,6 +18,7 @@
  */
 
 #include "DialogAbout.h"
+#include "appversion.h"
 #include "ui_DialogAbout.h"
 
 DialogAbout::DialogAbout(QWidget *parent) :

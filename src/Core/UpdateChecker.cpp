@@ -18,6 +18,7 @@
  */
 
 #include "UpdateChecker.h"
+#include "appversion.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>

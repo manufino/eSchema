@@ -31,7 +31,18 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 # disables all the APIs deprecated before Qt 6.0.0
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
+# APP_VERSION used to be a bare -D compiler define, but make rebuilds
+# nothing when a define changes - after a version bump every
+# not-otherwise-touched object kept the old string baked in (stale About
+# box, update checker comparing GitHub against the wrong version). Writing
+# it to a generated header instead turns the bump into an ordinary file
+# change that dependency tracking picks up. The Makefile re-runs qmake by
+# itself whenever this .pro is newer, so the header follows VERSION
+# automatically.
+APP_VERSION_LINE = '$${LITERAL_HASH}define APP_VERSION "$$VERSION"'
+write_file($$OUT_PWD/appversion.h, APP_VERSION_LINE)
+INCLUDEPATH += $$OUT_PWD
 
 SOURCES += \
 	src/main.cpp \

@@ -18,6 +18,7 @@
  */
 
 #include "CommandLine.h"
+#include "appversion.h"
 #include "Sheet.h"
 #include "LayerList.h"
 #include "LibraryManager.h"

@@ -18,6 +18,7 @@
  */
 
 #include "EpsGenerator.h"
+#include "appversion.h"
 
 #include <QFile>
 #include <QImage>

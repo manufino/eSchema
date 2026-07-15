@@ -27,6 +27,7 @@
 // into separate classes.
 
 #include "MainWindow.h"
+#include "appversion.h"
 #include "ui_MainWindow.h"
 #include "DialogAttachImage.h"
 #include "DialogExport.h"
