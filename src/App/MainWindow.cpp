@@ -41,6 +41,9 @@
 #include "PrimitivePad.h"
 #include "PrimitivePcbTrack.h"
 #include "PrimitiveComplexCurve.h"
+#include "PrimitiveLine.h"
+#include "PrimitiveRectangle.h"
+#include "PrimitiveEllipse.h"
 #include "ThemeManager.h"
 #include "UpdateChecker.h"
 #include "CreatePrimitiveCommand.h"
@@ -473,6 +476,34 @@ void MainWindow::setConnections()
                 static_cast<PrimitivePcbTrack *>(primitive)->setWidth(value);
         }
     });
+    connect(ui->spinLineLength, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Line)
+                static_cast<PrimitiveLine *>(primitive)->setLength(value);
+        }
+    });
+    connect(ui->spinShapeWidth, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Rectangle) {
+                auto *rectangle = static_cast<PrimitiveRectangle *>(primitive);
+                rectangle->setShapeSize(value, rectangle->shapeHeight());
+            } else if (primitive->getPrimitiveType() == GraphicsPrimitive::Ellipse) {
+                auto *ellipse = static_cast<PrimitiveEllipse *>(primitive);
+                ellipse->setShapeSize(value, ellipse->shapeHeight());
+            }
+        }
+    });
+    connect(ui->spinShapeHeight, &QDoubleSpinBox::valueChanged, this, [this](double value) {
+        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::Rectangle) {
+                auto *rectangle = static_cast<PrimitiveRectangle *>(primitive);
+                rectangle->setShapeSize(rectangle->shapeWidth(), value);
+            } else if (primitive->getPrimitiveType() == GraphicsPrimitive::Ellipse) {
+                auto *ellipse = static_cast<PrimitiveEllipse *>(primitive);
+                ellipse->setShapeSize(ellipse->shapeWidth(), value);
+            }
+        }
+    });
     connect(ui->spinPadWidth, &QDoubleSpinBox::valueChanged, this, [this](double value) {
         for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
             if (primitive->getPrimitiveType() == GraphicsPrimitive::Pad) {
@@ -610,6 +641,10 @@ void MainWindow::setConnections()
     ui->actionRestore->setEnabled(undo->canRedo());
 
     connect(undo, &QUndoStack::indexChanged, this, &MainWindow::refreshFcdCodeIfClean);
+    // A drag-resize/move only lands on the undo stack at mouse release, and
+    // never fires selectionChanged - without this the panel's new geometry
+    // fields (length/width/height) would keep showing pre-drag values.
+    connect(undo, &QUndoStack::indexChanged, this, &MainWindow::updatePropertiesPanel);
     syncFcdCodeFromSheet();
 
     connect(ui->txtSearch, &QLineEdit::textChanged, this, &MainWindow::filterLibraryPanel);

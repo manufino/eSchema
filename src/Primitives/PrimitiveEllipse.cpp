@@ -75,6 +75,26 @@ void PrimitiveEllipse::setControlPoint(int index, const QPointF &scenePos)
         m_p2 = scenePos;
 }
 
+qreal PrimitiveEllipse::shapeWidth() const
+{
+    return QRectF(m_p1, m_p2).normalized().width();
+}
+
+qreal PrimitiveEllipse::shapeHeight() const
+{
+    return QRectF(m_p1, m_p2).normalized().height();
+}
+
+void PrimitiveEllipse::setShapeSize(qreal width, qreal height)
+{
+    QRectF rect = QRectF(m_p1, m_p2).normalized();
+    rect.setSize(QSizeF(width, height));
+    prepareGeometryChange();
+    m_p1 = rect.topLeft();
+    m_p2 = rect.bottomRight();
+    update();
+}
+
 QPainterPath PrimitiveEllipse::booleanOutline() const
 {
     QPainterPath path;

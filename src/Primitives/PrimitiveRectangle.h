@@ -41,6 +41,12 @@ public:
     bool supportsBooleanOps() const override { return true; }
     QPainterPath booleanOutline() const override;
 
+    // Editable size (Properties panel): the normalized top-left corner stays
+    // fixed and the opposite one moves.
+    qreal shapeWidth() const;
+    qreal shapeHeight() const;
+    void setShapeSize(qreal width, qreal height);
+
     bool isDegenerate() const override;
     QStringList toTokens() const override;
 

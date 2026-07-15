@@ -37,6 +37,12 @@ public:
     QPointF controlPoint(int index) const override;
     void setControlPoint(int index, const QPointF &scenePos) override;
 
+    // Editable length (Properties panel): the first endpoint stays fixed and
+    // the second slides along the segment's current direction (along +X for
+    // a still-degenerate zero-length line).
+    qreal length() const;
+    void setLength(qreal length);
+
     bool isDegenerate() const override;
     QStringList toTokens() const override;
     bool supportsArrows() const override { return true; }

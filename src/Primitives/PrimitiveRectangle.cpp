@@ -75,6 +75,29 @@ void PrimitiveRectangle::setControlPoint(int index, const QPointF &scenePos)
         m_p2 = scenePos;
 }
 
+qreal PrimitiveRectangle::shapeWidth() const
+{
+    return QRectF(m_p1, m_p2).normalized().width();
+}
+
+qreal PrimitiveRectangle::shapeHeight() const
+{
+    return QRectF(m_p1, m_p2).normalized().height();
+}
+
+void PrimitiveRectangle::setShapeSize(qreal width, qreal height)
+{
+    QRectF rect = QRectF(m_p1, m_p2).normalized();
+    rect.setSize(QSizeF(width, height));
+    prepareGeometryChange();
+    // Re-anchoring on the normalized corners also normalizes the stored
+    // corner order itself, which is invisible to everything else - resize
+    // handles and serialization go through controlPoint(), not the rect.
+    m_p1 = rect.topLeft();
+    m_p2 = rect.bottomRight();
+    update();
+}
+
 QPainterPath PrimitiveRectangle::booleanOutline() const
 {
     QPainterPath path;

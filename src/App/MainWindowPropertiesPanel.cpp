@@ -31,6 +31,9 @@
 #include "PrimitivePad.h"
 #include "PrimitivePcbTrack.h"
 #include "PrimitiveComplexCurve.h"
+#include "PrimitiveLine.h"
+#include "PrimitiveRectangle.h"
+#include "PrimitiveEllipse.h"
 #include <QSignalBlocker>
 #include <QFont>
 
@@ -85,6 +88,9 @@ void MainWindow::updatePropertiesPanel()
     const QSignalBlocker blockTextBold(ui->checkBoxTextBold);
     const QSignalBlocker blockTextItalic(ui->checkBoxTextItalic);
     const QSignalBlocker blockTextMirrored(ui->checkBoxTextMirrored);
+    const QSignalBlocker blockLineLength(ui->spinLineLength);
+    const QSignalBlocker blockShapeWidth(ui->spinShapeWidth);
+    const QSignalBlocker blockShapeHeight(ui->spinShapeHeight);
 
     auto showRow = [](QWidget *label, QWidget *field, bool visible) {
         label->setVisible(visible);
@@ -122,6 +128,9 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->labelTextBold, ui->checkBoxTextBold, false);
         showRow(ui->labelTextItalic, ui->checkBoxTextItalic, false);
         showRow(ui->labelTextMirrored, ui->checkBoxTextMirrored, false);
+        showRow(ui->labelLineLength, ui->spinLineLength, false);
+        showRow(ui->labelShapeWidth, ui->spinShapeWidth, false);
+        showRow(ui->labelShapeHeight, ui->spinShapeHeight, false);
         ui->lineEdit->clear();
         ui->lineEdit_2->clear();
         return;
@@ -226,6 +235,28 @@ void MainWindow::updatePropertiesPanel()
     showRow(ui->labelTrackWidth, ui->spinTrackWidth, isPcbTrack);
     if (isPcbTrack)
         ui->spinTrackWidth->setValue(static_cast<PrimitivePcbTrack *>(primitive)->width());
+
+    // Numeric geometry, limited to the primitives where a single number is
+    // meaningful: a line's length, and a rectangle's/ellipse's bounding-box
+    // size. Multi-point primitives (polygons, curves) have no such scalar.
+    const bool isLine = primitive->getPrimitiveType() == GraphicsPrimitive::Line;
+    showRow(ui->labelLineLength, ui->spinLineLength, isLine);
+    if (isLine)
+        ui->spinLineLength->setValue(static_cast<PrimitiveLine *>(primitive)->length());
+
+    const bool isRectangle = primitive->getPrimitiveType() == GraphicsPrimitive::Rectangle;
+    const bool isEllipse = primitive->getPrimitiveType() == GraphicsPrimitive::Ellipse;
+    showRow(ui->labelShapeWidth, ui->spinShapeWidth, isRectangle || isEllipse);
+    showRow(ui->labelShapeHeight, ui->spinShapeHeight, isRectangle || isEllipse);
+    if (isRectangle) {
+        auto *rectangle = static_cast<PrimitiveRectangle *>(primitive);
+        ui->spinShapeWidth->setValue(rectangle->shapeWidth());
+        ui->spinShapeHeight->setValue(rectangle->shapeHeight());
+    } else if (isEllipse) {
+        auto *ellipse = static_cast<PrimitiveEllipse *>(primitive);
+        ui->spinShapeWidth->setValue(ellipse->shapeWidth());
+        ui->spinShapeHeight->setValue(ellipse->shapeHeight());
+    }
 
     const bool isPad = primitive->getPrimitiveType() == GraphicsPrimitive::Pad;
     showRow(ui->labelPadWidth, ui->spinPadWidth, isPad);

@@ -20,6 +20,7 @@
 #include "PrimitiveLine.h"
 #include "PrimitiveArrowUtils.h"
 #include "FidoCadTokenUtils.h"
+#include <QLineF>
 #include <QStyleOptionGraphicsItem>
 
 PrimitiveLine::PrimitiveLine(QGraphicsItem *parent)
@@ -81,6 +82,22 @@ void PrimitiveLine::setControlPoint(int index, const QPointF &scenePos)
         m_p1 = scenePos;
     else
         m_p2 = scenePos;
+}
+
+qreal PrimitiveLine::length() const
+{
+    return QLineF(m_p1, m_p2).length();
+}
+
+void PrimitiveLine::setLength(qreal length)
+{
+    QLineF line(m_p1, m_p2);
+    if (line.length() <= 0.0)
+        line.setAngle(0.0); // no direction to keep - extend along +X
+    line.setLength(length);
+    prepareGeometryChange();
+    m_p2 = line.p2();
+    update();
 }
 
 bool PrimitiveLine::isDegenerate() const
