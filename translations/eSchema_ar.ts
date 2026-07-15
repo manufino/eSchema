@@ -563,368 +563,368 @@ li.checked::marker { content: "\2612"; }
         <translation>خيارات</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="47" />
+        <location filename="../gui/DialogOptions.ui" line="59" />
         <source>General</source>
         <translation>عام</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="101" />
-        <location filename="../gui/DialogOptions.ui" line="338" />
+        <location filename="../gui/DialogOptions.ui" line="113" />
+        <location filename="../gui/DialogOptions.ui" line="350" />
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="320" />
+        <location filename="../gui/DialogOptions.ui" line="332" />
         <source>Stylesheet path</source>
         <translation>مسار ورقة الأنماط</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="110" />
+        <location filename="../gui/DialogOptions.ui" line="122" />
         <source>Autosave</source>
         <translation>الحفظ التلقائي</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="30" />
+        <location filename="../gui/DialogOptions.ui" line="36" />
         <source>Search options...</source>
         <translation>البحث في الخيارات...</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="52" />
+        <location filename="../gui/DialogOptions.ui" line="64" />
         <source>Interface</source>
         <translation>الواجهة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="62" />
+        <location filename="../gui/DialogOptions.ui" line="74" />
         <source>Snap</source>
         <translation>الانطباق</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="117" />
+        <location filename="../gui/DialogOptions.ui" line="129" />
         <source> min</source>
         <translation> min</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="133" />
+        <location filename="../gui/DialogOptions.ui" line="145" />
         <source>Keep a backup copy (.bak) when saving</source>
         <translation>الاحتفاظ بنسخة احتياطية (.bak) عند الحفظ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="140" />
+        <location filename="../gui/DialogOptions.ui" line="152" />
         <source>Undo history limit</source>
         <translation>حد سجل التراجع</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="147" />
+        <location filename="../gui/DialogOptions.ui" line="159" />
         <source>0 = unlimited; takes effect the next time eSchema starts</source>
         <translation>0 = بلا حدود؛ يسري عند التشغيل التالي لـ eSchema</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="163" />
+        <location filename="../gui/DialogOptions.ui" line="175" />
         <source>Check for updates on startup</source>
         <translation>التحقق من التحديثات عند بدء التشغيل</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="170" />
+        <location filename="../gui/DialogOptions.ui" line="182" />
         <source>Reopen the last file on startup</source>
         <translation>إعادة فتح آخر ملف عند بدء التشغيل</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="177" />
+        <location filename="../gui/DialogOptions.ui" line="189" />
         <source>Maximum recent files</source>
         <translation>الحد الأقصى للملفات الأخيرة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="218" />
+        <location filename="../gui/DialogOptions.ui" line="230" />
         <location filename="../src/Dialogs/DialogOptions.cpp" line="418" />
         <source>Language</source>
         <translation>اللغة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="297" />
+        <location filename="../gui/DialogOptions.ui" line="309" />
         <source>Light</source>
         <translation>فاتح</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="302" />
+        <location filename="../gui/DialogOptions.ui" line="314" />
         <source>Dark</source>
         <translation>داكن</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="307" />
+        <location filename="../gui/DialogOptions.ui" line="319" />
         <source>System</source>
         <translation>النظام</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="312" />
+        <location filename="../gui/DialogOptions.ui" line="324" />
         <source>Stylesheet</source>
         <translation>ورقة الأنماط</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="932" />
+        <location filename="../gui/DialogOptions.ui" line="944" />
         <source>Default polygon sides</source>
         <translation>عدد أضلاع المضلع الافتراضي</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="952" />
+        <location filename="../gui/DialogOptions.ui" line="964" />
         <source>Curve sampling step (units)</source>
         <translation>خطوة أخذ عينات المنحنيات (وحدات)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="959" />
+        <location filename="../gui/DialogOptions.ui" line="971" />
         <source>Spacing of the points generated along arcs, boolean results, and shape conversions - smaller is smoother but heavier</source>
         <translation>تباعد النقاط المولّدة على طول الأقواس ونتائج العمليات المنطقية وتحويلات الأشكال - الأصغر أنعم لكنه أثقل</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="978" />
+        <location filename="../gui/DialogOptions.ui" line="990" />
         <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
         <translation>يحول النتائج المنحنية إلى منحنيات معقدة (عدد عقد أقل بكثير وزوايا مستديرة قليلاً) بدلاً من مضلعات مسطّحة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="981" />
+        <location filename="../gui/DialogOptions.ui" line="993" />
         <source>Smooth curved results</source>
         <translation>نتائج منحنية ناعمة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="988" />
+        <location filename="../gui/DialogOptions.ui" line="1000" />
         <source>Default text font</source>
         <translation>خط النص الافتراضي</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="998" />
+        <location filename="../gui/DialogOptions.ui" line="1010" />
         <source>Nudge step (Alt+arrows)</source>
         <translation>خطوة الإزاحة (Alt+الأسهم)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1005" />
+        <location filename="../gui/DialogOptions.ui" line="1017" />
         <source>How many snap steps one Alt+arrow press moves the selection</source>
         <translation>عدد خطوات الانطباق التي يتحرك بها التحديد عند كل ضغطة Alt+سهم</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1044" />
+        <location filename="../gui/DialogOptions.ui" line="1056" />
         <source>Restore page defaults</source>
         <translation>استعادة افتراضيات هذه الصفحة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="83" />
+        <location filename="../gui/DialogOptions.ui" line="95" />
         <location filename="../src/Dialogs/DialogOptions.cpp" line="71" />
         <source>Library path</source>
         <translation>مسار المكتبات</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="289" />
+        <location filename="../gui/DialogOptions.ui" line="301" />
         <source>Interface style</source>
         <translation>نمط الواجهة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="57" />
+        <location filename="../gui/DialogOptions.ui" line="69" />
         <source>Grid</source>
         <translation>الشبكة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="548" />
+        <location filename="../gui/DialogOptions.ui" line="560" />
         <source>Snap to grid</source>
         <translation>الالتقاط إلى الشبكة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="562" />
+        <location filename="../gui/DialogOptions.ui" line="574" />
         <source>Snap step (grid units)</source>
         <translation>خطوة الالتقاط (وحدات الشبكة)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="494" />
+        <location filename="../gui/DialogOptions.ui" line="506" />
         <source>Grid step (Pixels) </source>
         <translation>خطوة الشبكة (بكسل) </translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="671" />
+        <location filename="../gui/DialogOptions.ui" line="683" />
         <source>Marked line color</source>
         <translation>لون الخط المميز</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="528" />
+        <location filename="../gui/DialogOptions.ui" line="540" />
         <source>Step size (in mm)</source>
         <translation>حجم الخطوة (بالملم)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="347" />
+        <location filename="../gui/DialogOptions.ui" line="359" />
         <source>Toolbar icon size</source>
         <translation>حجم أيقونات أشرطة الأدوات</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="370" />
+        <location filename="../gui/DialogOptions.ui" line="382" />
         <source>Turning it off can speed up very large drawings</source>
         <translation>إيقافه قد يسرّع الرسومات الكبيرة جداً</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="373" />
+        <location filename="../gui/DialogOptions.ui" line="385" />
         <source>Antialiasing</source>
         <translation>تنعيم الحواف</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="380" />
+        <location filename="../gui/DialogOptions.ui" line="392" />
         <source>Coordinates display</source>
         <translation>عرض الإحداثيات</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="388" />
+        <location filename="../gui/DialogOptions.ui" line="400" />
         <source>Units and millimeters</source>
         <translation>الوحدات والمليمترات</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="393" />
+        <location filename="../gui/DialogOptions.ui" line="405" />
         <source>Drawing units</source>
         <translation>وحدات الرسم</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="398" />
+        <location filename="../gui/DialogOptions.ui" line="410" />
         <source>Millimeters</source>
         <translation>مليمترات</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="406" />
+        <location filename="../gui/DialogOptions.ui" line="418" />
         <source>Zoom with the mouse wheel (without Ctrl)</source>
         <translation>التكبير بعجلة الفأرة (دون Ctrl)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="462" />
+        <location filename="../gui/DialogOptions.ui" line="474" />
         <source>Geometry</source>
         <translation>الهندسة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="476" />
+        <location filename="../gui/DialogOptions.ui" line="488" />
         <source>LINES+DOTS</source>
         <translation>خطوط+نقاط</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="481" />
+        <location filename="../gui/DialogOptions.ui" line="493" />
         <source>DOTS</source>
         <translation>نقاط</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="486" />
+        <location filename="../gui/DialogOptions.ui" line="498" />
         <source>LINES</source>
         <translation>خطوط</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="582" />
+        <location filename="../gui/DialogOptions.ui" line="594" />
         <source>Appearance</source>
         <translation>المظهر</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="691" />
+        <location filename="../gui/DialogOptions.ui" line="703" />
         <source>Marked line width</source>
         <translation>سُمك الخط المميز</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="628" />
+        <location filename="../gui/DialogOptions.ui" line="640" />
         <source>Normal line color</source>
         <translation>لون الخط العادي</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="648" />
+        <location filename="../gui/DialogOptions.ui" line="660" />
         <source>Line width</source>
         <translation>سُمك الخط</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="511" />
+        <location filename="../gui/DialogOptions.ui" line="523" />
         <source>Mark step</source>
         <translation>خطوة التمييز</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="468" />
+        <location filename="../gui/DialogOptions.ui" line="480" />
         <source>Grid type</source>
         <translation>نوع الشبكة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="588" />
+        <location filename="../gui/DialogOptions.ui" line="600" />
         <source>Dot color</source>
         <translation>لون النقاط</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="608" />
+        <location filename="../gui/DialogOptions.ui" line="620" />
         <source>Background color</source>
         <translation>لون الخلفية</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="67" />
+        <location filename="../gui/DialogOptions.ui" line="79" />
         <source>Drawing</source>
         <translation>الرسم</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="717" />
+        <location filename="../gui/DialogOptions.ui" line="729" />
         <source>Preview</source>
         <translation>معاينة</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="735" />
+        <location filename="../gui/DialogOptions.ui" line="747" />
         <source>Snap to objects</source>
         <translation>انطباق على العناصر</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="742" />
+        <location filename="../gui/DialogOptions.ui" line="754" />
         <source>Capture radius</source>
         <translation>نصف قطر الالتقاط</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="765" />
+        <location filename="../gui/DialogOptions.ui" line="777" />
         <source>Endpoints and vertices</source>
         <translation>الأطراف والرؤوس</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="775" />
+        <location filename="../gui/DialogOptions.ui" line="787" />
         <source>Segment midpoints</source>
         <translation>منتصفات القطع</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="785" />
+        <location filename="../gui/DialogOptions.ui" line="797" />
         <source>Shape centers</source>
         <translation>مراكز الأشكال</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="795" />
+        <location filename="../gui/DialogOptions.ui" line="807" />
         <source>Segment intersections</source>
         <translation>تقاطعات القطع</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="805" />
+        <location filename="../gui/DialogOptions.ui" line="817" />
         <source>Snap marker color</source>
         <translation>لون علامة الانطباق</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="825" />
+        <location filename="../gui/DialogOptions.ui" line="837" />
         <source>Handle color</source>
         <translation>لون المقابض</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="866" />
+        <location filename="../gui/DialogOptions.ui" line="878" />
         <source>Drawing line width</source>
         <translation>سُمك خط الرسم</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="889" />
+        <location filename="../gui/DialogOptions.ui" line="901" />
         <source>Selection tolerance</source>
         <translation>تفاوت التحديد</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="354" />
-        <location filename="../gui/DialogOptions.ui" line="420" />
-        <location filename="../gui/DialogOptions.ui" line="749" />
-        <location filename="../gui/DialogOptions.ui" line="896" />
+        <location filename="../gui/DialogOptions.ui" line="366" />
+        <location filename="../gui/DialogOptions.ui" line="432" />
+        <location filename="../gui/DialogOptions.ui" line="761" />
+        <location filename="../gui/DialogOptions.ui" line="908" />
         <source> px</source>
         <translation> px</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="413" />
+        <location filename="../gui/DialogOptions.ui" line="425" />
         <source>Macro preview size</source>
         <translation>حجم معاينة الماكرو</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="912" />
+        <location filename="../gui/DialogOptions.ui" line="924" />
         <source>Connection dot size</source>
         <translation>حجم نقطة الاتصال</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="436" />
+        <location filename="../gui/DialogOptions.ui" line="448" />
         <source>Show icons in the library tree</source>
         <translation>إظهار الأيقونات في شجرة المكتبة</translation>
     </message>
@@ -933,12 +933,12 @@ li.checked::marker { content: "\2612"; }
         <translation type="vanished">استعادة الإعدادات الافتراضية</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1064" />
+        <location filename="../gui/DialogOptions.ui" line="1076" />
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1071" />
+        <location filename="../gui/DialogOptions.ui" line="1083" />
         <source>Cancel</source>
         <translation>إلغاء</translation>
     </message>
@@ -947,7 +947,7 @@ li.checked::marker { content: "\2612"; }
         <translation type="vanished">إلغاء</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1078" />
+        <location filename="../gui/DialogOptions.ui" line="1090" />
         <source>Apply</source>
         <translation>تطبيق</translation>
     </message>
@@ -1667,8 +1667,8 @@ Proceed with restoring the default values?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1008" />
-        <location filename="../gui/MainWindow.ui" line="2370" />
-        <location filename="../gui/MainWindow.ui" line="2373" />
+        <location filename="../gui/MainWindow.ui" line="2377" />
+        <location filename="../gui/MainWindow.ui" line="2380" />
         <source>Text</source>
         <translation>نص</translation>
     </message>
@@ -1769,422 +1769,427 @@ Proceed with restoring the default values?
         <translation>تحرير</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1526" />
+        <location filename="../gui/MainWindow.ui" line="1517" />
+        <source>Align and distribute</source>
+        <translation>محاذاة وتوزيع</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1533" />
         <source>Shape</source>
         <translation>الشكل</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1539" />
+        <location filename="../gui/MainWindow.ui" line="1546" />
         <source>Boolean operations</source>
         <translation>العمليات المنطقية</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1550" />
+        <location filename="../gui/MainWindow.ui" line="1557" />
         <source>View</source>
         <translation>عرض</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1562" />
+        <location filename="../gui/MainWindow.ui" line="1569" />
         <source>Tools</source>
         <translation>أدوات</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1571" />
+        <location filename="../gui/MainWindow.ui" line="1578" />
         <source>Help</source>
         <translation>مساعدة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1596" />
+        <location filename="../gui/MainWindow.ui" line="1603" />
         <source>ToolBarStandard</source>
         <translation>ToolBarStandard</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1646" />
+        <location filename="../gui/MainWindow.ui" line="1653" />
         <source>ToolBarModify</source>
         <translation>ToolBarModify</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1695" />
+        <location filename="../gui/MainWindow.ui" line="1702" />
         <source>ToolBarPrimitive</source>
         <translation>ToolBarPrimitive</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1744" />
+        <location filename="../gui/MainWindow.ui" line="1751" />
         <source>New drawing</source>
         <translation>رسم جديد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1747" />
+        <location filename="../gui/MainWindow.ui" line="1754" />
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1759" />
+        <location filename="../gui/MainWindow.ui" line="1766" />
         <source>Open a file</source>
         <translation>فتح ملف</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1762" />
+        <location filename="../gui/MainWindow.ui" line="1769" />
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1771" />
+        <location filename="../gui/MainWindow.ui" line="1778" />
         <source>Import from DXF...</source>
         <translation>استيراد من DXF...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1783" />
+        <location filename="../gui/MainWindow.ui" line="1790" />
         <source>Save</source>
         <translation>حفظ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1786" />
+        <location filename="../gui/MainWindow.ui" line="1793" />
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1798" />
+        <location filename="../gui/MainWindow.ui" line="1805" />
         <source>Save as</source>
         <translation>حفظ باسم</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1801" />
+        <location filename="../gui/MainWindow.ui" line="1808" />
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1813" />
+        <location filename="../gui/MainWindow.ui" line="1820" />
         <source>Save split as...</source>
         <translation>حفظ مُفكَّك كـ...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1816" />
+        <location filename="../gui/MainWindow.ui" line="1823" />
         <source>Save a copy of the drawing with every macro expanded into raw primitives</source>
         <translation>حفظ نسخة من الرسم مع توسيع كل ماكرو إلى عناصر أولية</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1825" />
+        <location filename="../gui/MainWindow.ui" line="1832" />
         <location filename="../src/App/MainWindow.cpp" line="1388" />
         <source>Print</source>
         <translation>طباعة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1828" />
+        <location filename="../gui/MainWindow.ui" line="1835" />
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1837" />
+        <location filename="../gui/MainWindow.ui" line="1844" />
         <source>Close</source>
         <translation>إغلاق</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1840" />
+        <location filename="../gui/MainWindow.ui" line="1847" />
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1849" />
+        <location filename="../gui/MainWindow.ui" line="1856" />
         <source>Export...</source>
         <translation>تصدير...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1852" />
+        <location filename="../gui/MainWindow.ui" line="1859" />
         <source>Export the drawing as PNG, JPG, SVG, PDF, EPS, or DXF</source>
         <translation>تصدير الرسم بصيغة PNG أو JPG أو SVG أو PDF أو EPS أو DXF</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1855" />
+        <location filename="../gui/MainWindow.ui" line="1862" />
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1867" />
+        <location filename="../gui/MainWindow.ui" line="1874" />
         <location filename="../src/App/MainWindow.cpp" line="721" />
         <source>Undo</source>
         <translation>تراجع</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1870" />
+        <location filename="../gui/MainWindow.ui" line="1877" />
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1882" />
+        <location filename="../gui/MainWindow.ui" line="1889" />
         <location filename="../src/App/MainWindow.cpp" line="724" />
         <source>Redo</source>
         <translation>إعادة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1885" />
+        <location filename="../gui/MainWindow.ui" line="1892" />
         <source>Ctrl+Shift+Z</source>
         <translation>Ctrl+Shift+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1897" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1666" />
+        <location filename="../gui/MainWindow.ui" line="1904" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1657" />
         <source>Cut</source>
         <translation>قص</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1900" />
+        <location filename="../gui/MainWindow.ui" line="1907" />
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1912" />
+        <location filename="../gui/MainWindow.ui" line="1919" />
         <source>Copy</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1915" />
+        <location filename="../gui/MainWindow.ui" line="1922" />
         <source>Ctrl+C</source>
         <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1927" />
+        <location filename="../gui/MainWindow.ui" line="1934" />
         <source>Copy split</source>
         <translation>نسخ مُفكَّك</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1930" />
+        <location filename="../gui/MainWindow.ui" line="1937" />
         <source>Copy the selection with every macro expanded into raw primitives</source>
         <translation>نسخ التحديد مع توسيع كل ماكرو إلى عناصر أولية</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1939" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1608" />
+        <location filename="../gui/MainWindow.ui" line="1946" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1599" />
         <source>Copy as image</source>
         <translation>نسخ كصورة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1942" />
+        <location filename="../gui/MainWindow.ui" line="1949" />
         <source>Copy the selection (or the whole drawing) to the clipboard as an image</source>
         <translation>نسخ التحديد (أو الرسم بالكامل) إلى الحافظة كصورة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1945" />
+        <location filename="../gui/MainWindow.ui" line="1952" />
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1957" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1759" />
+        <location filename="../gui/MainWindow.ui" line="1964" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1750" />
         <source>Paste</source>
         <translation>لصق</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1960" />
+        <location filename="../gui/MainWindow.ui" line="1967" />
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1972" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1137" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1767" />
+        <location filename="../gui/MainWindow.ui" line="1979" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1128" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1758" />
         <source>Duplicate</source>
         <translation>تكرار</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1975" />
+        <location filename="../gui/MainWindow.ui" line="1982" />
         <source>Ctrl+D</source>
         <translation>Ctrl+D</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1987" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="606" />
+        <location filename="../gui/MainWindow.ui" line="1994" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="597" />
         <source>Rotate</source>
         <translation>تدوير</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1990" />
+        <location filename="../gui/MainWindow.ui" line="1997" />
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2002" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="586" />
+        <location filename="../gui/MainWindow.ui" line="2009" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="577" />
         <source>Mirror</source>
         <translation>انعكاس</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2005" />
+        <location filename="../gui/MainWindow.ui" line="2012" />
         <source>S</source>
         <translation>S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2014" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1158" />
+        <location filename="../gui/MainWindow.ui" line="2021" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1149" />
         <source>Convert macro to primitives</source>
         <translation>تحويل الماكرو إلى عناصر أولية</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2026" />
+        <location filename="../gui/MainWindow.ui" line="2033" />
         <source>Create macro from selection...</source>
         <translation>إنشاء ماكرو من التحديد...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2035" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1413" />
+        <location filename="../gui/MainWindow.ui" line="2042" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1404" />
         <source>Align left</source>
         <translation>محاذاة لليسار</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2044" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1429" />
+        <location filename="../gui/MainWindow.ui" line="2051" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1420" />
         <source>Align right</source>
         <translation>محاذاة لليمين</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2053" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1445" />
+        <location filename="../gui/MainWindow.ui" line="2060" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1436" />
         <source>Align top</source>
         <translation>محاذاة لأعلى</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2062" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1461" />
+        <location filename="../gui/MainWindow.ui" line="2069" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1452" />
         <source>Align bottom</source>
         <translation>محاذاة لأسفل</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2071" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1486" />
+        <location filename="../gui/MainWindow.ui" line="2078" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1477" />
         <source>Align horizontal center</source>
         <translation>محاذاة للوسط أفقيًا</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2080" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1510" />
+        <location filename="../gui/MainWindow.ui" line="2087" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1501" />
         <source>Align vertical center</source>
         <translation>محاذاة للوسط عموديًا</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2089" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1537" />
+        <location filename="../gui/MainWindow.ui" line="2096" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1528" />
         <source>Distribute horizontally</source>
         <translation>توزيع أفقيًا</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2098" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1560" />
+        <location filename="../gui/MainWindow.ui" line="2105" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1551" />
         <source>Distribute vertically</source>
         <translation>توزيع عموديًا</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2110" />
+        <location filename="../gui/MainWindow.ui" line="2117" />
         <source>Select all</source>
         <translation>تحديد الكل</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2113" />
+        <location filename="../gui/MainWindow.ui" line="2120" />
         <source>Ctrl+A</source>
         <translation>Ctrl+A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2122" />
+        <location filename="../gui/MainWindow.ui" line="2129" />
         <source>Find...</source>
         <translation>بحث...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2125" />
+        <location filename="../gui/MainWindow.ui" line="2132" />
         <source>Ctrl+F</source>
         <translation>Ctrl+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2137" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1242" />
+        <location filename="../gui/MainWindow.ui" line="2144" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1233" />
         <source>Delete</source>
         <translation>حذف</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2140" />
+        <location filename="../gui/MainWindow.ui" line="2147" />
         <source>Del</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2175" />
+        <location filename="../gui/MainWindow.ui" line="2182" />
         <source>About Qt</source>
         <translation>حول Qt</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2259" />
+        <location filename="../gui/MainWindow.ui" line="2266" />
         <source>Measure</source>
         <translation>قياس</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2262" />
+        <location filename="../gui/MainWindow.ui" line="2269" />
         <source>Measure: click two points to read their distance and angle in the status bar</source>
         <translation>قياس: انقر نقطتين لقراءة المسافة والزاوية في شريط الحالة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2265" />
+        <location filename="../gui/MainWindow.ui" line="2272" />
         <source>W</source>
         <translation>W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2277" />
+        <location filename="../gui/MainWindow.ui" line="2284" />
         <source>Regular polygon</source>
         <translation>مضلع منتظم</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2280" />
+        <location filename="../gui/MainWindow.ui" line="2287" />
         <source>Regular polygon: click the center, then a vertex</source>
         <translation>مضلع منتظم: انقر المركز ثم أحد الرؤوس</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2283" />
+        <location filename="../gui/MainWindow.ui" line="2290" />
         <source>N</source>
         <translation>N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2295" />
+        <location filename="../gui/MainWindow.ui" line="2302" />
         <source>Arc</source>
         <translation>قوس</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2298" />
+        <location filename="../gui/MainWindow.ui" line="2305" />
         <source>Arc: click the start point, the end point, then a point the arc passes through</source>
         <translation>قوس: انقر نقطة البداية ثم نقطة النهاية ثم نقطة يمر بها القوس</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2301" />
+        <location filename="../gui/MainWindow.ui" line="2308" />
         <source>U</source>
         <translation>U</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2472" />
+        <location filename="../gui/MainWindow.ui" line="2479" />
         <source>Fit the view to the selection</source>
         <translation>ملاءمة العرض مع التحديد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2475" />
+        <location filename="../gui/MainWindow.ui" line="2482" />
         <source>Fit the view to the bounding box of the selected elements</source>
         <translation>ملاءمة العرض مع المربع المحيط بالعناصر المحددة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2478" />
+        <location filename="../gui/MainWindow.ui" line="2485" />
         <source>Ctrl+Shift+F</source>
         <translation>Ctrl+Shift+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2490" />
+        <location filename="../gui/MainWindow.ui" line="2497" />
         <source>Show grid</source>
         <translation>إظهار الشبكة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2493" />
+        <location filename="../gui/MainWindow.ui" line="2500" />
         <source>Toggle the grid</source>
         <translation>تبديل إظهار الشبكة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2501" />
+        <location filename="../gui/MainWindow.ui" line="2508" />
         <source>Snap to grid</source>
         <translation>الالتصاق بالشبكة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2504" />
+        <location filename="../gui/MainWindow.ui" line="2511" />
         <source>Toggle snap to grid</source>
         <translation>تبديل الالتصاق بالشبكة</translation>
     </message>
@@ -2193,12 +2198,12 @@ Proceed with restoring the default values?
         <translation type="vanished">صورة نقطية للخلفية</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2152" />
+        <location filename="../gui/MainWindow.ui" line="2159" />
         <source>Options</source>
         <translation>خيارات</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2161" />
+        <location filename="../gui/MainWindow.ui" line="2168" />
         <source>About eSchema</source>
         <translation>حول eSchema</translation>
     </message>
@@ -2207,367 +2212,367 @@ Proceed with restoring the default values?
         <translation type="vanished">الطبقات</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2187" />
-        <location filename="../gui/MainWindow.ui" line="2190" />
+        <location filename="../gui/MainWindow.ui" line="2194" />
+        <location filename="../gui/MainWindow.ui" line="2197" />
         <source>Line</source>
         <translation>خط</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2193" />
+        <location filename="../gui/MainWindow.ui" line="2200" />
         <source>L</source>
         <translation>L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2205" />
-        <location filename="../gui/MainWindow.ui" line="2208" />
+        <location filename="../gui/MainWindow.ui" line="2212" />
+        <location filename="../gui/MainWindow.ui" line="2215" />
         <source>Rectangle</source>
         <translation>مستطيل</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2211" />
+        <location filename="../gui/MainWindow.ui" line="2218" />
         <source>G</source>
         <translation>G</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2223" />
-        <location filename="../gui/MainWindow.ui" line="2226" />
+        <location filename="../gui/MainWindow.ui" line="2230" />
+        <location filename="../gui/MainWindow.ui" line="2233" />
         <source>Polygon</source>
         <translation>مضلع</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2229" />
+        <location filename="../gui/MainWindow.ui" line="2236" />
         <source>P</source>
         <translation>P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2241" />
-        <location filename="../gui/MainWindow.ui" line="2244" />
+        <location filename="../gui/MainWindow.ui" line="2248" />
+        <location filename="../gui/MainWindow.ui" line="2251" />
         <source>Ellipse</source>
         <translation>قطع ناقص</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2247" />
+        <location filename="../gui/MainWindow.ui" line="2254" />
         <source>E</source>
         <translation>E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2316" />
-        <location filename="../gui/MainWindow.ui" line="2319" />
+        <location filename="../gui/MainWindow.ui" line="2323" />
+        <location filename="../gui/MainWindow.ui" line="2326" />
         <source>Select</source>
         <translation>تحديد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2322" />
+        <location filename="../gui/MainWindow.ui" line="2329" />
         <source>A</source>
         <translation>A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2334" />
-        <location filename="../gui/MainWindow.ui" line="2337" />
+        <location filename="../gui/MainWindow.ui" line="2341" />
+        <location filename="../gui/MainWindow.ui" line="2344" />
         <source>Bezier</source>
         <translation>بيزيه</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2340" />
+        <location filename="../gui/MainWindow.ui" line="2347" />
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2352" />
-        <location filename="../gui/MainWindow.ui" line="2355" />
+        <location filename="../gui/MainWindow.ui" line="2359" />
+        <location filename="../gui/MainWindow.ui" line="2362" />
         <source>Curve</source>
         <translation>منحنى</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2358" />
+        <location filename="../gui/MainWindow.ui" line="2365" />
         <source>O</source>
         <translation>O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2376" />
+        <location filename="../gui/MainWindow.ui" line="2383" />
         <source>T</source>
         <translation>T</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2388" />
-        <location filename="../gui/MainWindow.ui" line="2391" />
+        <location filename="../gui/MainWindow.ui" line="2395" />
+        <location filename="../gui/MainWindow.ui" line="2398" />
         <source>Connection</source>
         <translation>توصيل</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2394" />
+        <location filename="../gui/MainWindow.ui" line="2401" />
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2406" />
-        <location filename="../gui/MainWindow.ui" line="2409" />
+        <location filename="../gui/MainWindow.ui" line="2413" />
+        <location filename="../gui/MainWindow.ui" line="2416" />
         <source>PCB track</source>
         <translation>مسار PCB</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2412" />
+        <location filename="../gui/MainWindow.ui" line="2419" />
         <source>I</source>
         <translation>I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2424" />
-        <location filename="../gui/MainWindow.ui" line="2427" />
+        <location filename="../gui/MainWindow.ui" line="2431" />
+        <location filename="../gui/MainWindow.ui" line="2434" />
         <source>PCB pad</source>
         <translation>لوحة PCB</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2430" />
+        <location filename="../gui/MainWindow.ui" line="2437" />
         <source>Z</source>
         <translation>Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2442" />
-        <location filename="../gui/MainWindow.ui" line="2445" />
+        <location filename="../gui/MainWindow.ui" line="2449" />
+        <location filename="../gui/MainWindow.ui" line="2452" />
         <source>Image</source>
         <translation>صورة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2448" />
+        <location filename="../gui/MainWindow.ui" line="2455" />
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2460" />
+        <location filename="../gui/MainWindow.ui" line="2467" />
         <source>Fit view</source>
         <translation>ملاءمة العرض</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2463" />
+        <location filename="../gui/MainWindow.ui" line="2470" />
         <source>Fit the drawing view</source>
         <translation>ملاءمة عرض الرسم</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2170" />
+        <location filename="../gui/MainWindow.ui" line="2177" />
         <location filename="../src/App/MainWindow.cpp" line="797" />
         <location filename="../src/App/MainWindow.cpp" line="808" />
         <source>Check for updates</source>
         <translation>التحقق من التحديثات</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2513" />
+        <location filename="../gui/MainWindow.ui" line="2520" />
         <source>Keyboard shortcuts</source>
         <translation>اختصارات لوحة المفاتيح</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2525" />
-        <location filename="../gui/MainWindow.ui" line="2528" />
+        <location filename="../gui/MainWindow.ui" line="2532" />
+        <location filename="../gui/MainWindow.ui" line="2535" />
         <source>Layer management</source>
         <translation>إدارة الطبقات</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2531" />
+        <location filename="../gui/MainWindow.ui" line="2538" />
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2540" />
+        <location filename="../gui/MainWindow.ui" line="2547" />
         <source>Tracing image...</source>
         <translation>صورة الاقتفاء...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2543" />
+        <location filename="../gui/MainWindow.ui" line="2550" />
         <source>Attach or remove a reference image drawn under the grid, for tracing over</source>
         <translation>إرفاق أو إزالة صورة مرجعية تُرسم أسفل الشبكة، للاقتفاء عليها</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2558" />
+        <location filename="../gui/MainWindow.ui" line="2565" />
         <source>Basic tools</source>
         <translation>الأدوات الأساسية</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2573" />
+        <location filename="../gui/MainWindow.ui" line="2580" />
         <source>Drawing tools</source>
         <translation>أدوات الرسم</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2588" />
+        <location filename="../gui/MainWindow.ui" line="2595" />
         <source>Snap to objects</source>
         <translation>انطباق على العناصر</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2591" />
+        <location filename="../gui/MainWindow.ui" line="2598" />
         <source>Snap clicks and drags to endpoints, midpoints, centers, and intersections of what's already drawn</source>
         <translation>يُطبق النقرات والسحب على أطراف ومنتصفات ومراكز وتقاطعات ما هو مرسوم بالفعل</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2606" />
+        <location filename="../gui/MainWindow.ui" line="2613" />
         <source>Modify tools</source>
         <translation>أدوات التعديل</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2618" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="654" />
+        <location filename="../gui/MainWindow.ui" line="2625" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="645" />
         <source>Union</source>
         <translation>اتحاد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2621" />
+        <location filename="../gui/MainWindow.ui" line="2628" />
         <source>Merge the selected closed shapes into a single shape</source>
         <translation>يدمج الأشكال المغلقة المحددة في شكل واحد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2633" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="659" />
+        <location filename="../gui/MainWindow.ui" line="2640" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="650" />
         <source>Subtraction</source>
         <translation>طرح</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2636" />
+        <location filename="../gui/MainWindow.ui" line="2643" />
         <source>Subtract the other selected closed shapes from the first one (in drawing order)</source>
         <translation>يطرح الأشكال المغلقة المحددة الأخرى من الشكل الأول (حسب ترتيب الرسم)</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2648" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="664" />
+        <location filename="../gui/MainWindow.ui" line="2655" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="655" />
         <source>Intersection</source>
         <translation>تقاطع</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2651" />
+        <location filename="../gui/MainWindow.ui" line="2658" />
         <source>Keep only the area shared by all the selected closed shapes</source>
         <translation>يُبقي فقط على المساحة المشتركة بين جميع الأشكال المغلقة المحددة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2659" />
+        <location filename="../gui/MainWindow.ui" line="2666" />
         <source>Smooth curved results</source>
         <translation>نتائج منحنية ناعمة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2662" />
+        <location filename="../gui/MainWindow.ui" line="2669" />
         <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
         <translation>يحوّل النتائج المنحنية إلى منحنيات معقدة (عدد عُقد أقل بكثير وزوايا مستديرة قليلاً) بدلاً من مضلعات مسطّحة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2674" />
+        <location filename="../gui/MainWindow.ui" line="2681" />
         <source>Rotate by angle...</source>
         <translation>تدوير بزاوية...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2677" />
+        <location filename="../gui/MainWindow.ui" line="2684" />
         <source>Rotate the selection by an arbitrary angle; rectangles and ellipses are converted to polygons/curves first</source>
         <translation>يدير التحديد بزاوية اختيارية؛ تُحوَّل المستطيلات والقطوع الناقصة أولاً إلى مضلعات/منحنيات</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2689" />
+        <location filename="../gui/MainWindow.ui" line="2696" />
         <source>Scale...</source>
         <translation>تحجيم...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2692" />
+        <location filename="../gui/MainWindow.ui" line="2699" />
         <source>Scale the selection by a percentage around the first selected primitive's first point</source>
         <translation>يحجّم التحديد بنسبة مئوية حول النقطة الأولى لأول عنصر محدد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2704" />
+        <location filename="../gui/MainWindow.ui" line="2711" />
         <source>Array of copies...</source>
         <translation>مصفوفة نسخ...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2707" />
+        <location filename="../gui/MainWindow.ui" line="2714" />
         <source>Replicate the selection on a grid of rows and columns</source>
         <translation>يكرر التحديد على شبكة من الصفوف والأعمدة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2715" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="696" />
+        <location filename="../gui/MainWindow.ui" line="2722" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="687" />
         <source>Convert to polygon</source>
         <translation>تحويل إلى مضلع</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2718" />
+        <location filename="../gui/MainWindow.ui" line="2725" />
         <source>Rewrite the selected rectangles, ellipses, and closed curves as node-editable polygons</source>
         <translation>يعيد كتابة المستطيلات والقطوع الناقصة والمنحنيات المغلقة المحددة كمضلعات بعُقد قابلة للتحرير</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2726" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="701" />
+        <location filename="../gui/MainWindow.ui" line="2733" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="692" />
         <source>Convert to complex curve</source>
         <translation>تحويل إلى منحنى معقد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2729" />
+        <location filename="../gui/MainWindow.ui" line="2736" />
         <source>Rewrite the selected rectangles, ellipses, and polygons as smooth complex curves</source>
         <translation>يعيد كتابة المستطيلات والقطوع الناقصة والمضلعات المحددة كمنحنيات معقدة ناعمة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2737" />
+        <location filename="../gui/MainWindow.ui" line="2744" />
         <source>Simplify nodes...</source>
         <translation>تبسيط العُقد...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2740" />
+        <location filename="../gui/MainWindow.ui" line="2747" />
         <source>Remove nodes that deviate less than the given tolerance from the selected polygons and curves</source>
         <translation>يزيل من المضلعات والمنحنيات المحددة العُقد التي تنحرف أقل من التفاوت المحدد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2748" />
+        <location filename="../gui/MainWindow.ui" line="2755" />
         <source>Fillet corners...</source>
         <translation>تدوير الزوايا...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2751" />
+        <location filename="../gui/MainWindow.ui" line="2758" />
         <source>Round every corner of the selected polygons and rectangles with an arc of the given radius</source>
         <translation>يدوّر كل زاوية من المضلعات والمستطيلات المحددة بقوس بنصف القطر المحدد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2759" />
+        <location filename="../gui/MainWindow.ui" line="2766" />
         <source>Chamfer corners...</source>
         <translation>شطف الزوايا...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2762" />
+        <location filename="../gui/MainWindow.ui" line="2769" />
         <source>Cut every corner of the selected polygons and rectangles at the given distance</source>
         <translation>يقص كل زاوية من المضلعات والمستطيلات المحددة عند المسافة المحددة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2770" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1086" />
+        <location filename="../gui/MainWindow.ui" line="2777" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1077" />
         <source>Snap selection to grid</source>
         <translation>محاذاة التحديد إلى الشبكة</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2773" />
+        <location filename="../gui/MainWindow.ui" line="2780" />
         <source>Round every point of the selection to the snap step - handy after a DXF import or drawing with snapping off</source>
         <translation>يقرّب كل نقطة من التحديد إلى خطوة الانطباق - مفيد بعد استيراد DXF أو الرسم مع إيقاف الانطباق</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2781" />
+        <location filename="../gui/MainWindow.ui" line="2788" />
         <source>Offset outline...</source>
         <translation>إزاحة المحيط...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2784" />
+        <location filename="../gui/MainWindow.ui" line="2791" />
         <source>Grow or shrink the selected closed shapes by a parallel offset of their outline</source>
         <translation>يكبّر أو يصغّر الأشكال المغلقة المحددة بإزاحة موازية لمحيطها</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2789" />
+        <location filename="../gui/MainWindow.ui" line="2796" />
         <source>Invert selection</source>
         <translation>عكس التحديد</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2792" />
+        <location filename="../gui/MainWindow.ui" line="2799" />
         <source>Ctrl+Shift+I</source>
         <translation>Ctrl+Shift+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2800" />
+        <location filename="../gui/MainWindow.ui" line="2807" />
         <source>Select same type</source>
         <translation>تحديد النوع نفسه</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2803" />
+        <location filename="../gui/MainWindow.ui" line="2810" />
         <source>Select every primitive of the same type as the current selection</source>
         <translation>يحدد كل العناصر من نفس نوع التحديد الحالي</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2814" />
+        <location filename="../gui/MainWindow.ui" line="2821" />
         <source>Show rulers</source>
         <translation>إظهار المساطر</translation>
     </message>
@@ -2740,7 +2745,7 @@ Do you want to recover it?</source>
     <message>
         <location filename="../src/App/MainWindow.cpp" line="1388" />
         <location filename="../src/App/MainWindow.cpp" line="1494" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1608" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1599" />
         <source>The drawing is empty.</source>
         <translation>الرسم فارغ.</translation>
     </message>
@@ -2767,104 +2772,104 @@ Do you want to recover it?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="557" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="548" />
         <source>Add node</source>
         <translation>إضافة عقدة</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="561" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="552" />
         <source>Remove node</source>
         <translation>إزالة عقدة</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="718" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="725" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="709" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="716" />
         <source>Simplify nodes</source>
         <translation>تبسيط العُقد</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="718" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="709" />
         <source>Tolerance (drawing units):</source>
         <translation>التفاوت (وحدات الرسم):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="767" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="773" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="758" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="764" />
         <source>Chamfer corners</source>
         <translation>شطف الزوايا</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="767" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="773" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="758" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="764" />
         <source>Fillet corners</source>
         <translation>تدوير الزوايا</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="768" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="759" />
         <source>Cut distance (drawing units):</source>
         <translation>مسافة القص (وحدات الرسم):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="768" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="759" />
         <source>Radius (drawing units):</source>
         <translation>نصف القطر (وحدات الرسم):</translation>
     </message>
     <message>
+        <location filename="../src/App/MainWindowEditActions.cpp" line="809" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="818" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="827" />
         <source>Offset outline</source>
         <translation>إزاحة المحيط</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="819" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="810" />
         <source>Distance (drawing units, negative for inward):</source>
         <translation>المسافة (وحدات الرسم، سالبة نحو الداخل):</translation>
     </message>
     <message>
+        <location filename="../src/App/MainWindowEditActions.cpp" line="859" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="868" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="877" />
         <source>Scale</source>
         <translation>تحجيم</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="868" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="859" />
         <source>Scale factor (%):</source>
         <translation>معامل التحجيم (%):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="904" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="922" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="895" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="913" />
         <source>Rotate by angle</source>
         <translation>تدوير بزاوية</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="904" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="895" />
         <source>Angle (degrees, counterclockwise):</source>
         <translation>الزاوية (بالدرجات، عكس عقارب الساعة):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="988" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1020" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="979" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1011" />
         <source>Array of copies</source>
         <translation>مصفوفة نسخ</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1233" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1224" />
         <source>Create macro</source>
         <translation>إنشاء ماكرو</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1315" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1306" />
         <source>No matches</source>
         <translation>لا توجد نتائج مطابقة</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1327" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1318" />
         <source>%1 of %2</source>
         <translation>%1 من %2</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1374" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1365" />
         <source>Move selection</source>
         <translation>تحريك التحديد</translation>
     </message>

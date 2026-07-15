@@ -1505,22 +1505,29 @@
     <addaction name="actionConvertMacroToPrimitives"/>
     <addaction name="actionCreateMacro"/>
     <addaction name="separator"/>
-    <addaction name="actionAlignLeft"/>
-    <addaction name="actionAlignRight"/>
-    <addaction name="actionAlignTop"/>
-    <addaction name="actionAlignBottom"/>
-    <addaction name="actionAlignCenterHorizontal"/>
-    <addaction name="actionAlignCenterVertical"/>
-    <addaction name="separator"/>
-    <addaction name="actionDistributeHorizontal"/>
-    <addaction name="actionDistributeVertical"/>
-    <addaction name="actionSnapSelectionToGrid"/>
+    <addaction name="menuAlign"/>
     <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
     <addaction name="actionInvertSelection"/>
     <addaction name="actionSelectSameType"/>
     <addaction name="separator"/>
     <addaction name="actionFind"/>
+    <widget class="QMenu" name="menuAlign">
+     <property name="title">
+      <string>Align and distribute</string>
+     </property>
+     <addaction name="actionAlignLeft"/>
+     <addaction name="actionAlignRight"/>
+     <addaction name="actionAlignTop"/>
+     <addaction name="actionAlignBottom"/>
+     <addaction name="actionAlignCenterHorizontal"/>
+     <addaction name="actionAlignCenterVertical"/>
+     <addaction name="separator"/>
+     <addaction name="actionDistributeHorizontal"/>
+     <addaction name="actionDistributeVertical"/>
+     <addaction name="separator"/>
+     <addaction name="actionSnapSelectionToGrid"/>
+    </widget>
     <widget class="QMenu" name="menuShape">
      <property name="title">
       <string>Shape</string>

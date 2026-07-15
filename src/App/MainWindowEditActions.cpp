@@ -531,16 +531,7 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     menu.addAction(ui->actionConvertMacroToPrimitives);
     menu.addAction(ui->actionCreateMacro);
     menu.addSeparator();
-    menu.addAction(ui->actionAlignLeft);
-    menu.addAction(ui->actionAlignRight);
-    menu.addAction(ui->actionAlignTop);
-    menu.addAction(ui->actionAlignBottom);
-    menu.addAction(ui->actionAlignCenterHorizontal);
-    menu.addAction(ui->actionAlignCenterVertical);
-    menu.addSeparator();
-    menu.addAction(ui->actionDistributeHorizontal);
-    menu.addAction(ui->actionDistributeVertical);
-    menu.addAction(ui->actionSnapSelectionToGrid);
+    menu.addMenu(ui->menuAlign);
     menu.addSeparator();
     menu.addAction(ui->actionSelectAll);
     menu.addAction(ui->actionInvertSelection);
