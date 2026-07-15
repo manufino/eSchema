@@ -166,8 +166,12 @@ protected:
                 }
             } else if (event->type() == QEvent::MouseMove) {
                 // Live object-snap highlight while hunting for the point.
+                // The move must be swallowed: SheetView's own mouseMoveEvent
+                // would otherwise clear the highlight right back (its
+                // "not placing anything" branch) and reset the cursor.
                 m_sheet->snapPosition(m_view->mapToScene(
                         static_cast<QMouseEvent *>(event)->position().toPoint()));
+                return true;
             }
         }
         if (event->type() == QEvent::KeyPress
