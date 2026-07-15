@@ -419,6 +419,7 @@ void MainWindow::updateEditActionsState()
     ui->actionSimplifyNodes->setEnabled(canSimplify);
     ui->actionFilletCorners->setEnabled(canRound);
     ui->actionChamferCorners->setEnabled(canRound);
+    ui->actionOffsetOutline->setEnabled(booleanOperands >= 1);
 
     ui->actionScaleSelection->setEnabled(hasSelection);
     ui->actionRotateByAngle->setEnabled(hasSelection);
@@ -718,6 +719,58 @@ void MainWindow::roundSelectedCorners(bool chamfer)
 void MainWindow::clickFilletCornersAction()
 {
     roundSelectedCorners(false);
+}
+
+// Grows (positive distance) or shrinks (negative) each eligible closed
+// shape by a parallel offset of its outline. The offset region is built
+// with QPainterPathStroker - a band of twice the distance centered on the
+// outline - united with (outward) or subtracted from (inward) the original
+// region, then rewritten with the same representation rules as the boolean
+// results. An inward offset larger than the shape erodes it away entirely;
+// that shape is then left untouched.
+void MainWindow::clickOffsetOutlineAction()
+{
+    QList<GraphicsPrimitive *> eligible;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+        if (primitive->supportsBooleanOps())
+            eligible.append(primitive);
+    }
+    if (eligible.isEmpty())
+        return;
+
+    bool ok = false;
+    const double distance = QInputDialog::getDouble(
+                this, tr("Offset outline"),
+                tr("Distance (drawing units, negative for inward):"),
+                5.0, -500.0, 500.0, 1, &ok);
+    if (!ok || qFuzzyIsNull(distance))
+        return;
+
+    const bool smooth = ui->actionBooleanSmooth->isChecked();
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(tr("Offset outline"));
+    for (GraphicsPrimitive *primitive : eligible) {
+        const QPainterPath outline = primitive->booleanOutline();
+        QPainterPathStroker stroker;
+        stroker.setWidth(2.0 * qAbs(distance));
+        stroker.setJoinStyle(Qt::RoundJoin);
+        const QPainterPath band = stroker.createStroke(outline);
+        const QPainterPath offset = distance > 0.0 ? outline.united(band)
+                                                   : outline.subtracted(band);
+        const QList<GraphicsPrimitive *> results =
+                BooleanOps::primitivesFromPath(offset, primitive, smooth);
+        if (results.isEmpty()) {
+            primitive->setSelected(true); // fully eroded - keep the original
+            continue;
+        }
+        undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+        for (GraphicsPrimitive *result : results) {
+            undo->push(new CreatePrimitiveCommand(sheetScene, result));
+            result->setSelected(true);
+        }
+    }
+    undo->endMacro();
 }
 
 void MainWindow::clickChamferCornersAction()

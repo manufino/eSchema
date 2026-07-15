@@ -130,6 +130,7 @@ public slots:
     void clickSimplifyNodesAction();
     void clickFilletCornersAction();
     void clickChamferCornersAction();
+    void clickOffsetOutlineAction();
     // Whole-selection transforms and replication.
     void clickScaleSelectionAction();
     void clickRotateByAngleAction();

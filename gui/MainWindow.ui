@@ -1513,6 +1513,7 @@
      <addaction name="separator"/>
      <addaction name="actionFilletCorners"/>
      <addaction name="actionChamferCorners"/>
+     <addaction name="actionOffsetOutline"/>
     </widget>
     <widget class="QMenu" name="menuBoolean">
      <property name="title">
@@ -2702,6 +2703,17 @@
    </property>
    <property name="toolTip">
     <string>Cut every corner of the selected polygons and rectangles at the given distance</string>
+   </property>
+  </action>
+  <action name="actionOffsetOutline">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Offset outline...</string>
+   </property>
+   <property name="toolTip">
+    <string>Grow or shrink the selected closed shapes by a parallel offset of their outline</string>
    </property>
   </action>
   <action name="actionInvertSelection">

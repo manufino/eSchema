@@ -61,6 +61,16 @@ enum class Operation {
 QList<GraphicsPrimitive *> combine(const QList<GraphicsPrimitive *> &operands,
                                    Operation operation, bool smoothResults);
 
+// Builds the polygon/closed-complex-curve primitives covering `path`'s fill
+// region, styled after `styleSource` - the same per-contour representation
+// rules combine() uses for its results (see its doc comment above; combine()
+// itself delegates here). Also used by Edit > Shape > Offset outline, whose
+// region comes from QPainterPathStroker instead of a set operation. Returns
+// an empty list for an empty region.
+QList<GraphicsPrimitive *> primitivesFromPath(const QPainterPath &path,
+                                              GraphicsPrimitive *styleSource,
+                                              bool smoothResults);
+
 // The exact vertices of `path`'s (first) contour when it has only straight
 // edges - no sampling loss at all. Also used by Edit > Convert to polygon.
 QVector<QPointF> exactVertices(const QPainterPath &path);

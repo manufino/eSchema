@@ -240,10 +240,18 @@ QList<GraphicsPrimitive *> BooleanOps::combine(const QList<GraphicsPrimitive *> 
             break;
         }
     }
-    // The set operations above already return non-intersecting subpaths, but
-    // simplified() additionally normalizes the fill rule to odd-even, which
-    // is what makes the containment-depth hole test below meaningful.
-    combined = combined.simplified();
+    return primitivesFromPath(combined, operands.first(), smoothResults);
+}
+
+QList<GraphicsPrimitive *> BooleanOps::primitivesFromPath(const QPainterPath &path,
+                                                          GraphicsPrimitive *styleSource,
+                                                          bool smoothResults)
+{
+    QList<GraphicsPrimitive *> results;
+    // simplified() merges intersecting subpaths and normalizes the fill rule
+    // to odd-even, which is what makes the containment-depth hole test below
+    // meaningful.
+    const QPainterPath combined = path.simplified();
     if (combined.isEmpty())
         return results;
 
@@ -259,7 +267,7 @@ QList<GraphicsPrimitive *> BooleanOps::combine(const QList<GraphicsPrimitive *> 
         }
     }
 
-    GraphicsPrimitive *base = operands.first();
+    GraphicsPrimitive *base = styleSource;
     for (int i = 0; i < contours.size(); ++i) {
         const Contour &contour = contours.at(i);
         if (contour.depth % 2 != 0)

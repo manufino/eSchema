@@ -415,6 +415,7 @@ void MainWindow::setConnections()
     connect(ui->actionSimplifyNodes, &QAction::triggered, this, &MainWindow::clickSimplifyNodesAction);
     connect(ui->actionFilletCorners, &QAction::triggered, this, &MainWindow::clickFilletCornersAction);
     connect(ui->actionChamferCorners, &QAction::triggered, this, &MainWindow::clickChamferCornersAction);
+    connect(ui->actionOffsetOutline, &QAction::triggered, this, &MainWindow::clickOffsetOutlineAction);
     connect(ui->actionSelectSameType, &QAction::triggered, this, &MainWindow::clickSelectSameTypeAction);
     connect(ui->actionInvertSelection, &QAction::triggered, this, &MainWindow::clickInvertSelectionAction);
     // Alt+drag duplicate: the drag itself is handled inside GraphicsPrimitive;
