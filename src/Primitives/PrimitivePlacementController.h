@@ -91,7 +91,7 @@ private slots:
     void handleToolBarActionTriggered(QAction *action);
 
 private:
-    enum class Tool { Select, Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Text, Connection,
+    enum class Tool { Select, Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Arc, Text, Connection,
                       PcbTrack, Pad, Macro, Image };
 
     Tool currentTool() const;
@@ -161,6 +161,12 @@ private:
     // file's own pixel size, scaled to a sane on-sheet footprint), not
     // resized by the placement click the way Rectangle's second corner is.
     QPointF m_imageHalfSize;
+    // The Arc tool's two fixed endpoints (clicks 1 and 2). The third click -
+    // a point the arc passes through - never becomes a vertex itself: it
+    // just picks the circumcircle, and the whole curve is resampled along
+    // that arc (see the Tool::Arc branches in handleMousePress/Move).
+    QPointF m_arcStart;
+    QPointF m_arcEnd;
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H

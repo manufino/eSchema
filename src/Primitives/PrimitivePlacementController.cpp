@@ -43,6 +43,74 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QMessageBox>
+#include <QLineF>
+#include <cmath>
+
+namespace {
+
+// Points sampled along the circular arc from `from` to `to` that passes
+// through `via` (their circumcircle), spaced closely enough that the
+// interpolating spline drawn through them is visually indistinguishable
+// from the true arc. Falls back to the plain straight segment when the
+// three points are (nearly) collinear - the circle degenerates to a line.
+QVector<QPointF> sampleArcThrough(const QPointF &from, const QPointF &via, const QPointF &to)
+{
+    const qreal ax = from.x(), ay = from.y();
+    const qreal bx = via.x(), by = via.y();
+    const qreal cx = to.x(), cy = to.y();
+    const qreal det = 2.0 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
+    if (qAbs(det) < 1e-6)
+        return { from, to };
+
+    const qreal aSq = ax * ax + ay * ay;
+    const qreal bSq = bx * bx + by * by;
+    const qreal cSq = cx * cx + cy * cy;
+    const QPointF center((aSq * (by - cy) + bSq * (cy - ay) + cSq * (ay - by)) / det,
+                         (aSq * (cx - bx) + bSq * (ax - cx) + cSq * (bx - ax)) / det);
+    const qreal radius = QLineF(center, from).length();
+
+    const qreal angleFrom = std::atan2(ay - center.y(), ax - center.x());
+    const qreal angleVia = std::atan2(by - center.y(), bx - center.x());
+    const qreal angleTo = std::atan2(cy - center.y(), cx - center.x());
+
+    // Counterclockwise sweep from `fromAngle` up to `toAngle`, in [0, 2pi).
+    auto ccwSweep = [](qreal fromAngle, qreal toAngle) {
+        qreal sweep = toAngle - fromAngle;
+        while (sweep < 0.0)
+            sweep += 2.0 * M_PI;
+        while (sweep >= 2.0 * M_PI)
+            sweep -= 2.0 * M_PI;
+        return sweep;
+    };
+    // Go whichever way around the circle actually passes through `via`.
+    const qreal sweepTo = ccwSweep(angleFrom, angleTo);
+    const qreal sweepVia = ccwSweep(angleFrom, angleVia);
+    const qreal sweep = (sweepVia <= sweepTo) ? sweepTo : sweepTo - 2.0 * M_PI;
+
+    const qreal arcLength = radius * qAbs(sweep);
+    const int steps = qBound(8, qRound(arcLength / 5.0), 120);
+    QVector<QPointF> points;
+    points.reserve(steps + 1);
+    for (int i = 0; i <= steps; ++i) {
+        const qreal angle = angleFrom + sweep * i / steps;
+        points.append(center + radius * QPointF(std::cos(angle), std::sin(angle)));
+    }
+    // The sampled endpoints are the clicked ones up to rounding - pin them
+    // exactly so the arc starts and ends precisely where the user clicked.
+    points.first() = from;
+    points.last() = to;
+    return points;
+}
+
+void replaceCurveVertices(PrimitiveComplexCurve *curve, const QVector<QPointF> &points)
+{
+    while (curve->vertexCount() > 0)
+        curve->removeLastVertex();
+    for (const QPointF &point : points)
+        curve->appendVertex(point);
+}
+
+}
 
 PrimitivePlacementController::PrimitivePlacementController(SheetView *view, Sheet *sheet,
                                                              ToolBarPrimitive *toolBar,
@@ -71,6 +139,7 @@ PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() c
     if (name == QStringLiteral("actionEllipse")) return Tool::Ellipse;
     if (name == QStringLiteral("actionBezier")) return Tool::Bezier;
     if (name == QStringLiteral("actionCurve")) return Tool::Curve;
+    if (name == QStringLiteral("actionArc")) return Tool::Arc;
     if (name == QStringLiteral("actionText")) return Tool::Text;
     if (name == QStringLiteral("actionConnection")) return Tool::Connection;
     if (name == QStringLiteral("actionPcbTrack")) return Tool::PcbTrack;
@@ -91,6 +160,7 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::Rectangle: return 2;
     case Tool::Ellipse: return 2;
     case Tool::Bezier: return 4;
+    case Tool::Arc: return 3;
     case Tool::Connection: return 1;
     case Tool::Text: return 1;
     case Tool::PcbTrack: return 2;
@@ -126,6 +196,7 @@ GraphicsPrimitive *PrimitivePlacementController::createPrimitiveForTool(Tool too
     case Tool::Pad: return new PrimitivePad();
     case Tool::Polygon: return new PrimitivePolygon();
     case Tool::Curve: return new PrimitiveComplexCurve();
+    case Tool::Arc: return new PrimitiveComplexCurve(); // open, resampled along the arc while placing
     case Tool::Text: return new PrimitiveText(); // caller sets its text content
     case Tool::Macro: return new PrimitiveMacro(); // caller sets its macro key
     case Tool::Image: return new PrimitiveImage(); // caller sets its image data
@@ -183,7 +254,15 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
 
     m_pointsPlaced = 1;
 
-    if (isVariableVertexTool(m_activeTool)) {
+    if (m_activeTool == Tool::Arc) {
+        // Vertex 0 is the fixed start point; vertex 1 previews the end point
+        // until the second click. The through-point click (third) never adds
+        // a vertex - it resamples the whole curve along the arc it picks.
+        auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
+        m_arcStart = scenePos;
+        curve->appendVertex(scenePos);
+        curve->appendVertex(scenePos);
+    } else if (isVariableVertexTool(m_activeTool)) {
         // vertex 0 is fixed at the click; vertex 1 is the "live" preview vertex
         // that mouse-move updates until the next click.
         if (m_activeTool == Tool::Polygon) {
@@ -421,6 +500,22 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &scenePos)
         return true;
     }
 
+    if (m_activeTool == Tool::Arc) {
+        auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
+        if (m_pointsPlaced == 1) {
+            // Second click: fix the end point; the curve is a straight
+            // two-vertex segment until the through-point is picked.
+            m_arcEnd = scenePos;
+            replaceCurveVertices(curve, { m_arcStart, m_arcEnd });
+            m_pointsPlaced = 2;
+        } else {
+            // Third click: the through-point. Resample and finish.
+            replaceCurveVertices(curve, sampleArcThrough(m_arcStart, scenePos, m_arcEnd));
+            finishPlacement();
+        }
+        return true;
+    }
+
     if (isVariableVertexTool(m_activeTool)) {
         // Fix the current live vertex, then start a new live vertex for the
         // next segment.
@@ -451,6 +546,19 @@ bool PrimitivePlacementController::handleMouseMove(const QPointF &scenePos)
     if (m_activeTool == Tool::Image) {
         m_activePrimitive->setControlPoint(0, scenePos - m_imageHalfSize);
         m_activePrimitive->setControlPoint(1, scenePos + m_imageHalfSize);
+        return true;
+    }
+
+    if (m_activeTool == Tool::Arc) {
+        auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
+        if (m_pointsPlaced == 1) {
+            // End point still being chosen - straight-segment preview.
+            curve->setControlPoint(curve->vertexCount() - 1, scenePos);
+        } else {
+            // Both endpoints fixed - live-preview the arc bulging through
+            // the cursor.
+            replaceCurveVertices(curve, sampleArcThrough(m_arcStart, scenePos, m_arcEnd));
+        }
         return true;
     }
 

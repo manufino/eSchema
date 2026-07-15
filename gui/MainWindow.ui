@@ -1668,6 +1668,7 @@
    <addaction name="actionEllipse"/>
    <addaction name="actionBezier"/>
    <addaction name="actionCurve"/>
+   <addaction name="actionArc"/>
    <addaction name="actionText"/>
    <addaction name="actionConnection"/>
    <addaction name="actionPcbTrack"/>
@@ -2188,6 +2189,24 @@
    </property>
    <property name="shortcut">
     <string>E</string>
+   </property>
+  </action>
+  <action name="actionArc">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/arc.png</normaloff>:/res/resources/arc.png</iconset>
+   </property>
+   <property name="text">
+    <string>Arc</string>
+   </property>
+   <property name="toolTip">
+    <string>Arc: click the start point, the end point, then a point the arc passes through</string>
+   </property>
+   <property name="shortcut">
+    <string>U</string>
    </property>
   </action>
   <action name="actionSelect">
