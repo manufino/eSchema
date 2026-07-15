@@ -259,7 +259,7 @@
    <property name="minimumSize">
     <size>
      <width>200</width>
-     <height>218</height>
+     <height>120</height>
     </size>
    </property>
    <property name="windowIcon">
@@ -272,8 +272,22 @@
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="dockPropertiesContents">
-    <layout class="QGridLayout" name="gridLayoutProp" columnstretch="0,0">
+   <!-- The scroll area keeps the fields' combined minimum height from
+        propagating to the main window (which it used to make impossible to
+        shrink while this panel was docked) - a short window just scrolls
+        the panel instead. -->
+   <widget class="QScrollArea" name="dockPropertiesScroll">
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <widget class="QWidget" name="dockPropertiesContents">
+     <layout class="QGridLayout" name="gridLayoutProp" columnstretch="0,0">
      <property name="leftMargin">
       <number>5</number>
      </property>
@@ -1340,6 +1354,7 @@
       </spacer>
      </item>
     </layout>
+    </widget>
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockFcdCode">
