@@ -77,7 +77,7 @@ namespace {
 // "docking to that one side is just broken" until the stale saved state
 // was cleared by hand. Bump this whenever a dock widget or toolbar is
 // added/removed/renamed.
-constexpr int DockStateVersion = 2; // 2: added the Modify toolbar
+constexpr int DockStateVersion = 3; // 2: added the Modify toolbar; 3: its default row moved below the main toolbar
 
 // No bundled icon reads as "snap" the way a magnet does - a plain grid
 // glyph (the obvious alternative) would sit right next to actionShowGrid's
