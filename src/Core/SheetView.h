@@ -57,6 +57,11 @@ public:
     // default step of 1 guarantees integer coordinates (FIDOSPECS.md 3).
     QPointF snapToGrid(const QPointF &scenePos) const;
 
+    // The position a placement click/preview at `viewPos` should land on:
+    // Sheet::snapPosition() (object snap when enabled, grid otherwise),
+    // excluding whatever the placement controller is currently building.
+    QPointF placementSnap(const QPoint &viewPos);
+
     // Scene-unit spacing between consecutive minor/major grid lines, exactly
     // as drawn by drawBackground() - RulerWidget reads these so its ticks
     // land on the same lines as the visible grid instead of using an

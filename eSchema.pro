@@ -45,6 +45,7 @@ SOURCES += \
 	src/Core/GraphicsPrimitive.cpp \
 	src/Core/LayerList.cpp \
 	src/Core/LibraryManager.cpp \
+	src/Core/ObjectSnap.cpp \
 	src/Core/SettingsManager.cpp \
 	src/Core/Sheet.cpp \
 	src/Core/SheetView.cpp \
@@ -119,6 +120,7 @@ HEADERS += \
 	src/Core/LayerList.h \
 	src/Core/LibraryManager.h \
 	src/Core/MacroDescriptor.h \
+	src/Core/ObjectSnap.h \
 	src/Core/SettingsManager.h \
 	src/Core/Sheet.h \
 	src/Core/SheetView.h \

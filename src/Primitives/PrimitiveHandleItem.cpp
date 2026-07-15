@@ -56,7 +56,13 @@ void PrimitiveHandleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void PrimitiveHandleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF snapped = Utils::instance().snapToGrid(event->scenePos());
+    // Object snap (when enabled) takes precedence over the grid, excluding
+    // the very primitive being resized so it can't snap onto itself.
+    QPointF snapped;
+    if (auto *sheet = qobject_cast<Sheet *>(m_target->scene()))
+        snapped = sheet->snapPosition(event->scenePos(), { m_target });
+    else
+        snapped = Utils::instance().snapToGrid(event->scenePos());
     // Only a geometric corner can be constrained (e.g. aspect-ratio locked) -
     // a label point (index >= controlPointCount()) always drags freely.
     if (m_index < m_target->controlPointCount())
@@ -67,10 +73,14 @@ void PrimitiveHandleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void PrimitiveHandleItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *)
 {
+    auto *sheet = qobject_cast<Sheet *>(m_target->scene());
+    if (sheet)
+        sheet->clearSnapIndicator();
+
     const QPointF after = m_target->pointAt(m_index);
     if (after == m_dragStartPos)
         return; // plain click, nothing to undo
 
-    if (auto *sheet = qobject_cast<Sheet *>(m_target->scene()))
+    if (sheet)
         sheet->undoStack()->push(new ResizePrimitiveCommand(m_target, m_index, m_dragStartPos, after));
 }

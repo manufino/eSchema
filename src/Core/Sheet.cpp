@@ -19,8 +19,11 @@
 
 #include "Sheet.h"
 #include "SettingsManager.h"
+#include "ObjectSnap.h"
+#include "GlobalUtils.h"
 #include "PrimitivePad.h"
 #include "LayerList.h"
+#include <QGraphicsView>
 #include <utility>
 
 namespace {
@@ -134,6 +137,49 @@ void Sheet::drawForeground(QPainter *painter, const QRectF &)
                 pad->paintHole(painter);
         }
     }
+
+    // The captured object-snap point, as a small constant-screen-size open
+    // square - orange, so it can't be confused with the red resize handles.
+    if (m_snapIndicatorVisible) {
+        const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
+        const qreal half = 5.0 / qMax(0.01, scale);
+        QPen pen(QColor(255, 128, 0));
+        pen.setWidthF(2.0 / qMax(0.01, scale));
+        painter->setPen(pen);
+        painter->setBrush(Qt::NoBrush);
+        painter->drawRect(QRectF(m_snapIndicator - QPointF(half, half),
+                                 QSizeF(half * 2.0, half * 2.0)));
+    }
+}
+
+QPointF Sheet::snapPosition(const QPointF &scenePos,
+                            const QList<const GraphicsPrimitive *> &excluded)
+{
+    if (m_objectSnapEnabled) {
+        // ~12 screen pixels of capture radius, whatever the current zoom.
+        const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
+        const qreal radius = 12.0 / qMax(0.01, scale);
+        const std::optional<QPointF> captured =
+                ObjectSnap::snapPoint(this, scenePos, radius, excluded);
+        if (captured) {
+            if (!m_snapIndicatorVisible || m_snapIndicator != *captured) {
+                m_snapIndicatorVisible = true;
+                m_snapIndicator = *captured;
+                update();
+            }
+            return *captured;
+        }
+    }
+    clearSnapIndicator();
+    return Utils::instance().snapToGrid(scenePos);
+}
+
+void Sheet::clearSnapIndicator()
+{
+    if (!m_snapIndicatorVisible)
+        return;
+    m_snapIndicatorVisible = false;
+    update();
 }
 
 void Sheet::setBackgroundImage(const QString &mimeSubtype, const QString &base64Data,

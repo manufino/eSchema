@@ -219,9 +219,17 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     }
 
     if (m_placementController && m_placementController->isPlacementToolActive()) {
-        m_placementController->handleMouseMove(snapToGrid(mapToScene(event->pos())));
+        m_placementController->handleMouseMove(placementSnap(event->pos()));
         emit mouseMoved(relativeOrigin);
         return;
+    }
+
+    // Not placing anything - a leftover object-snap highlight would be
+    // misleading (drag snapping keeps its own highlight alive, see
+    // PrimitiveHandleItem).
+    if (!(event->buttons() & Qt::LeftButton)) {
+        if (auto *sheet = qobject_cast<Sheet *>(scene()))
+            sheet->clearSnapIndicator();
     }
 
     emit mouseMoved(relativeOrigin);
@@ -232,7 +240,7 @@ void SheetView::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && m_placementController
             && m_placementController->isPlacementToolActive()) {
-        m_placementController->handleMousePress(snapToGrid(mapToScene(event->pos())));
+        m_placementController->handleMousePress(placementSnap(event->pos()));
         return;
     }
 
@@ -263,7 +271,7 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
 void SheetView::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && m_placementController
-            && m_placementController->handleMouseDoubleClick(snapToGrid(mapToScene(event->pos()))))
+            && m_placementController->handleMouseDoubleClick(placementSnap(event->pos())))
         return;
 
     QGraphicsView::mouseDoubleClickEvent(event);
@@ -306,6 +314,18 @@ void SheetView::keyPressEvent(QKeyEvent *event)
 QPointF SheetView::snapToGrid(const QPointF &scenePos) const
 {
     return Utils::instance().snapToGrid(scenePos);
+}
+
+QPointF SheetView::placementSnap(const QPoint &viewPos)
+{
+    const QPointF scenePos = mapToScene(viewPos);
+    auto *sheet = qobject_cast<Sheet *>(scene());
+    if (!sheet)
+        return snapToGrid(scenePos);
+    QList<const GraphicsPrimitive *> excluded;
+    if (m_placementController && m_placementController->activePrimitive())
+        excluded.append(m_placementController->activePrimitive());
+    return sheet->snapPosition(scenePos, excluded);
 }
 
 void SheetView::loadSettings()

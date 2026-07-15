@@ -1,0 +1,150 @@
+/*
+ * ObjectSnap.cpp
+ *
+ * Copyright (C) 2023-2026 Manuel Finessi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include "ObjectSnap.h"
+#include "Sheet.h"
+#include "GraphicsPrimitive.h"
+#include <QLineF>
+#include <QRectF>
+#include <QVector>
+
+namespace {
+
+qreal distanceSq(const QPointF &a, const QPointF &b)
+{
+    const QPointF diff = a - b;
+    return QPointF::dotProduct(diff, diff);
+}
+
+// Squared distance from `p` to the segment [a, b].
+qreal pointToSegmentDistanceSq(const QPointF &p, const QPointF &a, const QPointF &b)
+{
+    const QPointF ab = b - a;
+    const qreal lengthSq = QPointF::dotProduct(ab, ab);
+    qreal t = lengthSq > 0 ? QPointF::dotProduct(p - a, ab) / lengthSq : 0.0;
+    t = qBound<qreal>(0.0, t, 1.0);
+    return distanceSq(p, a + ab * t);
+}
+
+}
+
+std::optional<QPointF> ObjectSnap::snapPoint(const Sheet *sheet, const QPointF &scenePos,
+                                             qreal radius,
+                                             const QList<const GraphicsPrimitive *> &excluded)
+{
+    const qreal radiusSq = radius * radius;
+    std::optional<QPointF> best;
+    qreal bestSq = radiusSq;
+    auto consider = [&](const QPointF &candidate) {
+        const qreal dsq = distanceSq(candidate, scenePos);
+        if (dsq <= bestSq) {
+            bestSq = dsq;
+            best = candidate;
+        }
+    };
+
+    // Straight segments passing near the cursor, collected while walking the
+    // primitives - any pairwise crossing among them is an intersection
+    // candidate. Only segments within `radius` of the cursor can contribute
+    // one (the intersection must itself land within `radius`), which keeps
+    // the pairwise loop tiny.
+    QVector<QLineF> nearbySegments;
+    auto considerSegment = [&](const QPointF &a, const QPointF &b) {
+        consider((a + b) / 2.0); // midpoint
+        if (pointToSegmentDistanceSq(scenePos, a, b) <= radiusSq)
+            nearbySegments.append(QLineF(a, b));
+    };
+
+    for (GraphicsPrimitive *primitive : sheet->primitives()) {
+        if (excluded.contains(primitive) || !primitive->isOnCanvas())
+            continue;
+        // Quick reject on the inflated bounding box, so a big drawing costs
+        // little per mouse move.
+        const QRectF reach = primitive->sceneBoundingRect().adjusted(-radius, -radius, radius, radius);
+        if (!reach.contains(scenePos))
+            continue;
+
+        const int count = primitive->controlPointCount();
+        switch (primitive->getPrimitiveType()) {
+        case GraphicsPrimitive::Bezier:
+            // Only the endpoints actually lie on the curve - the two inner
+            // control points are off-curve guides, meaningless as targets.
+            if (count >= 2) {
+                consider(primitive->controlPoint(0));
+                consider(primitive->controlPoint(count - 1));
+            }
+            break;
+        case GraphicsPrimitive::Line:
+        case GraphicsPrimitive::PcbTrack:
+            if (count >= 2) {
+                consider(primitive->controlPoint(0));
+                consider(primitive->controlPoint(1));
+                considerSegment(primitive->controlPoint(0), primitive->controlPoint(1));
+            }
+            break;
+        case GraphicsPrimitive::Polyline: {
+            for (int i = 0; i < count; ++i)
+                consider(primitive->controlPoint(i));
+            for (int i = 0; i < count; ++i) // closed ring - wrap the last edge
+                considerSegment(primitive->controlPoint(i), primitive->controlPoint((i + 1) % count));
+            break;
+        }
+        case GraphicsPrimitive::Rectangle: {
+            const QRectF rect = QRectF(primitive->controlPoint(0), primitive->controlPoint(1)).normalized();
+            consider(rect.center());
+            considerSegment(rect.topLeft(), rect.topRight());
+            considerSegment(rect.topRight(), rect.bottomRight());
+            considerSegment(rect.bottomRight(), rect.bottomLeft());
+            considerSegment(rect.bottomLeft(), rect.topLeft());
+            consider(rect.topLeft());
+            consider(rect.topRight());
+            consider(rect.bottomLeft());
+            consider(rect.bottomRight());
+            break;
+        }
+        case GraphicsPrimitive::Ellipse: {
+            const QRectF rect = QRectF(primitive->controlPoint(0), primitive->controlPoint(1)).normalized();
+            consider(rect.center());
+            // The four quadrant points - where the ellipse meets its axes.
+            consider(QPointF(rect.center().x(), rect.top()));
+            consider(QPointF(rect.center().x(), rect.bottom()));
+            consider(QPointF(rect.left(), rect.center().y()));
+            consider(QPointF(rect.right(), rect.center().y()));
+            break;
+        }
+        default:
+            // Spline vertices, macro/text/pad/connection anchors, image
+            // corners: the control points themselves are the natural targets.
+            for (int i = 0; i < count; ++i)
+                consider(primitive->controlPoint(i));
+            break;
+        }
+    }
+
+    for (int i = 0; i < nearbySegments.size(); ++i) {
+        for (int j = i + 1; j < nearbySegments.size(); ++j) {
+            QPointF crossing;
+            if (nearbySegments.at(i).intersects(nearbySegments.at(j), &crossing)
+                    == QLineF::BoundedIntersection)
+                consider(crossing);
+        }
+    }
+
+    return best;
+}

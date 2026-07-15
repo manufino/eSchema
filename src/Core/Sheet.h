@@ -66,6 +66,21 @@ public:
     // it - the classic Alt+drag "drag off a duplicate" gesture.
     void requestAltDragClone() { emit altDragCloneRequested(); }
 
+    // Object snap (see ObjectSnap.h): when enabled, a position within a few
+    // screen pixels of a characteristic point of an existing primitive
+    // snaps to it - taking precedence over the grid, and highlighting the
+    // captured point (drawForeground()). Falls back to plain grid snapping
+    // otherwise. Shared by SheetView (placement clicks/previews) and
+    // PrimitiveHandleItem (resize/node drags), each passing what it's
+    // currently editing as `excluded` so a shape can't snap onto itself.
+    QPointF snapPosition(const QPointF &scenePos,
+                         const QList<const GraphicsPrimitive *> &excluded = {});
+    void setObjectSnapEnabled(bool enabled) { m_objectSnapEnabled = enabled; clearSnapIndicator(); }
+    bool objectSnapEnabled() const { return m_objectSnapEnabled; }
+    // Hides the captured-point highlight - callers invoke it when their
+    // drag/placement interaction ends.
+    void clearSnapIndicator();
+
 signals:
     void altDragCloneRequested();
 
@@ -139,6 +154,9 @@ private slots:
 private:
     QList<GraphicsPrimitive*> m_primitives;
     QUndoStack m_undoStack;
+    bool m_objectSnapEnabled = false;
+    bool m_snapIndicatorVisible = false;
+    QPointF m_snapIndicator;
     qreal m_connectionDiameter = 2.0;
     qreal m_lineWidth = 0.5;
     qreal m_lineWidthCircles = 0.35;

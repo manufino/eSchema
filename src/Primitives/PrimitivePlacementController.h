@@ -61,6 +61,11 @@ public:
     // selection/pan handling while placing.
     bool isPlacementToolActive() const;
 
+    // The primitive currently being placed (nullptr when none) - SheetView
+    // passes it to Sheet::snapPosition() as excluded, so an in-progress
+    // shape's own preview vertices never become object-snap targets.
+    GraphicsPrimitive *activePrimitive() const { return m_activePrimitive; }
+
     // Called by SheetView from its own mouse event overrides with an
     // already-grid-snapped scene position. Return value: true if consumed.
     bool handleMousePress(const QPointF &scenePos);

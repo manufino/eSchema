@@ -1615,6 +1615,7 @@
    <addaction name="separator"/>
    <addaction name="actionShowGrid"/>
    <addaction name="actionSnapToGrid"/>
+   <addaction name="actionSnapToObjects"/>
    <addaction name="separator"/>
    <addaction name="actionOptions"/>
    <addaction name="separator"/>
@@ -2512,6 +2513,24 @@
    </property>
    <property name="text">
     <string>Drawing tools</string>
+   </property>
+  </action>
+  <action name="actionSnapToObjects">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/object_snap.png</normaloff>:/res/resources/object_snap.png</iconset>
+   </property>
+   <property name="text">
+    <string>Snap to objects</string>
+   </property>
+   <property name="toolTip">
+    <string>Snap clicks and drags to endpoints, midpoints, centers, and intersections of what's already drawn</string>
    </property>
   </action>
   <action name="actionToolBarModifyVisible">

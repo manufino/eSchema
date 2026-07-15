@@ -308,6 +308,18 @@ MainWindow::MainWindow(QWidget *parent)
         SettingsManager::getInstance().saveSetting("snap_enabled", checked);
     });
 
+    // Object snap (endpoints/midpoints/centers/intersections of what's
+    // already drawn - see Sheet::snapPosition()); on by default, persisted
+    // like the grid snap right above.
+    const QVariant objectSnapEnabled = SettingsManager::getInstance().loadSetting("snap_objects");
+    const QSignalBlocker blockObjectSnapAction(ui->actionSnapToObjects);
+    ui->actionSnapToObjects->setChecked(objectSnapEnabled.isValid() ? objectSnapEnabled.toBool() : true);
+    sheetScene->setObjectSnapEnabled(ui->actionSnapToObjects->isChecked());
+    connect(ui->actionSnapToObjects, &QAction::toggled, this, [this](bool checked) {
+        SettingsManager::getInstance().saveSetting("snap_objects", checked);
+        sheetScene->setObjectSnapEnabled(checked);
+    });
+
     setConnections();
     updateRecentFilesMenu();
     updateRulers();
