@@ -104,9 +104,9 @@ English is the language the interface is natively written in, and Italian is mai
 
 ## Screenshots
 
-| Layer manager | Component libraries |
+| Layer manager | Circular array of copies |
 |---|---|
-| ![Layer manager](https://github.com/manufino/eSchema/blob/main/resources/layer_manager.png?raw=true) | ![Library panel](https://github.com/manufino/eSchema/blob/main/resources/library_panel.png?raw=true) |
+| ![Layer manager](https://github.com/manufino/eSchema/blob/main/resources/layer_manager.png?raw=true) | ![Circular array of copies](https://github.com/manufino/eSchema/blob/main/resources/array_copies.png?raw=true) |
 
 ---
 
