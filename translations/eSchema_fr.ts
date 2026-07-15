@@ -229,11 +229,21 @@ li.checked::marker { content: "\2612"; }
     </message>
     <message>
         <location filename="../gui/DialogArray.ui" line="229" />
+        <source>Pick from canvas</source>
+        <translation>Choisir sur le dessin</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogArray.ui" line="232" />
+        <source>Hide this dialog and click the center point directly on the drawing</source>
+        <translation>Masque cette boîte de dialogue pour cliquer le point central directement sur le dessin</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogArray.ui" line="239" />
         <source>Rotate copies</source>
         <translation>Pivoter les copies</translation>
     </message>
     <message>
-        <location filename="../gui/DialogArray.ui" line="246" />
+        <location filename="../gui/DialogArray.ui" line="256" />
         <source>Steps are in drawing units, measured between copies.</source>
         <translation>Les pas sont en unités de dessin, mesurés entre les copies.</translation>
     </message>
@@ -1569,7 +1579,7 @@ Continuer avec la restauration des valeurs par défaut ?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1457" />
-        <location filename="../src/App/MainWindow.cpp" line="873" />
+        <location filename="../src/App/MainWindow.cpp" line="874" />
         <source>Open recent</source>
         <translation>Ouvrir récent</translation>
     </message>
@@ -1675,7 +1685,7 @@ Continuer avec la restauration des valeurs par défaut ?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1807" />
-        <location filename="../src/App/MainWindow.cpp" line="1328" />
+        <location filename="../src/App/MainWindow.cpp" line="1329" />
         <source>Print</source>
         <translation>Imprimer</translation>
     </message>
@@ -1711,7 +1721,7 @@ Continuer avec la restauration des valeurs par défaut ?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1849" />
-        <location filename="../src/App/MainWindow.cpp" line="700" />
+        <location filename="../src/App/MainWindow.cpp" line="701" />
         <source>Undo</source>
         <translation>Annuler</translation>
     </message>
@@ -1722,7 +1732,7 @@ Continuer avec la restauration des valeurs par défaut ?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1864" />
-        <location filename="../src/App/MainWindow.cpp" line="703" />
+        <location filename="../src/App/MainWindow.cpp" line="704" />
         <source>Redo</source>
         <translation>Rétablir</translation>
     </message>
@@ -2154,8 +2164,8 @@ Continuer avec la restauration des valeurs par défaut ?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2152" />
-        <location filename="../src/App/MainWindow.cpp" line="776" />
-        <location filename="../src/App/MainWindow.cpp" line="787" />
+        <location filename="../src/App/MainWindow.cpp" line="777" />
+        <location filename="../src/App/MainWindow.cpp" line="788" />
         <source>Check for updates</source>
         <translation>Vérifier les mises à jour</translation>
     </message>
@@ -2382,100 +2392,100 @@ Continuer avec la restauration des valeurs par défaut ?
         <translation>Afficher les règles</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="700" />
+        <location filename="../src/App/MainWindow.cpp" line="701" />
         <source>Undo: %1</source>
         <translation>Annuler : %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="703" />
+        <location filename="../src/App/MainWindow.cpp" line="704" />
         <source>Redo: %1</source>
         <translation>Rétablir : %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="766" />
+        <location filename="../src/App/MainWindow.cpp" line="767" />
         <source>Update available</source>
         <translation>Mise à jour disponible</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="767" />
+        <location filename="../src/App/MainWindow.cpp" line="768" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>Une nouvelle version d'eSchema est disponible (%1).
 Voulez-vous la télécharger maintenant ?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="777" />
+        <location filename="../src/App/MainWindow.cpp" line="778" />
         <source>eSchema is already up to date.</source>
         <translation>eSchema est déjà à jour.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="788" />
+        <location filename="../src/App/MainWindow.cpp" line="789" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>Impossible de vérifier les mises à jour. Vérifiez votre connexion Internet.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="820" />
+        <location filename="../src/App/MainWindow.cpp" line="821" />
         <source>Attach tracing image</source>
         <translation>Joindre une image de calque</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="826" />
+        <location filename="../src/App/MainWindow.cpp" line="827" />
         <source>New drawing* (unsaved)</source>
         <translation>Nouveau dessin* (non enregistré)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="874" />
+        <location filename="../src/App/MainWindow.cpp" line="875" />
         <source>The file no longer exists:
 %1</source>
         <translation>Le fichier n'existe plus :
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="888" />
+        <location filename="../src/App/MainWindow.cpp" line="889" />
         <source>Clear list</source>
         <translation>Effacer la liste</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="934" />
-        <location filename="../src/App/MainWindow.cpp" line="1088" />
-        <location filename="../src/App/MainWindow.cpp" line="1136" />
-        <location filename="../src/App/MainWindow.cpp" line="1169" />
-        <location filename="../src/App/MainWindow.cpp" line="1322" />
-        <location filename="../src/App/MainWindow.cpp" line="1464" />
+        <location filename="../src/App/MainWindow.cpp" line="935" />
+        <location filename="../src/App/MainWindow.cpp" line="1089" />
+        <location filename="../src/App/MainWindow.cpp" line="1137" />
+        <location filename="../src/App/MainWindow.cpp" line="1170" />
+        <location filename="../src/App/MainWindow.cpp" line="1323" />
+        <location filename="../src/App/MainWindow.cpp" line="1465" />
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="934" />
-        <location filename="../src/App/MainWindow.cpp" line="1322" />
+        <location filename="../src/App/MainWindow.cpp" line="935" />
+        <location filename="../src/App/MainWindow.cpp" line="1323" />
         <source>Unable to save the file:
 %1</source>
         <translation>Impossible d'enregistrer le fichier :
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="956" />
+        <location filename="../src/App/MainWindow.cpp" line="957" />
         <source>Unsaved changes</source>
         <translation>Modifications non enregistrées</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="957" />
+        <location filename="../src/App/MainWindow.cpp" line="958" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>Il y a des modifications non enregistrées. Voulez-vous les enregistrer ?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1072" />
+        <location filename="../src/App/MainWindow.cpp" line="1073" />
         <source>an untitled drawing</source>
         <translation>un dessin sans titre</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1075" />
-        <location filename="../src/App/MainWindow.cpp" line="1099" />
+        <location filename="../src/App/MainWindow.cpp" line="1076" />
+        <location filename="../src/App/MainWindow.cpp" line="1100" />
         <source>Autosave recovery</source>
         <translation>Récupération de l'enregistrement automatique</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1076" />
+        <location filename="../src/App/MainWindow.cpp" line="1077" />
         <source>eSchema wasn't closed properly last time.
 An autosave was found for %1.
 
@@ -2486,45 +2496,45 @@ Un enregistrement automatique a été trouvé pour %1.
 Voulez-vous le récupérer ?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1089" />
+        <location filename="../src/App/MainWindow.cpp" line="1090" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>Impossible de récupérer l'enregistrement automatique :
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1124" />
+        <location filename="../src/App/MainWindow.cpp" line="1125" />
         <source>Open drawing</source>
         <translation>Ouvrir un dessin</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1125" />
-        <location filename="../src/App/MainWindow.cpp" line="1293" />
-        <location filename="../src/App/MainWindow.cpp" line="1309" />
+        <location filename="../src/App/MainWindow.cpp" line="1126" />
+        <location filename="../src/App/MainWindow.cpp" line="1294" />
+        <location filename="../src/App/MainWindow.cpp" line="1310" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1136" />
-        <location filename="../src/App/MainWindow.cpp" line="1169" />
+        <location filename="../src/App/MainWindow.cpp" line="1137" />
+        <location filename="../src/App/MainWindow.cpp" line="1170" />
         <source>Unable to open the file:
 %1</source>
         <translation>Impossible d'ouvrir le fichier :
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1153" />
-        <location filename="../src/App/MainWindow.cpp" line="1181" />
+        <location filename="../src/App/MainWindow.cpp" line="1154" />
+        <location filename="../src/App/MainWindow.cpp" line="1182" />
         <source>Import from DXF</source>
         <translation>Importer depuis DXF</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1154" />
+        <location filename="../src/App/MainWindow.cpp" line="1155" />
         <source>DXF (*.dxf)</source>
         <translation>DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1182" />
+        <location filename="../src/App/MainWindow.cpp" line="1183" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -2533,44 +2543,44 @@ Voulez-vous le récupérer ?</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1227" />
+        <location filename="../src/App/MainWindow.cpp" line="1228" />
         <source>Edit FCD code</source>
         <translation>Modifier le code FCD</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1292" />
+        <location filename="../src/App/MainWindow.cpp" line="1293" />
         <source>Save drawing as</source>
         <translation>Enregistrer le dessin sous</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1308" />
+        <location filename="../src/App/MainWindow.cpp" line="1309" />
         <source>Save split as</source>
         <translation>Enregistrer éclaté sous</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1328" />
-        <location filename="../src/App/MainWindow.cpp" line="1434" />
+        <location filename="../src/App/MainWindow.cpp" line="1329" />
+        <location filename="../src/App/MainWindow.cpp" line="1435" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="1520" />
         <source>The drawing is empty.</source>
         <translation>Le dessin est vide.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1363" />
+        <location filename="../src/App/MainWindow.cpp" line="1364" />
         <source>Print preview</source>
         <translation>Aperçu avant impression</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1434" />
+        <location filename="../src/App/MainWindow.cpp" line="1435" />
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1442" />
+        <location filename="../src/App/MainWindow.cpp" line="1443" />
         <source>Export drawing</source>
         <translation>Exporter le dessin</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1465" />
+        <location filename="../src/App/MainWindow.cpp" line="1466" />
         <source>Could not export the file:
 %1</source>
         <translation>Impossible d'exporter le fichier :

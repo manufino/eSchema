@@ -229,11 +229,21 @@ li.checked::marker { content: "\2612"; }
     </message>
     <message>
         <location filename="../gui/DialogArray.ui" line="229" />
+        <source>Pick from canvas</source>
+        <translation>在画布上拾取</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogArray.ui" line="232" />
+        <source>Hide this dialog and click the center point directly on the drawing</source>
+        <translation>隐藏此对话框，直接在图纸上点击中心点</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogArray.ui" line="239" />
         <source>Rotate copies</source>
         <translation>旋转副本</translation>
     </message>
     <message>
-        <location filename="../gui/DialogArray.ui" line="246" />
+        <location filename="../gui/DialogArray.ui" line="256" />
         <source>Steps are in drawing units, measured between copies.</source>
         <translation>间距以绘图单位表示，按副本之间测量。</translation>
     </message>
@@ -1569,7 +1579,7 @@ Proceed with restoring the default values?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1457" />
-        <location filename="../src/App/MainWindow.cpp" line="873" />
+        <location filename="../src/App/MainWindow.cpp" line="874" />
         <source>Open recent</source>
         <translation>打开最近的文件</translation>
     </message>
@@ -1675,7 +1685,7 @@ Proceed with restoring the default values?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1807" />
-        <location filename="../src/App/MainWindow.cpp" line="1328" />
+        <location filename="../src/App/MainWindow.cpp" line="1329" />
         <source>Print</source>
         <translation>打印</translation>
     </message>
@@ -1711,7 +1721,7 @@ Proceed with restoring the default values?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1849" />
-        <location filename="../src/App/MainWindow.cpp" line="700" />
+        <location filename="../src/App/MainWindow.cpp" line="701" />
         <source>Undo</source>
         <translation>撤销</translation>
     </message>
@@ -1722,7 +1732,7 @@ Proceed with restoring the default values?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1864" />
-        <location filename="../src/App/MainWindow.cpp" line="703" />
+        <location filename="../src/App/MainWindow.cpp" line="704" />
         <source>Redo</source>
         <translation>重做</translation>
     </message>
@@ -2154,8 +2164,8 @@ Proceed with restoring the default values?
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2152" />
-        <location filename="../src/App/MainWindow.cpp" line="776" />
-        <location filename="../src/App/MainWindow.cpp" line="787" />
+        <location filename="../src/App/MainWindow.cpp" line="777" />
+        <location filename="../src/App/MainWindow.cpp" line="788" />
         <source>Check for updates</source>
         <translation>检查更新</translation>
     </message>
@@ -2382,100 +2392,100 @@ Proceed with restoring the default values?
         <translation>显示标尺</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="700" />
+        <location filename="../src/App/MainWindow.cpp" line="701" />
         <source>Undo: %1</source>
         <translation>撤销:%1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="703" />
+        <location filename="../src/App/MainWindow.cpp" line="704" />
         <source>Redo: %1</source>
         <translation>重做:%1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="766" />
+        <location filename="../src/App/MainWindow.cpp" line="767" />
         <source>Update available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="767" />
+        <location filename="../src/App/MainWindow.cpp" line="768" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>有新版本的 eSchema 可用（%1）。
 是否立即下载？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="777" />
+        <location filename="../src/App/MainWindow.cpp" line="778" />
         <source>eSchema is already up to date.</source>
         <translation>eSchema 已是最新版本。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="788" />
+        <location filename="../src/App/MainWindow.cpp" line="789" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>无法检查更新。请检查您的网络连接。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="820" />
+        <location filename="../src/App/MainWindow.cpp" line="821" />
         <source>Attach tracing image</source>
         <translation>附加描图图像</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="826" />
+        <location filename="../src/App/MainWindow.cpp" line="827" />
         <source>New drawing* (unsaved)</source>
         <translation>新建绘图*(未保存)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="874" />
+        <location filename="../src/App/MainWindow.cpp" line="875" />
         <source>The file no longer exists:
 %1</source>
         <translation>文件已不存在：
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="888" />
+        <location filename="../src/App/MainWindow.cpp" line="889" />
         <source>Clear list</source>
         <translation>清空列表</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="934" />
-        <location filename="../src/App/MainWindow.cpp" line="1088" />
-        <location filename="../src/App/MainWindow.cpp" line="1136" />
-        <location filename="../src/App/MainWindow.cpp" line="1169" />
-        <location filename="../src/App/MainWindow.cpp" line="1322" />
-        <location filename="../src/App/MainWindow.cpp" line="1464" />
+        <location filename="../src/App/MainWindow.cpp" line="935" />
+        <location filename="../src/App/MainWindow.cpp" line="1089" />
+        <location filename="../src/App/MainWindow.cpp" line="1137" />
+        <location filename="../src/App/MainWindow.cpp" line="1170" />
+        <location filename="../src/App/MainWindow.cpp" line="1323" />
+        <location filename="../src/App/MainWindow.cpp" line="1465" />
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="934" />
-        <location filename="../src/App/MainWindow.cpp" line="1322" />
+        <location filename="../src/App/MainWindow.cpp" line="935" />
+        <location filename="../src/App/MainWindow.cpp" line="1323" />
         <source>Unable to save the file:
 %1</source>
         <translation>无法保存文件:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="956" />
+        <location filename="../src/App/MainWindow.cpp" line="957" />
         <source>Unsaved changes</source>
         <translation>未保存的更改</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="957" />
+        <location filename="../src/App/MainWindow.cpp" line="958" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>有未保存的更改。是否要保存?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1072" />
+        <location filename="../src/App/MainWindow.cpp" line="1073" />
         <source>an untitled drawing</source>
         <translation>未命名的绘图</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1075" />
-        <location filename="../src/App/MainWindow.cpp" line="1099" />
+        <location filename="../src/App/MainWindow.cpp" line="1076" />
+        <location filename="../src/App/MainWindow.cpp" line="1100" />
         <source>Autosave recovery</source>
         <translation>自动保存恢复</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1076" />
+        <location filename="../src/App/MainWindow.cpp" line="1077" />
         <source>eSchema wasn't closed properly last time.
 An autosave was found for %1.
 
@@ -2486,45 +2496,45 @@ Do you want to recover it?</source>
 是否要恢复它？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1089" />
+        <location filename="../src/App/MainWindow.cpp" line="1090" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>无法恢复自动保存的文件：
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1124" />
+        <location filename="../src/App/MainWindow.cpp" line="1125" />
         <source>Open drawing</source>
         <translation>打开绘图</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1125" />
-        <location filename="../src/App/MainWindow.cpp" line="1293" />
-        <location filename="../src/App/MainWindow.cpp" line="1309" />
+        <location filename="../src/App/MainWindow.cpp" line="1126" />
+        <location filename="../src/App/MainWindow.cpp" line="1294" />
+        <location filename="../src/App/MainWindow.cpp" line="1310" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1136" />
-        <location filename="../src/App/MainWindow.cpp" line="1169" />
+        <location filename="../src/App/MainWindow.cpp" line="1137" />
+        <location filename="../src/App/MainWindow.cpp" line="1170" />
         <source>Unable to open the file:
 %1</source>
         <translation>无法打开文件:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1153" />
-        <location filename="../src/App/MainWindow.cpp" line="1181" />
+        <location filename="../src/App/MainWindow.cpp" line="1154" />
+        <location filename="../src/App/MainWindow.cpp" line="1182" />
         <source>Import from DXF</source>
         <translation>从 DXF 导入</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1154" />
+        <location filename="../src/App/MainWindow.cpp" line="1155" />
         <source>DXF (*.dxf)</source>
         <translation>DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1182" />
+        <location filename="../src/App/MainWindow.cpp" line="1183" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -2533,44 +2543,44 @@ Do you want to recover it?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1227" />
+        <location filename="../src/App/MainWindow.cpp" line="1228" />
         <source>Edit FCD code</source>
         <translation>编辑 FCD 代码</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1292" />
+        <location filename="../src/App/MainWindow.cpp" line="1293" />
         <source>Save drawing as</source>
         <translation>绘图另存为</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1308" />
+        <location filename="../src/App/MainWindow.cpp" line="1309" />
         <source>Save split as</source>
         <translation>拆分保存为</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1328" />
-        <location filename="../src/App/MainWindow.cpp" line="1434" />
+        <location filename="../src/App/MainWindow.cpp" line="1329" />
+        <location filename="../src/App/MainWindow.cpp" line="1435" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="1520" />
         <source>The drawing is empty.</source>
         <translation>绘图为空。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1363" />
+        <location filename="../src/App/MainWindow.cpp" line="1364" />
         <source>Print preview</source>
         <translation>打印预览</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1434" />
+        <location filename="../src/App/MainWindow.cpp" line="1435" />
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1442" />
+        <location filename="../src/App/MainWindow.cpp" line="1443" />
         <source>Export drawing</source>
         <translation>导出绘图</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1465" />
+        <location filename="../src/App/MainWindow.cpp" line="1466" />
         <source>Could not export the file:
 %1</source>
         <translation>无法导出文件：
