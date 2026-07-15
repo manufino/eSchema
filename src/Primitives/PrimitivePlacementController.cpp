@@ -35,6 +35,7 @@
 #include "PrimitiveMacro.h"
 #include "PrimitiveImage.h"
 #include "CreatePrimitiveCommand.h"
+#include "SettingsManager.h"
 #include <QAction>
 #include <QCheckBox>
 #include <QKeyEvent>
@@ -136,6 +137,7 @@ PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() c
     if (name == QStringLiteral("actionLine")) return Tool::Line;
     if (name == QStringLiteral("actionRectangle")) return Tool::Rectangle;
     if (name == QStringLiteral("actionPolygon")) return Tool::Polygon;
+    if (name == QStringLiteral("actionRegularPolygon")) return Tool::RegularPolygon;
     if (name == QStringLiteral("actionEllipse")) return Tool::Ellipse;
     if (name == QStringLiteral("actionBezier")) return Tool::Bezier;
     if (name == QStringLiteral("actionCurve")) return Tool::Curve;
@@ -161,6 +163,7 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::Ellipse: return 2;
     case Tool::Bezier: return 4;
     case Tool::Arc: return 3;
+    case Tool::RegularPolygon: return 2; // center, then a vertex
     case Tool::Connection: return 1;
     case Tool::Text: return 1;
     case Tool::PcbTrack: return 2;
@@ -195,6 +198,7 @@ GraphicsPrimitive *PrimitivePlacementController::createPrimitiveForTool(Tool too
     case Tool::PcbTrack: return new PrimitivePcbTrack();
     case Tool::Pad: return new PrimitivePad();
     case Tool::Polygon: return new PrimitivePolygon();
+    case Tool::RegularPolygon: return new PrimitivePolygon();
     case Tool::Curve: return new PrimitiveComplexCurve();
     case Tool::Arc: return new PrimitiveComplexCurve(); // open, resampled along the arc while placing
     case Tool::Text: return new PrimitiveText(); // caller sets its text content
@@ -246,6 +250,20 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         auto *primitiveText = static_cast<PrimitiveText *>(createPrimitiveForTool(Tool::Text));
         primitiveText->setText(text);
         m_activePrimitive = primitiveText;
+    } else if (m_activeTool == Tool::RegularPolygon) {
+        // Same ask-at-first-click pattern as the Text tool, remembering the
+        // last chosen side count across placements and sessions.
+        const int lastSides = SettingsManager::getInstance().loadSetting("regular_polygon_sides").toInt();
+        bool ok = false;
+        const int sides = QInputDialog::getInt(m_view, tr("Regular polygon"), tr("Number of sides:"),
+                                               lastSides >= 3 ? lastSides : 6, 3, 64, 1, &ok);
+        if (!ok) {
+            m_activeTool = Tool::Select;
+            return; // user cancelled - nothing to place
+        }
+        SettingsManager::getInstance().saveSetting("regular_polygon_sides", sides);
+        m_regularPolygonSides = sides;
+        m_activePrimitive = createPrimitiveForTool(m_activeTool);
     } else {
         m_activePrimitive = createPrimitiveForTool(m_activeTool);
     }
@@ -262,6 +280,13 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         m_arcStart = scenePos;
         curve->appendVertex(scenePos);
         curve->appendVertex(scenePos);
+    } else if (m_activeTool == Tool::RegularPolygon) {
+        // The click is the center; all vertices collapse there until the
+        // mouse moves and updateRegularPolygonVertices() fans them out.
+        auto *polygon = static_cast<PrimitivePolygon *>(m_activePrimitive);
+        m_regularPolygonCenter = scenePos;
+        for (int i = 0; i < m_regularPolygonSides; ++i)
+            polygon->appendVertex(scenePos);
     } else if (isVariableVertexTool(m_activeTool)) {
         // vertex 0 is fixed at the click; vertex 1 is the "live" preview vertex
         // that mouse-move updates until the next click.
@@ -359,6 +384,23 @@ void PrimitivePlacementController::startChainedSegment(Tool tool, const QPointF 
     m_activePrimitive->setControlPoint(1, startPoint);
     m_pointsPlaced = 1;
     m_sheet->addPrimitive(m_activePrimitive);
+}
+
+// Fans the polygon's vertices out around the fixed center, with the cursor
+// as the first vertex - so both the radius and the orientation follow the
+// mouse until the second click freezes them.
+void PrimitivePlacementController::updateRegularPolygonVertices(const QPointF &vertexPos)
+{
+    auto *polygon = static_cast<PrimitivePolygon *>(m_activePrimitive);
+    const QPointF delta = vertexPos - m_regularPolygonCenter;
+    const qreal radius = std::hypot(delta.x(), delta.y());
+    const qreal startAngle = std::atan2(delta.y(), delta.x());
+    const int count = polygon->vertexCount();
+    for (int i = 0; i < count; ++i) {
+        const qreal angle = startAngle + 2.0 * M_PI * i / count;
+        polygon->setControlPoint(i, m_regularPolygonCenter
+                                 + radius * QPointF(std::cos(angle), std::sin(angle)));
+    }
 }
 
 void PrimitivePlacementController::discardActivePrimitive()
@@ -516,6 +558,13 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &scenePos)
         return true;
     }
 
+    if (m_activeTool == Tool::RegularPolygon) {
+        // Second click: the first vertex - radius and orientation both fixed.
+        updateRegularPolygonVertices(scenePos);
+        finishPlacement();
+        return true;
+    }
+
     if (isVariableVertexTool(m_activeTool)) {
         // Fix the current live vertex, then start a new live vertex for the
         // next segment.
@@ -559,6 +608,11 @@ bool PrimitivePlacementController::handleMouseMove(const QPointF &scenePos)
             // the cursor.
             replaceCurveVertices(curve, sampleArcThrough(m_arcStart, scenePos, m_arcEnd));
         }
+        return true;
+    }
+
+    if (m_activeTool == Tool::RegularPolygon) {
+        updateRegularPolygonVertices(scenePos);
         return true;
     }
 

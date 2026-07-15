@@ -1700,6 +1700,7 @@
    <addaction name="actionLine"/>
    <addaction name="actionRectangle"/>
    <addaction name="actionPolygon"/>
+   <addaction name="actionRegularPolygon"/>
    <addaction name="actionEllipse"/>
    <addaction name="actionBezier"/>
    <addaction name="actionCurve"/>
@@ -2224,6 +2225,24 @@
    </property>
    <property name="shortcut">
     <string>E</string>
+   </property>
+  </action>
+  <action name="actionRegularPolygon">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/regular_polygon.png</normaloff>:/res/resources/regular_polygon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Regular polygon</string>
+   </property>
+   <property name="toolTip">
+    <string>Regular polygon: click the center, then a vertex</string>
+   </property>
+   <property name="shortcut">
+    <string>N</string>
    </property>
   </action>
   <action name="actionArc">

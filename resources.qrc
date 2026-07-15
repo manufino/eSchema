@@ -16,6 +16,8 @@
         <file>resources/scale.png</file>
         <file>resources/array.png</file>
         <file>resources/object_snap.png</file>
+        <file>resources/regular_polygon.png</file>
+        <file>resources/measure.png</file>
         <file>resources/arrow.png</file>
         <file>resources/bezier.png</file>
         <file>resources/complexcurve.png</file>

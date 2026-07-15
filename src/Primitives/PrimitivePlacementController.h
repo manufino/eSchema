@@ -96,8 +96,8 @@ private slots:
     void handleToolBarActionTriggered(QAction *action);
 
 private:
-    enum class Tool { Select, Line, Rectangle, Polygon, Ellipse, Bezier, Curve, Arc, Text, Connection,
-                      PcbTrack, Pad, Macro, Image };
+    enum class Tool { Select, Line, Rectangle, Polygon, RegularPolygon, Ellipse, Bezier, Curve, Arc,
+                      Text, Connection, PcbTrack, Pad, Macro, Image };
 
     Tool currentTool() const;
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count
@@ -172,6 +172,13 @@ private:
     // that arc (see the Tool::Arc branches in handleMousePress/Move).
     QPointF m_arcStart;
     QPointF m_arcEnd;
+    // Regular polygon tool: center fixed by the first click; the cursor is
+    // the first vertex (radius and orientation both follow it) until the
+    // second click. Side count is asked once per placement, remembering the
+    // last choice ("regular_polygon_sides").
+    void updateRegularPolygonVertices(const QPointF &vertexPos);
+    QPointF m_regularPolygonCenter;
+    int m_regularPolygonSides = 6;
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H
