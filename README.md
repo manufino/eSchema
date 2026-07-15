@@ -20,6 +20,7 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 
 - Line, Bézier curve, closed polygon, complex (spline) curve — with node add/remove editing directly on the canvas
 - Rectangle and ellipse (filled or outlined)
+- Arc (three clicks, live preview) and regular polygon (3–64 sides) tools, both emitting standard FidoCadJ primitives
 - Connection dot and PCB track
 - PCB pad
 - Text labels, with superscript/subscript markup
@@ -38,20 +39,25 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 ### Precision drawing tools
 - Configurable grid (dots or lines) with adjustable step and marked-line intervals
 - Snap-to-grid for every placement, move, and resize operation, with one-click toggles for both right on the toolbar
+- Object snap: clicks and drags capture endpoints, midpoints, centers, and intersections of what's already drawn, with a visual marker — each target kind individually configurable
+- A measure tool (distance and angle between two clicks, live in the status bar)
 - Photoshop/Illustrator-style rulers along the top and left edges of the canvas, synced live with the grid step and current zoom/pan
-- Align and distribute tools for tidying up a selection (left/right/top/bottom, center, even spacing)
+- Align and distribute tools for tidying up a selection (left/right/top/bottom, center, even spacing), plus snapping a whole selection back onto the grid
 - Zoom to fit the whole drawing or just the current selection
 - A background tracing image drawn under the grid (Tools > Tracing image...), for redrawing schematics from photos or scans — persisted in the file, invisible to a plain FidoCadJ
 
 ### A real editing workflow
 - Full undo/redo history for every operation (create, move, resize, mirror, rotate, delete, node edits)
 - Boolean operations between closed shapes — union, subtraction, intersection — with results that stay fully FidoCadJ-compatible (optionally as smooth complex curves)
-- A dedicated Modify toolbar grouping every shape-editing command: rotate, mirror, booleans, align/distribute, macro explode
-- Cut / copy / paste / duplicate, multi-selection, select all — including pasting an image straight from the clipboard
+- Shape tools: convert rectangles/ellipses/curves to editable polygons (and back to smooth curves), simplify nodes, fillet or chamfer corners, and grow/shrink a shape by a parallel outline offset
+- Whole-selection transforms: rotate by an arbitrary angle, scale by percentage, and replicate on a grid or circularly (clock-face style, with a mouse-picked center)
+- A dedicated Modify toolbar grouping every shape-editing command: rotate, mirror, booleans, transforms, align/distribute, macro explode
+- Cut / copy / paste / duplicate, multi-selection, select all, invert selection, select same type — including pasting an image straight from the clipboard, and Alt+drag to drag off a duplicate
+- Editable geometry right in the Properties panel: a line's length, a rectangle's or ellipse's width and height
 - Find (Ctrl+F) across text, macro names, and name/value labels
 - Nudge the selection by one grid step with Alt+arrow keys
 - A dockable live FCD code panel: watch the drawing as FidoCadJ text while you edit, or edit the text and apply it back as one undo step
-- Live status bar: cursor position (grid units and millimeters), zoom level, and running counts of primitives and macros in the drawing
+- Live status bar: cursor position (grid units and/or millimeters), zoom level, and running counts of primitives and macros in the drawing
 
 ### Export & printing
 - One export dialog for PNG, JPG, SVG, PDF, EPS and DXF, sized either by resolution (pixels per unit) or by an exact pixel size, with optional antialiasing, black & white, and one-file-per-layer splitting
@@ -70,11 +76,13 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 
 ### Safety & convenience
 - Autosave with a configurable interval, and crash recovery on the next startup if eSchema didn't close cleanly
-- Recent Files menu, and drag-and-drop of `.fcd`/`.dxf` files straight onto the main window
+- Optional `.bak` backup copy of the previous version on every save
+- Recent Files menu (configurable length), drag-and-drop of `.fcd`/`.dxf` files straight onto the main window, and an option to reopen the last file on startup
 - Update checker: automatic on startup (can be turned off) or on demand from the Help menu
 
 ### A UI that adapts to you
-- Dockable, floatable, tabbable panels (Libraries, Properties, FCD code) — arrange your workspace however you like, and it's remembered between sessions
+- Dockable, floatable, tabbable panels (Libraries, Properties, FCD code) — arrange your workspace however you like; the layout, window size, and position are all remembered between sessions
+- A searchable Options dialog organized in pages, with a live grid preview and per-page defaults — from toolbar icon size and mouse-wheel behavior to snap targets and marker colors
 - Light and dark themes, with custom stylesheet support
 - A fully translated, multi-language interface (see below)
 
@@ -128,6 +136,17 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 ---
 
 ## What's new
+
+### 1.0.5
+- **Object snap**: clicks and drags capture endpoints, midpoints, centers, and intersections of what's already drawn, with a visual marker and per-kind configuration
+- New drawing tools: **Arc** (U) and **Regular polygon** (N), plus a **Measure** tool (W)
+- **Shape tools**: convert to polygon/complex curve, simplify nodes, fillet/chamfer corners, parallel outline **offset**
+- **Transforms**: rotate by arbitrary angle, scale by percentage, **array of copies** (grid or circular, with a mouse-picked center)
+- Selection conveniences: **Alt+drag duplicate**, invert selection, select same type, snap selection to grid
+- Editable **geometry in the Properties panel** (line length, rectangle/ellipse size)
+- Completely **reworked Options dialog**: searchable sidebar pages, live grid preview, per-page defaults, and many new options (backup `.bak` on save, undo limit, reopen last file, toolbar icon size, antialiasing, coordinate units, wheel zoom, snap tuning, default fonts and colors...)
+- Libraries/Properties/FCD panels tabbed on the right by default, with tab icons; window size and position remembered
+- Fixes: stale version shown in the About box / false update notifications, main window no longer blocked from shrinking, left-side docking
 
 ### 1.0.4
 - **Boolean operations** between closed shapes (union, subtraction, intersection), applied as one undo step; curved results can optionally come out as smooth complex curves instead of flattened polygons
