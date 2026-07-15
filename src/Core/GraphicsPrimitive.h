@@ -332,6 +332,9 @@ protected:
     Layer *objLayer;
 
     QPointF m_dragAnchor; // last mouse scene position seen during an active drag
+    // Whether this drag already dropped its Alt+drag in-place duplicate -
+    // the gesture must clone exactly once per drag, on the first movement.
+    bool m_altDragCloned = false;
     // Control-point snapshots (per moved primitive - a multi-selection drag
     // moves them all) as they were at mousePress, so mouseReleaseEvent can
     // push one undo-able MovePrimitiveCommand per primitive that actually moved.

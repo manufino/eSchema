@@ -134,6 +134,9 @@ public slots:
     void clickScaleSelectionAction();
     void clickRotateByAngleAction();
     void clickArrayAction();
+    // Selection conveniences.
+    void clickSelectSameTypeAction();
+    void clickInvertSelectionAction();
     void clickNewAction();
     void clickOpenAction();
     void clickImportDxfAction();
@@ -250,6 +253,10 @@ private:
     void convertSelectionTo(bool toCurve, const QString &undoLabel);
     // Shared tail end of Fillet corners / Chamfer corners.
     void roundSelectedCorners(bool chamfer);
+    // Drops an unselected in-place copy of the current selection, as one
+    // undo step - the Alt+drag duplicate gesture (see Sheet::
+    // altDragCloneRequested() and GraphicsPrimitive::mouseMoveEvent()).
+    void cloneSelectionInPlace();
     // Inserts a new vertex into `primitive` (a polygon or complex curve, per
     // GraphicsPrimitive::supportsNodeEditing()) at the edge nearest
     // `scenePos`, as one undoable step - wired to the canvas context menu's

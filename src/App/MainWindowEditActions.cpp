@@ -56,6 +56,7 @@
 #include <QRandomGenerator>
 #include <QInputDialog>
 #include <QLineF>
+#include <QSet>
 #include <QtMath>
 #include <algorithm>
 #include <cmath>
@@ -422,6 +423,7 @@ void MainWindow::updateEditActionsState()
     ui->actionScaleSelection->setEnabled(hasSelection);
     ui->actionRotateByAngle->setEnabled(hasSelection);
     ui->actionArray->setEnabled(hasSelection);
+    ui->actionSelectSameType->setEnabled(hasSelection);
 }
 
 // Reuses the very same ui->action* objects the Edit menu bar entry is
@@ -465,6 +467,8 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     menu.addAction(ui->actionDistributeVertical);
     menu.addSeparator();
     menu.addAction(ui->actionSelectAll);
+    menu.addAction(ui->actionInvertSelection);
+    menu.addAction(ui->actionSelectSameType);
 
     // Only meaningful for a single selected polygon/complex curve - added
     // here as plain transient QActions (the menu is rebuilt fresh every
@@ -849,6 +853,48 @@ void MainWindow::clickArrayAction()
         }
     }
     undo->endMacro();
+}
+
+void MainWindow::clickSelectSameTypeAction()
+{
+    QSet<int> selectedTypes;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder())
+        selectedTypes.insert(primitive->getPrimitiveType());
+    if (selectedTypes.isEmpty())
+        return;
+    for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
+        if (selectedTypes.contains(primitive->getPrimitiveType()))
+            primitive->setSelected(true);
+    }
+}
+
+void MainWindow::clickInvertSelectionAction()
+{
+    for (GraphicsPrimitive *primitive : sheetScene->primitives())
+        primitive->setSelected(!primitive->isSelected());
+}
+
+void MainWindow::cloneSelectionInPlace()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+    const QList<GraphicsPrimitive *> clones =
+            FidoCadReader::parse(FidoCadWriter::writeSelection(selected), sheetScene);
+    if (clones.isEmpty())
+        return;
+
+    // The clones stay exactly where the originals were and are deliberately
+    // NOT selected - the drag that triggered this keeps moving the selected
+    // originals away from them.
+    QUndoStack *undo = sheetScene->undoStack();
+    const bool multiple = clones.size() > 1;
+    if (multiple)
+        undo->beginMacro(tr("Duplicate"));
+    for (GraphicsPrimitive *clone : clones)
+        undo->push(new CreatePrimitiveCommand(sheetScene, clone));
+    if (multiple)
+        undo->endMacro();
 }
 
 void MainWindow::clickConvertMacroToPrimitivesAction()

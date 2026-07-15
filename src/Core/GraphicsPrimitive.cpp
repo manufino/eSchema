@@ -312,6 +312,7 @@ void GraphicsPrimitive::paintLabels(QPainter *painter) const
 void GraphicsPrimitive::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     m_dragAnchor = Utils::instance().snapToGrid(event->scenePos());
+    m_altDragCloned = false;
 
     // Snapshot every primitive this drag might move (itself, plus any
     // co-selected siblings), so mouseReleaseEvent can push one undo-able
@@ -341,6 +342,16 @@ void GraphicsPrimitive::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if (delta.isNull())
         return;
     m_dragAnchor = newAnchor;
+
+    // Alt+drag drags off a duplicate: the moment the drag first actually
+    // moves, an in-place copy of the selection is dropped at the original
+    // spot (before the translation below), and the drag carries on moving
+    // the originals - matching the Illustrator/Inkscape gesture.
+    if ((event->modifiers() & Qt::AltModifier) && !m_altDragCloned) {
+        m_altDragCloned = true;
+        if (auto *sheet = qobject_cast<Sheet *>(scene()))
+            sheet->requestAltDragClone();
+    }
 
     // Move every selected primitive together, not just the one under the
     // cursor, so dragging any one item of a multi-selection moves the group.

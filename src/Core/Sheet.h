@@ -60,6 +60,17 @@ public:
 
     QUndoStack *undoStack() { return &m_undoStack; }
 
+    // Called by GraphicsPrimitive when a body drag starts with Alt held:
+    // asks whoever owns the clipboard round-trip machinery (MainWindow) to
+    // drop an in-place copy of the current selection before the drag moves
+    // it - the classic Alt+drag "drag off a duplicate" gesture.
+    void requestAltDragClone() { emit altDragCloneRequested(); }
+
+signals:
+    void altDragCloneRequested();
+
+public:
+
     // Document-wide FidoCadJ settings (FIDOSPECS.md 7's "FJC C/A/B"), each
     // defaulting to the spec's compiled-in default. FidoCadReader sets these
     // from an "FJC" line; FidoCadWriter re-emits one only when it differs from

@@ -1486,6 +1486,8 @@
     <addaction name="actionDistributeVertical"/>
     <addaction name="separator"/>
     <addaction name="actionSelectAll"/>
+    <addaction name="actionInvertSelection"/>
+    <addaction name="actionSelectSameType"/>
     <addaction name="separator"/>
     <addaction name="actionFind"/>
     <widget class="QMenu" name="menuShape">
@@ -2669,6 +2671,25 @@
    </property>
    <property name="toolTip">
     <string>Cut every corner of the selected polygons and rectangles at the given distance</string>
+   </property>
+  </action>
+  <action name="actionInvertSelection">
+   <property name="text">
+    <string>Invert selection</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+I</string>
+   </property>
+  </action>
+  <action name="actionSelectSameType">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Select same type</string>
+   </property>
+   <property name="toolTip">
+    <string>Select every primitive of the same type as the current selection</string>
    </property>
   </action>
   <action name="actionRulersVisible">

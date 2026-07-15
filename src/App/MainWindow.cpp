@@ -370,6 +370,12 @@ void MainWindow::setConnections()
     connect(ui->actionSimplifyNodes, &QAction::triggered, this, &MainWindow::clickSimplifyNodesAction);
     connect(ui->actionFilletCorners, &QAction::triggered, this, &MainWindow::clickFilletCornersAction);
     connect(ui->actionChamferCorners, &QAction::triggered, this, &MainWindow::clickChamferCornersAction);
+    connect(ui->actionSelectSameType, &QAction::triggered, this, &MainWindow::clickSelectSameTypeAction);
+    connect(ui->actionInvertSelection, &QAction::triggered, this, &MainWindow::clickInvertSelectionAction);
+    // Alt+drag duplicate: the drag itself is handled inside GraphicsPrimitive;
+    // dropping the in-place copy needs the FCD serialize/parse round trip,
+    // which lives here.
+    connect(sheetScene, &Sheet::altDragCloneRequested, this, &MainWindow::cloneSelectionInPlace);
     connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
     connect(ui->actionCreateMacro, &QAction::triggered, this, &MainWindow::clickCreateMacroAction);
     // Keeps every selection/clipboard-dependent Edit action's enabled state
