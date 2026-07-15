@@ -69,6 +69,7 @@
 #include <QFile>
 #include <QUndoCommand>
 #include <QPainterPath>
+#include <QTabBar>
 
 namespace {
 // Passed to save/restoreState() so a layout saved by an older build - with a
@@ -80,7 +81,7 @@ namespace {
 // "docking to that one side is just broken" until the stale saved state
 // was cleared by hand. Bump this whenever a dock widget or toolbar is
 // added/removed/renamed.
-constexpr int DockStateVersion = 3; // 2: added the Modify toolbar; 3: its default row moved below the main toolbar
+constexpr int DockStateVersion = 4; // 2: added the Modify toolbar; 3: its default row moved below the main toolbar; 4: panels tabbed on the right by default
 
 // No bundled icon reads as "snap" the way a magnet does - a plain grid
 // glyph (the obvious alternative) would sit right next to actionShowGrid's
@@ -161,15 +162,47 @@ MainWindow::MainWindow(QWidget *parent)
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockProperties->toggleViewAction());
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockLibraries->toggleViewAction());
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockFcdCode->toggleViewAction());
+    // The toggle actions inherit each panel's icon (set in the .ui), so the
+    // View menu matches the dock tab bar - see refreshDockTabIcons().
+    ui->dockProperties->toggleViewAction()->setIcon(ui->dockProperties->windowIcon());
+    ui->dockLibraries->toggleViewAction()->setIcon(ui->dockLibraries->windowIcon());
+    ui->dockFcdCode->toggleViewAction()->setIcon(ui->dockFcdCode->windowIcon());
     // Restores whatever dock/toolbar arrangement (position, size, floating,
     // tabbing) was in effect when the window was last closed - see
-    // closeEvent(), which is what actually saves it. Silently does nothing
-    // on the very first run (no saved state yet) or if the saved layout no
-    // longer matches the current set of dock widgets, leaving the .ui's own
-    // default arrangement in place.
+    // closeEvent(), which is what actually saves it. On the very first run
+    // (no saved state yet), or if the saved layout no longer matches the
+    // current set of dock widgets, the three panels are instead stacked as
+    // tabs on the right edge, Libraries in front.
     const QByteArray dockState = SettingsManager::getInstance().loadSetting("window_dock_state").toByteArray();
+    bool dockStateRestored = false;
     if (!dockState.isEmpty())
-        restoreState(dockState, DockStateVersion);
+        dockStateRestored = restoreState(dockState, DockStateVersion);
+    if (!dockStateRestored) {
+        ui->dockLibraries->setVisible(true);
+        ui->dockProperties->setVisible(true);
+        ui->dockFcdCode->setVisible(true);
+        tabifyDockWidget(ui->dockLibraries, ui->dockProperties);
+        tabifyDockWidget(ui->dockProperties, ui->dockFcdCode);
+        ui->dockLibraries->raise();
+    }
+
+    // QMainWindow's own dock tab bars show only each tab's text - there is
+    // no public API for their icons (see refreshDockTabIcons()) - so re-sync
+    // them whenever a dock is moved/re-tabbed. Deferred with a 0-timer: at
+    // the moment these signals fire, the internal tab bar hasn't been
+    // rebuilt yet.
+    for (QDockWidget *dock : { ui->dockLibraries, ui->dockProperties, ui->dockFcdCode }) {
+        connect(dock, &QDockWidget::dockLocationChanged, this, [this]() {
+            QTimer::singleShot(0, this, &MainWindow::refreshDockTabIcons);
+        });
+        connect(dock, &QDockWidget::topLevelChanged, this, [this]() {
+            QTimer::singleShot(0, this, &MainWindow::refreshDockTabIcons);
+        });
+        connect(dock, &QDockWidget::visibilityChanged, this, [this]() {
+            QTimer::singleShot(0, this, &MainWindow::refreshDockTabIcons);
+        });
+    }
+    refreshDockTabIcons();
 
     // Must run *after* restoreState(): corner ownership is itself part of
     // the state blob QMainWindow::saveState() writes, so restoring an old
@@ -917,6 +950,27 @@ bool MainWindow::confirmDiscardChanges()
     // the user then cancels that dialog, the stack is still dirty - treat
     // that the same as cancelling here, rather than closing/discarding anyway.
     return sheetScene->undoStack()->isClean();
+}
+
+// QMainWindow builds a private QTabBar for each group of tabified docks and
+// only ever fills in the tab text - there is no public API to reach those
+// tab bars, so their icons stay empty. The accepted workaround (see e.g.
+// QTBUG discussions and the Qt forums) is exactly this: find the direct
+// QTabBar children, match each tab back to its dock widget by title, and
+// stamp the dock's windowIcon on it. Titles are unique here (Libraries/
+// Properties/FCD code), so the match is unambiguous.
+void MainWindow::refreshDockTabIcons()
+{
+    const QList<QDockWidget *> docks = { ui->dockLibraries, ui->dockProperties, ui->dockFcdCode };
+    const QList<QTabBar *> tabBars = findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
+    for (QTabBar *tabBar : tabBars) {
+        for (int i = 0; i < tabBar->count(); ++i) {
+            for (QDockWidget *dock : docks) {
+                if (tabBar->tabText(i) == dock->windowTitle())
+                    tabBar->setTabIcon(i, dock->windowIcon());
+            }
+        }
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

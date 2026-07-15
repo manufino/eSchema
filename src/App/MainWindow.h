@@ -257,6 +257,12 @@ private:
     // undo step - the Alt+drag duplicate gesture (see Sheet::
     // altDragCloneRequested() and GraphicsPrimitive::mouseMoveEvent()).
     void cloneSelectionInPlace();
+    // Stamps each panel's windowIcon onto QMainWindow's internal dock tab
+    // bars, matching tabs to docks by title. Qt draws those tabs text-only
+    // and exposes no public API for them (long-standing limitation), so
+    // findChildren<QTabBar*>() is the accepted workaround - called after
+    // every dock move/re-tab, see the constructor's dock signal wiring.
+    void refreshDockTabIcons();
     // Inserts a new vertex into `primitive` (a polygon or complex curve, per
     // GraphicsPrimitive::supportsNodeEditing()) at the edge nearest
     // `scenePos`, as one undoable step - wired to the canvas context menu's

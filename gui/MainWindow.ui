@@ -84,6 +84,10 @@
      <height>110</height>
     </size>
    </property>
+   <property name="windowIcon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/data-structure.png</normaloff>:/res/resources/data-structure.png</iconset>
+   </property>
    <property name="windowTitle">
     <string>Libraries</string>
    </property>
@@ -254,6 +258,10 @@
      <width>200</width>
      <height>218</height>
     </size>
+   </property>
+   <property name="windowIcon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/properties.png</normaloff>:/res/resources/properties.png</iconset>
    </property>
    <property name="windowTitle">
     <string>Properties</string>
@@ -1337,6 +1345,10 @@
      <width>200</width>
      <height>150</height>
     </size>
+   </property>
+   <property name="windowIcon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/code.png</normaloff>:/res/resources/code.png</iconset>
    </property>
    <property name="windowTitle">
     <string>FCD code</string>
