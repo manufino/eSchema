@@ -187,6 +187,11 @@ void DialogOptions::loadSettings()
     val = settings.loadSetting("handle_color");
     ui->pickHandleColor->setColor(QColor(val.isValid() && QColor(val.toString()).isValid()
                                           ? val.toString() : QStringLiteral("#ff0000")));
+    val = settings.loadSetting("snap_to_guides");
+    ui->chkSnapGuides->setChecked(val.isValid() ? val.toBool() : true);
+    val = settings.loadSetting("guide_color");
+    ui->pickGuideColor->setColor(QColor(val.isValid() && QColor(val.toString()).isValid()
+                                         ? val.toString() : QStringLiteral("#00aaff")));
 
     // --- Drawing ---
     val = settings.loadSetting("line_width");
@@ -257,6 +262,8 @@ void DialogOptions::saveSettings()
     settings.saveSetting("object_snap_intersections", ui->chkSnapIntersections->isChecked());
     settings.saveSetting("snap_indicator_color", ui->pickSnapIndicatorColor->getColor().name());
     settings.saveSetting("handle_color", ui->pickHandleColor->getColor().name());
+    settings.saveSetting("snap_to_guides", ui->chkSnapGuides->isChecked());
+    settings.saveSetting("guide_color", ui->pickGuideColor->getColor().name());
 
     // --- Drawing ---
     settings.saveSetting("line_width", ui->spinLineWidth->value());
@@ -377,6 +384,8 @@ void DialogOptions::restorePageDefaults(int pageIndex)
         ui->chkSnapIntersections->setChecked(true);
         ui->pickSnapIndicatorColor->setColor(QColor(QStringLiteral("#ff8000")));
         ui->pickHandleColor->setColor(QColor(QStringLiteral("#ff0000")));
+        ui->chkSnapGuides->setChecked(true);
+        ui->pickGuideColor->setColor(QColor(QStringLiteral("#00aaff")));
         break;
     case PageDrawing:
         ui->spinLineWidth->setValue(0.5);

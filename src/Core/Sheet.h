@@ -81,6 +81,29 @@ public:
     // drag/placement interaction ends.
     void clearSnapIndicator();
 
+    // --- Guides ------------------------------------------------------------
+    // Illustrator/Photoshop-style guide lines, dragged out of the rulers:
+    // session-only editing aids (never saved to the .fcd file, never
+    // printed/exported - they're drawn by SheetView::drawForeground(), the
+    // view-side hook, precisely so Sheet::render() never sees them). A
+    // vertical guide is a vertical line at a fixed x; a horizontal one a
+    // horizontal line at a fixed y. Position snapping honors them when
+    // "snap_to_guides" is on (see snapPosition()).
+    struct Guide {
+        Qt::Orientation orientation;
+        qreal position;
+    };
+    const QList<Guide> &guides() const { return m_guides; }
+    // Returns the new guide's index (stable until a removal).
+    int addGuide(Qt::Orientation orientation, qreal position);
+    void moveGuide(int index, qreal position);
+    void removeGuide(int index);
+    void clearGuides();
+    // Index of the guide whose line passes within `tolerance` scene units
+    // of `scenePos` (nearest wins), or -1 - used by SheetView to let the
+    // mouse grab an existing guide.
+    int guideNear(const QPointF &scenePos, qreal tolerance) const;
+
 signals:
     void altDragCloneRequested();
 
@@ -153,6 +176,7 @@ private slots:
 
 private:
     QList<GraphicsPrimitive*> m_primitives;
+    QList<Guide> m_guides;
     QUndoStack m_undoStack;
     bool m_objectSnapEnabled = false;
     bool m_snapIndicatorVisible = false;

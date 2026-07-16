@@ -1576,6 +1576,7 @@
     <addaction name="actionCustomizeToolbars"/>
     <addaction name="actionCommandPalette"/>
     <addaction name="actionRulersVisible"/>
+    <addaction name="actionClearGuides"/>
     <addaction name="separator"/>
     <addaction name="actionAdjustView"/>
     <addaction name="actionZoomToSelection"/>
@@ -2644,6 +2645,18 @@
    </property>
    <property name="toolTip">
     <string>Add, remove, and reorder the commands on the toolbars</string>
+   </property>
+  </action>
+  <action name="actionClearGuides">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/delete-bin-line.png</normaloff>:/res/resources/remix/delete-bin-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear guides</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove every guide line dragged out of the rulers</string>
    </property>
   </action>
   <action name="actionCommandPalette">

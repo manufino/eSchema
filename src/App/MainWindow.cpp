@@ -412,6 +412,42 @@ void MainWindow::setConnections()
     });
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &MainWindow::updateRulersVisibility);
+    // Guides: dragging out of a ruler creates a guide line that follows the
+    // cursor; releasing it over the drawing keeps it, anywhere else (e.g.
+    // back on the ruler) discards it. The guide's coordinate is grid-snapped
+    // so dropped guides land on round positions.
+    auto guideCoordinate = [this](const QPoint &globalPos, Qt::Orientation orientation) {
+        const QPointF scenePos = ui->graphicsView->mapToScene(
+                ui->graphicsView->viewport()->mapFromGlobal(globalPos));
+        const QPointF snapped = ui->graphicsView->snapToGrid(scenePos);
+        return orientation == Qt::Vertical ? snapped.x() : snapped.y();
+    };
+    auto wireRulerGuides = [this, guideCoordinate](RulerWidget *ruler,
+                                                   Qt::Orientation orientation) {
+        connect(ruler, &RulerWidget::guideDragStarted, this, [this]() {
+            m_rulerGuideIndex = -1;
+        });
+        connect(ruler, &RulerWidget::guideDragMoved, this,
+                [this, orientation, guideCoordinate](const QPoint &globalPos) {
+            const qreal position = guideCoordinate(globalPos, orientation);
+            if (m_rulerGuideIndex < 0)
+                m_rulerGuideIndex = sheetScene->addGuide(orientation, position);
+            else
+                sheetScene->moveGuide(m_rulerGuideIndex, position);
+        });
+        connect(ruler, &RulerWidget::guideDragFinished, this, [this](const QPoint &globalPos) {
+            if (m_rulerGuideIndex >= 0
+                    && !ui->graphicsView->viewport()->rect().contains(
+                            ui->graphicsView->viewport()->mapFromGlobal(globalPos)))
+                sheetScene->removeGuide(m_rulerGuideIndex);
+            m_rulerGuideIndex = -1;
+        });
+    };
+    wireRulerGuides(ui->rulerHorizontal, Qt::Horizontal);
+    wireRulerGuides(ui->rulerVertical, Qt::Vertical);
+    connect(ui->actionClearGuides, &QAction::triggered, this, [this]() {
+        sheetScene->clearGuides();
+    });
     // Persists across restarts (see the constructor's own read of the same
     // key) - toggled() only fires on an actual state change, so the initial
     // setChecked() there can't be relied on to also save it back.

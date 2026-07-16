@@ -71,6 +71,12 @@ public:
 
 protected:
     void drawBackground (QPainter* painter, const QRectF &rect);
+    // Base implementation first (which forwards to Sheet::drawForeground -
+    // pad holes, snap indicator), then the sheet's guide lines on top.
+    // Guides are drawn here, on the view side, deliberately: Sheet::render()
+    // (print/export) never calls the view's hooks, so guides can never leak
+    // onto paper or into an exported file.
+    void drawForeground(QPainter *painter, const QRectF &rect) override;
     // Paints the sheet's tracing reference image (if any), between the flat
     // background fill and the grid lines - a no-op when none is set. Split
     // out since drawBackground() has an early-return path when the grid is
@@ -98,6 +104,13 @@ protected:
 private:
     void loadSettings();
     void zoomUpdate();
+    // The guide within grab distance (a few screen pixels) of `viewPos`, or
+    // -1 - see Sheet::guideNear().
+    int guideIndexAt(const QPoint &viewPos) const;
+    // The guide's new position for the cursor at `viewPos`, grid-snapped on
+    // its own axis (via the shared snap-to-grid helper) so dropped guides
+    // land on round coordinates.
+    qreal guidePositionFor(const Sheet::Guide &guide, const QPoint &viewPos) const;
 
 public slots:
     void settingChanged();
@@ -134,6 +147,9 @@ private:
     QPoint point;
     Utils::GridType gridType;
     PrimitivePlacementController *m_placementController = nullptr;
+    // Index (into Sheet::guides()) of the guide a left-drag is currently
+    // moving, -1 when none - releasing it outside the viewport deletes it.
+    int m_draggedGuide = -1;
 };
 
 #endif // SHEETVIEW_H

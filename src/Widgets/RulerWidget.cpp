@@ -19,6 +19,7 @@
 
 #include "RulerWidget.h"
 
+#include <QMouseEvent>
 #include <QPainter>
 #include <cmath>
 
@@ -49,11 +50,45 @@ void RulerWidget::setOrientation(Qt::Orientation orientation)
     if (m_orientation == Qt::Horizontal) {
         setFixedHeight(kBreadth);
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        // Hints that a guide can be dragged out: the top ruler drags a
+        // horizontal guide down, the left ruler a vertical guide right.
+        setCursor(Qt::SplitVCursor);
     } else {
         setFixedWidth(kBreadth);
         setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+        setCursor(Qt::SplitHCursor);
     }
     update();
+}
+
+void RulerWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        m_draggingGuide = true;
+        emit guideDragStarted();
+        emit guideDragMoved(event->globalPosition().toPoint());
+        return;
+    }
+    QWidget::mousePressEvent(event);
+}
+
+void RulerWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_draggingGuide) {
+        emit guideDragMoved(event->globalPosition().toPoint());
+        return;
+    }
+    QWidget::mouseMoveEvent(event);
+}
+
+void RulerWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (m_draggingGuide && event->button() == Qt::LeftButton) {
+        m_draggingGuide = false;
+        emit guideDragFinished(event->globalPosition().toPoint());
+        return;
+    }
+    QWidget::mouseReleaseEvent(event);
 }
 
 QSize RulerWidget::sizeHint() const

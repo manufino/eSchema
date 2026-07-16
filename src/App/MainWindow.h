@@ -437,5 +437,9 @@ private:
     Layer *m_printOneLayer = nullptr; // non-null = print only this layer
     bool m_printRealScale = false;    // false = fit to page (the default)
     double m_printScalePercent = 100.0;
+    // Index (into sheetScene->guides()) of the guide a ruler drag-out is
+    // currently placing, -1 when none - see the ruler wiring in
+    // setConnections().
+    int m_rulerGuideIndex = -1;
 };
 #endif // MAINWINDOW_H

@@ -160,6 +160,50 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 
 }
 
+void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
+{
+    QGraphicsView::drawForeground(painter, rect); // Sheet's own foreground
+
+    auto *sheet = qobject_cast<Sheet *>(scene());
+    if (!sheet || sheet->guides().isEmpty())
+        return;
+
+    QColor color(SettingsManager::getInstance().loadSetting("guide_color").toString());
+    if (!color.isValid())
+        color = QColor(0, 170, 255);
+    QPen pen(color);
+    pen.setCosmetic(true); // hairline whatever the zoom
+    pen.setStyle(Qt::DashLine);
+    painter->setPen(pen);
+    const QList<Sheet::Guide> &guides = sheet->guides();
+    for (const Sheet::Guide &guide : guides) {
+        if (guide.orientation == Qt::Vertical) {
+            if (guide.position >= rect.left() && guide.position <= rect.right())
+                painter->drawLine(QLineF(guide.position, rect.top(),
+                                         guide.position, rect.bottom()));
+        } else {
+            if (guide.position >= rect.top() && guide.position <= rect.bottom())
+                painter->drawLine(QLineF(rect.left(), guide.position,
+                                         rect.right(), guide.position));
+        }
+    }
+}
+
+int SheetView::guideIndexAt(const QPoint &viewPos) const
+{
+    auto *sheet = qobject_cast<Sheet *>(scene());
+    if (!sheet || sheet->guides().isEmpty())
+        return -1;
+    // A few screen pixels of grab distance, converted to scene units.
+    const qreal tolerance = 4.0 / qMax(0.01, transform().m11());
+    return sheet->guideNear(mapToScene(viewPos), tolerance);
+}
+
+qreal SheetView::guidePositionFor(const Sheet::Guide &guide, const QPoint &viewPos) const
+{
+    const QPointF snapped = snapToGrid(mapToScene(viewPos));
+    return guide.orientation == Qt::Vertical ? snapped.x() : snapped.y();
+}
 
 void SheetView::wheelEvent(QWheelEvent *event)
 {
@@ -207,6 +251,18 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     QPoint origin = mapFromGlobal(QCursor::pos());
     QPointF relativeOrigin = mapToScene(origin);
 
+    // An in-progress guide drag owns the mouse until release.
+    if (m_draggedGuide >= 0 && (event->buttons() & Qt::LeftButton)) {
+        if (auto *sheet = qobject_cast<Sheet *>(scene())) {
+            const Sheet::Guide guide = sheet->guides().at(m_draggedGuide);
+            sheet->moveGuide(m_draggedGuide, guidePositionFor(guide, event->pos()));
+            setCursor(guide.orientation == Qt::Vertical ? Qt::SplitHCursor
+                                                        : Qt::SplitVCursor);
+        }
+        emit mouseMoved(relativeOrigin);
+        return;
+    }
+
     if (event->buttons() & Qt::MiddleButton)
     {
         setCursor(Qt::ClosedHandCursor);
@@ -229,6 +285,18 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
+    // Hovering near a guide (with no drag in progress) shows the grab
+    // cursor, so guides read as adjustable rather than as static decoration.
+    if (!event->buttons()) {
+        const int hovered = guideIndexAt(event->pos());
+        if (hovered >= 0) {
+            if (auto *sheet = qobject_cast<Sheet *>(scene())) {
+                setCursor(sheet->guides().at(hovered).orientation == Qt::Vertical
+                          ? Qt::SplitHCursor : Qt::SplitVCursor);
+            }
+        }
+    }
+
     // Not placing anything - a leftover object-snap highlight would be
     // misleading (drag snapping keeps its own highlight alive, see
     // PrimitiveHandleItem).
@@ -249,6 +317,16 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         return;
     }
 
+    // Grabbing a guide takes precedence over selection: guides are thin,
+    // deliberate targets, and this is the only way to adjust one.
+    if (event->button() == Qt::LeftButton) {
+        const int grabbed = guideIndexAt(event->pos());
+        if (grabbed >= 0) {
+            m_draggedGuide = grabbed;
+            return;
+        }
+    }
+
     // Right-click ends a Line/PCB-track chain (matching FidoCadJ) without
     // otherwise opening the default context menu behaviour.
     if (event->button() == Qt::RightButton && m_placementController
@@ -267,6 +345,17 @@ void SheetView::mousePressEvent(QMouseEvent *event)
 
 void SheetView::mouseReleaseEvent(QMouseEvent *event)
 {
+    // Dropping a dragged guide outside the drawing area removes it - the
+    // standard "throw it back at the ruler" gesture for deleting a guide.
+    if (m_draggedGuide >= 0) {
+        if (auto *sheet = qobject_cast<Sheet *>(scene())) {
+            if (!viewport()->rect().contains(event->pos()))
+                sheet->removeGuide(m_draggedGuide);
+        }
+        m_draggedGuide = -1;
+        return;
+    }
+
     if (m_placementController && m_placementController->isPlacementToolActive())
         return;
 

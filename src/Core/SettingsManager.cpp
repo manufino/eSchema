@@ -128,6 +128,8 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("object_snap_intersections", true);
     saveSetting("snap_indicator_color", QColor(255, 128, 0).name());
     saveSetting("handle_color", QColor(Qt::red).name());
+    saveSetting("snap_to_guides", true);
+    saveSetting("guide_color", QColor(0, 170, 255).name());
 
     // BEHAVIOR/INTERFACE extras (see DialogOptions' pages).
     saveSetting("save_backup", false);

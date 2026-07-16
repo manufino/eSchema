@@ -160,13 +160,14 @@ void Sheet::drawForeground(QPainter *painter, const QRectF &)
 QPointF Sheet::snapPosition(const QPointF &scenePos,
                             const QList<const GraphicsPrimitive *> &excluded)
 {
+    // Capture radius in screen pixels (Options > Snap), whatever the
+    // current zoom - shared by object snap and guide snap below.
+    const int radiusPx = SettingsManager::getInstance()
+            .loadSetting("object_snap_radius").toInt();
+    const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
+    const qreal radius = (radiusPx > 0 ? radiusPx : 12.0) / qMax(0.01, scale);
+
     if (m_objectSnapEnabled) {
-        // Capture radius in screen pixels (Options > Snap), whatever the
-        // current zoom.
-        const int radiusPx = SettingsManager::getInstance()
-                .loadSetting("object_snap_radius").toInt();
-        const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
-        const qreal radius = (radiusPx > 0 ? radiusPx : 12.0) / qMax(0.01, scale);
         const std::optional<QPointF> captured =
                 ObjectSnap::snapPoint(this, scenePos, radius, excluded);
         if (captured) {
@@ -179,7 +180,83 @@ QPointF Sheet::snapPosition(const QPointF &scenePos,
         }
     }
     clearSnapIndicator();
-    return Utils::instance().snapToGrid(scenePos);
+    QPointF snapped = Utils::instance().snapToGrid(scenePos);
+
+    // Guides snap per axis, each axis to its nearest guide within the
+    // radius - so a position can stick to a vertical and a horizontal guide
+    // at once (their crossing), overriding the grid on that axis only.
+    // Enabled by default; the raw cursor distance (not the grid-snapped
+    // one) decides the capture, or a guide between grid lines could never
+    // win over the grid.
+    const QVariant snapGuidesSetting = SettingsManager::getInstance()
+            .loadSetting("snap_to_guides");
+    if (!snapGuidesSetting.isValid() || snapGuidesSetting.toBool()) {
+        qreal bestX = radius, bestY = radius;
+        for (const Guide &guide : std::as_const(m_guides)) {
+            if (guide.orientation == Qt::Vertical) {
+                const qreal distance = qAbs(scenePos.x() - guide.position);
+                if (distance <= bestX) {
+                    bestX = distance;
+                    snapped.setX(guide.position);
+                }
+            } else {
+                const qreal distance = qAbs(scenePos.y() - guide.position);
+                if (distance <= bestY) {
+                    bestY = distance;
+                    snapped.setY(guide.position);
+                }
+            }
+        }
+    }
+    return snapped;
+}
+
+int Sheet::addGuide(Qt::Orientation orientation, qreal position)
+{
+    m_guides.append({ orientation, position });
+    update();
+    return m_guides.size() - 1;
+}
+
+void Sheet::moveGuide(int index, qreal position)
+{
+    if (index < 0 || index >= m_guides.size())
+        return;
+    m_guides[index].position = position;
+    update();
+}
+
+void Sheet::removeGuide(int index)
+{
+    if (index < 0 || index >= m_guides.size())
+        return;
+    m_guides.removeAt(index);
+    update();
+}
+
+void Sheet::clearGuides()
+{
+    if (m_guides.isEmpty())
+        return;
+    m_guides.clear();
+    update();
+}
+
+int Sheet::guideNear(const QPointF &scenePos, qreal tolerance) const
+{
+    int best = -1;
+    qreal bestDistance = tolerance;
+    for (int i = 0; i < m_guides.size(); ++i) {
+        const Guide &guide = m_guides.at(i);
+        const qreal distance = guide.orientation == Qt::Vertical
+                ? qAbs(scenePos.x() - guide.position)
+                : qAbs(scenePos.y() - guide.position);
+        if (distance <= bestDistance) {
+            bestDistance = distance;
+            best = i;
+        }
+    }
+    return best;
 }
 
 void Sheet::clearSnapIndicator()

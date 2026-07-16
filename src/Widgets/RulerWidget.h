@@ -55,11 +55,26 @@ public slots:
     // ignored (marker hidden) once the mouse leaves the drawing view.
     void setMarkerPosition(qreal scenePos, bool visible);
 
+signals:
+    // Dragging out of the ruler creates a guide line (see Sheet::Guide):
+    // the top ruler drags out a horizontal guide, the left ruler a vertical
+    // one. The ruler only reports the gesture in global coordinates -
+    // MainWindow owns the mapping onto the drawing view and the guide
+    // itself. Moved/finished always arrive between started and the next
+    // started, Qt's implicit mouse grab guarantees it.
+    void guideDragStarted();
+    void guideDragMoved(const QPoint &globalPos);
+    void guideDragFinished(const QPoint &globalPos);
+
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
     Qt::Orientation m_orientation = Qt::Horizontal;
+    bool m_draggingGuide = false;
     qreal m_origin = 0.0;
     qreal m_scale = 1.0;
     qreal m_minorStep = 10.0;
