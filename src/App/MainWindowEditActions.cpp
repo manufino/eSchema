@@ -55,6 +55,11 @@
 #include <QMessageBox>
 #include <QRandomGenerator>
 #include <QInputDialog>
+#include <QVBoxLayout>
+#include <QFormLayout>
+#include <QDialogButtonBox>
+#include <QCheckBox>
+#include <QDoubleSpinBox>
 #include <QLineF>
 #include <QSet>
 #include <QtMath>
@@ -827,8 +832,11 @@ void MainWindow::clickFilletCornersAction()
 // with QPainterPathStroker - a band of twice the distance centered on the
 // outline - united with (outward) or subtracted from (inward) the original
 // region, then rewritten with the same representation rules as the boolean
-// results. An inward offset larger than the shape erodes it away entirely;
-// that shape is then left untouched.
+// results. "Keep the original shape" (persisted, like the array dialog's
+// remembered fields) leaves the operand on the sheet next to its offset
+// copy - the usual CAD offset workflow - instead of replacing it. An inward
+// offset larger than the shape erodes it away entirely; that shape is then
+// left untouched.
 void MainWindow::clickOffsetOutlineAction()
 {
     QList<GraphicsPrimitive *> eligible;
@@ -839,12 +847,33 @@ void MainWindow::clickOffsetOutlineAction()
     if (eligible.isEmpty())
         return;
 
-    bool ok = false;
-    const double distance = QInputDialog::getDouble(
-                this, tr("Offset outline"),
-                tr("Distance (drawing units, negative for inward):"),
-                5.0, -500.0, 500.0, 1, &ok);
-    if (!ok || qFuzzyIsNull(distance))
+    SettingsManager &settings = SettingsManager::getInstance();
+    QDialog dialog(this);
+    dialog.setWindowTitle(tr("Offset outline"));
+    auto *layout = new QVBoxLayout(&dialog);
+    auto *form = new QFormLayout;
+    auto *spinDistance = new QDoubleSpinBox(&dialog);
+    spinDistance->setRange(-500.0, 500.0);
+    spinDistance->setDecimals(1);
+    spinDistance->setValue(5.0);
+    form->addRow(tr("Distance (drawing units, negative for inward):"), spinDistance);
+    layout->addLayout(form);
+    auto *checkKeepOriginal = new QCheckBox(tr("Keep the original shape"), &dialog);
+    checkKeepOriginal->setChecked(settings.loadSetting("offset_keep_original").toBool());
+    layout->addWidget(checkKeepOriginal);
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+    connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    layout->addWidget(buttons);
+    spinDistance->setFocus();
+    spinDistance->selectAll();
+
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+    const double distance = spinDistance->value();
+    const bool keepOriginal = checkKeepOriginal->isChecked();
+    settings.saveSetting("offset_keep_original", keepOriginal);
+    if (qFuzzyIsNull(distance))
         return;
 
     const bool smooth = ui->actionBooleanSmooth->isChecked();
@@ -865,7 +894,8 @@ void MainWindow::clickOffsetOutlineAction()
             primitive->setSelected(true); // fully eroded - keep the original
             continue;
         }
-        undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+        if (!keepOriginal)
+            undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
         for (GraphicsPrimitive *result : results) {
             undo->push(new CreatePrimitiveCommand(sheetScene, result));
             result->setSelected(true);
