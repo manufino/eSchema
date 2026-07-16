@@ -26,10 +26,9 @@ LayerToolBarWidget::LayerToolBarWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(&LayerList::getInstance(),
-    &LayerList::layerListChanged,
-    this, &LayerToolBarWidget::setList);
-
+    // No layerListChanged connection here anymore: LayerComboBox instances
+    // rebuild themselves from the singleton now (see its constructor), so
+    // wiring it again from the outside would just rebuild twice per change.
     connect(ui->comboBox,
     &LayerComboBox::layerSelectedChanged,
     this, &LayerToolBarWidget::selectedChanged);
@@ -52,6 +51,11 @@ void LayerToolBarWidget::setList(QList<Layer*> *layerList)
 
 void LayerToolBarWidget::selectedChanged(int index)
 {
-    if(index >= 0 && ui->comboBox->count() > 0)
-        LayerList::getInstance().setMaster(ui->comboBox->currentData(Qt::DisplayRole).toString());
+    // By Layer*, never by display name: layer names are free-form user text
+    // with no uniqueness guarantee, and the name overload flags *every*
+    // layer with that name as master.
+    if (index >= 0 && ui->comboBox->count() > 0) {
+        if (Layer *layer = ui->comboBox->selectedLayer())
+            LayerList::getInstance().setMaster(layer);
+    }
 }

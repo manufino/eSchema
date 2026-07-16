@@ -190,6 +190,10 @@ private slots:
     // GraphicsPrimitive::syncLayerAppearance()) whenever a layer's eye/lock
     // state changes anywhere (toolbar combobox, DialogLayerList, ...).
     void refreshLayerAppearance();
+    // Connected to LayerList::layerAboutToBeRemoved - moves every primitive
+    // still on the doomed layer onto the master (or the first surviving
+    // layer), so no primitive is ever left holding a freed Layer*.
+    void reassignLayerBeforeRemoval(Layer *layer);
 
 private:
     QList<GraphicsPrimitive*> m_primitives;

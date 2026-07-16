@@ -34,6 +34,15 @@ LayerComboBox::LayerComboBox(QWidget* parent)
     connect(this, &QComboBox::currentIndexChanged,
     this, &LayerComboBox::currentIndexChanged);
 
+    // Every instance keeps itself in sync with the singleton list: an
+    // add/remove/reorder/rename rebuilds the rows. Without this, only the
+    // toolbar instance was ever refreshed - the properties-panel one kept
+    // stale rows forever, holding dangling Layer* item data after a
+    // deletion and silently mapping its positional selection onto the
+    // wrong live layer after a reorder.
+    connect(&LayerList::getInstance(), &LayerList::layerListChanged,
+            this, [this](QList<Layer *> *list) { addLayerList(list); });
+
     // view() lazily creates the popup's QAbstractItemView - forcing that
     // here lets the eye/lock click interception (eventFilter()) be wired up
     // once, up front.

@@ -65,6 +65,10 @@ public slots:
 
 signals:
     void layerListChanged(QList<Layer*> *layerList);
+    // Fired by removeLayer() right before the Layer object is deleted -
+    // every holder of a raw Layer* (primitives on the sheet, combo box item
+    // data) must drop or reassign it now, or be left dangling.
+    void layerAboutToBeRemoved(Layer *layer);
     // Fired by setVisible/setAllVisibleOrHidden/setLocked/
     // setAllLockedOrUnlocked - lighter-weight than layerListChanged (which
     // the toolbar combobox rebuilds itself entirely from), so a simple

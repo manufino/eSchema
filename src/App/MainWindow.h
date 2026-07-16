@@ -434,9 +434,12 @@ private:
     Ui::MainWindow *ui;
     Sheet *sheetScene;
     DialogOptions *optionDialog;
-    DialogAbout *aboutDialog;
-    DialogLayerList *layerManager;
-    DialogShortcuts *shortcutsDialog;
+    DialogAbout *aboutDialog = nullptr;
+    // Single instance (see clickLayerManagerAction()): a second one would
+    // keep stale rows - and dangling Layer* item data - across deletions
+    // performed in the first. Reset to nullptr on finished.
+    DialogLayerList *layerManager = nullptr;
+    DialogShortcuts *shortcutsDialog = nullptr;
     DialogFind *findDialog = nullptr; // created lazily on first Ctrl+F
     QString lastFindText;
     int lastFindIndex = -1;

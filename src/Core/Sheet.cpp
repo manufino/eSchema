@@ -53,6 +53,34 @@ Sheet::Sheet(QObject *parent) :
 
     connect(&LayerList::getInstance(), &LayerList::layerAppearanceChanged,
             this, &Sheet::refreshLayerAppearance);
+    // Deleting a layer from the layer manager must not leave any primitive
+    // holding the soon-to-be-freed Layer* - reassign them while it's alive.
+    connect(&LayerList::getInstance(), &LayerList::layerAboutToBeRemoved,
+            this, &Sheet::reassignLayerBeforeRemoval);
+}
+
+void Sheet::reassignLayerBeforeRemoval(Layer *layer)
+{
+    // The master is the natural fallback home; if the master itself is
+    // being removed (or missing), fall back to the first surviving layer.
+    Layer *fallback = LayerList::getInstance().getMaster();
+    if (!fallback || fallback == layer) {
+        fallback = nullptr;
+        const QList<Layer *> *layers = LayerList::getInstance().getList();
+        for (Layer *candidate : *layers) {
+            if (candidate != layer) {
+                fallback = candidate;
+                break;
+            }
+        }
+    }
+    if (!fallback)
+        return; // removing the only layer - nothing sane to reassign to
+
+    for (GraphicsPrimitive *primitive : std::as_const(m_primitives)) {
+        if (primitive->layer() == layer)
+            primitive->setLayer(fallback);
+    }
 }
 
 void Sheet::addPrimitive(GraphicsPrimitive *primitive)

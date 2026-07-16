@@ -88,6 +88,10 @@ void LayerList::removeLayer(Layer *layer)
     int index = layerList->indexOf(layer);
 
     if (index != -1) {
+        // Let every raw-pointer holder (Sheet's primitives, combo models)
+        // drop or reassign the layer while it's still alive - deleting
+        // first left them all dangling (crash at the next repaint).
+        emit layerAboutToBeRemoved(layer);
         layerList->removeAt(index);
         delete layer; // free the memory
         emit layerListChanged(layerList);
@@ -99,10 +103,12 @@ void LayerList::setMaster(Layer* layer)
     for (int i = 0; i < layerList->count(); i++)
     {
         Layer* currentLayer = (*layerList)[i];
-        // the master layer must always be visible
-        if(currentLayer->isMaster())
+        const bool isNewMaster = currentLayer == layer;
+        currentLayer->setMaster(isNewMaster);
+        // The master layer must always be visible - the *new* master, not
+        // whichever happened to be master before this loop flipped it.
+        if (isNewMaster)
             currentLayer->setVisible(true);
-        currentLayer->setMaster(currentLayer == layer);
     }
 }
 

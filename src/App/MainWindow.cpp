@@ -391,9 +391,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    Utils::instance().DeleteSafely(sheetScene);
-    Utils::instance().DeleteSafely(layerToolBarWidget);
-    Utils::instance().DeleteSafely(ui);
+    delete sheetScene;
+    delete layerToolBarWidget;
+    delete ui;
 }
 
 void MainWindow::setConnections()
@@ -877,8 +877,18 @@ void MainWindow::handleUpdateCheckFailed()
 
 void MainWindow::clickLayerManagerAction()
 {
+    // Single instance: triggering the action again just brings the open
+    // manager forward. A second, parallel one would keep stale rows (and
+    // dangling Layer* in its item data and row widgets) across deletions
+    // performed in the first.
+    if (layerManager) {
+        layerManager->raise();
+        layerManager->activateWindow();
+        return;
+    }
     layerManager = new DialogLayerList(this);
     connect(layerManager, &QDialog::finished, layerManager, &QObject::deleteLater);
+    connect(layerManager, &QDialog::finished, this, [this]() { layerManager = nullptr; });
     layerManager->show();
 }
 
