@@ -21,6 +21,7 @@
 #include "ui_DialogOptions.h"
 #include "ThemeManager.h"
 
+#include <QApplication>
 #include <QFileDialog>
 #include <QGroupBox>
 #include <QCheckBox>
@@ -421,8 +422,13 @@ void DialogOptions::cancel()
 
 void DialogOptions::apply()
 {
+    // The theme re-application below (global stylesheet + walking every
+    // action/button to re-tint icons) takes a moment - show it's working
+    // rather than looking hung.
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     saveSettings();
     ThemeManager::apply();
+    QApplication::restoreOverrideCursor();
 
     // The UI isn't retranslated live - the change is saved and takes effect
     // on the next launch, so tell the user rather than leaving them thinking

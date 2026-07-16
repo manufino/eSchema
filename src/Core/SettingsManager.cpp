@@ -33,7 +33,20 @@ SettingsManager::SettingsManager()
 void SettingsManager::saveSetting(const QString& key, const QVariant& value)
 {
     m_settings.setValue(key, value);
-    emit settingIsChanged();
+    // Coalesce change notifications: the Options dialog's Apply saves tens
+    // of settings back to back, and emitting synchronously per key made
+    // every receiver (live-settings refresh, grid reload, ruler sync, ...)
+    // re-run tens of times in a row - a visible multi-second freeze. One
+    // queued emission per event-loop turn notifies everyone exactly once
+    // for the whole batch; receivers read whatever they need back from the
+    // already-saved settings, so nothing observes a stale value.
+    if (!m_changeSignalPending) {
+        m_changeSignalPending = true;
+        QMetaObject::invokeMethod(this, [this]() {
+            m_changeSignalPending = false;
+            emit settingIsChanged();
+        }, Qt::QueuedConnection);
+    }
 }
 
 QVariant SettingsManager::loadSetting(const QString& key) const

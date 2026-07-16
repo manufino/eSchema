@@ -1336,14 +1336,22 @@ void MainWindow::applyLiveSettings()
     // Macro tree icons are black line art rendered onto transparency - on
     // the dark themes they'd disappear against the dark panel, so re-derive
     // every row's icon for the active theme (ThemeManager::themedIcon()),
-    // including after a live theme switch from the Options dialog. Cheap:
-    // LibraryManager::icon() is cached, only the re-tint runs per row.
+    // including after a live theme switch from the Options dialog. The pass
+    // touches hundreds of rows, so it only runs when something it depends
+    // on actually changed since the last pass.
     const QVariant treeIconsSetting = SettingsManager::getInstance()
             .loadSetting("macro_tree_icons_enabled");
-    if (!treeIconsSetting.isValid() || treeIconsSetting.toBool()) {
-        int macroIconSize = SettingsManager::getInstance().loadSetting("macro_icon_size").toInt();
-        if (macroIconSize <= 0)
-            macroIconSize = 32;
+    int macroIconSize = SettingsManager::getInstance().loadSetting("macro_icon_size").toInt();
+    if (macroIconSize <= 0)
+        macroIconSize = 32;
+    static bool lastPassDark = false;
+    static int lastPassIconSize = -1; // -1 = never ran
+    const bool macroIconsWanted = (!treeIconsSetting.isValid() || treeIconsSetting.toBool())
+            && ui->toolBoxLib->count() > 0;
+    if (macroIconsWanted && (ThemeManager::darkThemeActive() != lastPassDark
+                             || macroIconSize != lastPassIconSize)) {
+        lastPassDark = ThemeManager::darkThemeActive();
+        lastPassIconSize = macroIconSize;
         for (int page = 0; page < ui->toolBoxLib->count(); ++page) {
             auto *tree = qobject_cast<QTreeWidget *>(ui->toolBoxLib->widget(page));
             if (!tree)

@@ -37,6 +37,11 @@ public:
     void restoreDefaultSettings();
 
 signals:
+    // Emitted once per event-loop turn, no matter how many settings were
+    // saved in that turn (see saveSetting()'s coalescing) - receivers are
+    // whole-state refreshers (applyLiveSettings, SheetView::settingChanged,
+    // ...) that would otherwise re-run dozens of times for one Options
+    // dialog Apply, visibly freezing the UI.
     void settingIsChanged();
 
 private:
@@ -45,6 +50,7 @@ private:
     SettingsManager& operator=(const SettingsManager&) = delete;  // Disable the assignment operator
 
     QSettings m_settings;
+    bool m_changeSignalPending = false; // a coalesced emission is queued
 };
 
 #endif // SETTINGS_MANAGER_H
