@@ -33,11 +33,12 @@ const QStringList LanguageCodes = {
     "it", "en", "de", "fr", "es", "ru", "zh", "pl", "ja", "pt", "ar", "hi"
 };
 
-// Matches cboxStyle's item order 1:1 (Light/Dark/System/Stylesheet, see
-// DialogOptions.ui) - index into this to get/set the "gui_style" setting's
-// value from/to the combo box. Also consumed by ThemeManager::apply().
+// Matches cboxStyle's item order 1:1 (Light/Dark/the five built-in extra
+// themes/System/Stylesheet, see DialogOptions.ui) - index into this to
+// get/set the "gui_style" setting's value from/to the combo box. Also
+// consumed by ThemeManager::apply().
 const QStringList GuiStyleCodes = {
-    "light", "dark", "system", "custom"
+    "light", "dark", "nord", "midnight", "graphite", "sepia", "ocean", "system", "custom"
 };
 
 // listPages/stackPages order.

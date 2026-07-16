@@ -1,0 +1,383 @@
+/*
+ * eSchema - Ocean theme (built-in)
+ *
+ * Generated variant of the eSchema_dark.qss selector set: same widget
+ * coverage, recolored for the Ocean palette, with the theme's own UI font.
+ * ThemeManager applies a matching QPalette alongside (RulerWidget,
+ * LayerComboBox and PenStyleComboBox read palette() directly in paint code).
+ */
+
+QMenu {
+border:1px solid #88b2c6;
+padding-left:2px;
+background-color: #eaf4f8;
+color: #143a4d;
+}
+
+QMenuBar {
+color: #143a4d;
+font: 10pt "Verdana";
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #dcecf4, stop: 1 #eaf4f8);
+}
+
+QMenu::item {
+font: 10pt "Verdana";
+padding-left:2px;
+padding-right:25px;
+padding-top:2px;
+padding-bottom:2px;
+color: #143a4d;
+}
+QMenu::item:selected {
+color: #062330;
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 220), stop:0.508772 rgba(31, 111, 139, 200), stop:0.997301 rgba(72, 160, 188, 220));
+}
+
+QMenu::item:checked {
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 140), stop:0.508772 rgba(31, 111, 139, 160), stop:0.997301 rgba(72, 160, 188, 140));
+}
+
+QStatusBar {
+border-top:1px solid #88b2c6;
+background-color: #eaf4f8;
+color: #143a4d;
+}
+
+QToolBox::tab {
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                            stop: 0 #dcecf4, stop: 1 #eaf4f8);
+color: #143a4d;
+border:1px solid #9ec4d6;
+}
+
+QToolBox::tab:selected {
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 220), stop:0.508772 rgba(31, 111, 139, 200), stop:0.997301 rgba(72, 160, 188, 220));
+font: italic;
+color: #062330;
+border:1px solid #1f6f8b;
+}
+
+QToolBar {
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #dcecf4, stop: 1 #eaf4f8);
+}
+
+QToolBar QToolButton {
+border: 1px solid #9ec4d6;
+border-radius: 3px;
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #dcecf4, stop: 1 #cbe1ec);
+color: #143a4d;
+margin:1px;
+}
+
+QToolBar QToolButton[popupMode="1"] {
+padding-right: 20px;
+}
+
+QToolBar QToolButton:pressed {
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #cbe1ec, stop: 1 #dcecf4);
+}
+
+QToolBar QToolButton:checked {
+border: 1px solid #1f6f8b;
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 220), stop:0.508772 rgba(31, 111, 139, 200), stop:0.997301 rgba(72, 160, 188, 220));
+}
+
+QToolBar QToolButton::menu-button {
+border: 1px solid #9ec4d6;
+border-top-right-radius: 6px;
+border-bottom-right-radius: 6px;
+width: 16px;
+}
+
+QToolBar QToolButton::menu-arrow:open {
+top: 1px; left: 1px;
+}
+
+QToolTip {
+border: 1px solid #9ec4d6;
+background-color: #dcecf4;
+font:10pt "Verdana";
+color: #143a4d;
+padding:4px;
+border-radius:3px;
+}
+
+QTabWidget::pane {
+border: 2px solid #88b2c6;
+margin-right:4px;
+background-color: #eaf4f8;
+}
+
+QTabBar::tab {
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                            stop: 0 #dcecf4, stop: 1 #eaf4f8);
+border:1px solid #88b2c6;
+border-bottom-color: #88b2c6;
+height:16px;
+min-width: 14ex;
+padding: 8px;
+color: #143a4d;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                            stop: 0 #cbe1ec, stop: 1 #dcecf4);
+color: #062330;
+}
+
+QTabBar::tab:selected {
+border-color: #1f6f8b;
+border-bottom-color: #88b2c6;
+}
+
+QTabBar::tab:!selected {
+margin-top: 0px;
+}
+
+StatusBar > QLabel {
+color: #143a4d;
+font: 10pt "Verdana";
+margin-left:5px;
+}
+
+StatusBar > QPushButton {
+border: 1px solid #9ec4d6;
+border-radius: 3px;
+color: #143a4d;
+background-color: #dcecf4;
+margin:1px;
+}
+
+StatusBar > QPushButton:checked {
+border-color: #1f6f8b;
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 220), stop:0.508772 rgba(31, 111, 139, 200), stop:0.997301 rgba(72, 160, 188, 220));
+}
+
+QScrollBar:vertical {
+border: 1px solid #88b2c6;
+background-color: #eaf4f8;
+width:8px;
+margin: 0px 0px 0px 0px;
+border-radius:4px;
+}
+QScrollBar:horizontal {
+border: 1px solid #88b2c6;
+background-color: #eaf4f8;
+height:8px;
+margin: 0px 0px 0px 0px;
+border-radius:4px;
+}
+QScrollBar::handle:vertical{
+background-color: #8fb9cc;
+border-radius:2px;
+}
+QScrollBar::handle:horizontal {
+background-color: #8fb9cc;
+border-radius:2px;
+}
+QScrollBar::add-line {
+background-color: transparent;
+height: 0px;
+subcontrol-position: bottom;
+subcontrol-origin: margin;
+border-radius:4px;
+}
+QScrollBar::sub-line {
+background-color: transparent;
+height: 0 px;
+subcontrol-position: top;
+subcontrol-origin: margin;
+border-radius:4px;
+}
+
+QComboBox QAbstractItemView {
+border-radius:3px;
+border: 1px solid #9ec4d6;
+selection-background-color: #7fc3d8;
+background-color: #eaf4f8;
+color: #143a4d;
+}
+
+QComboBox {
+border: 1px solid #9ec4d6;
+border-radius: 3px;
+padding: 1px 18px 1px 3px;
+min-width: 6em;
+color: #143a4d;
+}
+
+QComboBox:editable {
+background: #ffffff;
+}
+
+QComboBox:!editable, QComboBox::drop-down:editable {
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                            stop: 0 #dcecf4, stop: 1 #cbe1ec);
+}
+
+QComboBox:!editable:on, QComboBox::drop-down:editable:on {
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                            stop: 0 #cbe1ec, stop: 1 #dcecf4);
+}
+
+QComboBox:on {
+padding-top: 3px;
+padding-left: 4px;
+}
+
+QComboBox::drop-down {
+subcontrol-origin: padding;
+subcontrol-position: top right;
+width: 15px;
+border-left-width: 1px;
+border-left-color: #9ec4d6;
+border-left-style: solid;
+border-top-right-radius: 3px;
+border-bottom-right-radius: 3px;
+}
+
+QComboBox::down-arrow {
+image:url(:res/resources/down.png);
+border: 0px;
+background-repeat: no-repeat;
+background-position: center center;
+height:10px;
+width:10px;
+}
+
+QComboBox::down-arrow:on {
+top: 1px;
+left: 1px;
+}
+
+QComboBox QAbstractItemView::item {
+min-height: 20px;
+}
+
+QComboBox QAbstractItemView::item:hover {
+color: #062330;
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 220), stop:0.508772 rgba(31, 111, 139, 200), stop:0.997301 rgba(72, 160, 188, 220));
+}
+
+QDoubleSpinBox, QSpinBox {
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                            stop: 0 #ffffff, stop: 1 #cbe1ec);
+border: 1px solid #9ec4d6;
+border-radius: 3px;
+color: #143a4d;
+}
+
+QLineEdit {
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                            stop: 0 #ffffff, stop: 1 #cbe1ec);
+border: 1px solid #9ec4d6;
+border-radius: 3px;
+color: #143a4d;
+}
+
+#txtSearch {
+border:1px solid #9ec4d6;
+border-top-right-radius:8px;
+border-top-left-radius:8px;
+border-bottom-right-radius:0px;
+border-bottom-left-radius:0px;
+margin-right:1px;
+padding: 2  2 2 20;
+background-image: url(:res/resources/search.png);
+background-repeat: no-repeat;
+background-position: left center;
+background-color: #ffffff;
+color: #143a4d;
+}
+
+LayerListView {
+background-color: #eaf4f8;
+color: #143a4d;
+}
+
+LayerListView QLineEdit {
+font: 10pt "Verdana";
+border:1px solid #9ec4d6;
+background:#ffffff;
+color: #143a4d;
+height: 20px;
+text-align:left;
+}
+
+LayerListView::item {
+border-bottom:1px solid #88b2c6;
+}
+
+LayerListView::item:selected {
+border: 1px solid #1f6f8b;
+}
+
+LayerListView::item:selected:!active {
+background-color: #cbe1ec;
+}
+
+LayerListView::item:selected:active {
+background-color: #cbe1ec;
+}
+
+LayerListView::item:hover {
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 220), stop:0.508772 rgba(31, 111, 139, 200), stop:0.997301 rgba(72, 160, 188, 220));
+}
+
+.layoutLayerListButton {
+border: 1px solid #9ec4d6;
+border-radius: 3px;
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #dcecf4, stop: 1 #cbe1ec);
+margin:1px;
+}
+
+.layoutLayerListButton:hover {
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 220), stop:0.508772 rgba(31, 111, 139, 200), stop:0.997301 rgba(72, 160, 188, 220));
+}
+
+/* DialogCreateMacro.ui: validation error label (semantic, kept identical
+   across all themes for consistent legibility) */
+QLabel#labelError {
+color: rgb(200, 0, 0);
+}
+
+/* LayerToolBarWidget.ui: "ACTIVE LAYER" caption */
+LayerToolBarWidget QLabel#label {
+border:1px solid #9ec4d6;
+background-color: #cbe1ec;
+color: #062330;
+}
+
+DialogOptions, DialogOptions * {
+font: 10pt "Verdana";
+}
+
+/* Containers the base sheet never styled - enumerated, not a blanket
+   QWidget{} rule, to avoid degrading native rendering of internal
+   sub-widgets Qt's style engine otherwise handles natively. */
+QMainWindow, QDialog, QDockWidget, QDockWidget > QWidget,
+QScrollArea, QScrollArea > QWidget, QToolBox, QToolBox QWidget,
+QGroupBox, QLabel {
+background-color: #eaf4f8;
+color: #143a4d;
+}
+QGroupBox::title {
+color: #143a4d;
+}
+QDockWidget::title {
+background-color: #cbe1ec;
+color: #143a4d;
+padding: 3px;
+}
+
+/* Custom-painted widgets that read palette() directly - ThemeManager also
+   sets a matching QPalette, these rules keep QSS authoritative too. */
+RulerWidget, LayerComboBox, PenStyleComboBox {
+background-color: #eaf4f8;
+color: #143a4d;
+}

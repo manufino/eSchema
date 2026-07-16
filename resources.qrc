@@ -172,6 +172,11 @@
     <qresource prefix="/styles">
         <file alias="eSchema.qss">resources/styles/eSchema.qss</file>
         <file alias="eSchema_dark.qss">resources/styles/eSchema_dark.qss</file>
+        <file alias="eSchema_nord.qss">resources/styles/eSchema_nord.qss</file>
+        <file alias="eSchema_midnight.qss">resources/styles/eSchema_midnight.qss</file>
+        <file alias="eSchema_graphite.qss">resources/styles/eSchema_graphite.qss</file>
+        <file alias="eSchema_sepia.qss">resources/styles/eSchema_sepia.qss</file>
+        <file alias="eSchema_ocean.qss">resources/styles/eSchema_ocean.qss</file>
         <file alias="eSchema_system.qss">resources/styles/eSchema_system.qss</file>
     </qresource>
 </RCC>

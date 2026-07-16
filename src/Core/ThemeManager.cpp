@@ -112,25 +112,44 @@ void retintIcons(bool dark)
 }
 
 // RulerWidget/LayerComboBox/PenStyleComboBox read palette() directly in
-// their paint code rather than relying purely on the QSS cascade, so the
-// dark theme needs a matching QPalette alongside eSchema_dark.qss to stay
-// visually consistent.
-QPalette darkPalette()
+// their paint code rather than relying purely on the QSS cascade, so every
+// built-in theme needs a matching QPalette alongside its .qss to stay
+// visually consistent. This builds one from a theme's few key colors.
+QPalette themedPalette(const QColor &window, const QColor &base, const QColor &text,
+                       const QColor &button, const QColor &highlight,
+                       const QColor &highlightedText)
 {
     QPalette palette;
-    palette.setColor(QPalette::Window, QColor(43, 43, 43));
-    palette.setColor(QPalette::WindowText, QColor(220, 220, 220));
-    palette.setColor(QPalette::Base, QColor(35, 35, 35));
-    palette.setColor(QPalette::AlternateBase, QColor(43, 43, 43));
-    palette.setColor(QPalette::ToolTipBase, QColor(58, 58, 58));
-    palette.setColor(QPalette::ToolTipText, QColor(220, 220, 220));
-    palette.setColor(QPalette::Text, QColor(220, 220, 220));
-    palette.setColor(QPalette::Button, QColor(58, 58, 58));
-    palette.setColor(QPalette::ButtonText, QColor(220, 220, 220));
+    palette.setColor(QPalette::Window, window);
+    palette.setColor(QPalette::WindowText, text);
+    palette.setColor(QPalette::Base, base);
+    palette.setColor(QPalette::AlternateBase, window);
+    palette.setColor(QPalette::ToolTipBase, button);
+    palette.setColor(QPalette::ToolTipText, text);
+    palette.setColor(QPalette::Text, text);
+    palette.setColor(QPalette::Button, button);
+    palette.setColor(QPalette::ButtonText, text);
     palette.setColor(QPalette::BrightText, Qt::red);
+    palette.setColor(QPalette::Link, highlight);
+    palette.setColor(QPalette::Highlight, highlight);
+    palette.setColor(QPalette::HighlightedText, highlightedText);
+    // Disabled text: halfway between the surface and the normal text, so it
+    // reads as dimmed on any theme, light or dark.
+    const QColor disabled((window.red() + text.red()) / 2,
+                          (window.green() + text.green()) / 2,
+                          (window.blue() + text.blue()) / 2);
+    palette.setColor(QPalette::Disabled, QPalette::WindowText, disabled);
+    palette.setColor(QPalette::Disabled, QPalette::Text, disabled);
+    palette.setColor(QPalette::Disabled, QPalette::ButtonText, disabled);
+    return palette;
+}
+
+QPalette darkPalette()
+{
+    QPalette palette = themedPalette(QColor(43, 43, 43), QColor(35, 35, 35),
+                                     QColor(220, 220, 220), QColor(58, 58, 58),
+                                     QColor(47, 111, 122), Qt::white);
     palette.setColor(QPalette::Link, QColor(63, 167, 180));
-    palette.setColor(QPalette::Highlight, QColor(47, 111, 122));
-    palette.setColor(QPalette::HighlightedText, Qt::white);
     palette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(110, 110, 110));
     palette.setColor(QPalette::Disabled, QPalette::Text, QColor(110, 110, 110));
     palette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(110, 110, 110));
@@ -149,10 +168,47 @@ void ThemeManager::apply()
 
     const QString style = SettingsManager::getInstance().loadSetting("gui_style").toString();
 
+    // Dark surfaces need the monochrome black icons re-tinted light.
+    bool darkIcons = false;
+
     QString qssPath;
     if (style == "dark") {
         qssPath = ":/styles/eSchema_dark.qss";
         qApp->setPalette(darkPalette());
+        darkIcons = true;
+    } else if (style == "nord") {
+        // Arctic blue-gray (the Nord palette), Segoe UI.
+        qssPath = ":/styles/eSchema_nord.qss";
+        qApp->setPalette(themedPalette(QColor(0x2e, 0x34, 0x40), QColor(0x27, 0x2c, 0x36),
+                                       QColor(0xd8, 0xde, 0xe9), QColor(0x3b, 0x42, 0x52),
+                                       QColor(0x5e, 0x81, 0xac), Qt::white));
+        darkIcons = true;
+    } else if (style == "midnight") {
+        // Deep navy with violet-blue accents, Trebuchet MS.
+        qssPath = ":/styles/eSchema_midnight.qss";
+        qApp->setPalette(themedPalette(QColor(0x14, 0x1a, 0x2e), QColor(0x0f, 0x14, 0x25),
+                                       QColor(0xc7, 0xd0, 0xf0), QColor(0x1e, 0x27, 0x42),
+                                       QColor(0x3d, 0x59, 0xa1), Qt::white));
+        darkIcons = true;
+    } else if (style == "graphite") {
+        // Neutral grays with an orange accent, Consolas.
+        qssPath = ":/styles/eSchema_graphite.qss";
+        qApp->setPalette(themedPalette(QColor(0x26, 0x26, 0x26), QColor(0x1f, 0x1f, 0x1f),
+                                       QColor(0xe0, 0xe0, 0xe0), QColor(0x38, 0x38, 0x38),
+                                       QColor(0xb3, 0x5a, 0x12), Qt::white));
+        darkIcons = true;
+    } else if (style == "sepia") {
+        // Warm paper tones, Georgia.
+        qssPath = ":/styles/eSchema_sepia.qss";
+        qApp->setPalette(themedPalette(QColor(0xf4, 0xec, 0xd8), QColor(0xfd, 0xf8, 0xec),
+                                       QColor(0x4a, 0x3b, 0x24), QColor(0xef, 0xe4, 0xc8),
+                                       QColor(0xc8, 0xa8, 0x6e), QColor(0x2e, 0x24, 0x13)));
+    } else if (style == "ocean") {
+        // Fresh light blue-teal, Verdana.
+        qssPath = ":/styles/eSchema_ocean.qss";
+        qApp->setPalette(themedPalette(QColor(0xea, 0xf4, 0xf8), QColor(0xff, 0xff, 0xff),
+                                       QColor(0x14, 0x3a, 0x4d), QColor(0xdc, 0xec, 0xf4),
+                                       QColor(0x7f, 0xc3, 0xd8), QColor(0x06, 0x23, 0x30)));
     } else if (style == "system") {
         qssPath = ":/styles/eSchema_system.qss";
         qApp->setPalette(kDefaultPalette);
@@ -177,5 +233,5 @@ void ThemeManager::apply()
     }
     qApp->setStyleSheet(qss);
 
-    retintIcons(style == "dark");
+    retintIcons(darkIcons);
 }

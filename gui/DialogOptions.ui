@@ -316,6 +316,31 @@
              </item>
              <item>
               <property name="text">
+               <string notr="true">Nord</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string notr="true">Midnight</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string notr="true">Graphite</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string notr="true">Sepia</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string notr="true">Ocean</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>System</string>
               </property>
              </item>
