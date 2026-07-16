@@ -18,6 +18,13 @@
         <file>resources/object_snap.png</file>
         <file>resources/regular_polygon.png</file>
         <file>resources/measure.png</file>
+        <file>resources/fillet.png</file>
+        <file>resources/chamfer.png</file>
+        <file>resources/offset.png</file>
+        <file>resources/simplify.png</file>
+        <file>resources/rulers.png</file>
+        <file>resources/shape_tools.png</file>
+        <file>resources/snap_selection.png</file>
         <file>resources/arrow.png</file>
         <file>resources/bezier.png</file>
         <file>resources/complexcurve.png</file>

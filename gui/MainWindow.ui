@@ -1513,6 +1513,10 @@
     <addaction name="separator"/>
     <addaction name="actionFind"/>
     <widget class="QMenu" name="menuAlign">
+     <property name="icon">
+      <iconset resource="../resources.qrc">
+       <normaloff>:/res/resources/align/align_left.png</normaloff>:/res/resources/align/align_left.png</iconset>
+     </property>
      <property name="title">
       <string>Align and distribute</string>
      </property>
@@ -1529,6 +1533,10 @@
      <addaction name="actionSnapSelectionToGrid"/>
     </widget>
     <widget class="QMenu" name="menuShape">
+     <property name="icon">
+      <iconset resource="../resources.qrc">
+       <normaloff>:/res/resources/shape_tools.png</normaloff>:/res/resources/shape_tools.png</iconset>
+     </property>
      <property name="title">
       <string>Shape</string>
      </property>
@@ -1542,6 +1550,10 @@
      <addaction name="actionOffsetOutline"/>
     </widget>
     <widget class="QMenu" name="menuBoolean">
+     <property name="icon">
+      <iconset resource="../resources.qrc">
+       <normaloff>:/res/resources/boolean_union.png</normaloff>:/res/resources/boolean_union.png</iconset>
+     </property>
      <property name="title">
       <string>Boolean operations</string>
      </property>
@@ -2179,6 +2191,10 @@
    </property>
   </action>
   <action name="actionAbout_Qt">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/question-line.png</normaloff>:/res/resources/remix/question-line.png</iconset>
+   </property>
    <property name="text">
     <string>About Qt</string>
    </property>
@@ -2582,6 +2598,10 @@
    </property>
   </action>
   <action name="actionCustomizeToolbars">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/list-settings-line.png</normaloff>:/res/resources/remix/list-settings-line.png</iconset>
+   </property>
    <property name="text">
     <string>Customize toolbars...</string>
    </property>
@@ -2668,6 +2688,10 @@
    </property>
   </action>
   <action name="actionBooleanSmooth">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/bezier.png</normaloff>:/res/resources/bezier.png</iconset>
+   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -2724,6 +2748,10 @@
    </property>
   </action>
   <action name="actionConvertToPolygon">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/polygon.png</normaloff>:/res/resources/polygon.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -2735,6 +2763,10 @@
    </property>
   </action>
   <action name="actionConvertToCurve">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/complexcurve.png</normaloff>:/res/resources/complexcurve.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -2746,6 +2778,10 @@
    </property>
   </action>
   <action name="actionSimplifyNodes">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/simplify.png</normaloff>:/res/resources/simplify.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -2757,6 +2793,10 @@
    </property>
   </action>
   <action name="actionFilletCorners">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/fillet.png</normaloff>:/res/resources/fillet.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -2768,6 +2808,10 @@
    </property>
   </action>
   <action name="actionChamferCorners">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/chamfer.png</normaloff>:/res/resources/chamfer.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -2779,6 +2823,10 @@
    </property>
   </action>
   <action name="actionSnapSelectionToGrid">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/snap_selection.png</normaloff>:/res/resources/snap_selection.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -2790,6 +2838,10 @@
    </property>
   </action>
   <action name="actionOffsetOutline">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/offset.png</normaloff>:/res/resources/offset.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -2801,6 +2853,10 @@
    </property>
   </action>
   <action name="actionInvertSelection">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/checkbox-indeterminate-line.png</normaloff>:/res/resources/remix/checkbox-indeterminate-line.png</iconset>
+   </property>
    <property name="text">
     <string>Invert selection</string>
    </property>
@@ -2809,6 +2865,10 @@
    </property>
   </action>
   <action name="actionSelectSameType">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/checkbox-multiple-line.png</normaloff>:/res/resources/remix/checkbox-multiple-line.png</iconset>
+   </property>
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -2820,6 +2880,10 @@
    </property>
   </action>
   <action name="actionRulersVisible">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/rulers.png</normaloff>:/res/resources/rulers.png</iconset>
+   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
