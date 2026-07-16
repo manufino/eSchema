@@ -297,6 +297,38 @@ color: #ffffff;
 
 /******************************************************************************************************/
 
+/* Plain dialog buttons (OK/Cancel/Apply, browse buttons, ...): without
+   this, the native style draws them in its own light chrome while the
+   dialog rule below inherits the light text color into them -
+   unreadable. StatusBar/layer-panel buttons keep their own more specific
+   rules. */
+QPushButton {
+    border: 1px solid #555555;
+    border-radius: 3px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #454545, stop: 1 #333333);
+	color: #dcdcdc;
+    padding: 4px 14px;
+}
+
+QPushButton:hover {
+    border: 1px solid #2fa7b4;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #333333, stop: 1 #454545);
+}
+
+QPushButton:default {
+    border: 1px solid #2fa7b4;
+}
+
+QPushButton:disabled {
+	color: #6e6e6e;
+    border-color: #4a4a4a;
+}
+
 QDoubleSpinBox, QSpinBox {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                 stop: 0 #2b2b2b, stop: 0.4 #313131,

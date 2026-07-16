@@ -263,6 +263,38 @@ color: #062330;
 background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(46, 139, 168, 220), stop:0.508772 rgba(31, 111, 139, 200), stop:0.997301 rgba(72, 160, 188, 220));
 }
 
+/* Plain dialog buttons (OK/Cancel/Apply, browse buttons, ...): without
+   this, the native style draws them in its own light chrome while the
+   theme's inherited text color stays theme-colored - unreadable on dark
+   surfaces. StatusBar/layer-panel buttons keep their own more specific
+   rules. */
+QPushButton {
+border: 1px solid #9ec4d6;
+border-radius: 3px;
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #dcecf4, stop: 1 #cbe1ec);
+color: #143a4d;
+padding: 4px 14px;
+}
+
+QPushButton:hover {
+border: 1px solid #1f6f8b;
+}
+
+QPushButton:pressed {
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #cbe1ec, stop: 1 #dcecf4);
+}
+
+QPushButton:default {
+border: 1px solid #1f6f8b;
+}
+
+QPushButton:disabled {
+color: #8fb9cc;
+border-color: #88b2c6;
+}
+
 QDoubleSpinBox, QSpinBox {
 background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                             stop: 0 #ffffff, stop: 1 #cbe1ec);
