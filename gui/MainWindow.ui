@@ -1559,6 +1559,7 @@
     <addaction name="actionToolBarBaseVisible"/>
     <addaction name="actionToolBarPrimitiveVisible"/>
     <addaction name="actionToolBarModifyVisible"/>
+    <addaction name="actionCustomizeToolbars"/>
     <addaction name="actionRulersVisible"/>
     <addaction name="separator"/>
     <addaction name="actionAdjustView"/>
@@ -2578,6 +2579,14 @@
    </property>
    <property name="text">
     <string>Drawing tools</string>
+   </property>
+  </action>
+  <action name="actionCustomizeToolbars">
+   <property name="text">
+    <string>Customize toolbars...</string>
+   </property>
+   <property name="toolTip">
+    <string>Add, remove, and reorder the commands on the toolbars</string>
    </property>
   </action>
   <action name="actionSnapToObjects">

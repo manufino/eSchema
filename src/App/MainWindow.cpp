@@ -28,6 +28,7 @@
 
 #include "MainWindow.h"
 #include "appversion.h"
+#include "DialogCustomizeToolbars.h"
 #include "ui_MainWindow.h"
 #include "DialogAttachImage.h"
 #include "DialogExport.h"
@@ -71,6 +72,8 @@
 #include <QUndoCommand>
 #include <QPainterPath>
 #include <QTabBar>
+#include <QWidgetAction>
+#include <functional>
 
 namespace {
 // Passed to save/restoreState() so a layout saved by an older build - with a
@@ -338,6 +341,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &MainWindow::applyLiveSettings);
     applyLiveSettings();
+
+    // Per-toolbar command customization (View > Customize toolbars...).
+    loadToolbarCustomizations();
+    connect(ui->actionCustomizeToolbars, &QAction::triggered,
+            this, &MainWindow::clickCustomizeToolbarsAction);
 
     // 0 = unlimited (QUndoStack's own default). Only effective while the
     // stack is empty, hence set once here; a change from the Options dialog
@@ -1021,6 +1029,142 @@ void MainWindow::refreshDockTabIcons()
             }
         }
     }
+}
+
+QList<QAction *> MainWindow::toolbarActionCatalog() const
+{
+    // Pure view toggles make no sense as toolbar commands.
+    static const QStringList Excluded = {
+        QStringLiteral("actionToolBarBaseVisible"),
+        QStringLiteral("actionToolBarPrimitiveVisible"),
+        QStringLiteral("actionToolBarModifyVisible"),
+        QStringLiteral("actionRulersVisible"),
+        QStringLiteral("actionCustomizeToolbars"),
+    };
+
+    QList<QAction *> catalog;
+    std::function<void(QMenu *)> collect = [&](QMenu *menu) {
+        for (QAction *action : menu->actions()) {
+            if (action->isSeparator())
+                continue;
+            if (QMenu *submenu = action->menu()) {
+                collect(submenu);
+                continue;
+            }
+            if (action->objectName().isEmpty() || action->text().isEmpty())
+                continue; // dynamically built entries (recent files, dock toggles, ...)
+            if (Excluded.contains(action->objectName()) || catalog.contains(action))
+                continue;
+            catalog.append(action);
+        }
+    };
+    for (QAction *topLevel : ui->menubar->actions()) {
+        if (QMenu *menu = topLevel->menu())
+            collect(menu);
+    }
+    return catalog;
+}
+
+QList<QToolBar *> MainWindow::customizableToolbars() const
+{
+    return { ui->toolBarTools, ui->toolBarModify };
+}
+
+QStringList MainWindow::toolbarLayoutOf(QToolBar *toolBar) const
+{
+    QStringList layout;
+    for (QAction *action : toolBar->actions()) {
+        if (qobject_cast<QWidgetAction *>(action))
+            continue; // e.g. the layer combobox - not a command, stays put
+        if (action->isSeparator())
+            layout.append(QStringLiteral("separator"));
+        else if (!action->objectName().isEmpty())
+            layout.append(action->objectName());
+    }
+    return layout;
+}
+
+void MainWindow::applyToolbarLayout(QToolBar *toolBar, const QStringList &layout)
+{
+    // Strip the current commands, keeping widget actions (layer combobox)
+    // where they are; the rebuilt commands are inserted before the first of
+    // them, i.e. exactly where the commands used to live.
+    QAction *firstWidgetAction = nullptr;
+    const QList<QAction *> existing = toolBar->actions();
+    for (QAction *action : existing) {
+        if (qobject_cast<QWidgetAction *>(action)) {
+            if (!firstWidgetAction)
+                firstWidgetAction = action;
+            continue;
+        }
+        toolBar->removeAction(action);
+        // Separators are throwaway QActions owned by the toolbar - delete
+        // them or they'd pile up across rebuilds. Real commands are owned
+        // by the .ui and just get detached.
+        if (action->isSeparator() && action->parent() == toolBar)
+            delete action;
+    }
+
+    for (const QString &name : layout) {
+        if (name == QStringLiteral("separator")) {
+            auto *separator = new QAction(toolBar);
+            separator->setSeparator(true);
+            toolBar->insertAction(firstWidgetAction, separator);
+        } else if (QAction *action = findChild<QAction *>(name)) {
+            toolBar->insertAction(firstWidgetAction, action);
+        }
+    }
+}
+
+void MainWindow::loadToolbarCustomizations()
+{
+    for (QToolBar *toolBar : customizableToolbars()) {
+        m_defaultToolbarLayouts.insert(toolBar, toolbarLayoutOf(toolBar));
+        const QVariant saved = SettingsManager::getInstance()
+                .loadSetting(QStringLiteral("toolbar_custom_") + toolBar->objectName());
+        if (saved.isValid())
+            applyToolbarLayout(toolBar, saved.toStringList());
+    }
+}
+
+void MainWindow::clickCustomizeToolbarsAction()
+{
+    QList<DialogCustomizeToolbars::ToolbarEntry> entries;
+    // User-visible toolbar names: reuse the View menu's own toggle labels,
+    // so the dialog and the menu can never drift apart.
+    const QHash<QToolBar *, QString> titles = {
+        { ui->toolBarTools, ui->actionToolBarBaseVisible->text() },
+        { ui->toolBarModify, ui->actionToolBarModifyVisible->text() },
+    };
+    for (QToolBar *toolBar : customizableToolbars()) {
+        DialogCustomizeToolbars::ToolbarEntry entry;
+        entry.toolBar = toolBar;
+        entry.title = titles.value(toolBar, toolBar->objectName());
+        entry.currentLayout = toolbarLayoutOf(toolBar);
+        entry.defaultLayout = m_defaultToolbarLayouts.value(toolBar);
+        entries.append(entry);
+    }
+
+    DialogCustomizeToolbars dialog(toolbarActionCatalog(), entries, this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+
+    const QHash<QToolBar *, QStringList> layouts = dialog.layouts();
+    for (auto it = layouts.constBegin(); it != layouts.constEnd(); ++it) {
+        applyToolbarLayout(it.key(), it.value());
+        SettingsManager::getInstance().saveSetting(
+                QStringLiteral("toolbar_custom_") + it.key()->objectName(), it.value());
+    }
+}
+
+QMenu *MainWindow::createPopupMenu()
+{
+    QMenu *menu = QMainWindow::createPopupMenu();
+    if (menu) {
+        menu->addSeparator();
+        menu->addAction(ui->actionCustomizeToolbars);
+    }
+    return menu;
 }
 
 void MainWindow::applyLiveSettings()

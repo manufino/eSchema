@@ -56,6 +56,7 @@ class QImage;
 class QUrl;
 class DialogFind;
 class UpdateChecker;
+class QToolBar;
 namespace BooleanOps { enum class Operation; }
 
 class MainWindow : public QMainWindow
@@ -77,6 +78,9 @@ protected:
     // actually closes. Triggered both by File > Close and the window's own
     // titlebar close button, since QWidget::close() reaches here either way.
     void closeEvent(QCloseEvent *event) override;
+    // QMainWindow's default toolbar/dock right-click menu (the visibility
+    // toggles), extended with "Customize toolbars...".
+    QMenu *createPopupMenu() override;
     // Dropping a .fcd (open) or .dxf (import) file anywhere on the window
     // loads it, exactly like the corresponding File menu entry - including
     // the unsaved-changes prompt. Other drops are refused at enter time.
@@ -85,6 +89,7 @@ protected:
 
 public slots:
     void clickOptionAction();
+    void clickCustomizeToolbarsAction();
     void clickAboutAction();
     void clickShortcutsAction();
     void clickCheckUpdatesAction();
@@ -270,6 +275,26 @@ private:
     // to SettingsManager::settingIsChanged() so the Options dialog's Apply
     // takes effect immediately, and called once at startup.
     void applyLiveSettings();
+
+    // --- Toolbar customization (View > Customize toolbars...) -------------
+    // Every command offered by the customize dialog: the actions reachable
+    // from the menu bar (recursively through submenus) that have a unique
+    // objectName - excluding pure view toggles like the toolbar/rulers
+    // visibility actions.
+    QList<QAction *> toolbarActionCatalog() const;
+    // The customizable toolbars (the two command toolbars - the drawing-tool
+    // palette is tied to the tool selector and stays fixed).
+    QList<QToolBar *> customizableToolbars() const;
+    // `layout` as stored: action objectNames, with "separator" entries.
+    // Widget actions already on the toolbar (e.g. the layer combobox) are
+    // preserved in place; the commands are rebuilt before them.
+    void applyToolbarLayout(QToolBar *toolBar, const QStringList &layout);
+    // The current command layout of `toolBar`, in the same format.
+    QStringList toolbarLayoutOf(QToolBar *toolBar) const;
+    // Captures the shipped defaults, then applies any persisted
+    // customization ("toolbar_custom_<objectName>") - called once at startup.
+    void loadToolbarCustomizations();
+    QHash<QToolBar *, QStringList> m_defaultToolbarLayouts;
     // Inserts a new vertex into `primitive` (a polygon or complex curve, per
     // GraphicsPrimitive::supportsNodeEditing()) at the edge nearest
     // `scenePos`, as one undoable step - wired to the canvas context menu's
