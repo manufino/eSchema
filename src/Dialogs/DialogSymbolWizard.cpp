@@ -134,7 +134,7 @@ DialogSymbolWizard::DialogSymbolWizard(QWidget *parent) :
     // "+": create a brand-new library right here - the combo is editable
     // anyway (typing an unknown name creates it on save), but an explicit
     // button makes that discoverable.
-    connect(ui->btnNewLibrary, &QToolButton::clicked, this, [this]() {
+    connect(ui->btnNewLibrary, &QPushButton::clicked, this, [this]() {
         bool ok = false;
         const QString name = QInputDialog::getText(this, tr("New library"),
                                                    tr("Library name:"),
