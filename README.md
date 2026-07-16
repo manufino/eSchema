@@ -144,7 +144,16 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 
 ## What's new
 
-### 1.0.6
+### 1.0.7
+- **Parametric symbol wizard** (Tools > Symbol wizard): DIP/SIP/quad packages in through-hole, SMD, or schematic style, pin numbers and/or names, live preview, saved straight into any user library — including a brand-new one created from the same dialog
+- **Angular and radial dimension tools** with AutoCAD-style picking: hovering highlights the two lines (rectangle edges work too) or the circle, and the center is found automatically
+- **Title-block library**: ready-made A4/A3 drawing frames at real paper sizes
+- Hold **Shift while drawing** to constrain lines to 45° steps and rectangles/ellipses to squares/circles
+- **Offset rework**: the dialog asks only the distance, then the mouse picks the side with a live preview until you click (AutoCAD-style); offset polygons and curves keep exactly the original node count, and every base primitive can now be offset (lines, Béziers, rectangles, ellipses, polygons, complex curves)
+- The **command palette search box** now sits centered in the menu bar
+- **Nord is the default theme** on a fresh install
+- Reliability fixes from a full code review: an undo/redo double free, dangling layer pointers after deleting a layer, verified atomic saves/exports, DXF import/export hardened against malformed files, and lifetime fixes around tool previews
+- Performance: settings reads are cached and selection/settings/clipboard notifications are coalesced, removing multi-second freezes with large selections or when applying options
 - **Customizable toolbars** (View > Customize toolbars...): add, remove, and reorder the commands on the main and Modify toolbars
 - **Customizable keyboard shortcuts**: the shortcut list becomes a searchable editor — reassign or remove any command's binding, with conflict handling and one-click defaults
 - **Command palette** (Ctrl+Shift+P): search and run any command by name
