@@ -21,6 +21,20 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                   stop: 0 #383838, stop: 1 #262626);
 }
 
+/* The menu bar's own top-level items: without these rules the native
+   style paints the selected item's highlight with palette colors that
+   don't match the theme, leaving the text unreadable. */
+QMenuBar::item {
+background: transparent;
+color: #e0e0e0;
+padding: 4px 8px;
+}
+
+QMenuBar::item:selected, QMenuBar::item:pressed {
+color: #ffffff;
+background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(211, 84, 0, 235), stop:0.508772 rgba(190, 90, 20, 215), stop:0.997301 rgba(230, 126, 34, 235));
+}
+
 QMenu::item {
 font: 10pt "Consolas";
 padding-left:2px;
