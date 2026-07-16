@@ -1550,6 +1550,10 @@
      <addaction name="actionFilletCorners"/>
      <addaction name="actionChamferCorners"/>
      <addaction name="actionOffsetOutline"/>
+     <addaction name="separator"/>
+     <addaction name="actionSplitAtPoint"/>
+     <addaction name="actionTrimToIntersection"/>
+     <addaction name="actionExtendToIntersection"/>
     </widget>
     <widget class="QMenu" name="menuBoolean">
      <property name="icon">
@@ -2645,6 +2649,42 @@
    </property>
    <property name="toolTip">
     <string>Add, remove, and reorder the commands on the toolbars</string>
+   </property>
+  </action>
+  <action name="actionSplitAtPoint">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/split_point.png</normaloff>:/res/resources/split_point.png</iconset>
+   </property>
+   <property name="text">
+    <string>Split at point</string>
+   </property>
+   <property name="toolTip">
+    <string>Split the selected line, curve or track in two at a clicked point</string>
+   </property>
+  </action>
+  <action name="actionTrimToIntersection">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/trim.png</normaloff>:/res/resources/trim.png</iconset>
+   </property>
+   <property name="text">
+    <string>Trim to intersection</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove the clicked part of a line up to where it crosses other primitives</string>
+   </property>
+  </action>
+  <action name="actionExtendToIntersection">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/extend.png</normaloff>:/res/resources/extend.png</iconset>
+   </property>
+   <property name="text">
+    <string>Extend to intersection</string>
+   </property>
+   <property name="toolTip">
+    <string>Extend the nearest end of a line until it meets another primitive</string>
    </property>
   </action>
   <action name="actionClearGuides">

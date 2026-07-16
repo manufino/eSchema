@@ -25,6 +25,10 @@
         <file>resources/rulers.png</file>
         <file>resources/shape_tools.png</file>
         <file>resources/snap_selection.png</file>
+        <file>resources/split_point.png</file>
+        <file>resources/trim.png</file>
+        <file>resources/extend.png</file>
+        <file>resources/dimension.png</file>
         <file>resources/arrow.png</file>
         <file>resources/bezier.png</file>
         <file>resources/complexcurve.png</file>

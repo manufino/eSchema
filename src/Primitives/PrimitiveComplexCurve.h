@@ -64,6 +64,11 @@ public:
     QStringList toTokens() const override;
     bool supportsArrows() const override { return !m_closed; }
 
+    // The interpolating spline actually painted - exposed for the editing
+    // commands (trim/extend boundaries) that need the true curve geometry
+    // rather than the bare vertex chain.
+    QPainterPath curvePath() const { return buildSplinePath(); }
+
 private:
     QPainterPath buildSplinePath() const;
 

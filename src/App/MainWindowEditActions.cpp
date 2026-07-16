@@ -133,8 +133,12 @@ int nearestSegmentInsertIndex(GraphicsPrimitive *primitive, const QPointF &scene
 class ScenePointPicker : public QObject
 {
 public:
-    ScenePointPicker(SheetView *view, Sheet *sheet)
-        : m_view(view), m_sheet(sheet) {}
+    // `snap` false picks the raw scene position instead of the object/grid
+    // snapped one - used when the click selects *which part* of something
+    // was hit (trim/extend) rather than an exact coordinate, where snapping
+    // could jump the pick across the very intersection being targeted.
+    ScenePointPicker(SheetView *view, Sheet *sheet, bool snap = true)
+        : m_view(view), m_sheet(sheet), m_snap(snap) {}
 
     bool run(QPointF *picked)
     {
@@ -159,8 +163,9 @@ protected:
             if (event->type() == QEvent::MouseButtonPress) {
                 auto *mouse = static_cast<QMouseEvent *>(event);
                 if (mouse->button() == Qt::LeftButton) {
-                    m_point = m_sheet->snapPosition(
-                                m_view->mapToScene(mouse->position().toPoint()));
+                    const QPointF scenePos =
+                            m_view->mapToScene(mouse->position().toPoint());
+                    m_point = m_snap ? m_sheet->snapPosition(scenePos) : scenePos;
                     m_accepted = true;
                     m_loop.quit();
                     return true; // the click must not also select/draw anything
@@ -174,8 +179,10 @@ protected:
                 // The move must be swallowed: SheetView's own mouseMoveEvent
                 // would otherwise clear the highlight right back (its
                 // "not placing anything" branch) and reset the cursor.
-                m_sheet->snapPosition(m_view->mapToScene(
-                        static_cast<QMouseEvent *>(event)->position().toPoint()));
+                if (m_snap) {
+                    m_sheet->snapPosition(m_view->mapToScene(
+                            static_cast<QMouseEvent *>(event)->position().toPoint()));
+                }
                 return true;
             }
         }
@@ -190,6 +197,7 @@ protected:
 private:
     SheetView *m_view;
     Sheet *m_sheet;
+    bool m_snap;
     QEventLoop m_loop;
     QPointF m_point;
     bool m_accepted = false;
@@ -293,6 +301,90 @@ GraphicsPrimitive *makeShapeLike(GraphicsPrimitive *source, const QVector<QPoint
     shape->setName(source->name());
     shape->setValue(source->value());
     return shape;
+}
+
+// --- Split / Trim / Extend helpers -----------------------------------------
+
+// A fresh, independent copy of one primitive via the same FCD serialize/
+// parse round trip Duplicate relies on - style, layer, arrows and labels
+// all come along.
+GraphicsPrimitive *clonePrimitive(GraphicsPrimitive *primitive, Sheet *sheet)
+{
+    QList<GraphicsPrimitive *> clones = FidoCadReader::parse(
+            FidoCadWriter::writeSelection({ primitive }), sheet);
+    if (clones.size() == 1)
+        return clones.first();
+    qDeleteAll(clones);
+    return nullptr;
+}
+
+// The parameter (clamped to [0, 1]) of `p`'s projection onto segment [a, b].
+qreal segmentParam(const QPointF &p, const QPointF &a, const QPointF &b)
+{
+    const QPointF ab = b - a;
+    const qreal lengthSq = QPointF::dotProduct(ab, ab);
+    if (lengthSq <= 0.0)
+        return 0.0;
+    return qBound<qreal>(0.0, QPointF::dotProduct(p - a, ab) / lengthSq, 1.0);
+}
+
+// What Split at point accepts: the open, line-like primitives. Closed
+// shapes have no "two halves" to split into and are served by the boolean
+// operations instead.
+bool splittableAtPoint(GraphicsPrimitive *primitive)
+{
+    switch (primitive->getPrimitiveType()) {
+    case GraphicsPrimitive::Line:
+    case GraphicsPrimitive::PcbTrack:
+    case GraphicsPrimitive::Bezier:
+        return true;
+    case GraphicsPrimitive::Spline:
+        return !primitive->isClosedShape() && primitive->controlPointCount() >= 2;
+    default:
+        return false;
+    }
+}
+
+void copyArrowAttributes(GraphicsPrimitive *destination, const GraphicsPrimitive *source)
+{
+    destination->setArrowAtStart(source->arrowAtStart());
+    destination->setArrowAtEnd(source->arrowAtEnd());
+    destination->setArrowStyleLimiter(source->arrowStyleLimiter());
+    destination->setArrowStyleEmpty(source->arrowStyleEmpty());
+    destination->setArrowLength(source->arrowLength());
+    destination->setArrowHalfWidth(source->arrowHalfWidth());
+}
+
+// The outline actually drawn for `primitive`, flattened to polylines in
+// scene coordinates - the cutting/boundary edges trim and extend test
+// against. Empty for primitive types that make no sense as a boundary
+// (text, images, connection dots, pads, macros).
+QList<QPolygonF> boundaryPolylines(GraphicsPrimitive *primitive)
+{
+    switch (primitive->getPrimitiveType()) {
+    case GraphicsPrimitive::Line:
+    case GraphicsPrimitive::PcbTrack: {
+        QPolygonF chain;
+        chain << primitive->controlPoint(0) << primitive->controlPoint(1);
+        return { chain };
+    }
+    case GraphicsPrimitive::Rectangle:
+    case GraphicsPrimitive::Ellipse:
+    case GraphicsPrimitive::Polyline:
+        return primitive->booleanOutline().toSubpathPolygons();
+    case GraphicsPrimitive::Spline:
+        return static_cast<PrimitiveComplexCurve *>(primitive)
+                ->curvePath().toSubpathPolygons();
+    case GraphicsPrimitive::Bezier: {
+        QPainterPath path;
+        path.moveTo(primitive->controlPoint(0));
+        path.cubicTo(primitive->controlPoint(1), primitive->controlPoint(2),
+                     primitive->controlPoint(3));
+        return path.toSubpathPolygons();
+    }
+    default:
+        return {};
+    }
 }
 
 // --- Ramer-Douglas-Peucker simplification ---------------------------------
@@ -501,6 +593,8 @@ void MainWindow::updateEditActionsState()
     ui->actionFilletCorners->setEnabled(canRound);
     ui->actionChamferCorners->setEnabled(canRound);
     ui->actionOffsetOutline->setEnabled(booleanOperands >= 1);
+    ui->actionSplitAtPoint->setEnabled(selected.size() == 1
+                                       && splittableAtPoint(selected.first()));
 
     ui->actionScaleSelection->setEnabled(hasSelection);
     ui->actionRotateByAngle->setEnabled(hasSelection);
@@ -907,6 +1001,335 @@ void MainWindow::clickOffsetOutlineAction()
 void MainWindow::clickChamferCornersAction()
 {
     roundSelectedCorners(true);
+}
+
+// Splits the single selected line-like primitive in two at a clicked point:
+// a line/track at the point's projection onto it, a Bezier by de Casteljau
+// subdivision at the nearest curve parameter, an open complex curve at the
+// point's projection onto its vertex chain. The two halves are fresh
+// primitives replacing the original (delete+create undo macro); the arrow
+// that would land at the joint is dropped on each side, and only the first
+// half keeps the name/value label so it doesn't end up duplicated.
+void MainWindow::clickSplitAtPointAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() != 1 || !splittableAtPoint(selected.first()))
+        return;
+    GraphicsPrimitive *primitive = selected.first();
+
+    ui->statusbar->showMessage(tr("Click the split point (right click or Esc cancels)"), 0);
+    QPointF picked;
+    ScenePointPicker picker(ui->graphicsView, sheetScene);
+    const bool accepted = picker.run(&picked);
+    ui->statusbar->clearMessage();
+    if (!accepted)
+        return;
+
+    GraphicsPrimitive *first = nullptr;
+    GraphicsPrimitive *second = nullptr;
+    switch (primitive->getPrimitiveType()) {
+    case GraphicsPrimitive::Line:
+    case GraphicsPrimitive::PcbTrack: {
+        const QPointF a = primitive->controlPoint(0);
+        const QPointF b = primitive->controlPoint(1);
+        const qreal t = segmentParam(picked, a, b);
+        if (t < 0.001 || t > 0.999)
+            break; // the pick landed on (or past) an endpoint - nothing to split
+        const QPointF x = a + (b - a) * t;
+        first = clonePrimitive(primitive, sheetScene);
+        second = clonePrimitive(primitive, sheetScene);
+        if (!first || !second)
+            break;
+        first->setControlPoint(1, x);
+        second->setControlPoint(0, x);
+        break;
+    }
+    case GraphicsPrimitive::Bezier: {
+        const QPointF p0 = primitive->controlPoint(0);
+        const QPointF p1 = primitive->controlPoint(1);
+        const QPointF p2 = primitive->controlPoint(2);
+        const QPointF p3 = primitive->controlPoint(3);
+        auto cubicAt = [&](qreal t) {
+            const qreal u = 1.0 - t;
+            return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3;
+        };
+        // The curve parameter nearest the pick, by dense sampling - plenty
+        // for a click-driven split.
+        qreal bestT = 0.5;
+        qreal bestDistSq = std::numeric_limits<qreal>::max();
+        constexpr int Samples = 256;
+        for (int i = 1; i < Samples; ++i) {
+            const qreal t = qreal(i) / Samples;
+            const QPointF diff = cubicAt(t) - picked;
+            const qreal distSq = QPointF::dotProduct(diff, diff);
+            if (distSq < bestDistSq) {
+                bestDistSq = distSq;
+                bestT = t;
+            }
+        }
+        if (bestT < 0.01 || bestT > 0.99)
+            break;
+        // De Casteljau subdivision: both halves together retrace the
+        // original curve exactly.
+        const QPointF q0 = p0 + (p1 - p0) * bestT;
+        const QPointF q1 = p1 + (p2 - p1) * bestT;
+        const QPointF q2 = p2 + (p3 - p2) * bestT;
+        const QPointF r0 = q0 + (q1 - q0) * bestT;
+        const QPointF r1 = q1 + (q2 - q1) * bestT;
+        const QPointF s = r0 + (r1 - r0) * bestT;
+        first = clonePrimitive(primitive, sheetScene);
+        second = clonePrimitive(primitive, sheetScene);
+        if (!first || !second)
+            break;
+        first->setControlPoint(1, q0);
+        first->setControlPoint(2, r0);
+        first->setControlPoint(3, s);
+        second->setControlPoint(0, s);
+        second->setControlPoint(1, r1);
+        second->setControlPoint(2, q2);
+        break;
+    }
+    case GraphicsPrimitive::Spline: {
+        const int insertIndex = nearestSegmentInsertIndex(primitive, picked);
+        const QPointF a = primitive->controlPoint(insertIndex - 1);
+        const QPointF b = primitive->controlPoint(insertIndex);
+        const QPointF x = a + (b - a) * segmentParam(picked, a, b);
+        QVector<QPointF> firstVertices, secondVertices;
+        for (int i = 0; i < insertIndex; ++i)
+            firstVertices.append(primitive->controlPoint(i));
+        firstVertices.append(x);
+        secondVertices.append(x);
+        for (int i = insertIndex; i < primitive->controlPointCount(); ++i)
+            secondVertices.append(primitive->controlPoint(i));
+        first = makeShapeLike(primitive, firstVertices, true, false);
+        second = makeShapeLike(primitive, secondVertices, true, false);
+        if (first)
+            copyArrowAttributes(first, primitive);
+        if (second)
+            copyArrowAttributes(second, primitive);
+        break;
+    }
+    default:
+        break;
+    }
+
+    if (!first || !second) {
+        delete first;
+        delete second;
+        ui->statusbar->showMessage(tr("The point does not split the primitive"), 4000);
+        return;
+    }
+    first->setArrowAtEnd(false);
+    second->setArrowAtStart(false);
+    second->setName(QString());
+    second->setValue(QString());
+
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(tr("Split at point"));
+    undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+    // push() calls redo() synchronously, which is what actually adds the
+    // primitive to the scene - only safe to select it afterwards.
+    undo->push(new CreatePrimitiveCommand(sheetScene, first));
+    first->setSelected(true);
+    undo->push(new CreatePrimitiveCommand(sheetScene, second));
+    second->setSelected(true);
+    undo->endMacro();
+}
+
+// The line/track nearest `scenePos` within a few screen pixels - the click
+// target both trim and extend operate on. Straight two-point primitives
+// only: they're the ones with a well-defined "portion between
+// intersections" and "direction to extend along".
+GraphicsPrimitive *MainWindow::pickedLineAt(const QPointF &scenePos) const
+{
+    const qreal tolerance = 8.0 / qMax(0.01, ui->graphicsView->transform().m11());
+    GraphicsPrimitive *best = nullptr;
+    qreal bestDistSq = tolerance * tolerance;
+    for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
+        const GraphicsPrimitive::PrimitiveTypes type = primitive->getPrimitiveType();
+        if (type != GraphicsPrimitive::Line && type != GraphicsPrimitive::PcbTrack)
+            continue;
+        if (!primitive->isOnCanvas())
+            continue;
+        const qreal distSq = pointToSegmentDistanceSq(scenePos,
+                                                      primitive->controlPoint(0),
+                                                      primitive->controlPoint(1));
+        if (distSq < bestDistSq) {
+            bestDistSq = distSq;
+            best = primitive;
+        }
+    }
+    return best;
+}
+
+// AutoCAD-style Trim: the clicked stretch of a line/track - between its
+// intersections with whatever other primitives cross it - is removed. A
+// clicked end stretch just shortens the line (an undoable endpoint move); a
+// clicked middle stretch splits it in two around the removed part.
+void MainWindow::clickTrimToIntersectionAction()
+{
+    ui->statusbar->showMessage(
+            tr("Click the part of a line to remove (right click or Esc cancels)"), 0);
+    QPointF picked;
+    ScenePointPicker picker(ui->graphicsView, sheetScene, false);
+    const bool accepted = picker.run(&picked);
+    ui->statusbar->clearMessage();
+    if (!accepted)
+        return;
+
+    GraphicsPrimitive *target = pickedLineAt(picked);
+    if (!target) {
+        ui->statusbar->showMessage(tr("No line or PCB track there"), 4000);
+        return;
+    }
+    const QPointF a = target->controlPoint(0);
+    const QPointF b = target->controlPoint(1);
+
+    // Every crossing of the target by any other primitive's outline, as a
+    // parameter along [a, b].
+    QVector<qreal> cuts;
+    for (GraphicsPrimitive *other : sheetScene->primitives()) {
+        if (other == target || !other->isOnCanvas())
+            continue;
+        const QList<QPolygonF> polylines = boundaryPolylines(other);
+        for (const QPolygonF &polyline : polylines) {
+            for (int i = 0; i + 1 < polyline.size(); ++i) {
+                QPointF crossing;
+                if (QLineF(a, b).intersects(QLineF(polyline.at(i), polyline.at(i + 1)),
+                                            &crossing) == QLineF::BoundedIntersection) {
+                    const qreal t = segmentParam(crossing, a, b);
+                    if (t > 1e-6 && t < 1.0 - 1e-6)
+                        cuts.append(t);
+                }
+            }
+        }
+    }
+    if (cuts.isEmpty()) {
+        ui->statusbar->showMessage(tr("Nothing crosses that line - nothing to trim"), 4000);
+        return;
+    }
+    std::sort(cuts.begin(), cuts.end());
+
+    // The clicked portion's bounds among the cut parameters.
+    const qreal tClick = segmentParam(picked, a, b);
+    qreal lower = 0.0, upper = 1.0;
+    for (qreal t : std::as_const(cuts)) {
+        if (t <= tClick)
+            lower = t;
+        else {
+            upper = t;
+            break;
+        }
+    }
+
+    QUndoStack *undo = sheetScene->undoStack();
+    if (lower <= 0.0 || upper >= 1.0) {
+        // An end portion - the line just gets shorter: a plain endpoint
+        // move, undoable like any drag.
+        const QVector<QPointF> before = target->controlPointSnapshot();
+        if (lower <= 0.0)
+            target->setControlPoint(0, a + (b - a) * upper);
+        else
+            target->setControlPoint(1, a + (b - a) * lower);
+        undo->push(new MovePrimitiveCommand(target, before,
+                                            target->controlPointSnapshot()));
+        return;
+    }
+
+    // A middle portion - the line splits into the two stretches around it.
+    GraphicsPrimitive *first = clonePrimitive(target, sheetScene);
+    GraphicsPrimitive *second = clonePrimitive(target, sheetScene);
+    if (!first || !second) {
+        delete first;
+        delete second;
+        return;
+    }
+    first->setControlPoint(1, a + (b - a) * lower);
+    first->setArrowAtEnd(false);
+    second->setControlPoint(0, a + (b - a) * upper);
+    second->setArrowAtStart(false);
+    second->setName(QString());
+    second->setValue(QString());
+
+    sheetScene->clearSelection();
+    undo->beginMacro(tr("Trim to intersection"));
+    undo->push(new DeletePrimitiveCommand(sheetScene, target));
+    undo->push(new CreatePrimitiveCommand(sheetScene, first));
+    undo->push(new CreatePrimitiveCommand(sheetScene, second));
+    undo->endMacro();
+}
+
+// AutoCAD-style Extend: the clicked line's nearest endpoint slides outward
+// along the line's own direction until it meets the first primitive outline
+// on its way - an undoable endpoint move.
+void MainWindow::clickExtendToIntersectionAction()
+{
+    ui->statusbar->showMessage(
+            tr("Click a line near the end to extend (right click or Esc cancels)"), 0);
+    QPointF picked;
+    ScenePointPicker picker(ui->graphicsView, sheetScene, false);
+    const bool accepted = picker.run(&picked);
+    ui->statusbar->clearMessage();
+    if (!accepted)
+        return;
+
+    GraphicsPrimitive *target = pickedLineAt(picked);
+    if (!target) {
+        ui->statusbar->showMessage(tr("No line or PCB track there"), 4000);
+        return;
+    }
+    const QPointF a = target->controlPoint(0);
+    const QPointF b = target->controlPoint(1);
+    const int endIndex = segmentParam(picked, a, b) < 0.5 ? 0 : 1;
+    const QPointF end = endIndex == 0 ? a : b;
+    const QPointF inner = endIndex == 0 ? b : a;
+    const QLineF span(inner, end);
+    if (span.length() <= 0.0)
+        return;
+    const QPointF direction = (end - inner) / span.length();
+
+    // First outline crossing strictly beyond the endpoint, along the ray.
+    qreal bestDistance = std::numeric_limits<qreal>::max();
+    QPointF bestPoint;
+    for (GraphicsPrimitive *other : sheetScene->primitives()) {
+        if (other == target || !other->isOnCanvas())
+            continue;
+        const QList<QPolygonF> polylines = boundaryPolylines(other);
+        for (const QPolygonF &polyline : polylines) {
+            for (int i = 0; i + 1 < polyline.size(); ++i) {
+                const QLineF edge(polyline.at(i), polyline.at(i + 1));
+                QPointF crossing;
+                if (QLineF(end, end + direction).intersects(edge, &crossing)
+                        == QLineF::NoIntersection)
+                    continue;
+                // The infinite-line crossing must actually lie on the edge...
+                const QPointF edgeVector = edge.p2() - edge.p1();
+                const qreal edgeLengthSq = QPointF::dotProduct(edgeVector, edgeVector);
+                if (edgeLengthSq <= 0.0)
+                    continue;
+                const qreal u = QPointF::dotProduct(crossing - edge.p1(), edgeVector)
+                        / edgeLengthSq;
+                if (u < 0.0 || u > 1.0)
+                    continue;
+                // ...and ahead of the endpoint, not behind it.
+                const qreal distance = QPointF::dotProduct(crossing - end, direction);
+                if (distance > 1e-6 && distance < bestDistance) {
+                    bestDistance = distance;
+                    bestPoint = crossing;
+                }
+            }
+        }
+    }
+    if (bestDistance == std::numeric_limits<qreal>::max()) {
+        ui->statusbar->showMessage(tr("Nothing to extend to in that direction"), 4000);
+        return;
+    }
+
+    const QVector<QPointF> before = target->controlPointSnapshot();
+    target->setControlPoint(endIndex, bestPoint);
+    sheetScene->undoStack()->push(
+            new MovePrimitiveCommand(target, before, target->controlPointSnapshot()));
 }
 
 // Scales every control point (labels included - they travel with the shape,

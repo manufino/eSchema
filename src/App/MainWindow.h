@@ -139,6 +139,14 @@ public slots:
     void clickFilletCornersAction();
     void clickChamferCornersAction();
     void clickOffsetOutlineAction();
+    // Splits the single selected line/track/Bezier/open curve in two at a
+    // clicked (snappable) point on it.
+    void clickSplitAtPointAction();
+    // AutoCAD-style trim/extend: click a portion of a line/track to remove
+    // it up to its intersections with the other primitives, or click near
+    // one of its ends to stretch that end to the first primitive it meets.
+    void clickTrimToIntersectionAction();
+    void clickExtendToIntersectionAction();
     // Whole-selection transforms and replication.
     void clickScaleSelectionAction();
     void clickRotateByAngleAction();
@@ -265,6 +273,9 @@ private:
     void convertSelectionTo(bool toCurve, const QString &undoLabel);
     // Shared tail end of Fillet corners / Chamfer corners.
     void roundSelectedCorners(bool chamfer);
+    // The line/PCB track nearest `scenePos` within a few screen pixels -
+    // what a trim/extend click operates on. Null when none is close enough.
+    GraphicsPrimitive *pickedLineAt(const QPointF &scenePos) const;
     // Drops an unselected in-place copy of the current selection, as one
     // undo step - the Alt+drag duplicate gesture (see Sheet::
     // altDragCloneRequested() and GraphicsPrimitive::mouseMoveEvent()).
