@@ -764,7 +764,7 @@ li.checked::marker { content: "\2612"; }
     </message>
     <message>
         <location filename="../gui/DialogOptions.ui" line="230" />
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="438" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="441" />
         <source>Language</source>
         <translation>Sprache</translation>
     </message>
@@ -1116,7 +1116,7 @@ li.checked::marker { content: "\2612"; }
         <translation>Stylesheet (*.qss)</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="439" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="442" />
         <source>The new language will take effect the next time eSchema starts.</source>
         <translation>Die neue Sprache wird beim nächsten Start von eSchema wirksam.</translation>
     </message>
@@ -2073,7 +2073,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1475" />
-        <location filename="../src/App/MainWindow.cpp" line="1060" />
+        <location filename="../src/App/MainWindow.cpp" line="1064" />
         <source>Open recent</source>
         <translation>Zuletzt geöffnet</translation>
     </message>
@@ -2184,7 +2184,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1863" />
-        <location filename="../src/App/MainWindow.cpp" line="1908" />
+        <location filename="../src/App/MainWindow.cpp" line="1939" />
         <source>Print</source>
         <translation>Drucken</translation>
     </message>
@@ -2220,7 +2220,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1905" />
-        <location filename="../src/App/MainWindow.cpp" line="813" />
+        <location filename="../src/App/MainWindow.cpp" line="817" />
         <source>Undo</source>
         <translation>Rückgängig</translation>
     </message>
@@ -2231,7 +2231,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1920" />
-        <location filename="../src/App/MainWindow.cpp" line="816" />
+        <location filename="../src/App/MainWindow.cpp" line="820" />
         <source>Redo</source>
         <translation>Wiederherstellen</translation>
     </message>
@@ -2242,7 +2242,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1935" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2276" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2451" />
         <source>Cut</source>
         <translation>Ausschneiden</translation>
     </message>
@@ -2273,7 +2273,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1977" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2218" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2393" />
         <source>Copy as image</source>
         <translation>Als Bild kopieren</translation>
     </message>
@@ -2289,7 +2289,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1995" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2370" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2545" />
         <source>Paste</source>
         <translation>Einfügen</translation>
     </message>
@@ -2300,7 +2300,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2010" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2391" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2566" />
         <source>Paste in place</source>
         <translation>An Originalposition einfügen</translation>
     </message>
@@ -2316,8 +2316,8 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2028" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1747" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2399" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1922" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2574" />
         <source>Duplicate</source>
         <translation>Duplizieren</translation>
     </message>
@@ -2328,7 +2328,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2043" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="757" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="870" />
         <source>Rotate</source>
         <translation>Drehen</translation>
     </message>
@@ -2339,7 +2339,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2058" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="707" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="820" />
         <source>Mirror</source>
         <translation>Spiegeln</translation>
     </message>
@@ -2350,7 +2350,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2073" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="735" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="848" />
         <source>Mirror as copy</source>
         <translation>Als Kopie spiegeln</translation>
     </message>
@@ -2361,7 +2361,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2085" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1768" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1943" />
         <source>Convert macro to primitives</source>
         <translation>Makro in Primitive umwandeln</translation>
     </message>
@@ -2372,49 +2372,49 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2106" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2023" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2198" />
         <source>Align left</source>
         <translation>Links ausrichten</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2115" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2039" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2214" />
         <source>Align right</source>
         <translation>Rechts ausrichten</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2124" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2055" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2230" />
         <source>Align top</source>
         <translation>Oben ausrichten</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2133" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2071" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2246" />
         <source>Align bottom</source>
         <translation>Unten ausrichten</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2142" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2096" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2271" />
         <source>Align horizontal center</source>
         <translation>Horizontal zentrieren</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2151" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2120" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2295" />
         <source>Align vertical center</source>
         <translation>Vertikal zentrieren</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2160" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2147" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2322" />
         <source>Distribute horizontally</source>
         <translation>Horizontal verteilen</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2169" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2170" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2345" />
         <source>Distribute vertically</source>
         <translation>Vertikal verteilen</translation>
     </message>
@@ -2440,7 +2440,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2208" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1852" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2027" />
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>
@@ -2735,8 +2735,8 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2241" />
-        <location filename="../src/App/MainWindow.cpp" line="901" />
-        <location filename="../src/App/MainWindow.cpp" line="912" />
+        <location filename="../src/App/MainWindow.cpp" line="905" />
+        <location filename="../src/App/MainWindow.cpp" line="916" />
         <source>Check for updates</source>
         <translation>Nach Updates suchen</translation>
     </message>
@@ -2773,7 +2773,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2708" />
-        <location filename="../src/App/MainWindow.cpp" line="1363" />
+        <location filename="../src/App/MainWindow.cpp" line="1367" />
         <source>Drawing tools</source>
         <translation>Zeichenwerkzeuge</translation>
     </message>
@@ -2789,7 +2789,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2729" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1195" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1370" />
         <source>Split at point</source>
         <translation>Am Punkt teilen</translation>
     </message>
@@ -2800,7 +2800,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2741" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1358" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1533" />
         <source>Trim to intersection</source>
         <translation>Bis zum Schnittpunkt stutzen</translation>
     </message>
@@ -2861,7 +2861,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2828" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="805" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="918" />
         <source>Union</source>
         <translation>Vereinigung</translation>
     </message>
@@ -2872,7 +2872,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2843" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="810" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="923" />
         <source>Subtraction</source>
         <translation>Subtraktion</translation>
     </message>
@@ -2883,7 +2883,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2858" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="815" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="928" />
         <source>Intersection</source>
         <translation>Schnittmenge</translation>
     </message>
@@ -2934,7 +2934,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2933" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="847" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="960" />
         <source>Convert to polygon</source>
         <translation>In Polygon umwandeln</translation>
     </message>
@@ -2945,7 +2945,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2948" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="852" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="965" />
         <source>Convert to complex curve</source>
         <translation>In komplexe Kurve umwandeln</translation>
     </message>
@@ -2986,7 +2986,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="3008" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1696" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1871" />
         <source>Snap selection to grid</source>
         <translation>Auswahl am Raster ausrichten</translation>
     </message>
@@ -3031,110 +3031,110 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
         <translation>Lineale anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="413" />
+        <location filename="../src/App/MainWindow.cpp" line="416" />
         <source>Search commands...</source>
         <translation>Befehle suchen...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="813" />
+        <location filename="../src/App/MainWindow.cpp" line="817" />
         <source>Undo: %1</source>
         <translation>Rückgängig: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="816" />
+        <location filename="../src/App/MainWindow.cpp" line="820" />
         <source>Redo: %1</source>
         <translation>Wiederherstellen: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="891" />
+        <location filename="../src/App/MainWindow.cpp" line="895" />
         <source>Update available</source>
         <translation>Update verfügbar</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="892" />
+        <location filename="../src/App/MainWindow.cpp" line="896" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>Eine neue Version von eSchema ist verfügbar (%1).
 Möchten Sie sie jetzt herunterladen?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="902" />
+        <location filename="../src/App/MainWindow.cpp" line="906" />
         <source>eSchema is already up to date.</source>
         <translation>eSchema ist bereits auf dem neuesten Stand.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="913" />
+        <location filename="../src/App/MainWindow.cpp" line="917" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>Updates konnten nicht überprüft werden. Überprüfen Sie Ihre Internetverbindung.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="955" />
+        <location filename="../src/App/MainWindow.cpp" line="959" />
         <source>Attach tracing image</source>
         <translation>Bild zum Nachzeichnen anhängen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1005" />
+        <location filename="../src/App/MainWindow.cpp" line="1009" />
         <source>Symbol wizard</source>
         <translation>Symbol-Assistent</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1011" />
+        <location filename="../src/App/MainWindow.cpp" line="1015" />
         <source>New drawing* (unsaved)</source>
         <translation>Neue Zeichnung* (nicht gespeichert)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1061" />
+        <location filename="../src/App/MainWindow.cpp" line="1065" />
         <source>The file no longer exists:
 %1</source>
         <translation>Die Datei existiert nicht mehr:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1075" />
+        <location filename="../src/App/MainWindow.cpp" line="1079" />
         <source>Clear list</source>
         <translation>Liste leeren</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1130" />
-        <location filename="../src/App/MainWindow.cpp" line="1596" />
-        <location filename="../src/App/MainWindow.cpp" line="1700" />
-        <location filename="../src/App/MainWindow.cpp" line="1736" />
-        <location filename="../src/App/MainWindow.cpp" line="1902" />
-        <location filename="../src/App/MainWindow.cpp" line="2052" />
+        <location filename="../src/App/MainWindow.cpp" line="1134" />
+        <location filename="../src/App/MainWindow.cpp" line="1627" />
+        <location filename="../src/App/MainWindow.cpp" line="1731" />
+        <location filename="../src/App/MainWindow.cpp" line="1767" />
+        <location filename="../src/App/MainWindow.cpp" line="1933" />
+        <location filename="../src/App/MainWindow.cpp" line="2083" />
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1130" />
-        <location filename="../src/App/MainWindow.cpp" line="1902" />
+        <location filename="../src/App/MainWindow.cpp" line="1134" />
+        <location filename="../src/App/MainWindow.cpp" line="1933" />
         <source>Unable to save the file:
 %1</source>
         <translation>Datei konnte nicht gespeichert werden:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1152" />
+        <location filename="../src/App/MainWindow.cpp" line="1156" />
         <source>Unsaved changes</source>
         <translation>Nicht gespeicherte Änderungen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1153" />
+        <location filename="../src/App/MainWindow.cpp" line="1157" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>Es gibt nicht gespeicherte Änderungen. Möchtest du sie speichern?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1580" />
+        <location filename="../src/App/MainWindow.cpp" line="1611" />
         <source>an untitled drawing</source>
         <translation>eine unbenannte Zeichnung</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1583" />
-        <location filename="../src/App/MainWindow.cpp" line="1608" />
+        <location filename="../src/App/MainWindow.cpp" line="1614" />
+        <location filename="../src/App/MainWindow.cpp" line="1639" />
         <source>Autosave recovery</source>
         <translation>Wiederherstellung der automatischen Sicherung</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1584" />
+        <location filename="../src/App/MainWindow.cpp" line="1615" />
         <source>eSchema wasn't closed properly last time.
 An autosave was found for %1.
 
@@ -3145,50 +3145,50 @@ Es wurde eine automatische Sicherung für %1 gefunden.
 Möchten Sie sie wiederherstellen?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1597" />
+        <location filename="../src/App/MainWindow.cpp" line="1628" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>Die automatische Sicherung konnte nicht wiederhergestellt werden:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1635" />
+        <location filename="../src/App/MainWindow.cpp" line="1666" />
         <source>Open drawing</source>
         <translation>Zeichnung öffnen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1636" />
-        <location filename="../src/App/MainWindow.cpp" line="1873" />
-        <location filename="../src/App/MainWindow.cpp" line="1889" />
+        <location filename="../src/App/MainWindow.cpp" line="1667" />
+        <location filename="../src/App/MainWindow.cpp" line="1904" />
+        <location filename="../src/App/MainWindow.cpp" line="1920" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1685" />
+        <location filename="../src/App/MainWindow.cpp" line="1716" />
         <source>The drawing had elements outside the drawing area and was moved onto the sheet</source>
         <translation>Die Zeichnung hatte Elemente außerhalb des Zeichenbereichs und wurde auf das Blatt verschoben</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1700" />
-        <location filename="../src/App/MainWindow.cpp" line="1736" />
+        <location filename="../src/App/MainWindow.cpp" line="1731" />
+        <location filename="../src/App/MainWindow.cpp" line="1767" />
         <source>Unable to open the file:
 %1</source>
         <translation>Datei konnte nicht geöffnet werden:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1718" />
         <location filename="../src/App/MainWindow.cpp" line="1749" />
+        <location filename="../src/App/MainWindow.cpp" line="1780" />
         <source>Import from DXF</source>
         <translation>Aus DXF importieren</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1719" />
+        <location filename="../src/App/MainWindow.cpp" line="1750" />
         <source>DXF (*.dxf)</source>
         <translation>DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1750" />
+        <location filename="../src/App/MainWindow.cpp" line="1781" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -3197,189 +3197,203 @@ Möchten Sie sie wiederherstellen?</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1807" />
+        <location filename="../src/App/MainWindow.cpp" line="1838" />
         <source>Edit FCD code</source>
         <translation>FCD-Code bearbeiten</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1872" />
+        <location filename="../src/App/MainWindow.cpp" line="1903" />
         <source>Save drawing as</source>
         <translation>Zeichnung speichern unter</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1888" />
+        <location filename="../src/App/MainWindow.cpp" line="1919" />
         <source>Save split as</source>
         <translation>Aufgelöst speichern unter</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1908" />
-        <location filename="../src/App/MainWindow.cpp" line="2022" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2218" />
+        <location filename="../src/App/MainWindow.cpp" line="1939" />
+        <location filename="../src/App/MainWindow.cpp" line="2053" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2393" />
         <source>The drawing is empty.</source>
         <translation>Die Zeichnung ist leer.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1945" />
+        <location filename="../src/App/MainWindow.cpp" line="1976" />
         <source>Print preview</source>
         <translation>Druckvorschau</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2022" />
+        <location filename="../src/App/MainWindow.cpp" line="2053" />
         <source>Export</source>
         <translation>Exportieren</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2030" />
+        <location filename="../src/App/MainWindow.cpp" line="2061" />
         <source>Export drawing</source>
         <translation>Zeichnung exportieren</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2053" />
+        <location filename="../src/App/MainWindow.cpp" line="2084" />
         <source>Could not export the file:
 %1</source>
         <translation>Die Datei konnte nicht exportiert werden:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="678" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="791" />
         <source>Add node</source>
         <translation>Knoten hinzufügen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="682" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="795" />
         <source>Remove node</source>
         <translation>Knoten entfernen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="869" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="876" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="982" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="989" />
         <source>Simplify nodes</source>
         <translation>Knoten vereinfachen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="869" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="982" />
         <source>Tolerance (drawing units):</source>
         <translation>Toleranz (Zeichnungseinheiten):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="918" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="924" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1031" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1037" />
         <source>Chamfer corners</source>
         <translation>Ecken fasen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="918" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="924" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1031" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1037" />
         <source>Fillet corners</source>
         <translation>Ecken abrunden</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="919" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1032" />
         <source>Cut distance (drawing units):</source>
         <translation>Schnittabstand (Zeichnungseinheiten):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="919" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1032" />
         <source>Radius (drawing units):</source>
         <translation>Radius (Zeichnungseinheiten):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="972" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1002" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1162" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1226" />
         <source>Offset outline</source>
         <translation>Konturversatz</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="979" />
         <source>Distance (drawing units, negative for inward):</source>
-        <translation>Abstand (Zeichnungseinheiten, negativ nach innen):</translation>
+        <translation type="vanished">Abstand (Zeichnungseinheiten, negativ nach innen):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="981" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1171" />
         <source>Keep the original shape</source>
         <translation>Ursprüngliche Form behalten</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1080" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1255" />
         <source>Click the split point (right click or Esc cancels)</source>
         <translation>Teilungspunkt anklicken (Rechtsklick oder Esc bricht ab)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1185" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1360" />
         <source>The point does not split the primitive</source>
         <translation>Der Punkt teilt das Primitiv nicht</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1296" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1471" />
         <source>Click the part of a line to remove (right click or Esc cancels)</source>
         <translation>Zu entfernenden Linienteil anklicken (Rechtsklick oder Esc bricht ab)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1319" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1455" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1494" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1630" />
         <source>No line or PCB track there</source>
         <translation>Dort ist keine Linie oder Leiterbahn</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1318" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1493" />
         <source>Nothing crosses that line - nothing to trim</source>
         <translation>Nichts kreuzt diese Linie – nichts zu stutzen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1434" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1169" />
+        <source>Distance (drawing units):</source>
+        <translation>Abstand (Zeichnungseinheiten):</translation>
+    </message>
+    <message>
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1197" />
+        <source>Move the mouse to the side to offset toward, then click (right click or Esc cancels)</source>
+        <translation>Maus auf die Versatzseite bewegen, dann klicken (Rechtsklick oder Esc bricht ab)</translation>
+    </message>
+    <message>
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1220" />
+        <source>The offset on that side would erode the shape away</source>
+        <translation>Der Versatz auf dieser Seite würde die Form vollständig aufzehren</translation>
+    </message>
+    <message>
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1609" />
         <source>Click a line near the end to extend (right click or Esc cancels)</source>
         <translation>Linie nahe dem zu verlängernden Ende anklicken (Rechtsklick oder Esc bricht ab)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1454" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1629" />
         <source>Nothing to extend to in that direction</source>
         <translation>In dieser Richtung gibt es nichts zum Verlängern</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1478" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1487" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1653" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1662" />
         <source>Scale</source>
         <translation>Skalieren</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1478" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1653" />
         <source>Scale factor (%):</source>
         <translation>Skalierungsfaktor (%):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1514" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1532" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1689" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1707" />
         <source>Rotate by angle</source>
         <translation>Um Winkel drehen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1514" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1689" />
         <source>Angle (degrees, counterclockwise):</source>
         <translation>Winkel (Grad, gegen den Uhrzeigersinn):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1598" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1630" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1773" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1805" />
         <source>Array of copies</source>
         <translation>Anordnung von Kopien</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1843" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2018" />
         <source>Create macro</source>
         <translation>Makro erstellen</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1925" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2100" />
         <source>No matches</source>
         <translation>Keine Treffer</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1937" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2112" />
         <source>%1 of %2</source>
         <translation>%1 von %2</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1984" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2159" />
         <source>Move selection</source>
         <translation>Auswahl verschieben</translation>
     </message>
