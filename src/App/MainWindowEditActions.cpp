@@ -65,9 +65,12 @@
 #include <QtMath>
 #include <QEventLoop>
 #include <QMouseEvent>
+#include <QGraphicsLineItem>
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <limits>
+#include <optional>
 
 namespace {
 // Squared distance from `p` to the segment [a, b] - squared (not the actual
@@ -140,6 +143,14 @@ public:
     ScenePointPicker(SheetView *view, Sheet *sheet, bool snap = true)
         : m_view(view), m_sheet(sheet), m_snap(snap) {}
 
+    // Invoked with the raw scene position on every mouse move while the
+    // pick is running - lets the caller drive an AutoCAD-style live preview
+    // of what clicking right here would do (trim/extend overlays).
+    void setHoverCallback(std::function<void(const QPointF &)> callback)
+    {
+        m_hoverCallback = std::move(callback);
+    }
+
     bool run(QPointF *picked)
     {
         m_view->viewport()->installEventFilter(this);
@@ -179,10 +190,12 @@ protected:
                 // The move must be swallowed: SheetView's own mouseMoveEvent
                 // would otherwise clear the highlight right back (its
                 // "not placing anything" branch) and reset the cursor.
-                if (m_snap) {
-                    m_sheet->snapPosition(m_view->mapToScene(
-                            static_cast<QMouseEvent *>(event)->position().toPoint()));
-                }
+                const QPointF scenePos = m_view->mapToScene(
+                        static_cast<QMouseEvent *>(event)->position().toPoint());
+                if (m_snap)
+                    m_sheet->snapPosition(scenePos);
+                if (m_hoverCallback)
+                    m_hoverCallback(scenePos);
                 return true;
             }
         }
@@ -198,6 +211,7 @@ private:
     SheetView *m_view;
     Sheet *m_sheet;
     bool m_snap;
+    std::function<void(const QPointF &)> m_hoverCallback;
     QEventLoop m_loop;
     QPointF m_point;
     bool m_accepted = false;
@@ -1172,62 +1186,107 @@ GraphicsPrimitive *MainWindow::pickedLineAt(const QPointF &scenePos) const
 // AutoCAD-style Trim: the clicked stretch of a line/track - between its
 // intersections with whatever other primitives cross it - is removed. A
 // clicked end stretch just shortens the line (an undoable endpoint move); a
-// clicked middle stretch splits it in two around the removed part.
+// clicked middle stretch splits it in two around the removed part. While
+// hunting for the click, the stretch that would be removed is previewed
+// live as a dashed red overlay, AutoCAD-style.
 void MainWindow::clickTrimToIntersectionAction()
 {
+    // What clicking at `pos` would remove: the containing stretch
+    // [lower, upper] (parameters along the target's [a, b]) between the
+    // target's crossings with every other primitive's outline. nullopt when
+    // there's no line there or nothing crosses it.
+    struct TrimPlan {
+        GraphicsPrimitive *target;
+        QPointF a, b;
+        qreal lower, upper;
+    };
+    auto computePlan = [this](const QPointF &pos) -> std::optional<TrimPlan> {
+        GraphicsPrimitive *target = pickedLineAt(pos);
+        if (!target)
+            return std::nullopt;
+        const QPointF a = target->controlPoint(0);
+        const QPointF b = target->controlPoint(1);
+
+        QVector<qreal> cuts;
+        for (GraphicsPrimitive *other : sheetScene->primitives()) {
+            if (other == target || !other->isOnCanvas())
+                continue;
+            const QList<QPolygonF> polylines = boundaryPolylines(other);
+            for (const QPolygonF &polyline : polylines) {
+                for (int i = 0; i + 1 < polyline.size(); ++i) {
+                    QPointF crossing;
+                    if (QLineF(a, b).intersects(QLineF(polyline.at(i), polyline.at(i + 1)),
+                                                &crossing) == QLineF::BoundedIntersection) {
+                        const qreal t = segmentParam(crossing, a, b);
+                        if (t > 1e-6 && t < 1.0 - 1e-6)
+                            cuts.append(t);
+                    }
+                }
+            }
+        }
+        if (cuts.isEmpty())
+            return std::nullopt;
+        std::sort(cuts.begin(), cuts.end());
+
+        const qreal tClick = segmentParam(pos, a, b);
+        qreal lower = 0.0, upper = 1.0;
+        for (qreal t : std::as_const(cuts)) {
+            if (t <= tClick)
+                lower = t;
+            else {
+                upper = t;
+                break;
+            }
+        }
+        return TrimPlan{ target, a, b, lower, upper };
+    };
+
+    // The would-be-removed stretch, previewed as a dashed red overlay - a
+    // plain QGraphicsItem, never a primitive, so it can't touch the
+    // document or the undo stack.
+    auto *preview = new QGraphicsLineItem;
+    QPen previewPen(QColor(220, 40, 40, 200));
+    previewPen.setCosmetic(true);
+    previewPen.setWidth(3);
+    previewPen.setStyle(Qt::DashLine);
+    preview->setPen(previewPen);
+    preview->setZValue(10000);
+    preview->setAcceptedMouseButtons(Qt::NoButton);
+    preview->setVisible(false);
+    sheetScene->addItem(preview);
+
     ui->statusbar->showMessage(
             tr("Click the part of a line to remove (right click or Esc cancels)"), 0);
     QPointF picked;
     ScenePointPicker picker(ui->graphicsView, sheetScene, false);
+    picker.setHoverCallback([&computePlan, preview](const QPointF &pos) {
+        if (const auto plan = computePlan(pos)) {
+            preview->setLine(QLineF(plan->a + (plan->b - plan->a) * plan->lower,
+                                    plan->a + (plan->b - plan->a) * plan->upper));
+            preview->setVisible(true);
+        } else {
+            preview->setVisible(false);
+        }
+    });
     const bool accepted = picker.run(&picked);
+    sheetScene->removeItem(preview);
+    delete preview;
     ui->statusbar->clearMessage();
     if (!accepted)
         return;
 
-    GraphicsPrimitive *target = pickedLineAt(picked);
-    if (!target) {
-        ui->statusbar->showMessage(tr("No line or PCB track there"), 4000);
+    const auto plan = computePlan(picked);
+    if (!plan) {
+        ui->statusbar->showMessage(pickedLineAt(picked)
+                ? tr("Nothing crosses that line - nothing to trim")
+                : tr("No line or PCB track there"), 4000);
         return;
     }
-    const QPointF a = target->controlPoint(0);
-    const QPointF b = target->controlPoint(1);
-
-    // Every crossing of the target by any other primitive's outline, as a
-    // parameter along [a, b].
-    QVector<qreal> cuts;
-    for (GraphicsPrimitive *other : sheetScene->primitives()) {
-        if (other == target || !other->isOnCanvas())
-            continue;
-        const QList<QPolygonF> polylines = boundaryPolylines(other);
-        for (const QPolygonF &polyline : polylines) {
-            for (int i = 0; i + 1 < polyline.size(); ++i) {
-                QPointF crossing;
-                if (QLineF(a, b).intersects(QLineF(polyline.at(i), polyline.at(i + 1)),
-                                            &crossing) == QLineF::BoundedIntersection) {
-                    const qreal t = segmentParam(crossing, a, b);
-                    if (t > 1e-6 && t < 1.0 - 1e-6)
-                        cuts.append(t);
-                }
-            }
-        }
-    }
-    if (cuts.isEmpty()) {
-        ui->statusbar->showMessage(tr("Nothing crosses that line - nothing to trim"), 4000);
-        return;
-    }
-    std::sort(cuts.begin(), cuts.end());
-
-    // The clicked portion's bounds among the cut parameters.
-    const qreal tClick = segmentParam(picked, a, b);
-    qreal lower = 0.0, upper = 1.0;
-    for (qreal t : std::as_const(cuts)) {
-        if (t <= tClick)
-            lower = t;
-        else {
-            upper = t;
-            break;
-        }
-    }
+    GraphicsPrimitive *target = plan->target;
+    const QPointF a = plan->a;
+    const QPointF b = plan->b;
+    const qreal lower = plan->lower;
+    const qreal upper = plan->upper;
 
     QUndoStack *undo = sheetScene->undoStack();
     if (lower <= 0.0 || upper >= 1.0) {
@@ -1268,74 +1327,113 @@ void MainWindow::clickTrimToIntersectionAction()
 
 // AutoCAD-style Extend: the clicked line's nearest endpoint slides outward
 // along the line's own direction until it meets the first primitive outline
-// on its way - an undoable endpoint move.
+// on its way - an undoable endpoint move. While hunting for the click, the
+// stretch that would be added is previewed live as a dashed green overlay.
 void MainWindow::clickExtendToIntersectionAction()
 {
+    // What clicking at `pos` would do: move `target`'s endpoint
+    // controlPoint(endIndex) (currently at `end`) out to `reached`.
+    struct ExtendPlan {
+        GraphicsPrimitive *target;
+        int endIndex;
+        QPointF end, reached;
+    };
+    auto computePlan = [this](const QPointF &pos) -> std::optional<ExtendPlan> {
+        GraphicsPrimitive *target = pickedLineAt(pos);
+        if (!target)
+            return std::nullopt;
+        const QPointF a = target->controlPoint(0);
+        const QPointF b = target->controlPoint(1);
+        const int endIndex = segmentParam(pos, a, b) < 0.5 ? 0 : 1;
+        const QPointF end = endIndex == 0 ? a : b;
+        const QPointF inner = endIndex == 0 ? b : a;
+        const QLineF span(inner, end);
+        if (span.length() <= 0.0)
+            return std::nullopt;
+        const QPointF direction = (end - inner) / span.length();
+
+        // First outline crossing strictly beyond the endpoint, along the ray.
+        qreal bestDistance = std::numeric_limits<qreal>::max();
+        QPointF bestPoint;
+        for (GraphicsPrimitive *other : sheetScene->primitives()) {
+            if (other == target || !other->isOnCanvas())
+                continue;
+            const QList<QPolygonF> polylines = boundaryPolylines(other);
+            for (const QPolygonF &polyline : polylines) {
+                for (int i = 0; i + 1 < polyline.size(); ++i) {
+                    const QLineF edge(polyline.at(i), polyline.at(i + 1));
+                    QPointF crossing;
+                    if (QLineF(end, end + direction).intersects(edge, &crossing)
+                            == QLineF::NoIntersection)
+                        continue;
+                    // The infinite-line crossing must actually lie on the
+                    // edge...
+                    const QPointF edgeVector = edge.p2() - edge.p1();
+                    const qreal edgeLengthSq = QPointF::dotProduct(edgeVector, edgeVector);
+                    if (edgeLengthSq <= 0.0)
+                        continue;
+                    const qreal u = QPointF::dotProduct(crossing - edge.p1(), edgeVector)
+                            / edgeLengthSq;
+                    if (u < 0.0 || u > 1.0)
+                        continue;
+                    // ...and ahead of the endpoint, not behind it.
+                    const qreal distance = QPointF::dotProduct(crossing - end, direction);
+                    if (distance > 1e-6 && distance < bestDistance) {
+                        bestDistance = distance;
+                        bestPoint = crossing;
+                    }
+                }
+            }
+        }
+        if (bestDistance == std::numeric_limits<qreal>::max())
+            return std::nullopt;
+        return ExtendPlan{ target, endIndex, end, bestPoint };
+    };
+
+    // The would-be-added stretch, previewed as a dashed green overlay.
+    auto *preview = new QGraphicsLineItem;
+    QPen previewPen(QColor(30, 170, 60, 200));
+    previewPen.setCosmetic(true);
+    previewPen.setWidth(3);
+    previewPen.setStyle(Qt::DashLine);
+    preview->setPen(previewPen);
+    preview->setZValue(10000);
+    preview->setAcceptedMouseButtons(Qt::NoButton);
+    preview->setVisible(false);
+    sheetScene->addItem(preview);
+
     ui->statusbar->showMessage(
             tr("Click a line near the end to extend (right click or Esc cancels)"), 0);
     QPointF picked;
     ScenePointPicker picker(ui->graphicsView, sheetScene, false);
+    picker.setHoverCallback([&computePlan, preview](const QPointF &pos) {
+        if (const auto plan = computePlan(pos)) {
+            preview->setLine(QLineF(plan->end, plan->reached));
+            preview->setVisible(true);
+        } else {
+            preview->setVisible(false);
+        }
+    });
     const bool accepted = picker.run(&picked);
+    sheetScene->removeItem(preview);
+    delete preview;
     ui->statusbar->clearMessage();
     if (!accepted)
         return;
 
-    GraphicsPrimitive *target = pickedLineAt(picked);
-    if (!target) {
-        ui->statusbar->showMessage(tr("No line or PCB track there"), 4000);
-        return;
-    }
-    const QPointF a = target->controlPoint(0);
-    const QPointF b = target->controlPoint(1);
-    const int endIndex = segmentParam(picked, a, b) < 0.5 ? 0 : 1;
-    const QPointF end = endIndex == 0 ? a : b;
-    const QPointF inner = endIndex == 0 ? b : a;
-    const QLineF span(inner, end);
-    if (span.length() <= 0.0)
-        return;
-    const QPointF direction = (end - inner) / span.length();
-
-    // First outline crossing strictly beyond the endpoint, along the ray.
-    qreal bestDistance = std::numeric_limits<qreal>::max();
-    QPointF bestPoint;
-    for (GraphicsPrimitive *other : sheetScene->primitives()) {
-        if (other == target || !other->isOnCanvas())
-            continue;
-        const QList<QPolygonF> polylines = boundaryPolylines(other);
-        for (const QPolygonF &polyline : polylines) {
-            for (int i = 0; i + 1 < polyline.size(); ++i) {
-                const QLineF edge(polyline.at(i), polyline.at(i + 1));
-                QPointF crossing;
-                if (QLineF(end, end + direction).intersects(edge, &crossing)
-                        == QLineF::NoIntersection)
-                    continue;
-                // The infinite-line crossing must actually lie on the edge...
-                const QPointF edgeVector = edge.p2() - edge.p1();
-                const qreal edgeLengthSq = QPointF::dotProduct(edgeVector, edgeVector);
-                if (edgeLengthSq <= 0.0)
-                    continue;
-                const qreal u = QPointF::dotProduct(crossing - edge.p1(), edgeVector)
-                        / edgeLengthSq;
-                if (u < 0.0 || u > 1.0)
-                    continue;
-                // ...and ahead of the endpoint, not behind it.
-                const qreal distance = QPointF::dotProduct(crossing - end, direction);
-                if (distance > 1e-6 && distance < bestDistance) {
-                    bestDistance = distance;
-                    bestPoint = crossing;
-                }
-            }
-        }
-    }
-    if (bestDistance == std::numeric_limits<qreal>::max()) {
-        ui->statusbar->showMessage(tr("Nothing to extend to in that direction"), 4000);
+    const auto plan = computePlan(picked);
+    if (!plan) {
+        ui->statusbar->showMessage(pickedLineAt(picked)
+                ? tr("Nothing to extend to in that direction")
+                : tr("No line or PCB track there"), 4000);
         return;
     }
 
-    const QVector<QPointF> before = target->controlPointSnapshot();
-    target->setControlPoint(endIndex, bestPoint);
+    const QVector<QPointF> before = plan->target->controlPointSnapshot();
+    plan->target->setControlPoint(plan->endIndex, plan->reached);
     sheetScene->undoStack()->push(
-            new MovePrimitiveCommand(target, before, target->controlPointSnapshot()));
+            new MovePrimitiveCommand(plan->target, before,
+                                     plan->target->controlPointSnapshot()));
 }
 
 // Scales every control point (labels included - they travel with the shape,
