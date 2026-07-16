@@ -103,6 +103,7 @@ public slots:
     void clickApplyFcdCodeAction();
     void clickRefreshFcdCodeAction();
     void clickMirrorAction();
+    void clickMirrorCopyAction();
     void clickRotateAction();
     void clickConvertMacroToPrimitivesAction();
     void clickCreateMacroAction();
@@ -112,6 +113,7 @@ public slots:
     void clickCopySplitAction();
     void clickCopyAsImageAction();
     void clickPasteAction();
+    void clickPasteInPlaceAction();
     void clickDuplicateAction();
     void clickSelectAllAction();
     void clickFindAction();
@@ -215,10 +217,12 @@ private:
     // needs this so pasting reproduces a predictable, repeatable layout.
     QList<GraphicsPrimitive *> selectedPrimitivesInOrder() const;
     // Parses `text` as FidoCadJ primitives and adds them to the sheet,
-    // offset by one grid step and selected - the shared tail end of both
-    // Paste and Duplicate (see pasteFromText()'s doc comment for why they
-    // share this instead of Duplicate routing through the clipboard).
-    void pasteFromText(const QString &text, const QString &undoLabel);
+    // offset by one grid step (unless `inPlace`, which keeps the original
+    // coordinates - Paste in place) and selected - the shared tail end of
+    // Paste, Paste in place and Duplicate (see pasteFromText()'s doc comment
+    // for why they share this instead of Duplicate routing through the
+    // clipboard).
+    void pasteFromText(const QString &text, const QString &undoLabel, bool inPlace = false);
     // Companion to pasteFromText() for when the clipboard holds a bitmap
     // instead of FCD text - builds a new PrimitiveImage from it and adds it
     // the same undo-stack way. See its definition for details.

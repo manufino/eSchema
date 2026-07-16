@@ -429,6 +429,7 @@ void MainWindow::setConnections()
     connect(ui->btnApplyFcdCode, &QPushButton::clicked, this, &MainWindow::clickApplyFcdCodeAction);
     connect(ui->btnRefreshFcdCode, &QPushButton::clicked, this, &MainWindow::clickRefreshFcdCodeAction);
     connect(ui->actionMirror, &QAction::triggered, this, &MainWindow::clickMirrorAction);
+    connect(ui->actionMirrorCopy, &QAction::triggered, this, &MainWindow::clickMirrorCopyAction);
     connect(ui->actionRotate, &QAction::triggered, this, &MainWindow::clickRotateAction);
     connect(ui->actionBooleanUnion, &QAction::triggered, this, &MainWindow::clickBooleanUnionAction);
     connect(ui->actionBooleanSubtract, &QAction::triggered, this, &MainWindow::clickBooleanSubtractAction);
@@ -696,6 +697,7 @@ void MainWindow::setConnections()
     connect(ui->actionCopySplit, &QAction::triggered, this, &MainWindow::clickCopySplitAction);
     connect(ui->actionCopyAsImage, &QAction::triggered, this, &MainWindow::clickCopyAsImageAction);
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::clickPasteAction);
+    connect(ui->actionPasteInPlace, &QAction::triggered, this, &MainWindow::clickPasteInPlaceAction);
     connect(ui->actionDuplicate, &QAction::triggered, this, &MainWindow::clickDuplicateAction);
     connect(ui->actionSelectAll, &QAction::triggered, this, &MainWindow::clickSelectAllAction);
     connect(ui->actionFind, &QAction::triggered, this, &MainWindow::clickFindAction);

@@ -1491,11 +1491,13 @@
     <addaction name="actionCopySplit"/>
     <addaction name="actionCopyAsImage"/>
     <addaction name="actionPaste"/>
+    <addaction name="actionPasteInPlace"/>
     <addaction name="actionDuplicate"/>
     <addaction name="actionDelete"/>
     <addaction name="separator"/>
     <addaction name="actionRotate"/>
     <addaction name="actionMirror"/>
+    <addaction name="actionMirrorCopy"/>
     <addaction name="actionRotateByAngle"/>
     <addaction name="actionScaleSelection"/>
     <addaction name="actionArray"/>
@@ -1690,6 +1692,7 @@
    </attribute>
    <addaction name="actionRotate"/>
    <addaction name="actionMirror"/>
+   <addaction name="actionMirrorCopy"/>
    <addaction name="actionRotateByAngle"/>
    <addaction name="actionScaleSelection"/>
    <addaction name="actionArray"/>
@@ -1980,6 +1983,24 @@
     <string>Ctrl+V</string>
    </property>
   </action>
+  <action name="actionPasteInPlace">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/clipboard-line.png</normaloff>:/res/resources/remix/clipboard-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste in place</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste the clipboard exactly where it was copied from, with no offset</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+V</string>
+   </property>
+  </action>
   <action name="actionDuplicate">
    <property name="enabled">
     <bool>true</bool>
@@ -2023,6 +2044,21 @@
    </property>
    <property name="shortcut">
     <string>S</string>
+   </property>
+  </action>
+  <action name="actionMirrorCopy">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/symmetry.png</normaloff>:/res/resources/symmetry.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mirror as copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a mirrored copy of the selection, leaving the original in place</string>
    </property>
   </action>
   <action name="actionConvertMacroToPrimitives">

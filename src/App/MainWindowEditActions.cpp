@@ -444,12 +444,15 @@ void MainWindow::updateEditActionsState()
     ui->actionDuplicate->setEnabled(hasSelection);
     ui->actionDelete->setEnabled(hasSelection);
     ui->actionMirror->setEnabled(hasSelection);
+    ui->actionMirrorCopy->setEnabled(hasSelection);
     ui->actionRotate->setEnabled(hasSelection);
     ui->actionCreateMacro->setEnabled(hasSelection);
     ui->actionConvertMacroToPrimitives->setEnabled(hasMacro);
 
     const QClipboard *clipboard = QGuiApplication::clipboard();
-    ui->actionPaste->setEnabled(!clipboard->text().isEmpty() || clipboard->mimeData()->hasImage());
+    const bool canPaste = !clipboard->text().isEmpty() || clipboard->mimeData()->hasImage();
+    ui->actionPaste->setEnabled(canPaste);
+    ui->actionPasteInPlace->setEnabled(canPaste);
 
     const bool hasAtLeastTwo = selected.size() >= 2;
     ui->actionAlignLeft->setEnabled(hasAtLeastTwo);
@@ -514,11 +517,13 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     menu.addAction(ui->actionCut);
     menu.addAction(ui->actionCopy);
     menu.addAction(ui->actionPaste);
+    menu.addAction(ui->actionPasteInPlace);
     menu.addAction(ui->actionDuplicate);
     menu.addAction(ui->actionDelete);
     menu.addSeparator();
     menu.addAction(ui->actionRotate);
     menu.addAction(ui->actionMirror);
+    menu.addAction(ui->actionMirrorCopy);
     menu.addAction(ui->actionRotateByAngle);
     menu.addAction(ui->actionScaleSelection);
     menu.addAction(ui->actionArray);
@@ -581,6 +586,36 @@ void MainWindow::clickMirrorAction()
     }
     if (multiple)
         undo->endMacro();
+}
+
+// Mirror as copy: the mirrored result is a fresh clone of the selection
+// (same FCD serialize/parse round trip as Duplicate), so the original stays
+// untouched in place - the classic "mirror copy" of CAD packages. The pivot
+// matches clickMirrorAction()'s convention, so the copy lands exactly where
+// a plain Mirror would have moved the original.
+void MainWindow::clickMirrorCopyAction()
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+    const QPointF pivot = selected.first()->controlPoint(0);
+
+    const QList<GraphicsPrimitive *> clones =
+            FidoCadReader::parse(FidoCadWriter::writeSelection(selected), sheetScene);
+    if (clones.isEmpty())
+        return;
+
+    sheetScene->clearSelection();
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(tr("Mirror as copy"));
+    for (GraphicsPrimitive *clone : clones) {
+        clone->mirror(Qt::Horizontal, pivot);
+        // push() calls redo() synchronously, which is what actually adds the
+        // primitive to the scene - only safe to select it afterwards.
+        undo->push(new CreatePrimitiveCommand(sheetScene, clone));
+        clone->setSelected(true);
+    }
+    undo->endMacro();
 }
 
 void MainWindow::clickRotateAction()
@@ -1666,7 +1701,7 @@ void MainWindow::clickCutAction()
 // clipboard at all - matching the visible result of the reference FidoCadJ
 // editor's Duplicate, which is copySelected()+paste() under the hood, but
 // without the side effect of clobbering whatever the user last copied).
-void MainWindow::pasteFromText(const QString &text, const QString &undoLabel)
+void MainWindow::pasteFromText(const QString &text, const QString &undoLabel, bool inPlace)
 {
     const QList<GraphicsPrimitive *> pasted = FidoCadReader::parse(text, sheetScene);
     if (pasted.isEmpty())
@@ -1676,10 +1711,11 @@ void MainWindow::pasteFromText(const QString &text, const QString &undoLabel)
     // FidoCadJ editor's paste (CopyPasteActions.paste() shifts by the current
     // grid step; PopUpMenu's Paste handler passes that grid step in) - so the
     // pasted copy is visibly distinct from what was copied and immediately
-    // ready to drag into place.
+    // ready to drag into place. Paste in place skips the shift: the copy
+    // lands exactly on the coordinates it was copied from.
     const QVariant stepVal = SettingsManager::getInstance().loadSetting("snap_step");
     const int step = stepVal.isValid() && stepVal.toInt() > 0 ? stepVal.toInt() : 10;
-    const QPointF offset(step, step);
+    const QPointF offset = inPlace ? QPointF(0, 0) : QPointF(step, step);
 
     sheetScene->clearSelection();
     QUndoStack *undo = sheetScene->undoStack();
@@ -1748,6 +1784,27 @@ void MainWindow::clickPasteAction()
     if (text.isEmpty())
         return;
     pasteFromText(text, tr("Paste"));
+}
+
+// Same as Paste, but without the one-grid-step shift - the copy lands on the
+// exact coordinates it was copied from. An image clipboard still goes
+// through pasteImageFromClipboard(): a bitmap has no source coordinates in
+// the drawing, so "in place" can only mean the same view-centered drop.
+void MainWindow::clickPasteInPlaceAction()
+{
+    const QClipboard *clipboard = QGuiApplication::clipboard();
+    if (clipboard->mimeData()->hasImage()) {
+        const QImage image = clipboard->image();
+        if (!image.isNull()) {
+            pasteImageFromClipboard(image);
+            return;
+        }
+    }
+
+    const QString text = clipboard->text();
+    if (text.isEmpty())
+        return;
+    pasteFromText(text, tr("Paste in place"), true);
 }
 
 void MainWindow::clickDuplicateAction()
