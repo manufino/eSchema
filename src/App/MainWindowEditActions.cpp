@@ -536,6 +536,18 @@ QVector<QPointF> roundedCornerRing(const QVector<QPointF> &points, qreal amount,
 // (EditorActions.rotateAllSelected/mirrorAllSelected pivot on
 // getFirstSelectedPrimitive().getFirstPoint()), rather than e.g. the
 // selection's bounding-box center.
+void MainWindow::scheduleSelectionRefresh()
+{
+    if (m_selectionRefreshPending)
+        return;
+    m_selectionRefreshPending = true;
+    QMetaObject::invokeMethod(this, [this]() {
+        m_selectionRefreshPending = false;
+        updateEditActionsState();
+        updatePropertiesPanel();
+    }, Qt::QueuedConnection);
+}
+
 void MainWindow::updateEditActionsState()
 {
     const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
@@ -560,10 +572,10 @@ void MainWindow::updateEditActionsState()
     ui->actionCreateMacro->setEnabled(hasSelection);
     ui->actionConvertMacroToPrimitives->setEnabled(hasMacro);
 
-    const QClipboard *clipboard = QGuiApplication::clipboard();
-    const bool canPaste = !clipboard->text().isEmpty() || clipboard->mimeData()->hasImage();
-    ui->actionPaste->setEnabled(canPaste);
-    ui->actionPasteInPlace->setEnabled(canPaste);
+    // Cached on QClipboard::dataChanged (see setConnections()) - never read
+    // the system clipboard here, this runs on every selection change.
+    ui->actionPaste->setEnabled(m_clipboardPastable);
+    ui->actionPasteInPlace->setEnabled(m_clipboardPastable);
 
     const bool hasAtLeastTwo = selected.size() >= 2;
     ui->actionAlignLeft->setEnabled(hasAtLeastTwo);

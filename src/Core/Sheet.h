@@ -201,6 +201,11 @@ private slots:
 
 private:
     QList<GraphicsPrimitive*> m_primitives;
+    // Just the pads, maintained alongside m_primitives: drawForeground()
+    // repaints every pad's hole on every frame, and scanning all primitives
+    // with dynamic_cast each time was O(n) per repaint even on drawings
+    // with no pad at all.
+    QList<GraphicsPrimitive*> m_pads;
     QList<Guide> m_guides;
     QUndoStack m_undoStack;
     bool m_objectSnapEnabled = false;

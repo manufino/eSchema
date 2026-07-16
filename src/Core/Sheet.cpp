@@ -93,6 +93,8 @@ void Sheet::addPrimitive(GraphicsPrimitive *primitive)
     // lock toggle) - make sure it starts in the right on-screen state.
     primitive->syncLayerAppearance();
     m_primitives.append(primitive);
+    if (primitive->getPrimitiveType() == GraphicsPrimitive::Pad)
+        m_pads.append(primitive);
     emit primitivesChanged();
 }
 
@@ -109,6 +111,7 @@ void Sheet::takePrimitive(GraphicsPrimitive *primitive)
         return; // already removed - see the idempotency note in Sheet.h
     removeItem(primitive);
     m_primitives.removeOne(primitive);
+    m_pads.removeOne(primitive);
     emit primitivesChanged();
 }
 
@@ -144,6 +147,7 @@ void Sheet::clearPrimitives()
     // primitives here since they were all added via addItem() in addPrimitive().
     clear();
     m_primitives.clear();
+    m_pads.clear();
     m_connectionDiameter = defaultConnectionDiameterSetting();
     m_lineWidth = defaultLineWidthSetting();
     m_lineWidthCircles = 0.35;
@@ -165,11 +169,12 @@ void Sheet::clearPrimitives()
 
 void Sheet::drawForeground(QPainter *painter, const QRectF &)
 {
-    for (GraphicsPrimitive *primitive : std::as_const(m_primitives)) {
-        if (auto *pad = dynamic_cast<PrimitivePad *>(primitive)) {
-            if (pad->isVisible() && pad->isOnCanvas())
-                pad->paintHole(painter);
-        }
+    // Only the pads (tracked separately by addPrimitive/takePrimitive) -
+    // scanning every primitive with dynamic_cast here ran on every repaint.
+    for (GraphicsPrimitive *primitive : std::as_const(m_pads)) {
+        auto *pad = static_cast<PrimitivePad *>(primitive);
+        if (pad->isVisible() && pad->isOnCanvas())
+            pad->paintHole(painter);
     }
 
     // Pick highlights for the angular/radial dimension tools: the hovered

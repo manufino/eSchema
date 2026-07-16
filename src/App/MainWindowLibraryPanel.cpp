@@ -37,7 +37,12 @@ void MainWindow::buildLibraryPanel()
     while (ui->toolBoxLib->count() > 0) {
         QWidget *page = ui->toolBoxLib->widget(0);
         ui->toolBoxLib->removeItem(0);
-        delete page;
+        // deleteLater, not delete: this rebuild runs synchronously from
+        // librariesReloaded, which a library-tree context-menu action can
+        // emit while that very tree's event handling is still on the stack
+        // - deleting it out from under its own signal dispatch is a
+        // use-after-free waiting to happen.
+        page->deleteLater();
     }
 
     // Falls back to the compiled-in default (matches SettingsManager::

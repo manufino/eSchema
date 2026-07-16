@@ -511,8 +511,30 @@ void MainWindow::setConnections()
     // Keeps every selection/clipboard-dependent Edit action's enabled state
     // current - both for the menu bar and the right-click context menu,
     // which reuses these same QAction objects (see showCanvasContextMenu()).
-    connect(sheetScene, &QGraphicsScene::selectionChanged, this, &MainWindow::updateEditActionsState);
-    connect(QGuiApplication::clipboard(), &QClipboard::dataChanged, this, &MainWindow::updateEditActionsState);
+    //
+    // Coalesced, not direct: a mass selection change (Ctrl+A, invert,
+    // delete-many) emits selectionChanged once *per primitive*, and running
+    // the two O(n) refreshers below on each emission made those operations
+    // O(n²) - a multi-second freeze on large drawings. One queued refresh
+    // per event-loop turn covers the whole batch (same pattern as
+    // SettingsManager's coalesced change signal).
+    connect(sheetScene, &QGraphicsScene::selectionChanged,
+            this, &MainWindow::scheduleSelectionRefresh);
+    // The clipboard state is cached here (not read inside
+    // updateEditActionsState()): querying the system clipboard is an OS
+    // roundtrip, far too expensive for something that used to run once per
+    // primitive during mass selections.
+    connect(QGuiApplication::clipboard(), &QClipboard::dataChanged, this, [this]() {
+        const QClipboard *clipboard = QGuiApplication::clipboard();
+        m_clipboardPastable = !clipboard->text().isEmpty()
+                || clipboard->mimeData()->hasImage();
+        updateEditActionsState();
+    });
+    {
+        const QClipboard *clipboard = QGuiApplication::clipboard();
+        m_clipboardPastable = !clipboard->text().isEmpty()
+                || clipboard->mimeData()->hasImage();
+    }
     updateEditActionsState();
 
     connect(ui->graphicsView, &SheetView::contextMenuRequested, this, &MainWindow::showCanvasContextMenu);
@@ -521,8 +543,8 @@ void MainWindow::setConnections()
     // edit back to every selected primitive when the user actually changes
     // it (editingFinished()/activated()-style signals, not textChanged() -
     // so partially-typed text or a value the sync itself just set doesn't
-    // get pushed back out on every keystroke).
-    connect(sheetScene, &QGraphicsScene::selectionChanged, this, &MainWindow::updatePropertiesPanel);
+    // get pushed back out on every keystroke). Refreshed through the same
+    // coalesced path as the edit actions above.
     updatePropertiesPanel();
     connect(ui->lineEdit, &QLineEdit::editingFinished, this, [this]() {
         for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder())
@@ -786,6 +808,12 @@ void MainWindow::setConnections()
     ui->actionRestore->setEnabled(undo->canRedo());
 
     connect(undo, &QUndoStack::indexChanged, this, &MainWindow::refreshFcdCodeIfClean);
+    // refreshFcdCodeIfClean() skips its (whole-document) serialization
+    // while the dock is hidden - catch up the moment it's shown again.
+    connect(ui->dockFcdCode, &QDockWidget::visibilityChanged, this, [this](bool visible) {
+        if (visible)
+            refreshFcdCodeIfClean();
+    });
     // A drag-resize/move only lands on the undo stack at mouse release, and
     // never fires selectionChanged - without this the panel's new geometry
     // fields (length/width/height) would keep showing pre-drag values.
@@ -1700,6 +1728,12 @@ void MainWindow::syncFcdCodeFromSheet()
 
 void MainWindow::refreshFcdCodeIfClean()
 {
+    // Serializing the whole document (tracing-image base64 included) and
+    // re-laying-out the text box on *every* undo-stack change is pure waste
+    // while the dock isn't even visible - it resyncs on visibilityChanged
+    // instead (see setConnections()).
+    if (!ui->dockFcdCode->isVisible())
+        return;
     if (!ui->txtFcdCode->document()->isModified())
         syncFcdCodeFromSheet();
 }

@@ -24,6 +24,8 @@
 #include <QCoreApplication>
 #include <QSettings>
 #include <QColor>
+#include <QHash>
+#include <QVariant>
 
 class SettingsManager : public QObject
 {
@@ -51,6 +53,13 @@ private:
 
     QSettings m_settings;
     bool m_changeSignalPending = false; // a coalesced emission is queued
+    // In-memory read cache over QSettings: several settings are consulted
+    // on every paint/mouse-move (line width, snap radii, marker colors...),
+    // and going through QSettings each time (mutex + string lookup +
+    // variant conversion) adds up to real per-frame cost. Writes update the
+    // cache in place; restoreDefaultSettings() drops it wholesale. mutable:
+    // loadSetting() is logically const.
+    mutable QHash<QString, QVariant> m_cache;
 };
 
 #endif // SETTINGS_MANAGER_H

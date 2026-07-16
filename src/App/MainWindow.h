@@ -216,6 +216,11 @@ private:
     // signals blocked, since this reflects the selection rather than being
     // an edit itself.
     void updatePropertiesPanel();
+    // Coalesces selectionChanged handling: mass selections (Ctrl+A, invert,
+    // delete-many) emit once per primitive, and refreshing the actions and
+    // the properties panel per emission made those operations O(n²). One
+    // queued refresh per event-loop turn serves the whole batch.
+    void scheduleSelectionRefresh();
     // Enables/disables every selection-dependent Edit action (Delete/Cut/
     // Copy/Duplicate/Mirror/Rotate/Convert macro/Create macro/Align/
     // Distribute/Paste/Select all) by the current selection's size and
@@ -466,5 +471,12 @@ private:
     // currently placing, -1 when none - see the ruler wiring in
     // setConnections().
     int m_rulerGuideIndex = -1;
+    // See scheduleSelectionRefresh().
+    bool m_selectionRefreshPending = false;
+    // Whether the clipboard holds pasteable content - cached on
+    // QClipboard::dataChanged, because reading the system clipboard is an
+    // OS roundtrip far too expensive for updateEditActionsState()'s
+    // per-selection-change cadence.
+    bool m_clipboardPastable = false;
 };
 #endif // MAINWINDOW_H

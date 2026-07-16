@@ -32,6 +32,7 @@ SettingsManager::SettingsManager()
 
 void SettingsManager::saveSetting(const QString& key, const QVariant& value)
 {
+    m_cache.insert(key, value);
     m_settings.setValue(key, value);
     // Coalesce change notifications: the Options dialog's Apply saves tens
     // of settings back to back, and emitting synchronously per key made
@@ -51,12 +52,20 @@ void SettingsManager::saveSetting(const QString& key, const QVariant& value)
 
 QVariant SettingsManager::loadSetting(const QString& key) const
 {
-    return m_settings.value(key);
+    // Hot settings (line width, snap radii, colors) are read per paint/
+    // mouse move - serve them from the in-memory cache after the first hit.
+    const auto cached = m_cache.constFind(key);
+    if (cached != m_cache.constEnd())
+        return cached.value();
+    const QVariant value = m_settings.value(key);
+    m_cache.insert(key, value);
+    return value;
 }
 
 void SettingsManager::restoreDefaultSettings()
 {
     m_settings.clear(); // Clear existing settings
+    m_cache.clear();    // ...and the read cache built over them
     m_settings.sync(); // Make sure the changes are saved to disk
 
     // Default settings
