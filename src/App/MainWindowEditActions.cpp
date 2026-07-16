@@ -978,7 +978,13 @@ void MainWindow::clickOffsetOutlineAction()
         const QPainterPath outline = primitive->booleanOutline();
         QPainterPathStroker stroker;
         stroker.setWidth(2.0 * qAbs(distance));
-        stroker.setJoinStyle(Qt::RoundJoin);
+        // Miter join keeps corners sharp: a true parallel offset of a
+        // rectangle is a bigger rectangle, not one with rounded corners.
+        // The generous miter limit (in half-stroke-widths) keeps even
+        // fairly acute corners pointed; beyond it the join falls back to a
+        // bevel rather than growing an absurd spike.
+        stroker.setJoinStyle(Qt::MiterJoin);
+        stroker.setMiterLimit(10.0);
         const QPainterPath band = stroker.createStroke(outline);
         const QPainterPath offset = distance > 0.0 ? outline.united(band)
                                                    : outline.subtracted(band);
