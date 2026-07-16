@@ -38,6 +38,7 @@
 #include "SettingsManager.h"
 #include <QAction>
 #include <QCheckBox>
+#include <QGuiApplication>
 #include <QKeyEvent>
 #include <QInputDialog>
 #include <QFileDialog>
@@ -653,8 +654,66 @@ void PrimitivePlacementController::switchToolBarToSelectTool()
     }
 }
 
-bool PrimitivePlacementController::handleMousePress(const QPointF &scenePos)
+QPointF PrimitivePlacementController::constrainedPlacementPoint(const QPointF &scenePos) const
 {
+    if (!(QGuiApplication::keyboardModifiers() & Qt::ShiftModifier) || !m_activePrimitive)
+        return scenePos;
+
+    QPointF anchor;
+    switch (m_activeTool) {
+    case Tool::Line:
+    case Tool::PcbTrack:
+        if (m_pointsPlaced != 1)
+            return scenePos;
+        anchor = m_activePrimitive->controlPoint(0);
+        break;
+    case Tool::Polygon:
+    case Tool::Curve: {
+        // The last *fixed* vertex - the final one is the live preview vertex
+        // this very point is about to become.
+        const int count = m_activePrimitive->controlPointCount();
+        if (count < 2)
+            return scenePos;
+        anchor = m_activePrimitive->controlPoint(count - 2);
+        break;
+    }
+    case Tool::Rectangle:
+    case Tool::Ellipse: {
+        // Square/circle: the larger of the two extents wins, signs kept.
+        if (m_pointsPlaced != 1)
+            return scenePos;
+        anchor = m_activePrimitive->controlPoint(0);
+        const QPointF delta = scenePos - anchor;
+        const qreal side = qMax(qAbs(delta.x()), qAbs(delta.y()));
+        return QPointF(anchor.x() + (delta.x() < 0 ? -side : side),
+                       anchor.y() + (delta.y() < 0 ? -side : side));
+    }
+    default:
+        return scenePos;
+    }
+
+    const QPointF delta = scenePos - anchor;
+    if (qFuzzyIsNull(delta.x()) && qFuzzyIsNull(delta.y()))
+        return scenePos;
+    // Lock the direction to the nearest multiple of 45°, keeping the
+    // distance; rounded to whole units so the point stays on the integer
+    // FidoCadJ coordinate space even along the diagonals.
+    constexpr qreal Step = M_PI / 4.0;
+    const qreal snapped = std::round(std::atan2(delta.y(), delta.x()) / Step) * Step;
+    const qreal length = std::hypot(delta.x(), delta.y());
+    QPointF direction(std::cos(snapped), std::sin(snapped));
+    if (qAbs(direction.x()) < 1e-9)
+        direction.setX(0);
+    if (qAbs(direction.y()) < 1e-9)
+        direction.setY(0);
+    const QPointF result = anchor + direction * length;
+    return QPointF(qRound(result.x()), qRound(result.y()));
+}
+
+bool PrimitivePlacementController::handleMousePress(const QPointF &rawScenePos)
+{
+    const QPointF scenePos = constrainedPlacementPoint(rawScenePos);
+
     if (!m_activePrimitive) {
         startPlacement(scenePos);
         return m_activePrimitive != nullptr;
@@ -758,10 +817,11 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &scenePos)
     return true;
 }
 
-bool PrimitivePlacementController::handleMouseMove(const QPointF &scenePos)
+bool PrimitivePlacementController::handleMouseMove(const QPointF &rawScenePos)
 {
     if (!m_activePrimitive)
         return false;
+    const QPointF scenePos = constrainedPlacementPoint(rawScenePos);
 
     if (m_activeTool == Tool::Image) {
         m_activePrimitive->setControlPoint(0, scenePos - m_imageHalfSize);

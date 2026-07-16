@@ -118,6 +118,15 @@ private:
     void discardActivePrimitive();
     void cancelPlacement();
     bool isVariableVertexTool(Tool tool) const;
+    // The point placement should actually use for `scenePos` while Shift is
+    // held: for line-like segments (Line/PCB track chains, polygon/curve
+    // edges) the direction from the last fixed point is locked to the
+    // nearest multiple of 45°; for Rectangle/Ellipse the second corner is
+    // forced square, so Shift drags out perfect squares/circles - the
+    // standard CAD/vector-editor gesture. Returns `scenePos` unchanged when
+    // Shift is up or the active tool/state has no anchor to constrain
+    // against.
+    QPointF constrainedPlacementPoint(const QPointF &scenePos) const;
     // Line and PCB track are the only two FidoCadJ tools that "chain":
     // finishing one segment immediately begins the next one from the same
     // endpoint, with no extra click needed for its first point - matching
