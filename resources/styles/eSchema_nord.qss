@@ -171,6 +171,22 @@ border-color: #88c0d0;
 background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(94, 129, 172, 235), stop:0.508772 rgba(76, 110, 156, 220), stop:0.997301 rgba(129, 161, 193, 235));
 }
 
+/* Tree/table column headers (e.g. the shortcut editor's Command/Shortcut
+   columns): without this rule the native style paints them in its own
+   light chrome while the theme's text color inherits in - unreadable on
+   dark surfaces. */
+QHeaderView::section {
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                  stop: 0 #3b4252, stop: 1 #333947);
+color: #d8dee9;
+border: 1px solid #4c566a;
+padding: 3px 6px;
+}
+
+QHeaderView::section:hover {
+border: 1px solid #88c0d0;
+}
+
 QScrollBar:vertical {
 border: 1px solid #242933;
 background-color: #2e3440;

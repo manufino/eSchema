@@ -196,6 +196,21 @@ StatusBar > QPushButton:checked {
 	background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(45, 95, 110, 230), stop:0.508772 rgba(40, 80, 110, 210), stop:0.997301 rgba(35, 100, 110, 230));
 }
 
+/* Tree/table column headers (e.g. the shortcut editor's Command/Shortcut
+   columns): without this rule the native style paints them in its own
+   light chrome while the theme's text color inherits in - unreadable. */
+QHeaderView::section {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #454545, stop: 1 #333333);
+	color: #dcdcdc;
+    border: 1px solid #555555;
+    padding: 3px 6px;
+}
+
+QHeaderView::section:hover {
+    border: 1px solid #2fa7b4;
+}
+
 QScrollBar:vertical {
         border: 1px solid #4a4a4a;
 	background-color: #2b2b2b;
