@@ -1579,6 +1579,11 @@
     <addaction name="actionToolBarModifyVisible"/>
     <addaction name="actionCustomizeToolbars"/>
     <addaction name="actionCommandPalette"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowGrid"/>
+    <addaction name="actionSnapToGrid"/>
+    <addaction name="actionSnapToObjects"/>
+    <addaction name="separator"/>
     <addaction name="actionRulersVisible"/>
     <addaction name="actionClearGuides"/>
     <addaction name="separator"/>

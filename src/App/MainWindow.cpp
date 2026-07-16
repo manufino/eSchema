@@ -1114,6 +1114,20 @@ QList<QAction *> MainWindow::toolbarActionCatalog() const
         if (QMenu *menu = topLevel->menu())
             collect(menu);
     }
+    // Whatever already sits on a customizable toolbar belongs in the catalog
+    // too, even if it never appears in a menu - otherwise the customize
+    // dialog can't resolve (and silently drops) such a command from the
+    // toolbar's own current layout, permanently losing its button on OK.
+    for (QToolBar *toolBar : customizableToolbars()) {
+        for (QAction *action : toolBar->actions()) {
+            if (action->isSeparator() || qobject_cast<QWidgetAction *>(action))
+                continue;
+            if (action->objectName().isEmpty() || action->text().isEmpty())
+                continue;
+            if (!Excluded.contains(action->objectName()) && !catalog.contains(action))
+                catalog.append(action);
+        }
+    }
     return catalog;
 }
 
@@ -1170,10 +1184,14 @@ void MainWindow::applyToolbarLayout(QToolBar *toolBar, const QStringList &layout
 
 void MainWindow::loadToolbarCustomizations()
 {
+    // "toolbar_custom2_": the original "toolbar_custom_" key is deliberately
+    // ignored - layouts saved under it may have been silently stripped of
+    // toolbar-only commands (the grid/snap toggles) by a customize dialog
+    // whose catalog only knew menu commands, so they can't be trusted.
     for (QToolBar *toolBar : customizableToolbars()) {
         m_defaultToolbarLayouts.insert(toolBar, toolbarLayoutOf(toolBar));
         const QVariant saved = SettingsManager::getInstance()
-                .loadSetting(QStringLiteral("toolbar_custom_") + toolBar->objectName());
+                .loadSetting(QStringLiteral("toolbar_custom2_") + toolBar->objectName());
         if (saved.isValid())
             applyToolbarLayout(toolBar, saved.toStringList());
     }
@@ -1205,7 +1223,7 @@ void MainWindow::clickCustomizeToolbarsAction()
     for (auto it = layouts.constBegin(); it != layouts.constEnd(); ++it) {
         applyToolbarLayout(it.key(), it.value());
         SettingsManager::getInstance().saveSetting(
-                QStringLiteral("toolbar_custom_") + it.key()->objectName(), it.value());
+                QStringLiteral("toolbar_custom2_") + it.key()->objectName(), it.value());
     }
 }
 
