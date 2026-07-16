@@ -298,6 +298,13 @@ private:
     // The line/PCB track nearest `scenePos` within a few screen pixels -
     // what a trim/extend click operates on. Null when none is close enough.
     GraphicsPrimitive *pickedLineAt(const QPointF &scenePos) const;
+    // The offset copy of `source` at `distance` (always positive) on the
+    // side `cursor` points at - AutoCAD-style side picking. Chains
+    // (lines/beziers/polygons/curves) get an exact miter-parallel offset
+    // with the same node count; rectangles/ellipses stay their own type.
+    // Empty when the chosen side would erode the shape away.
+    QList<GraphicsPrimitive *> buildOffsetPrimitives(GraphicsPrimitive *source, qreal distance,
+                                                     const QPointF &cursor) const;
     // Drops an unselected in-place copy of the current selection, as one
     // undo step - the Alt+drag duplicate gesture (see Sheet::
     // altDragCloneRequested() and GraphicsPrimitive::mouseMoveEvent()).

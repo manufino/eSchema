@@ -401,6 +401,118 @@ QList<QPolygonF> boundaryPolylines(GraphicsPrimitive *primitive)
     }
 }
 
+// --- Offset helpers ---------------------------------------------------------
+
+// What Edit > Shape > Offset accepts: every base drawing primitive except
+// macros, images, connection dots, texts, pads and PCB tracks.
+bool offsettable(GraphicsPrimitive *primitive)
+{
+    switch (primitive->getPrimitiveType()) {
+    case GraphicsPrimitive::Line:
+    case GraphicsPrimitive::Bezier:
+    case GraphicsPrimitive::Rectangle:
+    case GraphicsPrimitive::Ellipse:
+    case GraphicsPrimitive::Polyline:
+        return true;
+    case GraphicsPrimitive::Spline:
+        return primitive->controlPointCount() >= 2;
+    default:
+        return false;
+    }
+}
+
+// Miter-parallel offset of a point chain: exactly one output vertex per
+// input vertex - each is the intersection of its two adjacent edges shifted
+// along their normals - so polygons and curves keep their node count
+// instead of gaining spurious vertices from a stroked-path union. The
+// distance's sign picks the side; near-degenerate corners fall back to a
+// plain shift so no miter spike can explode.
+QVector<QPointF> offsetChain(const QVector<QPointF> &points, qreal distance, bool closed)
+{
+    const int count = points.size();
+    if (count < 2 || qFuzzyIsNull(distance))
+        return points;
+
+    auto edgeNormal = [](const QPointF &a, const QPointF &b) {
+        const QPointF direction = b - a;
+        const qreal length = std::hypot(direction.x(), direction.y());
+        if (length <= 0)
+            return QPointF();
+        return QPointF(direction.y() / length, -direction.x() / length);
+    };
+
+    QVector<QPointF> result(count);
+    for (int i = 0; i < count; ++i) {
+        const bool hasPrev = closed || i > 0;
+        const bool hasNext = closed || i < count - 1;
+        const QPointF previous = points.at((i - 1 + count) % count);
+        const QPointF current = points.at(i);
+        const QPointF next = points.at((i + 1) % count);
+        const QPointF nPrev = hasPrev ? edgeNormal(previous, current) : QPointF();
+        const QPointF nNext = hasNext ? edgeNormal(current, next) : QPointF();
+
+        if (hasPrev && hasNext && !nPrev.isNull() && !nNext.isNull()) {
+            const QLineF shiftedPrev(previous + nPrev * distance, current + nPrev * distance);
+            const QLineF shiftedNext(current + nNext * distance, next + nNext * distance);
+            QPointF corner;
+            if (shiftedPrev.intersects(shiftedNext, &corner) == QLineF::NoIntersection) {
+                corner = current + nPrev * distance; // collinear edges
+            } else {
+                const QPointF spike = corner - current;
+                if (std::hypot(spike.x(), spike.y()) > qAbs(distance) * 10.0)
+                    corner = current + nPrev * distance; // clamp absurd miters
+            }
+            result[i] = corner;
+        } else if (hasNext && !nNext.isNull()) {
+            result[i] = current + nNext * distance;
+        } else if (hasPrev && !nPrev.isNull()) {
+            result[i] = current + nPrev * distance;
+        } else {
+            result[i] = current;
+        }
+    }
+    return result;
+}
+
+// Distance from `p` to the chain's nearest segment - how the cursor picks
+// which of the two offset sides it means.
+qreal chainDistanceTo(const QVector<QPointF> &points, bool closed, const QPointF &p)
+{
+    const int count = points.size();
+    if (count == 0)
+        return std::numeric_limits<qreal>::max();
+    if (count == 1) {
+        const QPointF diff = p - points.first();
+        return std::hypot(diff.x(), diff.y());
+    }
+    qreal best = std::numeric_limits<qreal>::max();
+    const int segments = closed ? count : count - 1;
+    for (int i = 0; i < segments; ++i)
+        best = qMin(best, pointToSegmentDistanceSq(p, points.at(i), points.at((i + 1) % count)));
+    return std::sqrt(best);
+}
+
+// Twice the signed area of a closed chain - its sign encodes the winding,
+// so a flipped sign after an inward offset means the shape was eroded away.
+qreal signedAreaTwice(const QVector<QPointF> &points)
+{
+    qreal area = 0;
+    const int count = points.size();
+    for (int i = 0; i < count; ++i) {
+        const QPointF &a = points.at(i);
+        const QPointF &b = points.at((i + 1) % count);
+        area += a.x() * b.y() - b.x() * a.y();
+    }
+    return area;
+}
+
+qreal rectOutlineDistanceTo(const QRectF &rect, const QPointF &p)
+{
+    QVector<QPointF> corners = { rect.topLeft(), rect.topRight(),
+                                 rect.bottomRight(), rect.bottomLeft() };
+    return chainDistanceTo(corners, true, p);
+}
+
 // --- Ramer-Douglas-Peucker simplification ---------------------------------
 
 void rdpMarkKept(const QVector<QPointF> &points, int first, int last,
@@ -618,7 +730,8 @@ void MainWindow::updateEditActionsState()
     ui->actionSimplifyNodes->setEnabled(canSimplify);
     ui->actionFilletCorners->setEnabled(canRound);
     ui->actionChamferCorners->setEnabled(canRound);
-    ui->actionOffsetOutline->setEnabled(booleanOperands >= 1);
+    ui->actionOffsetOutline->setEnabled(selected.size() == 1
+                                        && offsettable(selected.first()));
     ui->actionSplitAtPoint->setEnabled(selected.size() == 1
                                        && splittableAtPoint(selected.first()));
 
@@ -947,25 +1060,102 @@ void MainWindow::clickFilletCornersAction()
     roundSelectedCorners(false);
 }
 
-// Grows (positive distance) or shrinks (negative) each eligible closed
-// shape by a parallel offset of its outline. The offset region is built
-// with QPainterPathStroker - a band of twice the distance centered on the
-// outline - united with (outward) or subtracted from (inward) the original
-// region, then rewritten with the same representation rules as the boolean
-// results. "Keep the original shape" (persisted, like the array dialog's
-// remembered fields) leaves the operand on the sheet next to its offset
-// copy - the usual CAD offset workflow - instead of replacing it. An inward
-// offset larger than the shape erodes it away entirely; that shape is then
-// left untouched.
+QList<GraphicsPrimitive *> MainWindow::buildOffsetPrimitives(GraphicsPrimitive *source,
+                                                             qreal distance,
+                                                             const QPointF &cursor) const
+{
+    const GraphicsPrimitive::PrimitiveTypes type = source->getPrimitiveType();
+
+    // Rectangles and ellipses stay their own type: the defining rect grown
+    // or shrunk by the distance on each side. For a rectangle that IS the
+    // exact parallel offset; for an ellipse it's the natural CAD result
+    // (offset semi-axes - the mathematically exact offset curve isn't an
+    // ellipse at all). The cursor picks the side by whichever candidate
+    // outline it is closer to.
+    if (type == GraphicsPrimitive::Rectangle || type == GraphicsPrimitive::Ellipse) {
+        const QRectF rect = QRectF(source->controlPoint(0),
+                                   source->controlPoint(1)).normalized();
+        const QRectF grown = rect.adjusted(-distance, -distance, distance, distance);
+        const QRectF shrunk = rect.adjusted(distance, distance, -distance, -distance);
+        const bool shrunkValid = shrunk.width() > 0.0 && shrunk.height() > 0.0;
+
+        QRectF chosen = grown;
+        if (shrunkValid) {
+            if (rectOutlineDistanceTo(shrunk, cursor) < rectOutlineDistanceTo(grown, cursor))
+                chosen = shrunk;
+        } else if (rect.contains(cursor)) {
+            return {}; // the cursor asks for the inward side, but it erodes away
+        }
+
+        GraphicsPrimitive *result = clonePrimitive(source, sheetScene);
+        if (!result)
+            return {};
+        result->setControlPoint(0, chosen.topLeft());
+        result->setControlPoint(1, chosen.bottomRight());
+        return { result };
+    }
+
+    // Everything else is a point chain: lines and Beziers (their control
+    // polygon - a close parallel for the gentle curves schematics use),
+    // polygons, and complex curves (their vertex chain, so the spline
+    // through the offset vertices parallels the original).
+    QVector<QPointF> points;
+    points.reserve(source->controlPointCount());
+    for (int i = 0; i < source->controlPointCount(); ++i)
+        points.append(source->controlPoint(i));
+    const bool closed = type == GraphicsPrimitive::Polyline
+            || (type == GraphicsPrimitive::Spline && source->isClosedShape());
+
+    const QVector<QPointF> sideA = offsetChain(points, distance, closed);
+    const QVector<QPointF> sideB = offsetChain(points, -distance, closed);
+    const QVector<QPointF> &chosen =
+            chainDistanceTo(sideA, closed, cursor) <= chainDistanceTo(sideB, closed, cursor)
+            ? sideA : sideB;
+    if (closed) {
+        // Erosion guard: an inward offset larger than the shape flips (or
+        // collapses) the winding - there is nothing sane on that side.
+        const qreal original = signedAreaTwice(points);
+        const qreal offset = signedAreaTwice(chosen);
+        if (qFuzzyIsNull(original) || qFuzzyIsNull(offset)
+                || (original > 0) != (offset > 0))
+            return {};
+    }
+
+    GraphicsPrimitive *result = nullptr;
+    switch (type) {
+    case GraphicsPrimitive::Polyline:
+        result = makeShapeLike(source, chosen, false);
+        break;
+    case GraphicsPrimitive::Spline:
+        result = makeShapeLike(source, chosen, true, closed);
+        if (result)
+            copyArrowAttributes(result, source);
+        break;
+    case GraphicsPrimitive::Line:
+    case GraphicsPrimitive::Bezier:
+        result = clonePrimitive(source, sheetScene);
+        if (result) {
+            for (int i = 0; i < chosen.size() && i < result->controlPointCount(); ++i)
+                result->setControlPoint(i, chosen.at(i));
+        }
+        break;
+    default:
+        break;
+    }
+    return result ? QList<GraphicsPrimitive *>{ result } : QList<GraphicsPrimitive *>();
+}
+
+// AutoCAD-style offset: the dialog asks only the distance (and whether to
+// keep the original); the side comes from the mouse afterwards - a
+// half-transparent live preview of the result follows the cursor's side of
+// the shape, and nothing is committed until the click. Chain offsets are
+// exact miter parallels with the same node count as the original.
 void MainWindow::clickOffsetOutlineAction()
 {
-    QList<GraphicsPrimitive *> eligible;
-    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
-        if (primitive->supportsBooleanOps())
-            eligible.append(primitive);
-    }
-    if (eligible.isEmpty())
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.size() != 1 || !offsettable(selected.first()))
         return;
+    GraphicsPrimitive *source = selected.first();
 
     SettingsManager &settings = SettingsManager::getInstance();
     QDialog dialog(this);
@@ -973,10 +1163,10 @@ void MainWindow::clickOffsetOutlineAction()
     auto *layout = new QVBoxLayout(&dialog);
     auto *form = new QFormLayout;
     auto *spinDistance = new QDoubleSpinBox(&dialog);
-    spinDistance->setRange(-500.0, 500.0);
+    spinDistance->setRange(0.1, 500.0);
     spinDistance->setDecimals(1);
     spinDistance->setValue(5.0);
-    form->addRow(tr("Distance (drawing units, negative for inward):"), spinDistance);
+    form->addRow(tr("Distance (drawing units):"), spinDistance);
     layout->addLayout(form);
     auto *checkKeepOriginal = new QCheckBox(tr("Keep the original shape"), &dialog);
     checkKeepOriginal->setChecked(settings.loadSetting("offset_keep_original").toBool());
@@ -993,67 +1183,52 @@ void MainWindow::clickOffsetOutlineAction()
     const double distance = spinDistance->value();
     const bool keepOriginal = checkKeepOriginal->isChecked();
     settings.saveSetting("offset_keep_original", keepOriginal);
-    if (qFuzzyIsNull(distance))
+
+    // Interactive side pick: the preview is real primitives at half
+    // opacity, rebuilt as the cursor changes side, never on the undo stack.
+    QList<GraphicsPrimitive *> preview;
+    auto clearPreview = [this, &preview]() {
+        for (GraphicsPrimitive *primitive : std::as_const(preview))
+            sheetScene->removePrimitive(primitive);
+        preview.clear();
+    };
+
+    ui->statusbar->showMessage(
+            tr("Move the mouse to the side to offset toward, then click (right click or Esc cancels)"), 0);
+    QPointF picked;
+    ScenePointPicker picker(ui->graphicsView, sheetScene, false);
+    picker.setHoverCallback([this, source, distance, &preview, &clearPreview](const QPointF &pos) {
+        clearPreview();
+        preview = buildOffsetPrimitives(source, distance, pos);
+        for (GraphicsPrimitive *primitive : std::as_const(preview)) {
+            primitive->setOpacity(0.55);
+            sheetScene->addPrimitive(primitive);
+        }
+    });
+    const bool accepted = picker.run(&picked);
+    clearPreview();
+    ui->statusbar->clearMessage();
+    if (!accepted)
+        return;
+    // The source may have been destroyed inside the picker's nested event
+    // loop (global shortcuts stay live there) - same guard as Split.
+    if (!sheetScene->primitives().contains(source))
         return;
 
-    const bool smooth = ui->actionBooleanSmooth->isChecked();
+    const QList<GraphicsPrimitive *> results = buildOffsetPrimitives(source, distance, picked);
+    if (results.isEmpty()) {
+        ui->statusbar->showMessage(tr("The offset on that side would erode the shape away"), 4000);
+        return;
+    }
+
     sheetScene->clearSelection();
     QUndoStack *undo = sheetScene->undoStack();
     undo->beginMacro(tr("Offset outline"));
-    for (GraphicsPrimitive *primitive : eligible) {
-        // Rectangles and ellipses get an exact same-type result: the
-        // defining rect grown/shrunk by the distance on each side. For a
-        // rectangle that IS the true parallel offset - and stays a clean
-        // 2-point rectangle instead of a path-derived polygon with a
-        // redundant node where the path closed. For an ellipse it's the
-        // natural CAD expectation (an ellipse with offset semi-axes; the
-        // mathematically exact offset curve isn't an ellipse at all).
-        const GraphicsPrimitive::PrimitiveTypes type = primitive->getPrimitiveType();
-        if (type == GraphicsPrimitive::Rectangle || type == GraphicsPrimitive::Ellipse) {
-            const QRectF grown = QRectF(primitive->controlPoint(0),
-                                        primitive->controlPoint(1)).normalized()
-                    .adjusted(-distance, -distance, distance, distance);
-            if (grown.width() <= 0.0 || grown.height() <= 0.0) {
-                primitive->setSelected(true); // fully eroded - keep the original
-                continue;
-            }
-            GraphicsPrimitive *result = clonePrimitive(primitive, sheetScene);
-            if (!result)
-                continue;
-            result->setControlPoint(0, grown.topLeft());
-            result->setControlPoint(1, grown.bottomRight());
-            if (!keepOriginal)
-                undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
-            undo->push(new CreatePrimitiveCommand(sheetScene, result));
-            result->setSelected(true);
-            continue;
-        }
-
-        const QPainterPath outline = primitive->booleanOutline();
-        QPainterPathStroker stroker;
-        stroker.setWidth(2.0 * qAbs(distance));
-        // Miter join keeps corners sharp: a true parallel offset of a
-        // rectangle is a bigger rectangle, not one with rounded corners.
-        // The generous miter limit (in half-stroke-widths) keeps even
-        // fairly acute corners pointed; beyond it the join falls back to a
-        // bevel rather than growing an absurd spike.
-        stroker.setJoinStyle(Qt::MiterJoin);
-        stroker.setMiterLimit(10.0);
-        const QPainterPath band = stroker.createStroke(outline);
-        const QPainterPath offset = distance > 0.0 ? outline.united(band)
-                                                   : outline.subtracted(band);
-        const QList<GraphicsPrimitive *> results =
-                BooleanOps::primitivesFromPath(offset, primitive, smooth);
-        if (results.isEmpty()) {
-            primitive->setSelected(true); // fully eroded - keep the original
-            continue;
-        }
-        if (!keepOriginal)
-            undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
-        for (GraphicsPrimitive *result : results) {
-            undo->push(new CreatePrimitiveCommand(sheetScene, result));
-            result->setSelected(true);
-        }
+    if (!keepOriginal)
+        undo->push(new DeletePrimitiveCommand(sheetScene, source));
+    for (GraphicsPrimitive *result : results) {
+        undo->push(new CreatePrimitiveCommand(sheetScene, result));
+        result->setSelected(true);
     }
     undo->endMacro();
 }
