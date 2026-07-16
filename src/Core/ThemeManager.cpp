@@ -194,16 +194,14 @@ void ThemeManager::apply()
     bool darkIcons = false;
 
     QString qssPath;
-    if (style == "dark") {
+    if (style == "light") {
+        // An explicit choice only - the shipped default (empty/unrecognized
+        // value, i.e. a first launch) falls through to Nord below.
+        qssPath = ":/styles/eSchema.qss";
+        qApp->setPalette(kDefaultPalette);
+    } else if (style == "dark") {
         qssPath = ":/styles/eSchema_dark.qss";
         qApp->setPalette(darkPalette());
-        darkIcons = true;
-    } else if (style == "nord") {
-        // Arctic blue-gray (the Nord palette), Segoe UI.
-        qssPath = ":/styles/eSchema_nord.qss";
-        qApp->setPalette(themedPalette(QColor(0x2e, 0x34, 0x40), QColor(0x27, 0x2c, 0x36),
-                                       QColor(0xd8, 0xde, 0xe9), QColor(0x3b, 0x42, 0x52),
-                                       QColor(0x5e, 0x81, 0xac), Qt::white));
         darkIcons = true;
     } else if (style == "midnight") {
         // Deep navy with violet-blue accents, Trebuchet MS.
@@ -240,10 +238,13 @@ void ThemeManager::apply()
         qssPath = SettingsManager::getInstance().loadSetting("stylesheet_path").toString();
         qApp->setPalette(kDefaultPalette);
     } else {
-        // "light", or any missing/unrecognized value - the original
-        // built-in eSchema look.
-        qssPath = ":/styles/eSchema.qss";
-        qApp->setPalette(kDefaultPalette);
+        // "nord", or any missing/unrecognized value: arctic blue-gray (the
+        // Nord palette), Segoe UI - the default look on a fresh install.
+        qssPath = ":/styles/eSchema_nord.qss";
+        qApp->setPalette(themedPalette(QColor(0x2e, 0x34, 0x40), QColor(0x27, 0x2c, 0x36),
+                                       QColor(0xd8, 0xde, 0xe9), QColor(0x3b, 0x42, 0x52),
+                                       QColor(0x5e, 0x81, 0xac), Qt::white));
+        darkIcons = true;
     }
 
     QString qss;

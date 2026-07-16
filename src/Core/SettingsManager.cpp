@@ -72,7 +72,7 @@ void SettingsManager::restoreDefaultSettings()
 
     // GENERAL
     saveSetting("language", "it");
-    saveSetting("gui_style", "light");
+    saveSetting("gui_style", "nord");
     saveSetting("stylesheet_path", "");
     saveSetting("lib_path", "");
     saveSetting("macro_icon_size", 32);

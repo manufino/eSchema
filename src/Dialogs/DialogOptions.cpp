@@ -126,7 +126,10 @@ void DialogOptions::loadSettings()
     m_initialLanguageIndex = ui->cboxLanguage->currentIndex();
     val = settings.loadSetting("gui_style");
     const int styleIndex = GuiStyleCodes.indexOf(val.toString());
-    ui->cboxStyle->setCurrentIndex(styleIndex >= 0 ? styleIndex : 0);
+    // Nord is the shipped default look (see ThemeManager::apply()'s own
+    // fallback) - reflect that when no explicit choice was ever saved.
+    ui->cboxStyle->setCurrentIndex(styleIndex >= 0 ? styleIndex
+                                                   : int(GuiStyleCodes.indexOf("nord")));
     val = settings.loadSetting("stylesheet_path");
     ui->txtStylesheetPath->setText(val.toString());
     updateStylesheetPathEnabled();
