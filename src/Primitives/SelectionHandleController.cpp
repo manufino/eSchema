@@ -52,6 +52,21 @@ void SelectionHandleController::onSelectionChanged()
 
 void SelectionHandleController::refreshHandlePositions()
 {
+    if (m_handles.isEmpty())
+        return;
+
+    // Add/Remove node (canvas context menu, and undo/redo of those
+    // commands) changes the selected primitive's point count *without*
+    // touching the selection, so no rebuild used to happen: every handle
+    // past the edit then addressed the wrong index - a "vertex" grip
+    // silently dragging the name/value label, or the other way around.
+    // Rebuild from scratch whenever the live count no longer matches.
+    GraphicsPrimitive *target = m_handles.first()->target();
+    if (target->totalPointCount() != m_handles.size()) {
+        onSelectionChanged(); // clear + rebuild against the live points
+        return;
+    }
+
     for (PrimitiveHandleItem *handle : std::as_const(m_handles))
         handle->setPos(handle->target()->pointAt(handle->controlPointIndex()));
 }
