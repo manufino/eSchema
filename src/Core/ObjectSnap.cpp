@@ -160,6 +160,30 @@ std::optional<QPointF> ObjectSnap::snapPoint(const Sheet *sheet, const QPointF &
         }
     }
 
+    // Guides take part in intersection snapping too: where two guides cross,
+    // and where a guide crosses a primitive's segment, is exactly the kind
+    // of construction point guides get dragged out for. Each guide passing
+    // within the radius contributes a short stretch of its (infinite) line,
+    // centered on the cursor and long enough to cover any crossing that
+    // could still land within the capture radius - so the existing pairwise
+    // loop below picks the crossings up like any other intersection.
+    const QVariant snapGuides = SettingsManager::getInstance().loadSetting("snap_to_guides");
+    if (wantIntersections && (!snapGuides.isValid() || snapGuides.toBool())) {
+        const qreal span = radius * 2.0;
+        const QList<Sheet::Guide> &guides = sheet->guides();
+        for (const Sheet::Guide &guide : guides) {
+            if (guide.orientation == Qt::Vertical) {
+                if (qAbs(scenePos.x() - guide.position) <= radius)
+                    nearbySegments.append(QLineF(guide.position, scenePos.y() - span,
+                                                 guide.position, scenePos.y() + span));
+            } else {
+                if (qAbs(scenePos.y() - guide.position) <= radius)
+                    nearbySegments.append(QLineF(scenePos.x() - span, guide.position,
+                                                 scenePos.x() + span, guide.position));
+            }
+        }
+    }
+
     for (int i = 0; i < nearbySegments.size(); ++i) {
         for (int j = i + 1; j < nearbySegments.size(); ++j) {
             QPointF crossing;
