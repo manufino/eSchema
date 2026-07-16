@@ -75,6 +75,9 @@ border:1px solid #1f6f8b;
 QToolBar {
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                   stop: 0 #dcecf4, stop: 1 #eaf4f8);
+/* Qt quirk: a QToolBar background rule is silently dropped on some base
+   styles (e.g. Fusion, the Linux default) unless the border is set too. */
+border: none;
 }
 
 QToolBar QToolButton {

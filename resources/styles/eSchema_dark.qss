@@ -84,6 +84,9 @@ border:1px solid #2fa7b4;
 
 QToolBar {
 background-color: #2b2b2b;
+/* Qt quirk: a QToolBar background rule is silently dropped on some base
+   styles (e.g. Fusion, the Linux default) unless the border is set too. */
+border: none;
 }
 
 QToolBar QToolButton { /* all types of tool button */

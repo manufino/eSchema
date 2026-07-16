@@ -172,7 +172,13 @@ QPalette darkPalette()
 bool ThemeManager::darkThemeActive()
 {
     const QString style = SettingsManager::getInstance().loadSetting("gui_style").toString();
-    return style == "dark" || style == "nord" || style == "midnight" || style == "graphite";
+    // Must mirror apply()'s branching exactly: an empty/unrecognized value
+    // falls through to Nord (dark) there, so it must count as dark here too,
+    // or paint-time icons (layer eye/lock glyphs, library tree previews)
+    // come out black on a dark surface. Naming the light styles keeps a
+    // future dark theme from silently reintroducing that mismatch.
+    return style != "light" && style != "sepia" && style != "ocean"
+            && style != "system" && style != "custom";
 }
 
 QPixmap ThemeManager::themedIcon(const QPixmap &source)
@@ -197,8 +203,16 @@ void ThemeManager::apply()
     if (style == "light") {
         // An explicit choice only - the shipped default (empty/unrecognized
         // value, i.e. a first launch) falls through to Nord below.
+        // An explicit light palette rather than kDefaultPalette: the OS
+        // default is only light on Windows - on a Linux desktop running a
+        // dark color scheme it is dark, which turned every natively-painted
+        // surface (toolbar areas, rulers, layer combo) black under the
+        // light stylesheet. The colors replicate the classic Windows
+        // palette this theme was designed on.
         qssPath = ":/styles/eSchema.qss";
-        qApp->setPalette(kDefaultPalette);
+        qApp->setPalette(themedPalette(QColor(0xf0, 0xf0, 0xf0), Qt::white,
+                                       Qt::black, QColor(0xf0, 0xf0, 0xf0),
+                                       QColor(0x00, 0x78, 0xd7), Qt::white));
     } else if (style == "dark") {
         qssPath = ":/styles/eSchema_dark.qss";
         qApp->setPalette(darkPalette());

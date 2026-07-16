@@ -62,6 +62,17 @@ QToolBox::tab:selected {
 border:1px solid cyan;
 }
 
+QToolBar {
+/* The light look historically relied on the native (Windows) toolbar
+   rendering, which happens to be this same flat light gray - stated
+   explicitly so Linux/macOS render it identically instead of falling back
+   to whatever the OS palette is (a dark desktop turned these black).
+   The border is required for the background to apply on some base styles
+   (e.g. Fusion) - same Qt quirk as in the themed stylesheets. */
+background-color: #f0f0f0;
+border: none;
+}
+
 QToolBar QToolButton { /* all types of tool button */
     border: 1px solid #8f8f91;
     border-radius: 3px;
