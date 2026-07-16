@@ -17,7 +17,7 @@
 <context>
     <name>CommandPalette</name>
     <message>
-        <location filename="../src/Widgets/CommandPalette.cpp" line="48" />
+        <location filename="../src/Widgets/CommandPalette.cpp" line="49" />
         <source>Type a command name...</source>
         <translation>Escreva o nome de um comando...</translation>
     </message>
@@ -2073,7 +2073,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1475" />
-        <location filename="../src/App/MainWindow.cpp" line="1011" />
+        <location filename="../src/App/MainWindow.cpp" line="1060" />
         <source>Open recent</source>
         <translation>Abrir recente</translation>
     </message>
@@ -2184,7 +2184,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1863" />
-        <location filename="../src/App/MainWindow.cpp" line="1810" />
+        <location filename="../src/App/MainWindow.cpp" line="1908" />
         <source>Print</source>
         <translation>Imprimir</translation>
     </message>
@@ -2220,7 +2220,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1905" />
-        <location filename="../src/App/MainWindow.cpp" line="780" />
+        <location filename="../src/App/MainWindow.cpp" line="813" />
         <source>Undo</source>
         <translation>Desfazer</translation>
     </message>
@@ -2231,7 +2231,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1920" />
-        <location filename="../src/App/MainWindow.cpp" line="783" />
+        <location filename="../src/App/MainWindow.cpp" line="816" />
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
@@ -2242,7 +2242,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1935" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2277" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2276" />
         <source>Cut</source>
         <translation>Cortar</translation>
     </message>
@@ -2273,7 +2273,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1977" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2219" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2218" />
         <source>Copy as image</source>
         <translation>Copiar como imagem</translation>
     </message>
@@ -2289,7 +2289,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1995" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2371" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2370" />
         <source>Paste</source>
         <translation>Colar</translation>
     </message>
@@ -2300,7 +2300,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2010" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2392" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2391" />
         <source>Paste in place</source>
         <translation>Colar no lugar</translation>
     </message>
@@ -2316,8 +2316,8 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2028" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1748" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2400" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1747" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2399" />
         <source>Duplicate</source>
         <translation>Duplicar</translation>
     </message>
@@ -2328,7 +2328,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2043" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="745" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="757" />
         <source>Rotate</source>
         <translation>Rodar</translation>
     </message>
@@ -2339,7 +2339,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2058" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="695" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="707" />
         <source>Mirror</source>
         <translation>Espelhar</translation>
     </message>
@@ -2350,7 +2350,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2073" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="723" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="735" />
         <source>Mirror as copy</source>
         <translation>Espelhar como cópia</translation>
     </message>
@@ -2361,7 +2361,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2085" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1769" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1768" />
         <source>Convert macro to primitives</source>
         <translation>Converter macro em primitivas</translation>
     </message>
@@ -2372,49 +2372,49 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2106" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2024" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2023" />
         <source>Align left</source>
         <translation>Alinhar à esquerda</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2115" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2040" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2039" />
         <source>Align right</source>
         <translation>Alinhar à direita</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2124" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2056" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2055" />
         <source>Align top</source>
         <translation>Alinhar ao topo</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2133" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2072" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2071" />
         <source>Align bottom</source>
         <translation>Alinhar à base</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2142" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2097" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2096" />
         <source>Align horizontal center</source>
         <translation>Alinhar ao centro horizontal</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2151" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2121" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2120" />
         <source>Align vertical center</source>
         <translation>Alinhar ao centro vertical</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2160" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2148" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2147" />
         <source>Distribute horizontally</source>
         <translation>Distribuir horizontalmente</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2169" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2171" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2170" />
         <source>Distribute vertically</source>
         <translation>Distribuir verticalmente</translation>
     </message>
@@ -2440,7 +2440,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2208" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1853" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1852" />
         <source>Delete</source>
         <translation>Eliminar</translation>
     </message>
@@ -2735,8 +2735,8 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2241" />
-        <location filename="../src/App/MainWindow.cpp" line="862" />
-        <location filename="../src/App/MainWindow.cpp" line="873" />
+        <location filename="../src/App/MainWindow.cpp" line="901" />
+        <location filename="../src/App/MainWindow.cpp" line="912" />
         <source>Check for updates</source>
         <translation>Verificar atualizações</translation>
     </message>
@@ -2773,7 +2773,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2708" />
-        <location filename="../src/App/MainWindow.cpp" line="1314" />
+        <location filename="../src/App/MainWindow.cpp" line="1363" />
         <source>Drawing tools</source>
         <translation>Ferramentas de desenho</translation>
     </message>
@@ -2789,7 +2789,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2729" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1177" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1195" />
         <source>Split at point</source>
         <translation>Dividir no ponto</translation>
     </message>
@@ -2800,7 +2800,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2741" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1349" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1358" />
         <source>Trim to intersection</source>
         <translation>Aparar até à interseção</translation>
     </message>
@@ -2861,7 +2861,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2828" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="793" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="805" />
         <source>Union</source>
         <translation>União</translation>
     </message>
@@ -2872,7 +2872,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2843" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="798" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="810" />
         <source>Subtraction</source>
         <translation>Subtração</translation>
     </message>
@@ -2883,7 +2883,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2858" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="803" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="815" />
         <source>Intersection</source>
         <translation>Interseção</translation>
     </message>
@@ -2934,7 +2934,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2933" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="835" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="847" />
         <source>Convert to polygon</source>
         <translation>Converter em polígono</translation>
     </message>
@@ -2945,7 +2945,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2948" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="840" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="852" />
         <source>Convert to complex curve</source>
         <translation>Converter em curva complexa</translation>
     </message>
@@ -2986,7 +2986,7 @@ Reatribuí-lo ao comando selecionado?</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="3008" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1697" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1696" />
         <source>Snap selection to grid</source>
         <translation>Ajustar seleção à grelha</translation>
     </message>
@@ -3031,105 +3031,110 @@ Reatribuí-lo ao comando selecionado?</translation>
         <translation>Mostrar réguas</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="780" />
+        <location filename="../src/App/MainWindow.cpp" line="413" />
+        <source>Search commands...</source>
+        <translation>Procurar comandos...</translation>
+    </message>
+    <message>
+        <location filename="../src/App/MainWindow.cpp" line="813" />
         <source>Undo: %1</source>
         <translation>Desfazer: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="783" />
+        <location filename="../src/App/MainWindow.cpp" line="816" />
         <source>Redo: %1</source>
         <translation>Refazer: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="852" />
+        <location filename="../src/App/MainWindow.cpp" line="891" />
         <source>Update available</source>
         <translation>Atualização disponível</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="853" />
+        <location filename="../src/App/MainWindow.cpp" line="892" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>Uma nova versão do eSchema está disponível (%1).
 Deseja baixá-la agora?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="863" />
+        <location filename="../src/App/MainWindow.cpp" line="902" />
         <source>eSchema is already up to date.</source>
         <translation>O eSchema já está atualizado.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="874" />
+        <location filename="../src/App/MainWindow.cpp" line="913" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>Não foi possível verificar atualizações. Verifique sua conexão com a internet.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="906" />
+        <location filename="../src/App/MainWindow.cpp" line="955" />
         <source>Attach tracing image</source>
         <translation>Anexar imagem de decalque</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="956" />
+        <location filename="../src/App/MainWindow.cpp" line="1005" />
         <source>Symbol wizard</source>
         <translation>Assistente de símbolos</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="962" />
+        <location filename="../src/App/MainWindow.cpp" line="1011" />
         <source>New drawing* (unsaved)</source>
         <translation>Novo desenho* (não guardado)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1012" />
+        <location filename="../src/App/MainWindow.cpp" line="1061" />
         <source>The file no longer exists:
 %1</source>
         <translation>O arquivo não existe mais:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1026" />
+        <location filename="../src/App/MainWindow.cpp" line="1075" />
         <source>Clear list</source>
         <translation>Limpar lista</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1081" />
-        <location filename="../src/App/MainWindow.cpp" line="1521" />
-        <location filename="../src/App/MainWindow.cpp" line="1616" />
-        <location filename="../src/App/MainWindow.cpp" line="1650" />
-        <location filename="../src/App/MainWindow.cpp" line="1804" />
-        <location filename="../src/App/MainWindow.cpp" line="1954" />
+        <location filename="../src/App/MainWindow.cpp" line="1130" />
+        <location filename="../src/App/MainWindow.cpp" line="1596" />
+        <location filename="../src/App/MainWindow.cpp" line="1700" />
+        <location filename="../src/App/MainWindow.cpp" line="1736" />
+        <location filename="../src/App/MainWindow.cpp" line="1902" />
+        <location filename="../src/App/MainWindow.cpp" line="2052" />
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1081" />
-        <location filename="../src/App/MainWindow.cpp" line="1804" />
+        <location filename="../src/App/MainWindow.cpp" line="1130" />
+        <location filename="../src/App/MainWindow.cpp" line="1902" />
         <source>Unable to save the file:
 %1</source>
         <translation>Não foi possível guardar o ficheiro:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1103" />
+        <location filename="../src/App/MainWindow.cpp" line="1152" />
         <source>Unsaved changes</source>
         <translation>Alterações não guardadas</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1104" />
+        <location filename="../src/App/MainWindow.cpp" line="1153" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>Existem alterações não guardadas. Deseja guardá-las?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1505" />
+        <location filename="../src/App/MainWindow.cpp" line="1580" />
         <source>an untitled drawing</source>
         <translation>um desenho sem título</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1508" />
-        <location filename="../src/App/MainWindow.cpp" line="1533" />
+        <location filename="../src/App/MainWindow.cpp" line="1583" />
+        <location filename="../src/App/MainWindow.cpp" line="1608" />
         <source>Autosave recovery</source>
         <translation>Recuperação de salvamento automático</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1509" />
+        <location filename="../src/App/MainWindow.cpp" line="1584" />
         <source>eSchema wasn't closed properly last time.
 An autosave was found for %1.
 
@@ -3140,50 +3145,50 @@ Foi encontrado um salvamento automático de %1.
 Deseja recuperá-lo?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1522" />
+        <location filename="../src/App/MainWindow.cpp" line="1597" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>Não foi possível recuperar o salvamento automático:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1558" />
+        <location filename="../src/App/MainWindow.cpp" line="1635" />
         <source>Open drawing</source>
         <translation>Abrir desenho</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1559" />
-        <location filename="../src/App/MainWindow.cpp" line="1775" />
-        <location filename="../src/App/MainWindow.cpp" line="1791" />
+        <location filename="../src/App/MainWindow.cpp" line="1636" />
+        <location filename="../src/App/MainWindow.cpp" line="1873" />
+        <location filename="../src/App/MainWindow.cpp" line="1889" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1608" />
+        <location filename="../src/App/MainWindow.cpp" line="1685" />
         <source>The drawing had elements outside the drawing area and was moved onto the sheet</source>
         <translation>O desenho tinha elementos fora da área de desenho e foi movido para a folha</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1616" />
-        <location filename="../src/App/MainWindow.cpp" line="1650" />
+        <location filename="../src/App/MainWindow.cpp" line="1700" />
+        <location filename="../src/App/MainWindow.cpp" line="1736" />
         <source>Unable to open the file:
 %1</source>
         <translation>Não foi possível abrir o ficheiro:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1634" />
-        <location filename="../src/App/MainWindow.cpp" line="1663" />
+        <location filename="../src/App/MainWindow.cpp" line="1718" />
+        <location filename="../src/App/MainWindow.cpp" line="1749" />
         <source>Import from DXF</source>
         <translation>Importar de DXF</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1635" />
+        <location filename="../src/App/MainWindow.cpp" line="1719" />
         <source>DXF (*.dxf)</source>
         <translation>DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1664" />
+        <location filename="../src/App/MainWindow.cpp" line="1750" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -3192,131 +3197,131 @@ Deseja recuperá-lo?</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1709" />
+        <location filename="../src/App/MainWindow.cpp" line="1807" />
         <source>Edit FCD code</source>
         <translation>Editar código FCD</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1774" />
+        <location filename="../src/App/MainWindow.cpp" line="1872" />
         <source>Save drawing as</source>
         <translation>Guardar desenho como</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1790" />
+        <location filename="../src/App/MainWindow.cpp" line="1888" />
         <source>Save split as</source>
         <translation>Salvar dividido como</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1810" />
-        <location filename="../src/App/MainWindow.cpp" line="1924" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2219" />
+        <location filename="../src/App/MainWindow.cpp" line="1908" />
+        <location filename="../src/App/MainWindow.cpp" line="2022" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2218" />
         <source>The drawing is empty.</source>
         <translation>O desenho está vazio.</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1847" />
+        <location filename="../src/App/MainWindow.cpp" line="1945" />
         <source>Print preview</source>
         <translation>Pré-visualização de impressão</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1924" />
+        <location filename="../src/App/MainWindow.cpp" line="2022" />
         <source>Export</source>
         <translation>Exportar</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1932" />
+        <location filename="../src/App/MainWindow.cpp" line="2030" />
         <source>Export drawing</source>
         <translation>Exportar desenho</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1955" />
+        <location filename="../src/App/MainWindow.cpp" line="2053" />
         <source>Could not export the file:
 %1</source>
         <translation>Não foi possível exportar o arquivo:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="666" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="678" />
         <source>Add node</source>
         <translation>Adicionar nó</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="670" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="682" />
         <source>Remove node</source>
         <translation>Remover nó</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="857" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="864" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="869" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="876" />
         <source>Simplify nodes</source>
         <translation>Simplificar nós</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="857" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="869" />
         <source>Tolerance (drawing units):</source>
         <translation>Tolerância (unidades de desenho):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="906" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="912" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="918" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="924" />
         <source>Chamfer corners</source>
         <translation>Chanfrar cantos</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="906" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="912" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="918" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="924" />
         <source>Fillet corners</source>
         <translation>Arredondar cantos</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="907" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="919" />
         <source>Cut distance (drawing units):</source>
         <translation>Distância de corte (unidades de desenho):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="907" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="919" />
         <source>Radius (drawing units):</source>
         <translation>Raio (unidades de desenho):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="960" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="990" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="972" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1002" />
         <source>Offset outline</source>
         <translation>Desvio do contorno</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="967" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="979" />
         <source>Distance (drawing units, negative for inward):</source>
         <translation>Distância (unidades de desenho, negativa para dentro):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="969" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="981" />
         <source>Keep the original shape</source>
         <translation>Manter a forma original</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1068" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1080" />
         <source>Click the split point (right click or Esc cancels)</source>
         <translation>Clique no ponto de divisão (botão direito ou Esc cancela)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1167" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1185" />
         <source>The point does not split the primitive</source>
         <translation>O ponto não divide a primitiva</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1287" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1296" />
         <source>Click the part of a line to remove (right click or Esc cancels)</source>
         <translation>Clique na parte da linha a remover (botão direito ou Esc cancela)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1310" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1456" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1319" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1455" />
         <source>No line or PCB track there</source>
         <translation>Não há nenhuma linha ou pista PCB aí</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1309" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1318" />
         <source>Nothing crosses that line - nothing to trim</source>
         <translation>Nada cruza essa linha – nada para aparar</translation>
     </message>
@@ -3326,156 +3331,156 @@ Deseja recuperá-lo?</translation>
         <translation>Clique numa linha perto da extremidade a estender (botão direito ou Esc cancela)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1455" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1454" />
         <source>Nothing to extend to in that direction</source>
         <translation>Não há nada até onde estender nessa direção</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1479" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1488" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1478" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1487" />
         <source>Scale</source>
         <translation>Escalar</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1479" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1478" />
         <source>Scale factor (%):</source>
         <translation>Fator de escala (%):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1515" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1533" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1514" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1532" />
         <source>Rotate by angle</source>
         <translation>Rodar por ângulo</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1515" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1514" />
         <source>Angle (degrees, counterclockwise):</source>
         <translation>Ângulo (graus, anti-horário):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1599" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1631" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1598" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1630" />
         <source>Array of copies</source>
         <translation>Matriz de cópias</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1844" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1843" />
         <source>Create macro</source>
         <translation>Criar macro</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1926" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1925" />
         <source>No matches</source>
         <translation>Nenhum resultado</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1938" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1937" />
         <source>%1 of %2</source>
         <translation>%1 de %2</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1985" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1984" />
         <source>Move selection</source>
         <translation>Mover seleção</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="115" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="120" />
         <source>Standard</source>
         <translation>Padrão</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="168" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="173" />
         <source>Rename library...</source>
         <translation>Renomear biblioteca...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="169" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="174" />
         <source>Delete library...</source>
         <translation>Eliminar biblioteca...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="180" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="185" />
         <source>Rename category...</source>
         <translation>Renomear categoria...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="181" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="186" />
         <source>Delete category...</source>
         <translation>Eliminar categoria...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="191" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="196" />
         <source>Rename macro...</source>
         <translation>Renomear macro...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="192" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="197" />
         <source>Delete macro...</source>
         <translation>Eliminar macro...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="211" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="218" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="216" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="223" />
         <source>Rename library</source>
         <translation>Renomear biblioteca</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="211" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="216" />
         <source>Library name:</source>
         <translation>Nome da biblioteca:</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="224" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="232" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="229" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="237" />
         <source>Delete library</source>
         <translation>Eliminar biblioteca</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="225" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="230" />
         <source>Permanently delete this library and all the macros it contains?</source>
         <translation>Eliminar definitivamente esta biblioteca e todas as macros que contém?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="238" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="245" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="243" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="250" />
         <source>Rename category</source>
         <translation>Renomear categoria</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="238" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="243" />
         <source>Category name:</source>
         <translation>Nome da categoria:</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="251" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="259" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="256" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="264" />
         <source>Delete category</source>
         <translation>Eliminar categoria</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="252" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="257" />
         <source>Delete category "%1" and all macros it contains?</source>
         <translation>Excluir a categoria "%1" e todas as macros que ela contém?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="269" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="276" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="274" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="281" />
         <source>Rename macro</source>
         <translation>Renomear macro</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="269" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="274" />
         <source>Macro name:</source>
         <translation>Nome da macro:</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="285" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="293" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="290" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="298" />
         <source>Delete macro</source>
         <translation>Eliminar macro</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="286" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="291" />
         <source>Permanently delete macro "%1"?</source>
         <translation>Excluir permanentemente a macro "%1"?</translation>
     </message>
@@ -3607,84 +3612,86 @@ Deseja recuperá-lo?</translation>
         <translation>Rodar</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="286" />
+        <location filename="../src/Core/LibraryManager.cpp" line="287" />
         <source>Missing library name.</source>
         <translation>Nome da biblioteca em falta.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="288" />
+        <location filename="../src/Core/LibraryManager.cpp" line="289" />
         <source>Cannot save into a standard library.</source>
         <translation>Não é possível salvar em uma biblioteca padrão.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="293" />
+        <location filename="../src/Core/LibraryManager.cpp" line="294" />
         <source>Invalid macro key.</source>
         <translation>Chave de macro inválida.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="297" />
+        <location filename="../src/Core/LibraryManager.cpp" line="298" />
         <source>A macro with this key already exists in this library.</source>
         <translation>Já existe uma macro com esta chave nesta biblioteca.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="305" />
-        <location filename="../src/Core/LibraryManager.cpp" line="369" />
+        <location filename="../src/Core/LibraryManager.cpp" line="306" />
+        <location filename="../src/Core/LibraryManager.cpp" line="324" />
+        <location filename="../src/Core/LibraryManager.cpp" line="382" />
+        <location filename="../src/Core/LibraryManager.cpp" line="413" />
         <source>Unable to write the file %1</source>
         <translation>Não foi possível escrever o ficheiro %1</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="410" />
-        <location filename="../src/Core/LibraryManager.cpp" line="459" />
-        <location filename="../src/Core/LibraryManager.cpp" line="494" />
-        <location filename="../src/Core/LibraryManager.cpp" line="524" />
-        <location filename="../src/Core/LibraryManager.cpp" line="561" />
+        <location filename="../src/Core/LibraryManager.cpp" line="428" />
+        <location filename="../src/Core/LibraryManager.cpp" line="477" />
+        <location filename="../src/Core/LibraryManager.cpp" line="512" />
+        <location filename="../src/Core/LibraryManager.cpp" line="542" />
+        <location filename="../src/Core/LibraryManager.cpp" line="579" />
         <source>Cannot modify a standard library.</source>
         <translation>Não é possível modificar uma biblioteca padrão.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="413" />
-        <location filename="../src/Core/LibraryManager.cpp" line="438" />
-        <location filename="../src/Core/LibraryManager.cpp" line="462" />
-        <location filename="../src/Core/LibraryManager.cpp" line="497" />
-        <location filename="../src/Core/LibraryManager.cpp" line="531" />
-        <location filename="../src/Core/LibraryManager.cpp" line="565" />
+        <location filename="../src/Core/LibraryManager.cpp" line="431" />
+        <location filename="../src/Core/LibraryManager.cpp" line="456" />
+        <location filename="../src/Core/LibraryManager.cpp" line="480" />
+        <location filename="../src/Core/LibraryManager.cpp" line="515" />
+        <location filename="../src/Core/LibraryManager.cpp" line="549" />
+        <location filename="../src/Core/LibraryManager.cpp" line="583" />
         <source>Library not found.</source>
         <translation>Biblioteca não encontrada.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="416" />
+        <location filename="../src/Core/LibraryManager.cpp" line="434" />
         <source>The library name cannot be empty.</source>
         <translation>O nome da biblioteca não pode estar vazio.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="436" />
+        <location filename="../src/Core/LibraryManager.cpp" line="454" />
         <source>Cannot delete a standard library.</source>
         <translation>Não é possível eliminar uma biblioteca padrão.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="443" />
+        <location filename="../src/Core/LibraryManager.cpp" line="461" />
         <source>Unable to delete the file %1</source>
         <translation>Não foi possível eliminar o ficheiro %1</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="465" />
+        <location filename="../src/Core/LibraryManager.cpp" line="483" />
         <source>The category name cannot be empty.</source>
         <translation>O nome da categoria não pode estar vazio.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="467" />
-        <location filename="../src/Core/LibraryManager.cpp" line="499" />
+        <location filename="../src/Core/LibraryManager.cpp" line="485" />
+        <location filename="../src/Core/LibraryManager.cpp" line="517" />
         <source>Category not found.</source>
         <translation>Categoria não encontrada.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="522" />
-        <location filename="../src/Core/LibraryManager.cpp" line="559" />
+        <location filename="../src/Core/LibraryManager.cpp" line="540" />
+        <location filename="../src/Core/LibraryManager.cpp" line="577" />
         <source>Macro not found.</source>
         <translation>Macro não encontrada.</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="527" />
+        <location filename="../src/Core/LibraryManager.cpp" line="545" />
         <source>The macro name cannot be empty.</source>
         <translation>O nome da macro não pode estar vazio.</translation>
     </message>
@@ -3705,27 +3712,27 @@ Deseja recuperá-lo?</translation>
         <translation>Remover nó</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="596" />
+        <location filename="../src/IO/DxfReader.cpp" line="611" />
         <source>%1 DXF layers beyond the 16-layer limit were merged into the last available layer.</source>
         <translation>%1 camadas DXF além do limite de 16 camadas foram mescladas na última camada disponível.</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="640" />
+        <location filename="../src/IO/DxfReader.cpp" line="674" />
         <source>%1 unsupported %2 entities were ignored.</source>
         <translation>%1 entidades %2 não suportadas foram ignoradas.</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="644" />
+        <location filename="../src/IO/DxfReader.cpp" line="678" />
         <source>%1 elements with more than %2 vertices were truncated.</source>
         <translation>%1 elementos com mais de %2 vértices foram truncados.</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="648" />
+        <location filename="../src/IO/DxfReader.cpp" line="682" />
         <source>%1 rotated ellipses were imported as unrotated (bounding box).</source>
         <translation>%1 elipses rotacionadas foram importadas sem rotação (caixa delimitadora).</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="652" />
+        <location filename="../src/IO/DxfReader.cpp" line="686" />
         <source>%1 INSERT references to missing blocks were ignored.</source>
         <translation>%1 referências INSERT a blocos ausentes foram ignoradas.</translation>
     </message>

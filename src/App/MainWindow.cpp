@@ -34,6 +34,7 @@
 #include "DialogAttachImage.h"
 #include "DialogSymbolWizard.h"
 #include <QRandomGenerator>
+#include <QLineEdit>
 #include "DialogExport.h"
 #include "DialogPrintOptions.h"
 #include "DxfReader.h"
@@ -404,6 +405,16 @@ void MainWindow::setConnections()
     connect(ui->actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::clickCheckUpdatesAction);
     connect(ui->actionCommandPalette, &QAction::triggered, this, &MainWindow::clickCommandPaletteAction);
+    // The command palette's launcher in the menu bar's unused right-hand
+    // corner: focusing the field opens the palette right under it (see
+    // eventFilter()), carrying over anything already typed.
+    m_menuBarSearch = new QLineEdit(ui->menubar);
+    m_menuBarSearch->setObjectName(QStringLiteral("menuBarSearch"));
+    m_menuBarSearch->setPlaceholderText(tr("Search commands..."));
+    m_menuBarSearch->setToolTip(ui->actionCommandPalette->toolTip());
+    m_menuBarSearch->setFixedWidth(220);
+    m_menuBarSearch->installEventFilter(this);
+    ui->menubar->setCornerWidget(m_menuBarSearch, Qt::TopRightCorner);
     connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
     connect(ui->graphicsView, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
     connect(ui->graphicsView, &SheetView::mouseMoved, this, [this](QPointF scenePos) {
@@ -1373,7 +1384,7 @@ void MainWindow::loadShortcutCustomizations()
 // menu's name) plus the drawing tools, handed to the palette as the very
 // same QAction objects the menus use - so enabled state, icons and
 // shortcuts always match, and triggering one is exactly a menu click.
-void MainWindow::clickCommandPaletteAction()
+void MainWindow::openCommandPalette(const QPoint &topCenter, const QString &initialText)
 {
     CommandPalette palette(this);
     const auto catalog = commandCatalogByCategory();
@@ -1381,11 +1392,37 @@ void MainWindow::clickCommandPaletteAction()
         if (entry.second != ui->actionCommandPalette) // a pointless entry
             palette.addCommand(entry.first, entry.second);
     }
+    palette.popup(topCenter, initialText);
+}
 
+void MainWindow::clickCommandPaletteAction()
+{
     // Just under the menu bar, centered - where command palettes usually
     // drop down from.
-    const QPoint topCenter = mapToGlobal(QPoint(width() / 2, menuBar()->height() + 4));
-    palette.popup(topCenter);
+    openCommandPalette(mapToGlobal(QPoint(width() / 2, menuBar()->height() + 4)));
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    // The menu bar's corner search field is a launcher, not a real editor:
+    // the moment it gains focus (click or tab), the palette itself opens
+    // right under it and takes over the typing. The guard keeps the
+    // focus-restore after the palette closes from re-triggering this.
+    if (watched == m_menuBarSearch && event->type() == QEvent::FocusIn
+            && !m_menuSearchOpening) {
+        m_menuSearchOpening = true;
+        const QString typed = m_menuBarSearch->text();
+        m_menuBarSearch->clear();
+        // Move focus away first, so closing the palette can't land focus
+        // back on the field and immediately reopen it.
+        ui->graphicsView->setFocus();
+        const QPoint anchor = m_menuBarSearch->mapToGlobal(
+                QPoint(m_menuBarSearch->width() / 2, m_menuBarSearch->height() + 2));
+        openCommandPalette(anchor, typed);
+        m_menuSearchOpening = false;
+        return true;
+    }
+    return QMainWindow::eventFilter(watched, event);
 }
 
 QMenu *MainWindow::createPopupMenu()

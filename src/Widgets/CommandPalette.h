@@ -48,8 +48,10 @@ public:
     void addCommand(const QString &category, QAction *action);
 
     // Sizes the popup, centers it horizontally on `topCenter` (global
-    // coordinates, its top edge landing there), and runs it modally.
-    void popup(const QPoint &topCenter);
+    // coordinates, its top edge landing there - clamped to stay on screen),
+    // and runs it modally. `initialText` seeds the search box (used by the
+    // menu bar's search field, so what was typed there carries over).
+    void popup(const QPoint &topCenter, const QString &initialText = QString());
 
 protected:
     // Forwards Up/Down/PageUp/PageDown from the search box to the list, so

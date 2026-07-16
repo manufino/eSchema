@@ -24,6 +24,7 @@
 #include <QLineEdit>
 #include <QListWidget>
 #include <QCoreApplication>
+#include <QScreen>
 #include <QVBoxLayout>
 
 namespace {
@@ -68,11 +69,23 @@ void CommandPalette::addCommand(const QString &category, QAction *action)
     m_entries.append({ category, action });
 }
 
-void CommandPalette::popup(const QPoint &topCenter)
+void CommandPalette::popup(const QPoint &topCenter, const QString &initialText)
 {
     resize(520, 420);
-    refilter(QString());
-    move(topCenter.x() - width() / 2, topCenter.y());
+    if (initialText.isEmpty())
+        refilter(QString());
+    else
+        m_edit->setText(initialText); // textChanged runs the filter
+    // Clamped to the available screen area: anchoring under the menu bar's
+    // right-corner search field would otherwise push part of the popup
+    // off-screen.
+    QPoint topLeft(topCenter.x() - width() / 2, topCenter.y());
+    if (QScreen *scr = screen()) {
+        const QRect available = scr->availableGeometry();
+        topLeft.setX(qBound(available.left(), topLeft.x(), available.right() - width()));
+        topLeft.setY(qBound(available.top(), topLeft.y(), available.bottom() - height()));
+    }
+    move(topLeft);
     m_edit->setFocus();
     exec();
 }

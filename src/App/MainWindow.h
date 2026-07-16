@@ -50,6 +50,7 @@ class QTreeWidget;
 class QTreeWidgetItem;
 class QDragEnterEvent;
 class QDropEvent;
+class QLineEdit;
 class QMimeData;
 class QTimer;
 class QImage;
@@ -86,6 +87,9 @@ protected:
     // the unsaved-changes prompt. Other drops are refused at enter time.
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
+    // Watches the menu bar's corner search field: focusing it opens the
+    // command palette anchored right under it (see setConnections()).
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 public slots:
     void clickOptionAction();
@@ -216,6 +220,11 @@ private:
     // signals blocked, since this reflects the selection rather than being
     // an edit itself.
     void updatePropertiesPanel();
+    // Builds and runs the command palette anchored at `topCenter` (global),
+    // optionally seeded with `initialText` - shared by the Ctrl+Shift+P
+    // action (centered under the menu bar) and the menu bar's corner
+    // search field (anchored under the field, carrying its typed text).
+    void openCommandPalette(const QPoint &topCenter, const QString &initialText = QString());
     // Coalesces selectionChanged handling: mass selections (Ctrl+A, invert,
     // delete-many) emit once per primitive, and refreshing the actions and
     // the properties panel per emission made those operations O(n²). One
@@ -473,6 +482,10 @@ private:
     int m_rulerGuideIndex = -1;
     // See scheduleSelectionRefresh().
     bool m_selectionRefreshPending = false;
+    // The command-palette launcher living in the menu bar's unused
+    // right-hand corner - focusing it pops the palette under it.
+    QLineEdit *m_menuBarSearch = nullptr;
+    bool m_menuSearchOpening = false; // re-entry guard for the focus handler
     // Whether the clipboard holds pasteable content - cached on
     // QClipboard::dataChanged, because reading the system clipboard is an
     // OS roundtrip far too expensive for updateEditActionsState()'s

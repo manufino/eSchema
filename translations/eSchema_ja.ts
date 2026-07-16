@@ -17,7 +17,7 @@
 <context>
     <name>CommandPalette</name>
     <message>
-        <location filename="../src/Widgets/CommandPalette.cpp" line="48" />
+        <location filename="../src/Widgets/CommandPalette.cpp" line="49" />
         <source>Type a command name...</source>
         <translation>コマンド名を入力...</translation>
     </message>
@@ -2073,7 +2073,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1475" />
-        <location filename="../src/App/MainWindow.cpp" line="1011" />
+        <location filename="../src/App/MainWindow.cpp" line="1060" />
         <source>Open recent</source>
         <translation>最近使用したファイルを開く</translation>
     </message>
@@ -2184,7 +2184,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1863" />
-        <location filename="../src/App/MainWindow.cpp" line="1810" />
+        <location filename="../src/App/MainWindow.cpp" line="1908" />
         <source>Print</source>
         <translation>印刷</translation>
     </message>
@@ -2220,7 +2220,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1905" />
-        <location filename="../src/App/MainWindow.cpp" line="780" />
+        <location filename="../src/App/MainWindow.cpp" line="813" />
         <source>Undo</source>
         <translation>元に戻す</translation>
     </message>
@@ -2231,7 +2231,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1920" />
-        <location filename="../src/App/MainWindow.cpp" line="783" />
+        <location filename="../src/App/MainWindow.cpp" line="816" />
         <source>Redo</source>
         <translation>やり直し</translation>
     </message>
@@ -2242,7 +2242,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1935" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2277" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2276" />
         <source>Cut</source>
         <translation>切り取り</translation>
     </message>
@@ -2273,7 +2273,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1977" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2219" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2218" />
         <source>Copy as image</source>
         <translation>画像としてコピー</translation>
     </message>
@@ -2289,7 +2289,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="1995" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2371" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2370" />
         <source>Paste</source>
         <translation>貼り付け</translation>
     </message>
@@ -2300,7 +2300,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2010" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2392" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2391" />
         <source>Paste in place</source>
         <translation>同じ位置に貼り付け</translation>
     </message>
@@ -2316,8 +2316,8 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2028" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1748" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2400" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1747" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2399" />
         <source>Duplicate</source>
         <translation>複製</translation>
     </message>
@@ -2328,7 +2328,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2043" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="745" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="757" />
         <source>Rotate</source>
         <translation>回転</translation>
     </message>
@@ -2339,7 +2339,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2058" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="695" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="707" />
         <source>Mirror</source>
         <translation>反転</translation>
     </message>
@@ -2350,7 +2350,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2073" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="723" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="735" />
         <source>Mirror as copy</source>
         <translation>ミラーコピー</translation>
     </message>
@@ -2361,7 +2361,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2085" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1769" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1768" />
         <source>Convert macro to primitives</source>
         <translation>マクロをプリミティブに変換</translation>
     </message>
@@ -2372,49 +2372,49 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2106" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2024" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2023" />
         <source>Align left</source>
         <translation>左揃え</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2115" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2040" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2039" />
         <source>Align right</source>
         <translation>右揃え</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2124" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2056" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2055" />
         <source>Align top</source>
         <translation>上揃え</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2133" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2072" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2071" />
         <source>Align bottom</source>
         <translation>下揃え</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2142" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2097" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2096" />
         <source>Align horizontal center</source>
         <translation>水平方向中央揃え</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2151" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2121" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2120" />
         <source>Align vertical center</source>
         <translation>垂直方向中央揃え</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2160" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2148" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2147" />
         <source>Distribute horizontally</source>
         <translation>水平方向に分布</translation>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2169" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2171" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2170" />
         <source>Distribute vertically</source>
         <translation>垂直方向に分布</translation>
     </message>
@@ -2440,7 +2440,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2208" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1853" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1852" />
         <source>Delete</source>
         <translation>削除</translation>
     </message>
@@ -2735,8 +2735,8 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2241" />
-        <location filename="../src/App/MainWindow.cpp" line="862" />
-        <location filename="../src/App/MainWindow.cpp" line="873" />
+        <location filename="../src/App/MainWindow.cpp" line="901" />
+        <location filename="../src/App/MainWindow.cpp" line="912" />
         <source>Check for updates</source>
         <translation>アップデートを確認</translation>
     </message>
@@ -2773,7 +2773,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2708" />
-        <location filename="../src/App/MainWindow.cpp" line="1314" />
+        <location filename="../src/App/MainWindow.cpp" line="1363" />
         <source>Drawing tools</source>
         <translation>描画ツール</translation>
     </message>
@@ -2789,7 +2789,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2729" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1177" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1195" />
         <source>Split at point</source>
         <translation>点で分割</translation>
     </message>
@@ -2800,7 +2800,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2741" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1349" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1358" />
         <source>Trim to intersection</source>
         <translation>交点までトリム</translation>
     </message>
@@ -2861,7 +2861,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2828" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="793" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="805" />
         <source>Union</source>
         <translation>合体</translation>
     </message>
@@ -2872,7 +2872,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2843" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="798" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="810" />
         <source>Subtraction</source>
         <translation>減算</translation>
     </message>
@@ -2883,7 +2883,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2858" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="803" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="815" />
         <source>Intersection</source>
         <translation>交差</translation>
     </message>
@@ -2934,7 +2934,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2933" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="835" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="847" />
         <source>Convert to polygon</source>
         <translation>多角形に変換</translation>
     </message>
@@ -2945,7 +2945,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="2948" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="840" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="852" />
         <source>Convert to complex curve</source>
         <translation>複雑曲線に変換</translation>
     </message>
@@ -2986,7 +2986,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="3008" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1697" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1696" />
         <source>Snap selection to grid</source>
         <translation>選択範囲をグリッドに合わせる</translation>
     </message>
@@ -3031,105 +3031,110 @@ Reassign it to the selected command?</source>
         <translation>定規を表示</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="780" />
+        <location filename="../src/App/MainWindow.cpp" line="413" />
+        <source>Search commands...</source>
+        <translation>コマンドを検索...</translation>
+    </message>
+    <message>
+        <location filename="../src/App/MainWindow.cpp" line="813" />
         <source>Undo: %1</source>
         <translation>元に戻す: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="783" />
+        <location filename="../src/App/MainWindow.cpp" line="816" />
         <source>Redo: %1</source>
         <translation>やり直し: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="852" />
+        <location filename="../src/App/MainWindow.cpp" line="891" />
         <source>Update available</source>
         <translation>更新があります</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="853" />
+        <location filename="../src/App/MainWindow.cpp" line="892" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>eSchemaの新しいバージョンが利用可能です（%1）。
 今すぐダウンロードしますか？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="863" />
+        <location filename="../src/App/MainWindow.cpp" line="902" />
         <source>eSchema is already up to date.</source>
         <translation>eSchemaは既に最新版です。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="874" />
+        <location filename="../src/App/MainWindow.cpp" line="913" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>更新を確認できませんでした。インターネット接続を確認してください。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="906" />
+        <location filename="../src/App/MainWindow.cpp" line="955" />
         <source>Attach tracing image</source>
         <translation>トレース画像を添付</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="956" />
+        <location filename="../src/App/MainWindow.cpp" line="1005" />
         <source>Symbol wizard</source>
         <translation>シンボルウィザード</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="962" />
+        <location filename="../src/App/MainWindow.cpp" line="1011" />
         <source>New drawing* (unsaved)</source>
         <translation>新規図面*(未保存)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1012" />
+        <location filename="../src/App/MainWindow.cpp" line="1061" />
         <source>The file no longer exists:
 %1</source>
         <translation>ファイルはもう存在しません:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1026" />
+        <location filename="../src/App/MainWindow.cpp" line="1075" />
         <source>Clear list</source>
         <translation>リストを消去</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1081" />
-        <location filename="../src/App/MainWindow.cpp" line="1521" />
-        <location filename="../src/App/MainWindow.cpp" line="1616" />
-        <location filename="../src/App/MainWindow.cpp" line="1650" />
-        <location filename="../src/App/MainWindow.cpp" line="1804" />
-        <location filename="../src/App/MainWindow.cpp" line="1954" />
+        <location filename="../src/App/MainWindow.cpp" line="1130" />
+        <location filename="../src/App/MainWindow.cpp" line="1596" />
+        <location filename="../src/App/MainWindow.cpp" line="1700" />
+        <location filename="../src/App/MainWindow.cpp" line="1736" />
+        <location filename="../src/App/MainWindow.cpp" line="1902" />
+        <location filename="../src/App/MainWindow.cpp" line="2052" />
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1081" />
-        <location filename="../src/App/MainWindow.cpp" line="1804" />
+        <location filename="../src/App/MainWindow.cpp" line="1130" />
+        <location filename="../src/App/MainWindow.cpp" line="1902" />
         <source>Unable to save the file:
 %1</source>
         <translation>ファイルを保存できません:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1103" />
+        <location filename="../src/App/MainWindow.cpp" line="1152" />
         <source>Unsaved changes</source>
         <translation>未保存の変更</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1104" />
+        <location filename="../src/App/MainWindow.cpp" line="1153" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>未保存の変更があります。保存しますか?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1505" />
+        <location filename="../src/App/MainWindow.cpp" line="1580" />
         <source>an untitled drawing</source>
         <translation>無題の図面</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1508" />
-        <location filename="../src/App/MainWindow.cpp" line="1533" />
+        <location filename="../src/App/MainWindow.cpp" line="1583" />
+        <location filename="../src/App/MainWindow.cpp" line="1608" />
         <source>Autosave recovery</source>
         <translation>自動保存の復元</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1509" />
+        <location filename="../src/App/MainWindow.cpp" line="1584" />
         <source>eSchema wasn't closed properly last time.
 An autosave was found for %1.
 
@@ -3140,50 +3145,50 @@ Do you want to recover it?</source>
 復元しますか？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1522" />
+        <location filename="../src/App/MainWindow.cpp" line="1597" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>自動保存を復元できませんでした:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1558" />
+        <location filename="../src/App/MainWindow.cpp" line="1635" />
         <source>Open drawing</source>
         <translation>図面を開く</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1559" />
-        <location filename="../src/App/MainWindow.cpp" line="1775" />
-        <location filename="../src/App/MainWindow.cpp" line="1791" />
+        <location filename="../src/App/MainWindow.cpp" line="1636" />
+        <location filename="../src/App/MainWindow.cpp" line="1873" />
+        <location filename="../src/App/MainWindow.cpp" line="1889" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1608" />
+        <location filename="../src/App/MainWindow.cpp" line="1685" />
         <source>The drawing had elements outside the drawing area and was moved onto the sheet</source>
         <translation>図面に描画領域の外の要素があったため、シート上に移動しました</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1616" />
-        <location filename="../src/App/MainWindow.cpp" line="1650" />
+        <location filename="../src/App/MainWindow.cpp" line="1700" />
+        <location filename="../src/App/MainWindow.cpp" line="1736" />
         <source>Unable to open the file:
 %1</source>
         <translation>ファイルを開けません:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1634" />
-        <location filename="../src/App/MainWindow.cpp" line="1663" />
+        <location filename="../src/App/MainWindow.cpp" line="1718" />
+        <location filename="../src/App/MainWindow.cpp" line="1749" />
         <source>Import from DXF</source>
         <translation>DXFからインポート</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1635" />
+        <location filename="../src/App/MainWindow.cpp" line="1719" />
         <source>DXF (*.dxf)</source>
         <translation>DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1664" />
+        <location filename="../src/App/MainWindow.cpp" line="1750" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -3192,131 +3197,131 @@ Do you want to recover it?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1709" />
+        <location filename="../src/App/MainWindow.cpp" line="1807" />
         <source>Edit FCD code</source>
         <translation>FCDコードを編集</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1774" />
+        <location filename="../src/App/MainWindow.cpp" line="1872" />
         <source>Save drawing as</source>
         <translation>名前を付けて図面を保存</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1790" />
+        <location filename="../src/App/MainWindow.cpp" line="1888" />
         <source>Save split as</source>
         <translation>分解して保存</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1810" />
-        <location filename="../src/App/MainWindow.cpp" line="1924" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="2219" />
+        <location filename="../src/App/MainWindow.cpp" line="1908" />
+        <location filename="../src/App/MainWindow.cpp" line="2022" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="2218" />
         <source>The drawing is empty.</source>
         <translation>図面が空です。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1847" />
+        <location filename="../src/App/MainWindow.cpp" line="1945" />
         <source>Print preview</source>
         <translation>印刷プレビュー</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1924" />
+        <location filename="../src/App/MainWindow.cpp" line="2022" />
         <source>Export</source>
         <translation>エクスポート</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1932" />
+        <location filename="../src/App/MainWindow.cpp" line="2030" />
         <source>Export drawing</source>
         <translation>図面をエクスポート</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1955" />
+        <location filename="../src/App/MainWindow.cpp" line="2053" />
         <source>Could not export the file:
 %1</source>
         <translation>ファイルをエクスポートできませんでした:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="666" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="678" />
         <source>Add node</source>
         <translation>ノードを追加</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="670" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="682" />
         <source>Remove node</source>
         <translation>ノードを削除</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="857" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="864" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="869" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="876" />
         <source>Simplify nodes</source>
         <translation>ノードを簡略化</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="857" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="869" />
         <source>Tolerance (drawing units):</source>
         <translation>許容差（図面単位）：</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="906" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="912" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="918" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="924" />
         <source>Chamfer corners</source>
         <translation>角を面取り</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="906" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="912" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="918" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="924" />
         <source>Fillet corners</source>
         <translation>角を丸める</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="907" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="919" />
         <source>Cut distance (drawing units):</source>
         <translation>切断距離（図面単位）：</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="907" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="919" />
         <source>Radius (drawing units):</source>
         <translation>半径（図面単位）：</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="960" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="990" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="972" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1002" />
         <source>Offset outline</source>
         <translation>輪郭のオフセット</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="967" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="979" />
         <source>Distance (drawing units, negative for inward):</source>
         <translation>距離（図面単位、負の値で内側）：</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="969" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="981" />
         <source>Keep the original shape</source>
         <translation>元の図形を残す</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1068" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1080" />
         <source>Click the split point (right click or Esc cancels)</source>
         <translation>分割する点をクリック（右クリックまたは Esc でキャンセル）</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1167" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1185" />
         <source>The point does not split the primitive</source>
         <translation>その点では図形を分割できません</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1287" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1296" />
         <source>Click the part of a line to remove (right click or Esc cancels)</source>
         <translation>削除したい線の部分をクリック（右クリックまたは Esc でキャンセル）</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1310" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1456" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1319" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1455" />
         <source>No line or PCB track there</source>
         <translation>そこに線や PCB 配線はありません</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1309" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1318" />
         <source>Nothing crosses that line - nothing to trim</source>
         <translation>その線と交差するものがなく、トリムできません</translation>
     </message>
@@ -3326,156 +3331,156 @@ Do you want to recover it?</source>
         <translation>延長したい端の近くで線をクリック（右クリックまたは Esc でキャンセル）</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1455" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1454" />
         <source>Nothing to extend to in that direction</source>
         <translation>その方向に延長できる相手がありません</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1479" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1488" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1478" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1487" />
         <source>Scale</source>
         <translation>拡大縮小</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1479" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1478" />
         <source>Scale factor (%):</source>
         <translation>倍率（%）：</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1515" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1533" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1514" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1532" />
         <source>Rotate by angle</source>
         <translation>角度を指定して回転</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1515" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1514" />
         <source>Angle (degrees, counterclockwise):</source>
         <translation>角度（度、反時計回り）：</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1599" />
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1631" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1598" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1630" />
         <source>Array of copies</source>
         <translation>コピーの配列</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1844" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1843" />
         <source>Create macro</source>
         <translation>マクロを作成</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1926" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1925" />
         <source>No matches</source>
         <translation>一致するものがありません</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1938" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1937" />
         <source>%1 of %2</source>
         <translation>%2 件中 %1 件目</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowEditActions.cpp" line="1985" />
+        <location filename="../src/App/MainWindowEditActions.cpp" line="1984" />
         <source>Move selection</source>
         <translation>選択範囲を移動</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="115" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="120" />
         <source>Standard</source>
         <translation>標準</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="168" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="173" />
         <source>Rename library...</source>
         <translation>ライブラリの名前を変更...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="169" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="174" />
         <source>Delete library...</source>
         <translation>ライブラリを削除...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="180" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="185" />
         <source>Rename category...</source>
         <translation>カテゴリの名前を変更...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="181" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="186" />
         <source>Delete category...</source>
         <translation>カテゴリを削除...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="191" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="196" />
         <source>Rename macro...</source>
         <translation>マクロの名前を変更...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="192" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="197" />
         <source>Delete macro...</source>
         <translation>マクロを削除...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="211" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="218" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="216" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="223" />
         <source>Rename library</source>
         <translation>ライブラリの名前を変更</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="211" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="216" />
         <source>Library name:</source>
         <translation>ライブラリ名:</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="224" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="232" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="229" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="237" />
         <source>Delete library</source>
         <translation>ライブラリを削除</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="225" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="230" />
         <source>Permanently delete this library and all the macros it contains?</source>
         <translation>このライブラリと含まれるすべてのマクロを完全に削除しますか?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="238" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="245" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="243" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="250" />
         <source>Rename category</source>
         <translation>カテゴリの名前を変更</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="238" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="243" />
         <source>Category name:</source>
         <translation>カテゴリ名:</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="251" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="259" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="256" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="264" />
         <source>Delete category</source>
         <translation>カテゴリを削除</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="252" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="257" />
         <source>Delete category "%1" and all macros it contains?</source>
         <translation>カテゴリ「%1」とそれに含まれるすべてのマクロを削除しますか？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="269" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="276" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="274" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="281" />
         <source>Rename macro</source>
         <translation>マクロの名前を変更</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="269" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="274" />
         <source>Macro name:</source>
         <translation>マクロ名:</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="285" />
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="293" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="290" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="298" />
         <source>Delete macro</source>
         <translation>マクロを削除</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="286" />
+        <location filename="../src/App/MainWindowLibraryPanel.cpp" line="291" />
         <source>Permanently delete macro "%1"?</source>
         <translation>マクロ「%1」を完全に削除しますか？</translation>
     </message>
@@ -3607,84 +3612,86 @@ Do you want to recover it?</source>
         <translation>回転</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="286" />
+        <location filename="../src/Core/LibraryManager.cpp" line="287" />
         <source>Missing library name.</source>
         <translation>ライブラリ名がありません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="288" />
+        <location filename="../src/Core/LibraryManager.cpp" line="289" />
         <source>Cannot save into a standard library.</source>
         <translation>標準ライブラリには保存できません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="293" />
+        <location filename="../src/Core/LibraryManager.cpp" line="294" />
         <source>Invalid macro key.</source>
         <translation>マクロキーが無効です。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="297" />
+        <location filename="../src/Core/LibraryManager.cpp" line="298" />
         <source>A macro with this key already exists in this library.</source>
         <translation>このライブラリには同じキーのマクロが既に存在します。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="305" />
-        <location filename="../src/Core/LibraryManager.cpp" line="369" />
+        <location filename="../src/Core/LibraryManager.cpp" line="306" />
+        <location filename="../src/Core/LibraryManager.cpp" line="324" />
+        <location filename="../src/Core/LibraryManager.cpp" line="382" />
+        <location filename="../src/Core/LibraryManager.cpp" line="413" />
         <source>Unable to write the file %1</source>
         <translation>ファイル %1 を書き込めません</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="410" />
-        <location filename="../src/Core/LibraryManager.cpp" line="459" />
-        <location filename="../src/Core/LibraryManager.cpp" line="494" />
-        <location filename="../src/Core/LibraryManager.cpp" line="524" />
-        <location filename="../src/Core/LibraryManager.cpp" line="561" />
+        <location filename="../src/Core/LibraryManager.cpp" line="428" />
+        <location filename="../src/Core/LibraryManager.cpp" line="477" />
+        <location filename="../src/Core/LibraryManager.cpp" line="512" />
+        <location filename="../src/Core/LibraryManager.cpp" line="542" />
+        <location filename="../src/Core/LibraryManager.cpp" line="579" />
         <source>Cannot modify a standard library.</source>
         <translation>標準ライブラリは変更できません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="413" />
-        <location filename="../src/Core/LibraryManager.cpp" line="438" />
-        <location filename="../src/Core/LibraryManager.cpp" line="462" />
-        <location filename="../src/Core/LibraryManager.cpp" line="497" />
-        <location filename="../src/Core/LibraryManager.cpp" line="531" />
-        <location filename="../src/Core/LibraryManager.cpp" line="565" />
+        <location filename="../src/Core/LibraryManager.cpp" line="431" />
+        <location filename="../src/Core/LibraryManager.cpp" line="456" />
+        <location filename="../src/Core/LibraryManager.cpp" line="480" />
+        <location filename="../src/Core/LibraryManager.cpp" line="515" />
+        <location filename="../src/Core/LibraryManager.cpp" line="549" />
+        <location filename="../src/Core/LibraryManager.cpp" line="583" />
         <source>Library not found.</source>
         <translation>ライブラリが見つかりません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="416" />
+        <location filename="../src/Core/LibraryManager.cpp" line="434" />
         <source>The library name cannot be empty.</source>
         <translation>ライブラリ名を空にすることはできません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="436" />
+        <location filename="../src/Core/LibraryManager.cpp" line="454" />
         <source>Cannot delete a standard library.</source>
         <translation>標準ライブラリは削除できません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="443" />
+        <location filename="../src/Core/LibraryManager.cpp" line="461" />
         <source>Unable to delete the file %1</source>
         <translation>ファイル %1 を削除できません</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="465" />
+        <location filename="../src/Core/LibraryManager.cpp" line="483" />
         <source>The category name cannot be empty.</source>
         <translation>カテゴリ名を空にすることはできません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="467" />
-        <location filename="../src/Core/LibraryManager.cpp" line="499" />
+        <location filename="../src/Core/LibraryManager.cpp" line="485" />
+        <location filename="../src/Core/LibraryManager.cpp" line="517" />
         <source>Category not found.</source>
         <translation>カテゴリが見つかりません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="522" />
-        <location filename="../src/Core/LibraryManager.cpp" line="559" />
+        <location filename="../src/Core/LibraryManager.cpp" line="540" />
+        <location filename="../src/Core/LibraryManager.cpp" line="577" />
         <source>Macro not found.</source>
         <translation>マクロが見つかりません。</translation>
     </message>
     <message>
-        <location filename="../src/Core/LibraryManager.cpp" line="527" />
+        <location filename="../src/Core/LibraryManager.cpp" line="545" />
         <source>The macro name cannot be empty.</source>
         <translation>マクロ名を空にすることはできません。</translation>
     </message>
@@ -3705,27 +3712,27 @@ Do you want to recover it?</source>
         <translation>ノードを削除</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="596" />
+        <location filename="../src/IO/DxfReader.cpp" line="611" />
         <source>%1 DXF layers beyond the 16-layer limit were merged into the last available layer.</source>
         <translation>16レイヤーの上限を超える %1 個のDXFレイヤーが、最後に使用可能なレイヤーに統合されました。</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="640" />
+        <location filename="../src/IO/DxfReader.cpp" line="674" />
         <source>%1 unsupported %2 entities were ignored.</source>
         <translation>サポートされていない %2 エンティティが %1 個無視されました。</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="644" />
+        <location filename="../src/IO/DxfReader.cpp" line="678" />
         <source>%1 elements with more than %2 vertices were truncated.</source>
         <translation>頂点数が %2 を超える要素が %1 個切り捨てられました。</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="648" />
+        <location filename="../src/IO/DxfReader.cpp" line="682" />
         <source>%1 rotated ellipses were imported as unrotated (bounding box).</source>
         <translation>回転した楕円が %1 個、回転なし（境界ボックス）としてインポートされました。</translation>
     </message>
     <message>
-        <location filename="../src/IO/DxfReader.cpp" line="652" />
+        <location filename="../src/IO/DxfReader.cpp" line="686" />
         <source>%1 INSERT references to missing blocks were ignored.</source>
         <translation>存在しないブロックへの %1 個のINSERT参照が無視されました。</translation>
     </message>
