@@ -43,7 +43,12 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 void StatusBar::loadSettings()
 {
     QVariant val = SettingsManager::getInstance().loadSetting("grid_step");
-    gridSize = val.toInt();
+    // A settings file that doesn't have this key yet (no prior launch, no
+    // "Restore defaults" click) loads an invalid QVariant here - toInt()
+    // silently yields 0, which sceneMousePos() below then divides by,
+    // crashing with SIGFPE on the very first mouse move. Same guard as
+    // SheetView::minorGridStep()/majorGridStep() for the identical setting.
+    gridSize = qMax(1, val.toInt());
 
     val = SettingsManager::getInstance().loadSetting("mm_step");
     mm_step = val.toDouble();
