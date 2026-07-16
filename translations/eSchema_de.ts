@@ -1720,7 +1720,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="125" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="172" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="187" />
         <source>Row spacing (units)</source>
         <translation>Reihenabstand (Einheiten)</translation>
     </message>
@@ -1728,6 +1728,11 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
         <location filename="../gui/DialogSymbolWizard.ui" line="132" />
         <source>Distance between the two pin rows (opposite sides for a quad package); the body width for a schematic symbol</source>
         <translation>Abstand zwischen den beiden Pin-Reihen (gegenüberliegende Seiten bei einem Quad-Gehäuse); die Gehäusebreite bei einem Schaltplansymbol</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="285" />
+        <source>Create a new library to save the symbol into</source>
+        <translation>Erstellt eine neue Bibliothek zum Speichern des Symbols</translation>
     </message>
     <message>
         <source>Distance between the two pin rows (opposite sides for a quad package)</source>
@@ -1775,7 +1780,7 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="253" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="484" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="499" />
         <source>Wizard</source>
         <translation>Assistent</translation>
     </message>
@@ -1785,12 +1790,22 @@ Dem ausgewählten Befehl neu zuweisen?</translation>
         <translation>Bibliothek</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="107" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="108" />
         <source>My symbols</source>
         <translation>Meine Symbole</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="171" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="139" />
+        <source>New library</source>
+        <translation>Neue Bibliothek</translation>
+    </message>
+    <message>
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="140" />
+        <source>Library name:</source>
+        <translation>Bibliotheksname:</translation>
+    </message>
+    <message>
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="186" />
         <source>Body width (units)</source>
         <translation>Gehäusebreite (Einheiten)</translation>
     </message>
@@ -3467,53 +3482,73 @@ Möchten Sie sie wiederherstellen?</translation>
 <context>
     <name>PrimitivePlacementController</name>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="264" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="306" />
         <source>Text</source>
         <translation>Text</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="264" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="306" />
         <source>Content:</source>
         <translation>Inhalt:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="281" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="323" />
         <source>Regular polygon</source>
         <translation>Regelmäßiges Vieleck</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="281" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="323" />
         <source>Number of sides:</source>
         <translation>Anzahl der Seiten:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="458" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="507" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="486" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="725" />
         <source>%1 mm</source>
         <translation>%1 mm</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="461" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="489" />
         <source>%1 (%2 mm)</source>
         <translation>%1 (%2 mm)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="464" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="492" />
         <source>dx: %1   dy: %2   length: %3   angle: %4°</source>
         <translation>dx: %1   dy: %2   Länge: %3   Winkel: %4°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="906" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="703" />
+        <source>Angular dimension: click the first line</source>
+        <translation>Winkelbemaßung: erste Linie anklicken</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="704" />
+        <source>Angular dimension: click the second line</source>
+        <translation>Winkelbemaßung: zweite Linie anklicken</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="713" />
+        <source>Radial dimension: click the outline of a circle or arc</source>
+        <translation>Radiusbemaßung: den Umriss eines Kreises oder Bogens anklicken</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1124" />
         <source>Dimension</source>
         <translation>Bemaßung</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="937" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1141" />
+        <source>The two lines are parallel - no angle to dimension</source>
+        <translation>Die beiden Linien sind parallel – kein Winkel zu bemaßen</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1180" />
         <source>Angular dimension</source>
         <translation>Winkelbemaßung</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="946" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="300" />
         <source>Radial dimension</source>
         <translation>Radiusbemaßung</translation>
     </message>
@@ -3522,18 +3557,18 @@ Möchten Sie sie wiederherstellen?</translation>
         <translation type="vanished">dx: %1   dy: %2   Länge: %3 (%4 mm)   Winkel: %5°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="684" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="693" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="902" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="911" />
         <source>Insert image</source>
         <translation>Bild einfügen</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="685" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="903" />
         <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
         <translation>Bilder (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="694" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="912" />
         <source>Unable to read the file:
 %1</source>
         <translation>Datei konnte nicht gelesen werden:

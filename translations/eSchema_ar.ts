@@ -1720,7 +1720,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="125" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="172" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="187" />
         <source>Row spacing (units)</source>
         <translation>المسافة بين الصفين (وحدات)</translation>
     </message>
@@ -1728,6 +1728,11 @@ Reassign it to the selected command?</source>
         <location filename="../gui/DialogSymbolWizard.ui" line="132" />
         <source>Distance between the two pin rows (opposite sides for a quad package); the body width for a schematic symbol</source>
         <translation>المسافة بين صفي الأطراف (الجانبان المتقابلان للعبوة الرباعية)؛ وعرض الجسم للرمز المخططي</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="285" />
+        <source>Create a new library to save the symbol into</source>
+        <translation>ينشئ مكتبة جديدة لحفظ الرمز فيها</translation>
     </message>
     <message>
         <source>Distance between the two pin rows (opposite sides for a quad package)</source>
@@ -1775,7 +1780,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="253" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="484" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="499" />
         <source>Wizard</source>
         <translation>المعالج</translation>
     </message>
@@ -1785,12 +1790,22 @@ Reassign it to the selected command?</source>
         <translation>المكتبة</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="107" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="108" />
         <source>My symbols</source>
         <translation>رموزي</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="171" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="139" />
+        <source>New library</source>
+        <translation>مكتبة جديدة</translation>
+    </message>
+    <message>
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="140" />
+        <source>Library name:</source>
+        <translation>اسم المكتبة:</translation>
+    </message>
+    <message>
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="186" />
         <source>Body width (units)</source>
         <translation>عرض الجسم (وحدات)</translation>
     </message>
@@ -3467,53 +3482,73 @@ Do you want to recover it?</source>
 <context>
     <name>PrimitivePlacementController</name>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="264" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="306" />
         <source>Text</source>
         <translation>نص</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="264" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="306" />
         <source>Content:</source>
         <translation>المحتوى:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="281" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="323" />
         <source>Regular polygon</source>
         <translation>مضلع منتظم</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="281" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="323" />
         <source>Number of sides:</source>
         <translation>عدد الأضلاع:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="458" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="507" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="486" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="725" />
         <source>%1 mm</source>
         <translation>%1 mm</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="461" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="489" />
         <source>%1 (%2 mm)</source>
         <translation>%1 (%2 mm)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="464" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="492" />
         <source>dx: %1   dy: %2   length: %3   angle: %4°</source>
         <translation>dx: %1   dy: %2   الطول: %3   الزاوية: %4°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="906" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="703" />
+        <source>Angular dimension: click the first line</source>
+        <translation>البُعد الزاوي: انقر الخط الأول</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="704" />
+        <source>Angular dimension: click the second line</source>
+        <translation>البُعد الزاوي: انقر الخط الثاني</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="713" />
+        <source>Radial dimension: click the outline of a circle or arc</source>
+        <translation>البُعد نصف القطري: انقر محيط دائرة أو قوس</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1124" />
         <source>Dimension</source>
         <translation>بُعد</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="937" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1141" />
+        <source>The two lines are parallel - no angle to dimension</source>
+        <translation>الخطان متوازيان - لا توجد زاوية لقياسها</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1180" />
         <source>Angular dimension</source>
         <translation>بُعد زاوي</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="946" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="300" />
         <source>Radial dimension</source>
         <translation>بُعد نصف قطري</translation>
     </message>
@@ -3522,18 +3557,18 @@ Do you want to recover it?</source>
         <translation type="vanished">dx: %1   dy: %2   الطول: %3 (%4 مم)   الزاوية: %5°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="684" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="693" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="902" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="911" />
         <source>Insert image</source>
         <translation>إدراج صورة</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="685" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="903" />
         <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
         <translation>صور (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="694" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="912" />
         <source>Unable to read the file:
 %1</source>
         <translation>تعذرت قراءة الملف:
