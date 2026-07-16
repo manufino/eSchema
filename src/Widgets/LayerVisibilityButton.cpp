@@ -18,15 +18,20 @@
  */
 
 #include "LayerVisibilityButton.h"
+#include "ThemeManager.h"
 
 LayerVisibilityButton::LayerVisibilityButton(Layer * layer, QWidget *parent)
     : QLabel(parent)
 {
     this->layer = layer;
 
-    images.append(QPixmap(":/res/resources/remix/eye-line.png"));
-    images.append(QPixmap(":/res/resources/remix/eye-off-line.png"));
-    images.append(QPixmap(":/res/resources/remix/eye-fill.png"));
+    // themedIcon(): the eye glyphs are black line art, invisible on the
+    // dark themes' surfaces without the light re-tint. Applied once here -
+    // these buttons live inside DialogLayerList, which is recreated on
+    // every open, so a theme switch is picked up the next time it opens.
+    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-line.png")));
+    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-off-line.png")));
+    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-fill.png")));
 
     if(layer->isMaster())
         setPixmap(images[2]);

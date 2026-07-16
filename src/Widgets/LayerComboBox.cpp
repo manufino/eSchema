@@ -20,6 +20,7 @@
 #include "LayerComboBox.h"
 #include "LayerItemDelegate.h"
 #include "LayerIcons.h"
+#include "ThemeManager.h"
 #include "qpainterpath.h"
 #include <QAbstractItemView>
 #include <QMouseEvent>
@@ -115,12 +116,16 @@ void LayerComboBox::paintEvent(QPaintEvent* event)
 
         if (Layer *layer = selectedLayer()) {
             const QRect rowRect(0, 0, opt.rect.height(), opt.rect.height());
+            // themedIcon(): black line art, invisible on the dark themes'
+            // surfaces without the light re-tint.
             const QPixmap eyeIcon(layer->isVisible()
                     ? QStringLiteral(":/res/resources/remix/eye-line.png")
                     : QStringLiteral(":/res/resources/remix/eye-off-line.png"));
-            painter.drawPixmap(LayerItemDelegate::eyeIconRect(rowRect), eyeIcon);
+            painter.drawPixmap(LayerItemDelegate::eyeIconRect(rowRect),
+                                ThemeManager::themedIcon(eyeIcon));
             painter.drawPixmap(LayerItemDelegate::lockIconRect(rowRect),
-                                LayerIcons::renderLockIcon(layer->isLocked()));
+                                ThemeManager::themedIcon(
+                                        LayerIcons::renderLockIcon(layer->isLocked())));
         }
 
         QRect colorRect = QRect(46, 5, 20, 14);

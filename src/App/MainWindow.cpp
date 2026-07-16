@@ -48,6 +48,7 @@
 #include "PrimitiveRectangle.h"
 #include "PrimitiveEllipse.h"
 #include "ThemeManager.h"
+#include <QTreeWidget>
 #include "UpdateChecker.h"
 #include "CreatePrimitiveCommand.h"
 #include "DeletePrimitiveCommand.h"
@@ -1330,6 +1331,34 @@ void MainWindow::applyLiveSettings()
         const QSignalBlocker blocker(ui->actionSnapToObjects);
         ui->actionSnapToObjects->setChecked(enabled);
         sheetScene->setObjectSnapEnabled(enabled);
+    }
+
+    // Macro tree icons are black line art rendered onto transparency - on
+    // the dark themes they'd disappear against the dark panel, so re-derive
+    // every row's icon for the active theme (ThemeManager::themedIcon()),
+    // including after a live theme switch from the Options dialog. Cheap:
+    // LibraryManager::icon() is cached, only the re-tint runs per row.
+    const QVariant treeIconsSetting = SettingsManager::getInstance()
+            .loadSetting("macro_tree_icons_enabled");
+    if (!treeIconsSetting.isValid() || treeIconsSetting.toBool()) {
+        int macroIconSize = SettingsManager::getInstance().loadSetting("macro_icon_size").toInt();
+        if (macroIconSize <= 0)
+            macroIconSize = 32;
+        for (int page = 0; page < ui->toolBoxLib->count(); ++page) {
+            auto *tree = qobject_cast<QTreeWidget *>(ui->toolBoxLib->widget(page));
+            if (!tree)
+                continue;
+            for (int top = 0; top < tree->topLevelItemCount(); ++top) {
+                QTreeWidgetItem *categoryItem = tree->topLevelItem(top);
+                for (int child = 0; child < categoryItem->childCount(); ++child) {
+                    QTreeWidgetItem *item = categoryItem->child(child);
+                    const QString key = item->data(0, Qt::UserRole).toString();
+                    if (!key.isEmpty())
+                        item->setIcon(0, ThemeManager::themedIcon(
+                                LibraryManager::getInstance().icon(key, macroIconSize)));
+                }
+            }
+        }
     }
 }
 

@@ -19,14 +19,17 @@
 
 #include "LayerLockButton.h"
 #include "LayerIcons.h"
+#include "ThemeManager.h"
 
 LayerLockButton::LayerLockButton(Layer *layer, QWidget *parent)
     : QLabel(parent)
 {
     this->layer = layer;
 
-    images.append(LayerIcons::renderLockIcon(false));
-    images.append(LayerIcons::renderLockIcon(true));
+    // themedIcon(): black line art, re-tinted light on dark themes (see
+    // LayerVisibilityButton for why once-at-construction is enough).
+    images.append(ThemeManager::themedIcon(LayerIcons::renderLockIcon(false)));
+    images.append(ThemeManager::themedIcon(LayerIcons::renderLockIcon(true)));
 
     setStatus(layer->isLocked());
 

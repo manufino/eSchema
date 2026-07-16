@@ -25,6 +25,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "LibraryManager.h"
+#include "ThemeManager.h"
 #include <QTreeWidget>
 #include <QFont>
 #include <QMenu>
@@ -85,7 +86,8 @@ void MainWindow::buildLibraryPanel()
             for (const MacroDescriptor &descriptor : library.macrosByCategory.value(category)) {
                 auto *item = new QTreeWidgetItem(categoryItem, QStringList(descriptor.name));
                 if (showTreeIcons)
-                    item->setIcon(0, LibraryManager::getInstance().icon(descriptor.key, iconSize));
+                    item->setIcon(0, ThemeManager::themedIcon(
+                            LibraryManager::getInstance().icon(descriptor.key, iconSize)));
                 item->setData(0, Qt::UserRole, descriptor.key);
                 item->setToolTip(0, descriptor.name);
                 // An explicit size hint, not just the icon size passed to the

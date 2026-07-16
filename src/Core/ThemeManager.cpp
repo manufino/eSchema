@@ -33,6 +33,9 @@
 
 namespace {
 
+// The light color dark themes re-tint monochrome icons to.
+const QColor kDarkIconColor(220, 220, 220);
+
 // Recolors an icon's neutral (unsaturated - black/gray) pixels to `color`
 // while keeping their alpha (shape) untouched - turns the app's black line
 // icons light for the dark themes. Saturated pixels are deliberately left
@@ -95,7 +98,6 @@ void retintIcon(QObject *owner, const QIcon &currentIcon, bool dark,
     if (it == originalIcons().end())
         it = originalIcons().insert(owner, currentIcon);
 
-    static const QColor kDarkIconColor(220, 220, 220);
     setIcon(dark ? tintIcon(it.value(), kDarkIconColor) : it.value());
 }
 
@@ -166,6 +168,17 @@ QPalette darkPalette()
 }
 
 } // namespace
+
+bool ThemeManager::darkThemeActive()
+{
+    const QString style = SettingsManager::getInstance().loadSetting("gui_style").toString();
+    return style == "dark" || style == "nord" || style == "midnight" || style == "graphite";
+}
+
+QPixmap ThemeManager::themedIcon(const QPixmap &source)
+{
+    return darkThemeActive() ? tintPixmap(source, kDarkIconColor) : source;
+}
 
 void ThemeManager::apply()
 {

@@ -20,6 +20,8 @@
 #ifndef THEME_MANAGER_H
 #define THEME_MANAGER_H
 
+#include <QPixmap>
+
 // Applies the app-wide QSS + QPalette selected by the "gui_style"/
 // "stylesheet_path" settings (see SettingsManager and DialogOptions'
 // interface-style combo box).
@@ -27,6 +29,18 @@ class ThemeManager
 {
 public:
     static void apply();
+
+    // True while the active built-in theme uses dark surfaces (Dark, Nord,
+    // Midnight, Graphite) - the themes whose icons get re-tinted light.
+    static bool darkThemeActive();
+
+    // `source` adjusted for the active theme: on a dark theme its neutral
+    // (black/gray) pixels are recolored light while saturated pixels (e.g.
+    // the red control-point squares) keep their color; on light themes it
+    // is returned unchanged. For pixmaps painted/set outside the automatic
+    // QAction/QAbstractButton re-tint - layer eye/lock glyphs, macro tree
+    // icons.
+    static QPixmap themedIcon(const QPixmap &source);
 };
 
 #endif // THEME_MANAGER_H

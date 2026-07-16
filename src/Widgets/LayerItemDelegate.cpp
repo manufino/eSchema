@@ -20,6 +20,7 @@
 #include "LayerItemDelegate.h"
 #include "LayerIcons.h"
 #include "Layer.h"
+#include "ThemeManager.h"
 
 LayerItemDelegate::LayerItemDelegate(QObject* parent)
     : QStyledItemDelegate(parent) {}
@@ -65,11 +66,14 @@ void LayerItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     // reflected the next time this row repaints, with no sync bookkeeping.
     Layer *layer = index.data(Qt::UserRole + 2).value<Layer *>();
     if (layer) {
+        // themedIcon(): the glyphs are black line art, invisible on the
+        // dark themes' surfaces without the light re-tint.
         const QPixmap eyeIcon(layer->isVisible()
                 ? QStringLiteral(":/res/resources/remix/eye-line.png")
                 : QStringLiteral(":/res/resources/remix/eye-off-line.png"));
-        painter->drawPixmap(eyeIconRect(rect), eyeIcon);
-        painter->drawPixmap(lockIconRect(rect), LayerIcons::renderLockIcon(layer->isLocked()));
+        painter->drawPixmap(eyeIconRect(rect), ThemeManager::themedIcon(eyeIcon));
+        painter->drawPixmap(lockIconRect(rect), ThemeManager::themedIcon(
+                                LayerIcons::renderLockIcon(layer->isLocked())));
     }
 
     // Draw the color swatch
