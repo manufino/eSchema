@@ -26,6 +26,7 @@
 #include "PrimitiveEllipse.h"
 #include "PrimitiveText.h"
 
+#include <QInputDialog>
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
@@ -129,6 +130,20 @@ DialogSymbolWizard::DialogSymbolWizard(QWidget *parent) :
     };
     connect(ui->txtName, &QLineEdit::textChanged, this, validate);
     connect(ui->cboxLibrary, &QComboBox::editTextChanged, this, validate);
+
+    // "+": create a brand-new library right here - the combo is editable
+    // anyway (typing an unknown name creates it on save), but an explicit
+    // button makes that discoverable.
+    connect(ui->btnNewLibrary, &QToolButton::clicked, this, [this]() {
+        bool ok = false;
+        const QString name = QInputDialog::getText(this, tr("New library"),
+                                                   tr("Library name:"),
+                                                   QLineEdit::Normal, QString(), &ok);
+        if (!ok || name.trimmed().isEmpty())
+            return;
+        ui->cboxLibrary->addItem(name.trimmed());
+        ui->cboxLibrary->setCurrentIndex(ui->cboxLibrary->count() - 1);
+    });
 
     syncTypeDependentFields();
     refreshPreview();

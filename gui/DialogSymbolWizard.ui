@@ -262,11 +262,31 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QComboBox" name="cboxLibrary">
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="layoutLibrary">
+         <item>
+          <widget class="QComboBox" name="cboxLibrary">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="btnNewLibrary">
+           <property name="text">
+            <string notr="true">+</string>
+           </property>
+           <property name="toolTip">
+            <string>Create a new library to save the symbol into</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
