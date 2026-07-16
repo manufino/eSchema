@@ -30,18 +30,22 @@ DeletePrimitiveCommand::DeletePrimitiveCommand(Sheet *sheet, GraphicsPrimitive *
 
 DeletePrimitiveCommand::~DeletePrimitiveCommand()
 {
-    // If redo() was the last thing applied, the primitive is deleted (not in
-    // the sheet) - we're the sole owner in that state, so clean it up.
-    if (!m_sheet->primitives().contains(m_primitive))
+    // Only if redo() was the last thing applied *to this command*: the
+    // explicit flag (not a Sheet-membership test) keeps a coexisting
+    // Create command for the same primitive from also concluding it owns
+    // it - see CreatePrimitiveCommand's class comment.
+    if (m_owns)
         delete m_primitive;
 }
 
 void DeletePrimitiveCommand::undo()
 {
     m_sheet->addPrimitive(m_primitive);
+    m_owns = false;
 }
 
 void DeletePrimitiveCommand::redo()
 {
     m_sheet->takePrimitive(m_primitive);
+    m_owns = true;
 }

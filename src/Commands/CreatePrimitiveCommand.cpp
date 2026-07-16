@@ -30,18 +30,22 @@ CreatePrimitiveCommand::CreatePrimitiveCommand(Sheet *sheet, GraphicsPrimitive *
 
 CreatePrimitiveCommand::~CreatePrimitiveCommand()
 {
-    // If undo() was the last thing applied, the sheet no longer owns the
-    // primitive - we do, and must clean it up ourselves.
-    if (!m_sheet->primitives().contains(m_primitive))
+    // Only if undo() was the last thing applied *to this command*: the
+    // explicit flag (not a Sheet-membership test) keeps a coexisting
+    // Delete command for the same primitive from also concluding it owns
+    // it - see the class comment.
+    if (m_owns)
         delete m_primitive;
 }
 
 void CreatePrimitiveCommand::undo()
 {
     m_sheet->takePrimitive(m_primitive);
+    m_owns = true;
 }
 
 void CreatePrimitiveCommand::redo()
 {
     m_sheet->addPrimitive(m_primitive);
+    m_owns = false;
 }

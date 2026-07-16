@@ -28,9 +28,12 @@ class GraphicsPrimitive;
 // Undo/redo for Edit > Delete. Mirrors CreatePrimitiveCommand: constructed
 // while the primitive is still in the sheet, redo() (auto-called once by
 // QUndoStack::push()) removes it via takePrimitive() without deleting it, and
-// undo() hands it back via addPrimitive(). Whichever state the command isn't
-// currently "holding" the primitive in when destroyed determines whether the
-// destructor needs to delete it.
+// undo() hands it back via addPrimitive().
+//
+// Ownership is tracked with an explicit flag flipped in undo()/redo(),
+// never inferred from Sheet membership - see CreatePrimitiveCommand's class
+// comment for the double-free a membership test causes when a Create and a
+// Delete command for the same primitive coexist on the stack.
 class DeletePrimitiveCommand : public QUndoCommand
 {
 public:
@@ -43,6 +46,9 @@ public:
 private:
     Sheet *m_sheet;
     GraphicsPrimitive *m_primitive;
+    // True only between a redo() (this command holds the detached
+    // primitive) and the next undo()/destruction.
+    bool m_owns = false;
 };
 
 #endif // DELETEPRIMITIVECOMMAND_H

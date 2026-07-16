@@ -35,6 +35,13 @@ class GraphicsPrimitive;
 // primitive to takePrimitive() (removes it from the scene without deleting
 // it), so this command becomes the sole owner until either redo() gives it
 // back or this command itself is destroyed while still holding it.
+//
+// Ownership is tracked with an explicit flag flipped in undo()/redo(),
+// never inferred from Sheet membership: a Create(X) and a Delete(X) command
+// for the same primitive can coexist on the stack, and with X detached a
+// membership test would make *both* destructors conclude they own it -
+// a double free the moment the stack is cleared (File > New, closing the
+// app, opening a file). The flag guarantees exactly one owner at a time.
 class CreatePrimitiveCommand : public QUndoCommand
 {
 public:
@@ -47,6 +54,9 @@ public:
 private:
     Sheet *m_sheet;
     GraphicsPrimitive *m_primitive;
+    // True only between an undo() (this command holds the detached
+    // primitive) and the next redo()/destruction.
+    bool m_owns = false;
 };
 
 #endif // CREATEPRIMITIVECOMMAND_H
