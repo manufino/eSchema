@@ -37,6 +37,7 @@ public:
     void saveSetting(const QString& key, const QVariant& value);
     QVariant loadSetting(const QString& key) const;
     void restoreDefaultSettings();
+    void ensureDefaults();
 
 signals:
     // Emitted once per event-loop turn, no matter how many settings were

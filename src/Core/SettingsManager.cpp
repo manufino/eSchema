@@ -62,6 +62,22 @@ QVariant SettingsManager::loadSetting(const QString& key) const
     return value;
 }
 
+void SettingsManager::ensureDefaults()
+{
+    // A genuinely fresh install (no ini/registry entries at all yet) has no
+    // way to reach restoreDefaultSettings() before the GUI starts reading
+    // settings - it's normally only invoked from the Options dialog's
+    // "Restore defaults" button. Without it, every color/number read via
+    // loadSetting() comes back as an invalid QVariant (an empty string
+    // becomes an invalid, effectively black QColor; toInt()/toDouble() on
+    // it silently yield 0), producing a solid black canvas and black
+    // toolbar icons rather than the intended defaults - this call fills
+    // every key in exactly once, on a store that has none, so it never
+    // touches settings an existing install has already customized.
+    if (m_settings.allKeys().isEmpty())
+        restoreDefaultSettings();
+}
+
 void SettingsManager::restoreDefaultSettings()
 {
     m_settings.clear(); // Clear existing settings

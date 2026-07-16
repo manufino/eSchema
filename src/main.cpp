@@ -63,6 +63,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    // Must run before anything below reads a setting (ThemeManager::apply(),
+    // resolveLanguageCode(), CommandLine's headless conversions, MainWindow's
+    // constructor...) - see SettingsManager::ensureDefaults() for why.
+    SettingsManager::getInstance().ensureDefaults();
+
     // FidoCadJ-compatible command line (see CommandLine.h): "-h" and parse
     // errors stop here; "-c"/"-s" run headless conversions before (or, with
     // "-n", instead of) the GUI.
