@@ -359,7 +359,7 @@ void DialogOptions::restorePageDefaults(int pageIndex)
     case PageInterface:
         // Language deliberately untouched - "reset" silently switching the
         // UI language would be hostile.
-        ui->cboxStyle->setCurrentIndex(0);
+        ui->cboxStyle->setCurrentIndex(GuiStyleCodes.indexOf("nord"));
         ui->txtStylesheetPath->clear();
         ui->spinToolbarIconSize->setValue(25);
         ui->chkRenderAntialias->setChecked(true);
@@ -370,7 +370,7 @@ void DialogOptions::restorePageDefaults(int pageIndex)
         break;
     case PageGrid:
         // Mirrors SettingsManager::restoreDefaultSettings()'s grid values.
-        ui->cboxGridType->setCurrentIndex(0);
+        ui->cboxGridType->setCurrentIndex(1); // Dots
         ui->spinGridStep->setValue(5);
         ui->spinGridLineMarkStep->setValue(50);
         ui->doubleSpinStep_mm->setValue(0.635);

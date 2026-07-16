@@ -64,18 +64,20 @@ QVariant SettingsManager::loadSetting(const QString& key) const
 
 void SettingsManager::ensureDefaults()
 {
-    // A genuinely fresh install (no ini/registry entries at all yet) has no
-    // way to reach restoreDefaultSettings() before the GUI starts reading
-    // settings - it's normally only invoked from the Options dialog's
-    // "Restore defaults" button. Without it, every color/number read via
+    // A fresh install (no ini/registry entries yet) has no way to reach
+    // restoreDefaultSettings() before the GUI starts reading settings -
+    // it's normally only invoked from the Options dialog's "Restore
+    // defaults" button. Without this, every unwritten key read via
     // loadSetting() comes back as an invalid QVariant (an empty string
     // becomes an invalid, effectively black QColor; toInt()/toDouble() on
-    // it silently yield 0), producing a solid black canvas and black
-    // toolbar icons rather than the intended defaults - this call fills
-    // every key in exactly once, on a store that has none, so it never
-    // touches settings an existing install has already customized.
-    if (m_settings.allKeys().isEmpty())
-        restoreDefaultSettings();
+    // it silently yield 0), producing a solid black canvas, black toolbar
+    // icons and a divide-by-zero crash rather than the intended defaults.
+    // Fills only keys that are missing, so it is safe to run on every
+    // startup: existing installs keep all their customizations, partial
+    // stores (e.g. one aborted by a first-launch crash) are healed, and
+    // settings introduced by an upgrade get their defaults filled in.
+    writeMissingDefaults();
+    m_settings.sync();
 }
 
 void SettingsManager::restoreDefaultSettings()
@@ -84,38 +86,52 @@ void SettingsManager::restoreDefaultSettings()
     m_cache.clear();    // ...and the read cache built over them
     m_settings.sync(); // Make sure the changes are saved to disk
 
+    // The store was just cleared, so this writes every default.
+    writeMissingDefaults();
+
+    m_settings.sync();
+}
+
+void SettingsManager::writeMissingDefaults()
+{
+    const auto def = [this](const QString &key, const QVariant &value) {
+        if (!m_settings.contains(key))
+            saveSetting(key, value);
+    };
+
     // Default settings
 
-    // GENERAL
-    saveSetting("language", "it");
-    saveSetting("gui_style", "nord");
-    saveSetting("stylesheet_path", "");
-    saveSetting("lib_path", "");
-    saveSetting("macro_icon_size", 32);
+    // GENERAL - "language" is deliberately absent: main.cpp's
+    // resolveLanguageCode() derives it from the OS locale when unset, and
+    // writing one here would suppress that detection on first launch.
+    def("gui_style", "nord");
+    def("stylesheet_path", "");
+    def("lib_path", "");
+    def("macro_icon_size", 32);
     // Whether the library tree also renders a small preview icon per macro
     // row (LibraryManager::icon()) or just its name - independent of the
     // large MacroPreviewWidget panel below the tree, which always shows the
     // currently-clicked macro regardless of this setting.
-    saveSetting("macro_tree_icons_enabled", true);
+    def("macro_tree_icons_enabled", true);
     // Matches the reference FidoCadJ editor's own compiled-in default
     // (Globals.lineWidthDefault) - the single width every schematic
     // primitive (Line/Bezier/Rectangle/Ellipse/Polygon/ComplexCurve) draws
     // with, including inside macro bodies (GraphicsPrimitive::
     // effectiveLineWidth()). PL/PA (PCB track/pad) are unaffected - they
     // carry their own explicit width/size token per FIDOSPECS.
-    saveSetting("line_width", 0.5);
+    def("line_width", 0.5);
     // Extra hit-test padding (scene units) added around a primitive's actual
     // drawn geometry for click/rubber-band selection - see
     // GraphicsPrimitive::selectionTolerance(). Without this, Qt's default
     // shape() (a plain bounding rect) made every primitive selectable
     // anywhere inside its bounding box, including empty space far from what
     // was actually drawn.
-    saveSetting("selection_tolerance", 3.0);
+    def("selection_tolerance", 3.0);
     // Matches the reference FidoCadJ editor's own compiled-in default
     // (Globals.diameterConnection) - the connection-dot size every SA
     // primitive draws with, unless overridden per-document by an "FJC C" line
     // (Sheet::connectionDiameter()/PrimitiveConnection::effectiveDiameter()).
-    saveSetting("connection_diameter", 2.0);
+    def("connection_diameter", 2.0);
 
     // GRID - matches the reference FidoCadJ editor's own compiled-in default
     // (GRID_SIZE = 5). The bundled libraries are drawn on that 5-unit pitch:
@@ -123,73 +139,73 @@ void SettingsManager::restoreDefaultSettings()
     // the anchor), so a coarser grid/snap step leaves some pins off-grid
     // after placement. One logical unit is 5 mils (0.127 mm), hence a 5-unit
     // grid step spans 0.635 mm.
-    saveSetting("grid_step", 5);
-    saveSetting("mm_step", 0.635);
-    saveSetting("grid_type", 0);
-    saveSetting("grid_step_mark", 50);
-    saveSetting("grid_line_width", 0.20);
-    saveSetting("grid_line_mark_width", 0.20);
+    def("grid_step", 5);
+    def("mm_step", 0.635);
+    // Utils::GridType::Dots - the classic dotted schematic grid, matching
+    // the reference FidoCadJ editor's look out of the box.
+    def("grid_type", 1);
+    def("grid_step_mark", 50);
+    def("grid_line_width", 0.20);
+    def("grid_line_mark_width", 0.20);
     // Whether the grid is actually drawn - toggled via the main toolbar's
     // grid button (actionShowGrid), independent of the grid's own appearance
     // settings above.
-    saveSetting("grid_visible", true);
+    def("grid_visible", true);
 
     // SNAP - defaults to the same spacing as the visible grid (grid_step) so
     // clicks visibly snap to grid intersections. Any multiple of 1 keeps
     // coordinates integers, satisfying FidoCadJ's grid-unit requirement
     // (FIDOSPECS.md 3), so this can be changed independently of grid_step.
-    saveSetting("snap_enabled", true);
-    saveSetting("snap_step", 5);
+    def("snap_enabled", true);
+    def("snap_step", 5);
 
     // RULERS - whether the top/left rulers are shown around the drawing
     // area (RulerWidget), toggled from the Options dialog.
-    saveSetting("rulers_visible", true);
+    def("rulers_visible", true);
 
     // AUTOSAVE - periodically writes the open drawing to a recovery sidecar
     // file so a crash doesn't lose unsaved work (see MainWindow::
     // autosaveTick()). Does not touch the document's own save path/undo
     // clean state.
-    saveSetting("autosave_enabled", true);
-    saveSetting("autosave_interval_minutes", 5);
+    def("autosave_enabled", true);
+    def("autosave_interval_minutes", 5);
 
     // UPDATE CHECK - a single HTTPS request to GitHub's releases API at
     // startup (see UpdateChecker), silent unless a newer version is found.
     // The manual "Check for updates" menu action ignores this setting.
-    saveSetting("check_updates_on_startup", true);
+    def("check_updates_on_startup", true);
 
     // OBJECT SNAP - see ObjectSnap.h/Sheet::snapPosition().
-    saveSetting("snap_objects", true);
-    saveSetting("object_snap_radius", 12);
-    saveSetting("object_snap_endpoints", true);
-    saveSetting("object_snap_midpoints", true);
-    saveSetting("object_snap_centers", true);
-    saveSetting("object_snap_intersections", true);
-    saveSetting("snap_indicator_color", QColor(255, 128, 0).name());
-    saveSetting("handle_color", QColor(Qt::red).name());
-    saveSetting("snap_to_guides", true);
-    saveSetting("guide_color", QColor(0, 170, 255).name());
+    def("snap_objects", true);
+    def("object_snap_radius", 12);
+    def("object_snap_endpoints", true);
+    def("object_snap_midpoints", true);
+    def("object_snap_centers", true);
+    def("object_snap_intersections", true);
+    def("snap_indicator_color", QColor(255, 128, 0).name());
+    def("handle_color", QColor(Qt::red).name());
+    def("snap_to_guides", true);
+    def("guide_color", QColor(0, 170, 255).name());
 
     // BEHAVIOR/INTERFACE extras (see DialogOptions' pages).
-    saveSetting("save_backup", false);
-    saveSetting("undo_limit", 0);
-    saveSetting("startup_reopen_last", false);
-    saveSetting("recent_files_max", 10);
-    saveSetting("toolbar_icon_size", 25);
-    saveSetting("render_antialias", true);
-    saveSetting("units_display", 0);
-    saveSetting("wheel_zoom_direct", false);
-    saveSetting("regular_polygon_sides", 6);
-    saveSetting("curve_sampling_step", 5.0);
-    saveSetting("boolean_smooth_results", false);
-    saveSetting("text_default_font", "Courier New");
-    saveSetting("nudge_step_multiplier", 1);
-    saveSetting("dimension_text_size", 4);
+    def("save_backup", false);
+    def("undo_limit", 0);
+    def("startup_reopen_last", false);
+    def("recent_files_max", 10);
+    def("toolbar_icon_size", 25);
+    def("render_antialias", true);
+    def("units_display", 0);
+    def("wheel_zoom_direct", false);
+    def("regular_polygon_sides", 6);
+    def("curve_sampling_step", 5.0);
+    def("boolean_smooth_results", false);
+    def("text_default_font", "Courier New");
+    def("nudge_step_multiplier", 1);
+    def("dimension_text_size", 4);
 
     // COLORS
-    saveSetting("background_color", QColor("white").name());
-    saveSetting("grid_dot_color", QColor("blue").name());
-    saveSetting("grid_line_color", QColor(100, 100, 100).name());
-    saveSetting("grid_line_mark_color", QColor(100, 100, 100).name());
-
-    m_settings.sync();
+    def("background_color", QColor("white").name());
+    def("grid_dot_color", QColor("blue").name());
+    def("grid_line_color", QColor(100, 100, 100).name());
+    def("grid_line_mark_color", QColor(100, 100, 100).name());
 }

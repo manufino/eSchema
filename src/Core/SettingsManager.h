@@ -52,6 +52,12 @@ private:
     SettingsManager(const SettingsManager&) = delete;  // Disable the copy constructor
     SettingsManager& operator=(const SettingsManager&) = delete;  // Disable the assignment operator
 
+    // Writes the shipped default for every key not already present, without
+    // touching existing values - the single source of truth for defaults,
+    // shared by ensureDefaults() (fill gaps) and restoreDefaultSettings()
+    // (clear first, so everything is a gap).
+    void writeMissingDefaults();
+
     QSettings m_settings;
     bool m_changeSignalPending = false; // a coalesced emission is queued
     // In-memory read cache over QSettings: several settings are consulted

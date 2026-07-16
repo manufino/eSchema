@@ -146,6 +146,8 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 
 ### 1.0.7
 - Fixed a black drawing canvas, black toolbar icons, and a crash on mouse movement, all on the very first launch of a fresh install (no settings file yet)
+- Fixed theme rendering on Linux: toolbar areas no longer stay black in dark themes, and the light themes no longer inherit a dark desktop's system palette
+- The default grid style is now dots, matching FidoCadJ's classic look
 - Fixed the Linux/macOS portable packages: the app failed to start with "Qt libraries not found" because the zip step turned a symlink into a stray duplicate of the binary outside its library folder
 - **Parametric symbol wizard** (Tools > Symbol wizard): DIP/SIP/quad packages in through-hole, SMD, or schematic style, pin numbers and/or names, live preview, saved straight into any user library — including a brand-new one created from the same dialog
 - **Angular and radial dimension tools** with AutoCAD-style picking: hovering highlights the two lines (rectangle edges work too) or the circle, and the center is found automatically
