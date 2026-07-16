@@ -213,8 +213,6 @@ void SheetView::wheelEvent(QWheelEvent *event)
             SettingsManager::getInstance().loadSetting("wheel_zoom_direct").toBool();
     if (wheelZoomsDirectly || (event->modifiers() & Qt::ControlModifier)) {
         // zoom
-        const ViewportAnchor anchor = transformationAnchor();
-        setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
         int angle = event->angleDelta().y();
         qreal factor;
         if (angle > 0) {
@@ -233,8 +231,18 @@ void SheetView::wheelEvent(QWheelEvent *event)
             factor = ZOOM_SCALE_MAX / currentScale;
         }
 
+        // Keep the drawing point under the cursor pinned there through the
+        // zoom, by hand: scale, then translate the transform by however far
+        // that point moved. QGraphicsView's own AnchorUnderMouse can't do
+        // this reliably here - it works by adjusting the scrollbars, which
+        // are clamped to the sceneRect, so near the drawing's edges (or on
+        // a small drawing) the anchor silently fails and the view drifts.
+        // Panning in this view already goes through the transform for the
+        // same reason (see the middle-drag in mouseMoveEvent()).
+        const QPointF anchorBefore = mapToScene(event->position().toPoint());
         scale(factor, factor);
-        setTransformationAnchor(anchor);
+        const QPointF anchorAfter = mapToScene(event->position().toPoint());
+        translate(anchorAfter.x() - anchorBefore.x(), anchorAfter.y() - anchorBefore.y());
 
         zoomUpdate();
         emit viewTransformChanged();
