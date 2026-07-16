@@ -212,6 +212,8 @@ void DialogOptions::loadSettings()
                                                        : QStringLiteral("Courier New")));
     val = settings.loadSetting("nudge_step_multiplier");
     ui->spinNudgeMultiplier->setValue(val.toInt() > 0 ? val.toInt() : 1);
+    val = settings.loadSetting("dimension_text_size");
+    ui->spinDimensionTextSize->setValue(val.toInt() > 0 ? val.toInt() : 4);
 }
 
 void DialogOptions::saveSettings()
@@ -274,6 +276,7 @@ void DialogOptions::saveSettings()
     settings.saveSetting("boolean_smooth_results", ui->chkBooleanSmooth->isChecked());
     settings.saveSetting("text_default_font", ui->fontComboDefaultText->currentFont().family());
     settings.saveSetting("nudge_step_multiplier", ui->spinNudgeMultiplier->value());
+    settings.saveSetting("dimension_text_size", ui->spinDimensionTextSize->value());
 }
 
 void DialogOptions::syncGridPreview()
@@ -396,6 +399,7 @@ void DialogOptions::restorePageDefaults(int pageIndex)
         ui->chkBooleanSmooth->setChecked(false);
         ui->fontComboDefaultText->setCurrentFont(QFont(QStringLiteral("Courier New")));
         ui->spinNudgeMultiplier->setValue(1);
+        ui->spinDimensionTextSize->setValue(4);
         break;
     default:
         break;

@@ -46,7 +46,9 @@
 #include <QMessageBox>
 #include <QLineF>
 #include <QtMath>
+#include <QUndoStack>
 #include <cmath>
+#include <utility>
 
 namespace {
 
@@ -152,6 +154,7 @@ PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() c
     if (name == QStringLiteral("actionPad")) return Tool::Pad;
     if (name == QStringLiteral("actionImage")) return Tool::Image;
     if (name == QStringLiteral("actionMeasure")) return Tool::Measure;
+    if (name == QStringLiteral("actionDimension")) return Tool::Dimension;
     return Tool::Select;
 }
 
@@ -170,6 +173,7 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::Arc: return 3;
     case Tool::RegularPolygon: return 2; // center, then a vertex
     case Tool::Measure: return 2;
+    case Tool::Dimension: return 3; // two measured points + the line's offset
     case Tool::Connection: return 1;
     case Tool::Text: return 1;
     case Tool::PcbTrack: return 2;
@@ -208,6 +212,7 @@ GraphicsPrimitive *PrimitivePlacementController::createPrimitiveForTool(Tool too
     case Tool::Curve: return new PrimitiveComplexCurve();
     case Tool::Arc: return new PrimitiveComplexCurve(); // open, resampled along the arc while placing
     case Tool::Measure: return new PrimitiveLine(); // dashed rubber line, removed at the second click
+    case Tool::Dimension: return new PrimitiveLine(); // the dimension line itself (see m_dimensionExtras)
     case Tool::Text: return new PrimitiveText(); // caller sets its text content
     case Tool::Macro: return new PrimitiveMacro(); // caller sets its macro key
     case Tool::Image: return new PrimitiveImage(); // caller sets its image data
@@ -301,6 +306,13 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
     } else if (m_activeTool == Tool::Measure) {
         m_measureStart = scenePos;
         m_activePrimitive->penStyleIsChanged(Qt::DashLine);
+        m_activePrimitive->setControlPoint(0, scenePos);
+        m_activePrimitive->setControlPoint(1, scenePos);
+        emit measureUpdated(measureText(scenePos, scenePos));
+    } else if (m_activeTool == Tool::Dimension) {
+        // First click: the first measured point. The line previews plain
+        // (no arrows) until the second point fixes what is being measured.
+        m_dimensionStart = scenePos;
         m_activePrimitive->setControlPoint(0, scenePos);
         m_activePrimitive->setControlPoint(1, scenePos);
         emit measureUpdated(measureText(scenePos, scenePos));
@@ -457,7 +469,80 @@ void PrimitivePlacementController::discardActivePrimitive()
     if (m_activePrimitive)
         m_sheet->removePrimitive(m_activePrimitive);
     m_activePrimitive = nullptr;
+    // A dimension preview spans several primitives, not just the active one.
+    for (GraphicsPrimitive *extra : std::as_const(m_dimensionExtras))
+        m_sheet->removePrimitive(extra);
+    m_dimensionExtras.clear();
     m_pointsPlaced = 0;
+}
+
+// The measured distance as the dimension label's text, honoring the same
+// unit preference as the status bar readout.
+QString PrimitivePlacementController::dimensionLabel(qreal length) const
+{
+    const int unitsDisplay = qBound(0, SettingsManager::getInstance()
+                                    .loadSetting("units_display").toInt(), 2);
+    switch (unitsDisplay) {
+    case 1:
+        return QString::number(length, 'f', 1);
+    case 2:
+        return tr("%1 mm").arg(length * 0.127, 0, 'f', 2);
+    default:
+        return tr("%1 (%2 mm)").arg(length, 0, 'f', 1).arg(length * 0.127, 0, 'f', 2);
+    }
+}
+
+// Lays the whole annotation out for the dimension line passing through
+// `offsetPoint`: the line runs parallel to the measured span at the
+// cursor's perpendicular offset, one extension line connects each measured
+// point to it, and the distance label sits just past its midpoint. The
+// extension lines and the label are created lazily on the first preview.
+void PrimitivePlacementController::updateDimensionPreview(const QPointF &offsetPoint)
+{
+    if (m_dimensionExtras.isEmpty()) {
+        auto *extensionA = new PrimitiveLine();
+        auto *extensionB = new PrimitiveLine();
+        auto *label = new PrimitiveText();
+        applyDefaults(extensionA);
+        applyDefaults(extensionB);
+        applyDefaults(label);
+        const int textSize = SettingsManager::getInstance()
+                .loadSetting("dimension_text_size").toInt();
+        if (textSize > 0)
+            label->setSize(textSize, qMax(1, textSize * 3 / 4));
+        const QString defaultFont = SettingsManager::getInstance()
+                .loadSetting("text_default_font").toString();
+        if (!defaultFont.isEmpty())
+            label->setFontName(defaultFont);
+        m_dimensionExtras = { extensionA, extensionB, label };
+        for (GraphicsPrimitive *extra : std::as_const(m_dimensionExtras))
+            m_sheet->addPrimitive(extra);
+    }
+
+    const QPointF span = m_dimensionEnd - m_dimensionStart;
+    const qreal length = std::hypot(span.x(), span.y());
+    if (length <= 0.0)
+        return;
+    const QPointF normal(-span.y() / length, span.x() / length);
+    const qreal offset = QPointF::dotProduct(offsetPoint - m_dimensionStart, normal);
+    const QPointF lineStart = m_dimensionStart + normal * offset;
+    const QPointF lineEnd = m_dimensionEnd + normal * offset;
+
+    m_activePrimitive->setControlPoint(0, lineStart);
+    m_activePrimitive->setControlPoint(1, lineEnd);
+    m_dimensionExtras.at(0)->setControlPoint(0, m_dimensionStart);
+    m_dimensionExtras.at(0)->setControlPoint(1, lineStart);
+    m_dimensionExtras.at(1)->setControlPoint(0, m_dimensionEnd);
+    m_dimensionExtras.at(1)->setControlPoint(1, lineEnd);
+
+    auto *label = static_cast<PrimitiveText *>(m_dimensionExtras.at(2));
+    label->setText(dimensionLabel(length));
+    // Just past the dimension line's midpoint, on the side away from what
+    // is being measured (the offset's own side), so the text never sits on
+    // top of the arrows.
+    const qreal side = offset >= 0.0 ? 1.0 : -1.0;
+    label->setControlPoint(0, (lineStart + lineEnd) / 2.0
+                           + normal * (side * (label->sizeY() / 2.0 + 1.0)));
 }
 
 void PrimitivePlacementController::cancelPlacement()
@@ -624,6 +709,39 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &scenePos)
         return true;
     }
 
+    if (m_activeTool == Tool::Dimension) {
+        if (m_pointsPlaced == 1) {
+            // Second click: the other measured point. A zero-length span
+            // has nothing to dimension - just keep waiting for a real one.
+            if (scenePos == m_dimensionStart)
+                return true;
+            m_dimensionEnd = scenePos;
+            m_pointsPlaced = 2;
+            m_activePrimitive->setArrowAtStart(true);
+            m_activePrimitive->setArrowAtEnd(true);
+            updateDimensionPreview(scenePos);
+            return true;
+        }
+        // Third click: the dimension line's final position. Everything is
+        // already on the sheet as the live preview - push it all onto the
+        // undo stack as one step (Sheet::addPrimitive() is idempotent, so
+        // push()'s synchronous redo() is a harmless no-op), then stay armed
+        // for the next dimension, like Measure does.
+        updateDimensionPreview(scenePos);
+        m_sheet->clearSelection();
+        QUndoStack *undo = m_sheet->undoStack();
+        undo->beginMacro(tr("Dimension"));
+        undo->push(new CreatePrimitiveCommand(m_sheet, m_activePrimitive));
+        for (GraphicsPrimitive *extra : std::as_const(m_dimensionExtras))
+            undo->push(new CreatePrimitiveCommand(m_sheet, extra));
+        undo->endMacro();
+        m_activePrimitive->setSelected(true);
+        m_activePrimitive = nullptr;
+        m_dimensionExtras.clear();
+        m_pointsPlaced = 0;
+        return true;
+    }
+
     if (isVariableVertexTool(m_activeTool)) {
         // Fix the current live vertex, then start a new live vertex for the
         // next segment.
@@ -678,6 +796,19 @@ bool PrimitivePlacementController::handleMouseMove(const QPointF &scenePos)
     if (m_activeTool == Tool::Measure) {
         m_activePrimitive->setControlPoint(1, scenePos);
         emit measureUpdated(measureText(m_measureStart, scenePos));
+        return true;
+    }
+
+    if (m_activeTool == Tool::Dimension) {
+        if (m_pointsPlaced == 1) {
+            // Still choosing the second measured point - plain line preview.
+            m_activePrimitive->setControlPoint(1, scenePos);
+            emit measureUpdated(measureText(m_dimensionStart, scenePos));
+        } else {
+            // Both points fixed - the whole annotation follows the cursor's
+            // perpendicular offset.
+            updateDimensionPreview(scenePos);
+        }
         return true;
     }
 

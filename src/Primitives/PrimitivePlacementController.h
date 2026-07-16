@@ -103,7 +103,7 @@ signals:
 
 private:
     enum class Tool { Select, Line, Rectangle, Polygon, RegularPolygon, Ellipse, Bezier, Curve, Arc,
-                      Text, Connection, PcbTrack, Pad, Macro, Image, Measure };
+                      Text, Connection, PcbTrack, Pad, Macro, Image, Measure, Dimension };
 
     Tool currentTool() const;
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count
@@ -190,6 +190,21 @@ private:
     // only the status-bar readout (see measureUpdated()).
     QString measureText(const QPointF &from, const QPointF &to) const;
     QPointF m_measureStart;
+
+    // Dimension tool: two clicks fix the measured points, the third places
+    // the dimension line parallel to them at the cursor's offset. The
+    // annotation is plain primitives (a double-arrowed line, two extension
+    // lines, a text with the distance), so the file format is untouched.
+    // m_activePrimitive is the dimension line itself; the extension lines
+    // and the label live in m_dimensionExtras while previewing, and
+    // everything is pushed onto the undo stack as one macro at the final
+    // click. The measured distance is formatted per "units_display" and the
+    // label sized per "dimension_text_size" (Options > Drawing).
+    void updateDimensionPreview(const QPointF &offsetPoint);
+    QString dimensionLabel(qreal length) const;
+    QPointF m_dimensionStart;
+    QPointF m_dimensionEnd;
+    QList<GraphicsPrimitive *> m_dimensionExtras;
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H

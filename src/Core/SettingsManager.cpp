@@ -145,6 +145,7 @@ void SettingsManager::restoreDefaultSettings()
     saveSetting("boolean_smooth_results", false);
     saveSetting("text_default_font", "Courier New");
     saveSetting("nudge_step_multiplier", 1);
+    saveSetting("dimension_text_size", 4);
 
     // COLORS
     saveSetting("background_color", QColor("white").name());
