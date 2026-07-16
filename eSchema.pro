@@ -105,6 +105,7 @@ SOURCES += \
 	src/Dialogs/DialogOptions.cpp \
 	src/Dialogs/DialogShortcuts.cpp \
 	src/Widgets/ColorPicker.cpp \
+	src/Widgets/CommandPalette.cpp \
 	src/Widgets/GridPreviewWidget.cpp \
 	src/Widgets/LayerColorPicker.cpp \
 	src/Widgets/LayerComboBox.cpp \
@@ -183,6 +184,7 @@ HEADERS += \
 	src/Dialogs/DialogOptions.h \
 	src/Dialogs/DialogShortcuts.h \
 	src/Widgets/ColorPicker.h \
+	src/Widgets/CommandPalette.h \
 	src/Widgets/GridPreviewWidget.h \
 	src/Widgets/LayerColorPicker.h \
 	src/Widgets/LayerComboBox.h \

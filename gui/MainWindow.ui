@@ -1574,6 +1574,7 @@
     <addaction name="actionToolBarPrimitiveVisible"/>
     <addaction name="actionToolBarModifyVisible"/>
     <addaction name="actionCustomizeToolbars"/>
+    <addaction name="actionCommandPalette"/>
     <addaction name="actionRulersVisible"/>
     <addaction name="separator"/>
     <addaction name="actionAdjustView"/>
@@ -2643,6 +2644,21 @@
    </property>
    <property name="toolTip">
     <string>Add, remove, and reorder the commands on the toolbars</string>
+   </property>
+  </action>
+  <action name="actionCommandPalette">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/search.png</normaloff>:/res/resources/search.png</iconset>
+   </property>
+   <property name="text">
+    <string>Command palette...</string>
+   </property>
+   <property name="toolTip">
+    <string>Search and run any command by name</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+P</string>
    </property>
   </action>
   <action name="actionSnapToObjects">

@@ -29,6 +29,7 @@
 #include "MainWindow.h"
 #include "appversion.h"
 #include "DialogCustomizeToolbars.h"
+#include "CommandPalette.h"
 #include "ui_MainWindow.h"
 #include "DialogAttachImage.h"
 #include "DialogExport.h"
@@ -395,6 +396,7 @@ void MainWindow::setConnections()
     connect(ui->actionInformation, &QAction::triggered, this, &MainWindow::clickAboutAction);
     connect(ui->actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::clickCheckUpdatesAction);
+    connect(ui->actionCommandPalette, &QAction::triggered, this, &MainWindow::clickCommandPaletteAction);
     connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
     connect(ui->graphicsView, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
     connect(ui->graphicsView, &SheetView::mouseMoved, this, [this](QPointF scenePos) {
@@ -1157,6 +1159,51 @@ void MainWindow::clickCustomizeToolbarsAction()
         SettingsManager::getInstance().saveSetting(
                 QStringLiteral("toolbar_custom_") + it.key()->objectName(), it.value());
     }
+}
+
+// Every command reachable from the menu bar (grouped under its top-level
+// menu's name) plus the drawing tools, handed to the palette as the very
+// same QAction objects the menus use - so enabled state, icons and
+// shortcuts always match, and triggering one is exactly a menu click.
+void MainWindow::clickCommandPaletteAction()
+{
+    CommandPalette palette(this);
+
+    std::function<void(QMenu *, const QString &)> collect =
+            [&](QMenu *menu, const QString &category) {
+        for (QAction *action : menu->actions()) {
+            if (action->isSeparator())
+                continue;
+            if (QMenu *submenu = action->menu()) {
+                collect(submenu, category);
+                continue;
+            }
+            // Dynamically built entries (recent files, ...) have no stable
+            // objectName; the palette itself would be a pointless entry.
+            if (action->objectName().isEmpty() || action->text().isEmpty())
+                continue;
+            if (action == ui->actionCommandPalette)
+                continue;
+            palette.addCommand(category, action);
+        }
+    };
+    for (QAction *topLevel : ui->menubar->actions()) {
+        if (QMenu *menu = topLevel->menu()) {
+            QString category = topLevel->text();
+            category.remove(QLatin1Char('&'));
+            collect(menu, category);
+        }
+    }
+    for (QAction *action : ui->toolBarPrimitive->actions()) {
+        if (!action->isSeparator() && !action->objectName().isEmpty()
+                && !action->text().isEmpty())
+            palette.addCommand(tr("Drawing tools"), action);
+    }
+
+    // Just under the menu bar, centered - where command palettes usually
+    // drop down from.
+    const QPoint topCenter = mapToGlobal(QPoint(width() / 2, menuBar()->height() + 4));
+    palette.popup(topCenter);
 }
 
 QMenu *MainWindow::createPopupMenu()

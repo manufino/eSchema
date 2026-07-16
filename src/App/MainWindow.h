@@ -90,6 +90,7 @@ protected:
 public slots:
     void clickOptionAction();
     void clickCustomizeToolbarsAction();
+    void clickCommandPaletteAction();
     void clickAboutAction();
     void clickShortcutsAction();
     void clickCheckUpdatesAction();
