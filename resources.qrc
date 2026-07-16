@@ -29,6 +29,8 @@
         <file>resources/trim.png</file>
         <file>resources/extend.png</file>
         <file>resources/dimension.png</file>
+        <file>resources/dimension_angular.png</file>
+        <file>resources/dimension_radius.png</file>
         <file>resources/arrow.png</file>
         <file>resources/bezier.png</file>
         <file>resources/complexcurve.png</file>

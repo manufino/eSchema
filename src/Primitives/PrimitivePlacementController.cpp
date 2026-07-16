@@ -156,6 +156,8 @@ PrimitivePlacementController::Tool PrimitivePlacementController::currentTool() c
     if (name == QStringLiteral("actionImage")) return Tool::Image;
     if (name == QStringLiteral("actionMeasure")) return Tool::Measure;
     if (name == QStringLiteral("actionDimension")) return Tool::Dimension;
+    if (name == QStringLiteral("actionDimensionAngular")) return Tool::DimensionAngular;
+    if (name == QStringLiteral("actionDimensionRadial")) return Tool::DimensionRadial;
     return Tool::Select;
 }
 
@@ -175,6 +177,8 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::RegularPolygon: return 2; // center, then a vertex
     case Tool::Measure: return 2;
     case Tool::Dimension: return 3; // two measured points + the line's offset
+    case Tool::DimensionAngular: return 4; // vertex, two ray points, arc radius
+    case Tool::DimensionRadial: return 2; // center, rim point
     case Tool::Connection: return 1;
     case Tool::Text: return 1;
     case Tool::PcbTrack: return 2;
@@ -214,6 +218,8 @@ GraphicsPrimitive *PrimitivePlacementController::createPrimitiveForTool(Tool too
     case Tool::Arc: return new PrimitiveComplexCurve(); // open, resampled along the arc while placing
     case Tool::Measure: return new PrimitiveLine(); // dashed rubber line, removed at the second click
     case Tool::Dimension: return new PrimitiveLine(); // the dimension line itself (see m_dimensionExtras)
+    case Tool::DimensionAngular: return new PrimitiveComplexCurve(); // the measuring arc
+    case Tool::DimensionRadial: return new PrimitiveLine(); // the radius arrow
     case Tool::Text: return new PrimitiveText(); // caller sets its text content
     case Tool::Macro: return new PrimitiveMacro(); // caller sets its macro key
     case Tool::Image: return new PrimitiveImage(); // caller sets its image data
@@ -317,6 +323,20 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         m_activePrimitive->setControlPoint(0, scenePos);
         m_activePrimitive->setControlPoint(1, scenePos);
         emit measureUpdated(measureText(scenePos, scenePos));
+    } else if (m_activeTool == Tool::DimensionAngular) {
+        // First click: the angle's vertex. The curve previews the rays as
+        // they're picked; it only becomes the measuring arc at click 3.
+        m_angleVertex = scenePos;
+        auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
+        curve->appendVertex(scenePos);
+        curve->appendVertex(scenePos);
+        curve->penStyleIsChanged(Qt::DashLine);
+    } else if (m_activeTool == Tool::DimensionRadial) {
+        // First click: the center; the radius arrow follows the cursor.
+        m_radialCenter = scenePos;
+        m_activePrimitive->setControlPoint(0, scenePos);
+        m_activePrimitive->setControlPoint(1, scenePos);
+        m_activePrimitive->setArrowAtEnd(true);
     } else if (isVariableVertexTool(m_activeTool)) {
         // vertex 0 is fixed at the click; vertex 1 is the "live" preview vertex
         // that mouse-move updates until the next click.
@@ -487,6 +507,117 @@ QString PrimitivePlacementController::dimensionLabel(qreal length) const
     return tr("%1 mm").arg(length * 0.127, 0, 'f', 2);
 }
 
+GraphicsPrimitive *PrimitivePlacementController::createDimensionLabel() const
+{
+    auto *label = new PrimitiveText();
+    applyDefaults(label);
+    const int textSize = SettingsManager::getInstance()
+            .loadSetting("dimension_text_size").toInt();
+    if (textSize > 0)
+        label->setSize(textSize, qMax(1, textSize * 3 / 4));
+    const QString defaultFont = SettingsManager::getInstance()
+            .loadSetting("text_default_font").toString();
+    if (!defaultFont.isEmpty())
+        label->setFontName(defaultFont);
+    return label;
+}
+
+void PrimitivePlacementController::finishDimensionAnnotation(const QString &undoLabel)
+{
+    // Everything is already on the sheet as the live preview - push it all
+    // onto the undo stack as one step (Sheet::addPrimitive() is idempotent,
+    // so push()'s synchronous redo() is a harmless no-op), then stay armed
+    // for the next annotation, like Measure does.
+    m_sheet->clearSelection();
+    QUndoStack *undo = m_sheet->undoStack();
+    undo->beginMacro(undoLabel);
+    undo->push(new CreatePrimitiveCommand(m_sheet, m_activePrimitive));
+    for (GraphicsPrimitive *extra : std::as_const(m_dimensionExtras))
+        undo->push(new CreatePrimitiveCommand(m_sheet, extra));
+    undo->endMacro();
+    m_activePrimitive->setSelected(true);
+    m_activePrimitive = nullptr;
+    m_dimensionExtras.clear();
+    m_pointsPlaced = 0;
+}
+
+// Lays the measuring arc out for the cursor: radius = the cursor's distance
+// from the vertex, swept between the two rays on whichever side the cursor
+// is, sampled every ~10 degrees into the open complex curve. The angle
+// label sits just outside the arc's midpoint.
+void PrimitivePlacementController::updateAngularDimensionPreview(const QPointF &cursor)
+{
+    if (m_dimensionExtras.isEmpty()) {
+        GraphicsPrimitive *label = createDimensionLabel();
+        m_dimensionExtras = { label };
+        m_sheet->addPrimitive(label);
+    }
+
+    const QPointF toCursor = cursor - m_angleVertex;
+    const qreal radius = qMax(3.0, std::hypot(toCursor.x(), toCursor.y()));
+
+    auto wrap = [](qreal angle) {
+        while (angle < 0)
+            angle += 2.0 * M_PI;
+        while (angle >= 2.0 * M_PI)
+            angle -= 2.0 * M_PI;
+        return angle;
+    };
+    const qreal rayA = std::atan2(m_angleFirst.y() - m_angleVertex.y(),
+                                  m_angleFirst.x() - m_angleVertex.x());
+    const qreal rayB = std::atan2(m_angleSecond.y() - m_angleVertex.y(),
+                                  m_angleSecond.x() - m_angleVertex.x());
+    const qreal cursorAngle = std::atan2(toCursor.y(), toCursor.x());
+    // The arc runs counterclockwise from one ray to the other, on the side
+    // the cursor is on - so the same three points can dimension either the
+    // angle or its 360° complement.
+    qreal start = rayA;
+    qreal sweep = wrap(rayB - rayA);
+    if (wrap(cursorAngle - rayA) > sweep) {
+        start = rayB;
+        sweep = 2.0 * M_PI - sweep;
+    }
+    if (sweep <= 0.0)
+        return;
+
+    const int segments = qBound(2, int(std::ceil(sweep / (M_PI / 18.0))), 36);
+    QVector<QPointF> points;
+    points.reserve(segments + 1);
+    for (int i = 0; i <= segments; ++i) {
+        const qreal angle = start + sweep * i / segments;
+        points.append(m_angleVertex + radius * QPointF(std::cos(angle), std::sin(angle)));
+    }
+    replaceCurveVertices(static_cast<PrimitiveComplexCurve *>(m_activePrimitive), points);
+
+    auto *label = static_cast<PrimitiveText *>(m_dimensionExtras.at(0));
+    label->setText(QStringLiteral("%1°").arg(qRadiansToDegrees(sweep), 0, 'f', 1));
+    const qreal midAngle = start + sweep / 2.0;
+    label->setControlPoint(0, m_angleVertex
+                           + (radius + label->sizeY() + 2.0)
+                             * QPointF(std::cos(midAngle), std::sin(midAngle)));
+}
+
+// The radius arrow from the center to the cursor, its measure labelled just
+// past the rim point along the same direction.
+void PrimitivePlacementController::updateRadialDimensionPreview(const QPointF &cursor)
+{
+    if (m_dimensionExtras.isEmpty()) {
+        GraphicsPrimitive *label = createDimensionLabel();
+        m_dimensionExtras = { label };
+        m_sheet->addPrimitive(label);
+    }
+
+    m_activePrimitive->setControlPoint(0, m_radialCenter);
+    m_activePrimitive->setControlPoint(1, cursor);
+
+    const QPointF span = cursor - m_radialCenter;
+    const qreal radius = std::hypot(span.x(), span.y());
+    auto *label = static_cast<PrimitiveText *>(m_dimensionExtras.at(0));
+    label->setText(QLatin1String("R ") + dimensionLabel(radius));
+    const QPointF direction = radius > 0 ? span / radius : QPointF(1, 0);
+    label->setControlPoint(0, cursor + direction * (label->sizeY() + 2.0));
+}
+
 // Lays the whole annotation out for the dimension line passing through
 // `offsetPoint`: the line runs parallel to the measured span at the
 // cursor's perpendicular offset, one extension line connects each measured
@@ -497,18 +628,9 @@ void PrimitivePlacementController::updateDimensionPreview(const QPointF &offsetP
     if (m_dimensionExtras.isEmpty()) {
         auto *extensionA = new PrimitiveLine();
         auto *extensionB = new PrimitiveLine();
-        auto *label = new PrimitiveText();
+        GraphicsPrimitive *label = createDimensionLabel();
         applyDefaults(extensionA);
         applyDefaults(extensionB);
-        applyDefaults(label);
-        const int textSize = SettingsManager::getInstance()
-                .loadSetting("dimension_text_size").toInt();
-        if (textSize > 0)
-            label->setSize(textSize, qMax(1, textSize * 3 / 4));
-        const QString defaultFont = SettingsManager::getInstance()
-                .loadSetting("text_default_font").toString();
-        if (!defaultFont.isEmpty())
-            label->setFontName(defaultFont);
         m_dimensionExtras = { extensionA, extensionB, label };
         for (GraphicsPrimitive *extra : std::as_const(m_dimensionExtras))
             m_sheet->addPrimitive(extra);
@@ -781,17 +903,47 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &rawScenePos)
         // push()'s synchronous redo() is a harmless no-op), then stay armed
         // for the next dimension, like Measure does.
         updateDimensionPreview(scenePos);
-        m_sheet->clearSelection();
-        QUndoStack *undo = m_sheet->undoStack();
-        undo->beginMacro(tr("Dimension"));
-        undo->push(new CreatePrimitiveCommand(m_sheet, m_activePrimitive));
-        for (GraphicsPrimitive *extra : std::as_const(m_dimensionExtras))
-            undo->push(new CreatePrimitiveCommand(m_sheet, extra));
-        undo->endMacro();
-        m_activePrimitive->setSelected(true);
-        m_activePrimitive = nullptr;
-        m_dimensionExtras.clear();
-        m_pointsPlaced = 0;
+        finishDimensionAnnotation(tr("Dimension"));
+        return true;
+    }
+
+    if (m_activeTool == Tool::DimensionAngular) {
+        auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
+        if (m_pointsPlaced == 1) {
+            // Second click: a point on the first ray.
+            if (scenePos == m_angleVertex)
+                return true;
+            m_angleFirst = scenePos;
+            m_pointsPlaced = 2;
+            // Preview both rays as a V while the second one is chosen.
+            replaceCurveVertices(curve, { m_angleFirst, m_angleVertex, m_angleVertex });
+            return true;
+        }
+        if (m_pointsPlaced == 2) {
+            // Third click: a point on the second ray - from here the curve
+            // becomes the measuring arc following the cursor.
+            if (scenePos == m_angleVertex)
+                return true;
+            m_angleSecond = scenePos;
+            m_pointsPlaced = 3;
+            curve->penStyleIsChanged(Qt::SolidLine);
+            curve->setArrowAtStart(true);
+            curve->setArrowAtEnd(true);
+            updateAngularDimensionPreview(scenePos);
+            return true;
+        }
+        // Fourth click: the arc's final radius/side.
+        updateAngularDimensionPreview(scenePos);
+        finishDimensionAnnotation(tr("Angular dimension"));
+        return true;
+    }
+
+    if (m_activeTool == Tool::DimensionRadial) {
+        // Second click: the rim point - the radius arrow is final.
+        if (scenePos == m_radialCenter)
+            return true;
+        updateRadialDimensionPreview(scenePos);
+        finishDimensionAnnotation(tr("Radial dimension"));
         return true;
     }
 
@@ -863,6 +1015,27 @@ bool PrimitivePlacementController::handleMouseMove(const QPointF &rawScenePos)
             // perpendicular offset.
             updateDimensionPreview(scenePos);
         }
+        return true;
+    }
+
+    if (m_activeTool == Tool::DimensionAngular) {
+        auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
+        if (m_pointsPlaced == 1) {
+            // Choosing the first ray point - a single rubber ray.
+            replaceCurveVertices(curve, { m_angleVertex, scenePos });
+        } else if (m_pointsPlaced == 2) {
+            // Choosing the second ray point - both rays as a V.
+            replaceCurveVertices(curve, { m_angleFirst, m_angleVertex, scenePos });
+        } else {
+            // Rays fixed - the measuring arc follows the cursor's radius
+            // and side.
+            updateAngularDimensionPreview(scenePos);
+        }
+        return true;
+    }
+
+    if (m_activeTool == Tool::DimensionRadial) {
+        updateRadialDimensionPreview(scenePos);
         return true;
     }
 

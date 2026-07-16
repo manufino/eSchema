@@ -1766,6 +1766,8 @@
    <addaction name="separator"/>
    <addaction name="actionMeasure"/>
    <addaction name="actionDimension"/>
+   <addaction name="actionDimensionAngular"/>
+   <addaction name="actionDimensionRadial"/>
   </widget>
   <action name="actionNewDraw">
    <property name="enabled">
@@ -2353,6 +2355,36 @@
    </property>
    <property name="shortcut">
     <string>D</string>
+   </property>
+  </action>
+  <action name="actionDimensionAngular">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/dimension_angular.png</normaloff>:/res/resources/dimension_angular.png</iconset>
+   </property>
+   <property name="text">
+    <string>Angular dimension</string>
+   </property>
+   <property name="toolTip">
+    <string>Angular dimension: click the vertex and a point on each side, then place the arc with the measured angle</string>
+   </property>
+  </action>
+  <action name="actionDimensionRadial">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/dimension_radius.png</normaloff>:/res/resources/dimension_radius.png</iconset>
+   </property>
+   <property name="text">
+    <string>Radial dimension</string>
+   </property>
+   <property name="toolTip">
+    <string>Radial dimension: click the center and a point on the rim to place a radius arrow with its measure</string>
    </property>
   </action>
   <action name="actionRegularPolygon">

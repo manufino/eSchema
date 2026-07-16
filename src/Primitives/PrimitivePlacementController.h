@@ -103,7 +103,8 @@ signals:
 
 private:
     enum class Tool { Select, Line, Rectangle, Polygon, RegularPolygon, Ellipse, Bezier, Curve, Arc,
-                      Text, Connection, PcbTrack, Pad, Macro, Image, Measure, Dimension };
+                      Text, Connection, PcbTrack, Pad, Macro, Image, Measure, Dimension,
+                      DimensionAngular, DimensionRadial };
 
     Tool currentTool() const;
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count
@@ -214,6 +215,28 @@ private:
     QPointF m_dimensionStart;
     QPointF m_dimensionEnd;
     QList<GraphicsPrimitive *> m_dimensionExtras;
+
+    // A distance/angle label primitive configured per the dimension
+    // settings (size, default font) - shared by the linear, angular and
+    // radial dimension tools.
+    GraphicsPrimitive *createDimensionLabel() const;
+    // Shared tail of every dimension tool's final click: pushes the live
+    // preview primitives (m_activePrimitive + m_dimensionExtras) onto the
+    // undo stack as one `undoLabel` macro and resets the state, staying
+    // armed for the next annotation.
+    void finishDimensionAnnotation(const QString &undoLabel);
+    // Angular dimension: vertex, a point on each ray (clicks 1-3), then the
+    // fourth click places the measuring arc at the cursor's radius, on the
+    // cursor's side of the two rays. m_activePrimitive is the arc (an open
+    // complex curve with arrows); the label lives in m_dimensionExtras.
+    void updateAngularDimensionPreview(const QPointF &cursor);
+    QPointF m_angleVertex;
+    QPointF m_angleFirst;
+    QPointF m_angleSecond;
+    // Radial dimension: center then a rim point - a radius arrow with its
+    // measure. m_activePrimitive is the radius line.
+    void updateRadialDimensionPreview(const QPointF &cursor);
+    QPointF m_radialCenter;
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H
