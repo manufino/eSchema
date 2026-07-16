@@ -58,6 +58,16 @@ void DialogPrintOptions::margins(double *top, double *bottom, double *left, doub
     *right = ui->spinMarginRight->value();
 }
 
+bool DialogPrintOptions::realScale() const
+{
+    return ui->radioRealScale->isChecked();
+}
+
+double DialogPrintOptions::scalePercent() const
+{
+    return ui->spinScalePercent->value();
+}
+
 Layer *DialogPrintOptions::singleLayer() const
 {
     return ui->chkOneLayer->isChecked() ? ui->cbPrintLayer->selectedLayer() : nullptr;
@@ -74,6 +84,8 @@ void DialogPrintOptions::accept()
     settings.saveSetting("print_margin_left", ui->spinMarginLeft->value());
     settings.saveSetting("print_margin_right", ui->spinMarginRight->value());
     settings.saveSetting("print_one_layer", ui->chkOneLayer->isChecked());
+    settings.saveSetting("print_real_scale", ui->radioRealScale->isChecked());
+    settings.saveSetting("print_scale_percent", ui->spinScalePercent->value());
     QDialog::accept();
 }
 
@@ -103,4 +115,10 @@ void DialogPrintOptions::loadSavedOptions()
     // initial selection (the master layer, per LayerComboBox::setAutoMaster()).
     ui->chkOneLayer->setChecked(settings.loadSetting("print_one_layer").toBool());
     ui->cbPrintLayer->setEnabled(ui->chkOneLayer->isChecked());
+
+    if (settings.loadSetting("print_real_scale").toBool())
+        ui->radioRealScale->setChecked(true); // enables spinScalePercent via the .ui connection
+    const QVariant percent = settings.loadSetting("print_scale_percent");
+    if (percent.isValid())
+        ui->spinScalePercent->setValue(percent.toDouble());
 }

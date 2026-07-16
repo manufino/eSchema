@@ -44,6 +44,13 @@ public:
     bool mirror() const;
     bool blackWhite() const;
     bool landscape() const;
+    // Real-scale printing: when true, the drawing is printed at
+    // scalePercent() of its physical size (one logical unit = 1/200 inch,
+    // FidoCadJ's fixed unit) instead of being scaled to fit the page -
+    // needed e.g. for toner-transfer PCB etching, where 100% must come out
+    // of the printer dimensionally exact.
+    bool realScale() const;
+    double scalePercent() const;
     // Centimeters (top, bottom, left, right), in that order - matches the
     // "Margini (cm)" spin boxes.
     void margins(double *top, double *bottom, double *left, double *right) const;

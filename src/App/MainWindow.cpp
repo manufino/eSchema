@@ -1545,6 +1545,8 @@ void MainWindow::clickPrintAction()
     m_printMirror = optionsDialog.mirror();
     m_printBlackWhite = optionsDialog.blackWhite();
     m_printOneLayer = optionsDialog.singleLayer();
+    m_printRealScale = optionsDialog.realScale();
+    m_printScalePercent = optionsDialog.scalePercent();
 
     // Selection highlighting (the selected-primitive green blend) and resize
     // handles are editor chrome, not part of the drawing - hide them for the
@@ -1605,8 +1607,14 @@ void MainWindow::renderForPrint(QPrinter *printer)
         // Fit the drawing within the printable area, preserving aspect ratio
         // and centering it - a schematic's shape rarely matches the page's,
         // and stretching it unevenly would distort right angles and text.
-        const qreal scale = qMin(targetRect.width() / sourceRect.width(),
-                                  targetRect.height() / sourceRect.height());
+        // Real scale instead prints dimensionally exact: one logical unit is
+        // fixed at 1/200 inch (FidoCadJ's unit), so at 100% the printed size
+        // is resolution/200 device pixels per unit - whatever doesn't fit
+        // the page is simply clipped, since scale accuracy is the point.
+        const qreal scale = m_printRealScale
+                ? printer->resolution() / 200.0 * (m_printScalePercent / 100.0)
+                : qMin(targetRect.width() / sourceRect.width(),
+                       targetRect.height() / sourceRect.height());
         const QSizeF scaledSize = sourceRect.size() * scale;
         const QRectF centeredTarget(targetRect.left() + (targetRect.width() - scaledSize.width()) / 2.0,
                                      targetRect.top() + (targetRect.height() - scaledSize.height()) / 2.0,

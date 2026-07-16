@@ -39,6 +39,61 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupScale">
+     <property name="title">
+      <string>Scale</string>
+     </property>
+     <layout class="QGridLayout" name="gridScale">
+      <item row="0" column="0" colspan="2">
+       <widget class="QRadioButton" name="radioFitPage">
+        <property name="text">
+         <string>Fit to page</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="radioRealScale">
+        <property name="text">
+         <string>Real scale (%):</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="spinScalePercent">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>100.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QLabel" name="lblScaleHint">
+        <property name="text">
+         <string>At 100%, one drawing unit prints as 0.127 mm (1/200 inch).</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupMargins">
      <property name="title">
       <string>Margins (cm)</string>
@@ -195,6 +250,12 @@
    <sender>chkOneLayer</sender>
    <signal>toggled(bool)</signal>
    <receiver>cbPrintLayer</receiver>
+   <slot>setEnabled(bool)</slot>
+  </connection>
+  <connection>
+   <sender>radioRealScale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spinScalePercent</receiver>
    <slot>setEnabled(bool)</slot>
   </connection>
  </connections>

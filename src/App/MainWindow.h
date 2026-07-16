@@ -421,5 +421,7 @@ private:
     bool m_printMirror = false;
     bool m_printBlackWhite = false;
     Layer *m_printOneLayer = nullptr; // non-null = print only this layer
+    bool m_printRealScale = false;    // false = fit to page (the default)
+    double m_printScalePercent = 100.0;
 };
 #endif // MAINWINDOW_H
