@@ -74,6 +74,7 @@
 #include <QPainterPath>
 #include <QTabBar>
 #include <QWidgetAction>
+#include <cmath>
 #include <functional>
 
 namespace {
@@ -1432,6 +1433,7 @@ void MainWindow::checkForAutosaveRecovery()
         clearAutosave();
         return;
     }
+    normalizeLoadedDrawingPosition();
 
     if (!original.isEmpty())
         setCurrentFilePath(original);
@@ -1471,6 +1473,52 @@ void MainWindow::clickOpenAction()
     openFile(path);
 }
 
+// If the just-loaded drawing sticks out of the drawing area, shift it onto
+// the sheet. One rigid translation for everything - primitives, macros,
+// labels - by a whole number of units, so relative geometry and grid
+// alignment are untouched; the view is then refitted so the user actually
+// sees what was recovered. Deliberately not undoable (it's part of loading,
+// like the parse itself), and it doesn't dirty the undo stack - the file on
+// disk only changes if the user later saves.
+void MainWindow::normalizeLoadedDrawingPosition()
+{
+    const QRectF bounds = sheetScene->itemsBoundingRect();
+    if (bounds.isEmpty())
+        return;
+    const QRectF area = sheetScene->sceneRect();
+    if (area.contains(bounds))
+        return;
+
+    // Pull the overflowing side back onto the sheet; the origin side wins
+    // when the drawing is bigger than the sheet on an axis, keeping the
+    // origin-side content visible.
+    qreal dx = 0.0, dy = 0.0;
+    if (bounds.right() > area.right())
+        dx = area.right() - bounds.right();
+    if (bounds.left() + dx < area.left())
+        dx = area.left() - bounds.left();
+    if (bounds.bottom() > area.bottom())
+        dy = area.bottom() - bounds.bottom();
+    if (bounds.top() + dy < area.top())
+        dy = area.top() - bounds.top();
+
+    // Whole units, rounded toward the inside of the sheet, so a file's
+    // integer coordinates stay integer.
+    dx = dx > 0 ? std::ceil(dx) : std::floor(dx);
+    dy = dy > 0 ? std::ceil(dy) : std::floor(dy);
+    if (qFuzzyIsNull(dx) && qFuzzyIsNull(dy))
+        return;
+
+    const QPointF delta(dx, dy);
+    for (GraphicsPrimitive *primitive : sheetScene->primitives())
+        primitive->translateControlPoints(delta);
+
+    ui->graphicsView->adjustView();
+    ui->statusbar->showMessage(
+            tr("The drawing had elements outside the drawing area and was moved onto the sheet"),
+            6000);
+}
+
 bool MainWindow::openFile(const QString &filePath)
 {
     QString error;
@@ -1478,6 +1526,7 @@ bool MainWindow::openFile(const QString &filePath)
         QMessageBox::warning(this, tr("Error"), tr("Unable to open the file:\n%1").arg(error));
         return false;
     }
+    normalizeLoadedDrawingPosition();
     sheetScene->undoStack()->setClean();
     setCurrentFilePath(filePath);
     // Whatever the previous document's autosave was tracking is moot now -
@@ -1511,6 +1560,7 @@ bool MainWindow::importDxfFile(const QString &filePath)
         QMessageBox::warning(this, tr("Error"), tr("Unable to open the file:\n%1").arg(error));
         return false;
     }
+    normalizeLoadedDrawingPosition();
     sheetScene->undoStack()->setClean();
     // A DXF file has no notion of "this eSchema document's own path" - it's
     // an import, not a native Open, so the next Save still goes through Save

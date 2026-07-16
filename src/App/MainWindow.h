@@ -343,6 +343,13 @@ private:
     // drag holds none (wrong extension, non-file payload). Shared by
     // dragEnterEvent (to decide acceptance) and dropEvent.
     static QString droppableFilePath(const QMimeData *mimeData);
+    // Called right after every bulk load (Open, DXF import, autosave
+    // recovery): if the loaded content sticks out of the drawing area (the
+    // fixed sceneRect - e.g. a file authored with negative coordinates),
+    // the whole drawing is shifted onto the sheet as one rigid integer
+    // translation and the view refitted, so nothing opens stranded out of
+    // sight. A no-op for well-placed files.
+    void normalizeLoadedDrawingPosition();
     bool saveToPath(const QString &filePath);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();
