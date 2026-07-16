@@ -320,9 +320,9 @@ li.checked::marker { content: "\2612"; }
     <name>DialogAttachImage</name>
     <message>
         <location filename="../gui/DialogAttachImage.ui" line="20" />
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="77" />
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="87" />
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="94" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="78" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="88" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="95" />
         <source>Tracing image</source>
         <translation>Immagine di ricalco</translation>
     </message>
@@ -372,24 +372,22 @@ li.checked::marker { content: "\2612"; }
         <translation>Rimuovi immagine</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="49" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="50" />
         <source>(currently attached image)</source>
         <translation>(immagine attualmente allegata)</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="78" />
         <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
-        <translation>Immagini (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
+        <translation type="vanished">Immagini (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="87" />
         <source>Unable to read the file:
 %1</source>
-        <translation>Impossibile leggere il file:
+        <translation type="vanished">Impossibile leggere il file:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="94" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="95" />
         <source>Unrecognized image file:
 %1</source>
         <translation>File immagine non riconosciuto:
@@ -3493,73 +3491,73 @@ Vuoi recuperarlo?</translation>
 <context>
     <name>PrimitivePlacementController</name>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="306" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="307" />
         <source>Text</source>
         <translation>Testo</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="306" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="307" />
         <source>Content:</source>
         <translation>Contenuto:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="323" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="324" />
         <source>Regular polygon</source>
         <translation>Poligono regolare</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="323" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="324" />
         <source>Number of sides:</source>
         <translation>Numero di lati:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="486" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="725" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="487" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="726" />
         <source>%1 mm</source>
         <translation>%1 mm</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="489" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="490" />
         <source>%1 (%2 mm)</source>
         <translation>%1 (%2 mm)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="492" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="493" />
         <source>dx: %1   dy: %2   length: %3   angle: %4°</source>
         <translation>dx: %1   dy: %2   lunghezza: %3   angolo: %4°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="703" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="704" />
         <source>Angular dimension: click the first line</source>
         <translation>Quota angolare: fai clic sulla prima linea</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="704" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="705" />
         <source>Angular dimension: click the second line</source>
         <translation>Quota angolare: fai clic sulla seconda linea</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="713" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="714" />
         <source>Radial dimension: click the outline of a circle or arc</source>
         <translation>Quota radiale: fai clic sul contorno di un cerchio o di un arco</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1124" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1125" />
         <source>Dimension</source>
         <translation>Quota</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1141" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1142" />
         <source>The two lines are parallel - no angle to dimension</source>
         <translation>Le due linee sono parallele: nessun angolo da quotare</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1180" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1181" />
         <source>Angular dimension</source>
         <translation>Quota angolare</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="300" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="301" />
         <source>Radial dimension</source>
         <translation>Quota radiale</translation>
     </message>
@@ -3568,21 +3566,19 @@ Vuoi recuperarlo?</translation>
         <translation type="vanished">dx: %1   dy: %2   lunghezza: %3 (%4 mm)   angolo: %5°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="902" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="911" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="903" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="912" />
         <source>Insert image</source>
         <translation>Inserisci immagine</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="903" />
         <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
-        <translation>Immagini (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
+        <translation type="vanished">Immagini (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="912" />
         <source>Unable to read the file:
 %1</source>
-        <translation>Impossibile leggere il file:
+        <translation type="vanished">Impossibile leggere il file:
 %1</translation>
     </message>
 </context>
@@ -3740,6 +3736,21 @@ Vuoi recuperarlo?</translation>
         <location filename="../src/IO/DxfReader.cpp" line="652" />
         <source>%1 INSERT references to missing blocks were ignored.</source>
         <translation>%1 riferimenti INSERT a blocchi non trovati sono stati ignorati.</translation>
+    </message>
+</context>
+<context>
+    <name>SharedTexts</name>
+    <message>
+        <location filename="../src/Core/GlobalUtils.h" line="40" />
+        <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
+        <translation>Immagini (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
+    </message>
+    <message>
+        <location filename="../src/Core/GlobalUtils.h" line="46" />
+        <source>Unable to read the file:
+%1</source>
+        <translation>Impossibile leggere il file:
+%1</translation>
     </message>
 </context>
 <context>

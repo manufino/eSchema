@@ -20,13 +20,34 @@
 #ifndef GLOBALUTILS_H
 #define GLOBALUTILS_H
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QRandomGenerator>
 #include <QColor>
 #include <QPointF>
+#include <QString>
 #include <QVariant>
 #include <cmath>
 #include "SettingsManager.h"
+
+// Translatable strings needed word-for-word by more than one class: a
+// single shared declaration (one entry per language in the .ts files)
+// instead of every tr() context re-declaring its own identical copy.
+namespace SharedTexts {
+
+inline QString imageFileFilter()
+{
+    return QCoreApplication::translate("SharedTexts",
+            "Images (*.png *.jpg *.jpeg *.bmp *.gif)");
+}
+
+inline QString unableToReadFile(const QString &path)
+{
+    return QCoreApplication::translate("SharedTexts",
+            "Unable to read the file:\n%1").arg(path);
+}
+
+} // namespace SharedTexts
 
 class Utils {
 public:
@@ -38,7 +59,7 @@ public:
 
     static Utils& instance()
     {
-        static Utils instance; // Garantisce l'istanza singola
+        static Utils instance; // guarantees the single shared instance
         return instance;
     }
 
@@ -69,22 +90,6 @@ public:
         const int step = stepVal.isValid() && stepVal.toInt() > 0 ? stepVal.toInt() : 10;
 
         return QPointF(std::round(pos.x() / step) * step, std::round(pos.y() / step) * step);
-    }
-
-    /**
-     * Libera la memoria in modo sicuro.
-     */
-    template<typename T>
-    void DeleteSafely(T*& ptr)
-    {
-        if (ptr) {
-            if constexpr (std::is_array_v<T>)
-                delete[] ptr;
-            else delete ptr;
-
-            ptr = nullptr;
-        } else
-            qDebug() << "[DeleteSafely]: Attempting to delete a null pointer.";
     }
 
 private:

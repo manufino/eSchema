@@ -20,6 +20,7 @@
 #include "DialogAttachImage.h"
 #include "ui_DialogAttachImage.h"
 #include "Sheet.h"
+#include "GlobalUtils.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -75,7 +76,7 @@ void DialogAttachImage::browseForImage()
 {
     const QString path = QFileDialog::getOpenFileName(
                 this, tr("Tracing image"), QString(),
-                tr("Images (*.png *.jpg *.jpeg *.bmp *.gif)"));
+                SharedTexts::imageFileFilter());
     if (!path.isEmpty())
         loadImageFile(path);
 }
@@ -84,7 +85,7 @@ void DialogAttachImage::loadImageFile(const QString &path)
 {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::warning(this, tr("Tracing image"), tr("Unable to read the file:\n%1").arg(path));
+        QMessageBox::warning(this, tr("Tracing image"), SharedTexts::unableToReadFile(path));
         return;
     }
     const QByteArray data = file.readAll();

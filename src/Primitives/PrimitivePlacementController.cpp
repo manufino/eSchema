@@ -36,6 +36,7 @@
 #include "PrimitiveImage.h"
 #include "CreatePrimitiveCommand.h"
 #include "SettingsManager.h"
+#include "GlobalUtils.h"
 #include <QAction>
 #include <QCheckBox>
 #include <QCursor>
@@ -900,7 +901,7 @@ void PrimitivePlacementController::armImagePlacement()
 {
     const QString path = QFileDialog::getOpenFileName(
                 m_view, tr("Insert image"), QString(),
-                tr("Images (*.png *.jpg *.jpeg *.bmp *.gif)"));
+                SharedTexts::imageFileFilter());
     if (path.isEmpty()) {
         switchToolBarToSelectTool();
         return; // user cancelled - nothing to place
@@ -909,7 +910,7 @@ void PrimitivePlacementController::armImagePlacement()
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
         QMessageBox::warning(m_view, tr("Insert image"),
-                              tr("Unable to read the file:\n%1").arg(path));
+                              SharedTexts::unableToReadFile(path));
         switchToolBarToSelectTool();
         return;
     }

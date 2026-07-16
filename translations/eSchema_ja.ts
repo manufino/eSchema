@@ -320,9 +320,9 @@ li.checked::marker { content: "\2612"; }
     <name>DialogAttachImage</name>
     <message>
         <location filename="../gui/DialogAttachImage.ui" line="20" />
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="77" />
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="87" />
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="94" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="78" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="88" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="95" />
         <source>Tracing image</source>
         <translation>トレース画像</translation>
     </message>
@@ -372,24 +372,22 @@ li.checked::marker { content: "\2612"; }
         <translation>画像を削除</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="49" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="50" />
         <source>(currently attached image)</source>
         <translation>（現在添付されている画像）</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="78" />
         <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
-        <translation>画像 (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
+        <translation type="vanished">画像 (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="87" />
         <source>Unable to read the file:
 %1</source>
-        <translation>ファイルを読み込めません:
+        <translation type="vanished">ファイルを読み込めません:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="94" />
+        <location filename="../src/Dialogs/DialogAttachImage.cpp" line="95" />
         <source>Unrecognized image file:
 %1</source>
         <translation>認識できない画像ファイルです:
@@ -3485,73 +3483,73 @@ Do you want to recover it?</source>
 <context>
     <name>PrimitivePlacementController</name>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="306" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="307" />
         <source>Text</source>
         <translation>テキスト</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="306" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="307" />
         <source>Content:</source>
         <translation>内容:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="323" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="324" />
         <source>Regular polygon</source>
         <translation>正多角形</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="323" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="324" />
         <source>Number of sides:</source>
         <translation>辺の数：</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="486" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="725" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="487" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="726" />
         <source>%1 mm</source>
         <translation>%1 mm</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="489" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="490" />
         <source>%1 (%2 mm)</source>
         <translation>%1 (%2 mm)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="492" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="493" />
         <source>dx: %1   dy: %2   length: %3   angle: %4°</source>
         <translation>dx: %1   dy: %2   長さ: %3   角度: %4°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="703" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="704" />
         <source>Angular dimension: click the first line</source>
         <translation>角度寸法：1 本目の線をクリック</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="704" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="705" />
         <source>Angular dimension: click the second line</source>
         <translation>角度寸法：2 本目の線をクリック</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="713" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="714" />
         <source>Radial dimension: click the outline of a circle or arc</source>
         <translation>半径寸法：円または円弧の輪郭をクリック</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1124" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1125" />
         <source>Dimension</source>
         <translation>寸法</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1141" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1142" />
         <source>The two lines are parallel - no angle to dimension</source>
         <translation>2 本の線が平行のため、寸法を取る角度がありません</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1180" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1181" />
         <source>Angular dimension</source>
         <translation>角度寸法</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="300" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="301" />
         <source>Radial dimension</source>
         <translation>半径寸法</translation>
     </message>
@@ -3560,21 +3558,19 @@ Do you want to recover it?</source>
         <translation type="vanished">dx: %1   dy: %2   長さ: %3 (%4 mm)   角度: %5°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="902" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="911" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="903" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="912" />
         <source>Insert image</source>
         <translation>画像を挿入</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="903" />
         <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
-        <translation>画像 (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
+        <translation type="vanished">画像 (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="912" />
         <source>Unable to read the file:
 %1</source>
-        <translation>ファイルを読み込めません:
+        <translation type="vanished">ファイルを読み込めません:
 %1</translation>
     </message>
 </context>
@@ -3732,6 +3728,21 @@ Do you want to recover it?</source>
         <location filename="../src/IO/DxfReader.cpp" line="652" />
         <source>%1 INSERT references to missing blocks were ignored.</source>
         <translation>存在しないブロックへの %1 個のINSERT参照が無視されました。</translation>
+    </message>
+</context>
+<context>
+    <name>SharedTexts</name>
+    <message>
+        <location filename="../src/Core/GlobalUtils.h" line="40" />
+        <source>Images (*.png *.jpg *.jpeg *.bmp *.gif)</source>
+        <translation>画像 (*.png *.jpg *.jpeg *.bmp *.gif)</translation>
+    </message>
+    <message>
+        <location filename="../src/Core/GlobalUtils.h" line="46" />
+        <source>Unable to read the file:
+%1</source>
+        <translation>ファイルを読み込めません:
+%1</translation>
     </message>
 </context>
 <context>
