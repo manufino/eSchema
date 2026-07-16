@@ -262,40 +262,11 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <layout class="QHBoxLayout" name="layoutLibrary">
-         <item>
-          <widget class="QComboBox" name="cboxLibrary">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <!-- A QPushButton, not a QToolButton: the built-in themes style
-               QPushButton and QToolBar QToolButton, but a bare QToolButton
-               inside a dialog would fall back to the unthemed native look. -->
-          <widget class="QPushButton" name="btnNewLibrary">
-           <property name="maximumSize">
-            <size>
-             <width>34</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string notr="true">+</string>
-           </property>
-           <property name="toolTip">
-            <string>Create a new library to save the symbol into</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QComboBox" name="cboxLibrary">
+         <property name="toolTip">
+          <string>The user library to save the symbol into; the last entry creates a new one</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

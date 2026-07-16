@@ -95,17 +95,29 @@ qreal textWidth(const QString &text)
 
 } // namespace
 
+namespace {
+// Always the combo's last entry - picking it prompts for a new library name
+// instead of naming an existing one. Same pattern as DialogCreateMacro.
+QString newLibrarySentinel()
+{
+    return QObject::tr("New library...");
+}
+}
+
 DialogSymbolWizard::DialogSymbolWizard(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogSymbolWizard)
 {
     ui->setupUi(this);
 
-    // Save targets: the existing user libraries; typing a new name creates
-    // that library on save (standard libraries are read-only).
+    // Save targets: the existing user libraries, plus the trailing "New
+    // library..." sentinel that prompts for a fresh one (standard libraries
+    // are read-only).
     ui->cboxLibrary->addItems(LibraryManager::getInstance().userLibraryDisplayNames());
-    if (ui->cboxLibrary->count() == 0)
-        ui->cboxLibrary->setEditText(tr("My symbols"));
+    ui->cboxLibrary->addItem(newLibrarySentinel());
+    ui->cboxLibrary->setCurrentIndex(-1); // force an explicit choice
+    connect(ui->cboxLibrary, &QComboBox::activated,
+            this, &DialogSymbolWizard::handleLibrarySelected);
 
     auto refresh = [this]() { refreshPreview(); };
     auto syncAndRefresh = [this](int) {
@@ -122,28 +134,16 @@ DialogSymbolWizard::DialogSymbolWizard(QWidget *parent) :
     connect(ui->chkPinNumbers, &QCheckBox::toggled, this, refresh);
     connect(ui->txtPinNames, &QPlainTextEdit::textChanged, this, refresh);
 
-    // OK needs somewhere to save to and something to call the result.
+    // OK needs a name and a real library choice (not the sentinel, which
+    // the selection handler never leaves current anyway).
     auto validate = [this]() {
+        const int index = ui->cboxLibrary->currentIndex();
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(
                 !ui->txtName->text().trimmed().isEmpty()
-                && !ui->cboxLibrary->currentText().trimmed().isEmpty());
+                && index >= 0 && index != ui->cboxLibrary->count() - 1);
     };
     connect(ui->txtName, &QLineEdit::textChanged, this, validate);
-    connect(ui->cboxLibrary, &QComboBox::editTextChanged, this, validate);
-
-    // "+": create a brand-new library right here - the combo is editable
-    // anyway (typing an unknown name creates it on save), but an explicit
-    // button makes that discoverable.
-    connect(ui->btnNewLibrary, &QPushButton::clicked, this, [this]() {
-        bool ok = false;
-        const QString name = QInputDialog::getText(this, tr("New library"),
-                                                   tr("Library name:"),
-                                                   QLineEdit::Normal, QString(), &ok);
-        if (!ok || name.trimmed().isEmpty())
-            return;
-        ui->cboxLibrary->addItem(name.trimmed());
-        ui->cboxLibrary->setCurrentIndex(ui->cboxLibrary->count() - 1);
-    });
+    connect(ui->cboxLibrary, &QComboBox::currentIndexChanged, this, validate);
 
     syncTypeDependentFields();
     refreshPreview();
@@ -153,6 +153,27 @@ DialogSymbolWizard::DialogSymbolWizard(QWidget *parent) :
 DialogSymbolWizard::~DialogSymbolWizard()
 {
     delete ui;
+}
+
+void DialogSymbolWizard::handleLibrarySelected(int index)
+{
+    if (index != ui->cboxLibrary->count() - 1) {
+        m_previousLibraryIndex = index;
+        return;
+    }
+
+    // The "New library..." sentinel: ask for a name and insert it as a real
+    // entry just before the sentinel - same flow as DialogCreateMacro.
+    const QString name = QInputDialog::getText(this, tr("New library"),
+                                               tr("Library name:")).trimmed();
+    if (name.isEmpty()) {
+        ui->cboxLibrary->setCurrentIndex(m_previousLibraryIndex);
+        return;
+    }
+    const int insertAt = ui->cboxLibrary->count() - 1;
+    ui->cboxLibrary->insertItem(insertAt, name);
+    ui->cboxLibrary->setCurrentIndex(insertAt);
+    m_previousLibraryIndex = insertAt;
 }
 
 void DialogSymbolWizard::syncTypeDependentFields()

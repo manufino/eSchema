@@ -1720,7 +1720,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="125" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="187" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="208" />
         <source>Row spacing (units)</source>
         <translation>列間隔（単位）</translation>
     </message>
@@ -1730,9 +1730,13 @@ Reassign it to the selected command?</source>
         <translation>2 つのピン列の間隔（クアッドでは対向する辺）。回路図シンボルでは本体の幅</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="285" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="267" />
+        <source>The user library to save the symbol into; the last entry creates a new one</source>
+        <translation>シンボルの保存先ユーザーライブラリ。最後の項目で新規作成します</translation>
+    </message>
+    <message>
         <source>Create a new library to save the symbol into</source>
-        <translation>シンボルの保存先となる新しいライブラリを作成します</translation>
+        <translation type="vanished">シンボルの保存先となる新しいライブラリを作成します</translation>
     </message>
     <message>
         <source>Distance between the two pin rows (opposite sides for a quad package)</source>
@@ -1780,7 +1784,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="253" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="499" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="520" />
         <source>Wizard</source>
         <translation>ウィザード</translation>
     </message>
@@ -1790,22 +1794,21 @@ Reassign it to the selected command?</source>
         <translation>ライブラリ</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="108" />
         <source>My symbols</source>
-        <translation>マイシンボル</translation>
+        <translation type="vanished">マイシンボル</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="139" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="167" />
         <source>New library</source>
         <translation>新しいライブラリ</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="140" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="168" />
         <source>Library name:</source>
         <translation>ライブラリ名：</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="186" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="207" />
         <source>Body width (units)</source>
         <translation>本体の幅（単位）</translation>
     </message>
@@ -3691,6 +3694,7 @@ Do you want to recover it?</source>
     </message>
     <message>
         <location filename="../src/Dialogs/DialogCreateMacro.cpp" line="30" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="103" />
         <source>New library...</source>
         <translation>新しいライブラリ...</translation>
     </message>

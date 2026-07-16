@@ -1720,7 +1720,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="125" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="187" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="208" />
         <source>Row spacing (units)</source>
         <translation>पंक्तियों की दूरी (इकाइयाँ)</translation>
     </message>
@@ -1730,9 +1730,13 @@ Reassign it to the selected command?</source>
         <translation>पिनों की दो पंक्तियों के बीच की दूरी (क्वाड पैकेज में विपरीत भुजाएँ); योजनाबद्ध प्रतीक में मुख्य भाग की चौड़ाई</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="285" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="267" />
+        <source>The user library to save the symbol into; the last entry creates a new one</source>
+        <translation>प्रतीक सहेजने की उपयोगकर्ता लाइब्रेरी; अंतिम प्रविष्टि नई लाइब्रेरी बनाती है</translation>
+    </message>
+    <message>
         <source>Create a new library to save the symbol into</source>
-        <translation>प्रतीक सहेजने के लिए एक नई लाइब्रेरी बनाता है</translation>
+        <translation type="vanished">प्रतीक सहेजने के लिए एक नई लाइब्रेरी बनाता है</translation>
     </message>
     <message>
         <source>Distance between the two pin rows (opposite sides for a quad package)</source>
@@ -1780,7 +1784,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="253" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="499" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="520" />
         <source>Wizard</source>
         <translation>विज़ार्ड</translation>
     </message>
@@ -1790,22 +1794,21 @@ Reassign it to the selected command?</source>
         <translation>लाइब्रेरी</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="108" />
         <source>My symbols</source>
-        <translation>मेरे प्रतीक</translation>
+        <translation type="vanished">मेरे प्रतीक</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="139" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="167" />
         <source>New library</source>
         <translation>नई लाइब्रेरी</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="140" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="168" />
         <source>Library name:</source>
         <translation>लाइब्रेरी का नाम:</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="186" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="207" />
         <source>Body width (units)</source>
         <translation>मुख्य भाग की चौड़ाई (इकाइयाँ)</translation>
     </message>
@@ -3691,6 +3694,7 @@ Do you want to recover it?</source>
     </message>
     <message>
         <location filename="../src/Dialogs/DialogCreateMacro.cpp" line="30" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="103" />
         <source>New library...</source>
         <translation>नई लाइब्रेरी...</translation>
     </message>

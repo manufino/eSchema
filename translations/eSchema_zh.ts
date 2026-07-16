@@ -1720,7 +1720,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="125" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="187" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="208" />
         <source>Row spacing (units)</source>
         <translation>列间距（单位）</translation>
     </message>
@@ -1730,9 +1730,13 @@ Reassign it to the selected command?</source>
         <translation>两列引脚之间的距离（四边封装为相对两边）；原理图符号则为主体宽度</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="285" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="267" />
+        <source>The user library to save the symbol into; the last entry creates a new one</source>
+        <translation>用于保存符号的用户库；最后一项可创建新库</translation>
+    </message>
+    <message>
         <source>Create a new library to save the symbol into</source>
-        <translation>创建一个用于保存符号的新库</translation>
+        <translation type="vanished">创建一个用于保存符号的新库</translation>
     </message>
     <message>
         <source>Distance between the two pin rows (opposite sides for a quad package)</source>
@@ -1780,7 +1784,7 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="253" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="499" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="520" />
         <source>Wizard</source>
         <translation>向导</translation>
     </message>
@@ -1790,22 +1794,21 @@ Reassign it to the selected command?</source>
         <translation>库</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="108" />
         <source>My symbols</source>
-        <translation>我的符号</translation>
+        <translation type="vanished">我的符号</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="139" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="167" />
         <source>New library</source>
         <translation>新建库</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="140" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="168" />
         <source>Library name:</source>
         <translation>库名称：</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="186" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="207" />
         <source>Body width (units)</source>
         <translation>主体宽度（单位）</translation>
     </message>
@@ -3691,6 +3694,7 @@ Do you want to recover it?</source>
     </message>
     <message>
         <location filename="../src/Dialogs/DialogCreateMacro.cpp" line="30" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="103" />
         <source>New library...</source>
         <translation>新建库...</translation>
     </message>

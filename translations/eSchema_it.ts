@@ -1728,7 +1728,7 @@ Riassegnarla al comando selezionato?</translation>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="125" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="187" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="208" />
         <source>Row spacing (units)</source>
         <translation>Distanza tra le file (unità)</translation>
     </message>
@@ -1738,9 +1738,13 @@ Riassegnarla al comando selezionato?</translation>
         <translation>Distanza tra le due file di pin (lati opposti per un package quad); larghezza del corpo per un simbolo schematico</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="285" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="267" />
+        <source>The user library to save the symbol into; the last entry creates a new one</source>
+        <translation>La libreria utente in cui salvare il simbolo; l'ultima voce ne crea una nuova</translation>
+    </message>
+    <message>
         <source>Create a new library to save the symbol into</source>
-        <translation>Crea una nuova libreria in cui salvare il simbolo</translation>
+        <translation type="vanished">Crea una nuova libreria in cui salvare il simbolo</translation>
     </message>
     <message>
         <source>Distance between the two pin rows (opposite sides for a quad package)</source>
@@ -1788,7 +1792,7 @@ Riassegnarla al comando selezionato?</translation>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="253" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="499" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="520" />
         <source>Wizard</source>
         <translation>Wizard</translation>
     </message>
@@ -1798,22 +1802,21 @@ Riassegnarla al comando selezionato?</translation>
         <translation>Libreria</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="108" />
         <source>My symbols</source>
-        <translation>I miei simboli</translation>
+        <translation type="vanished">I miei simboli</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="139" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="167" />
         <source>New library</source>
         <translation>Nuova libreria</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="140" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="168" />
         <source>Library name:</source>
         <translation>Nome della libreria:</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="186" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="207" />
         <source>Body width (units)</source>
         <translation>Larghezza corpo (unità)</translation>
     </message>
@@ -3699,6 +3702,7 @@ Vuoi recuperarlo?</translation>
     </message>
     <message>
         <location filename="../src/Dialogs/DialogCreateMacro.cpp" line="30" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="103" />
         <source>New library...</source>
         <translation>Nuova libreria...</translation>
     </message>

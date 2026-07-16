@@ -62,8 +62,13 @@ public:
 private:
     void refreshPreview();
     void syncTypeDependentFields();
+    // Handles the library combo's trailing "New library..." sentinel:
+    // prompts for a name and inserts it as a real entry (reverting to the
+    // previous choice on cancel) - same flow as DialogCreateMacro.
+    void handleLibrarySelected(int index);
 
     Ui::DialogSymbolWizard *ui;
+    int m_previousLibraryIndex = -1;
 };
 
 #endif // DIALOGSYMBOLWIZARD_H
