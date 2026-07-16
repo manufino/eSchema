@@ -137,9 +137,24 @@ jobs:
 
       - name: Package zip
         run: |
+          # linuxdeploy makes AppRun a symlink to usr/bin/eSchema. A plain
+          # "zip -r" follows symlinks, so the shipped AppRun became a stray
+          # COPY of the binary at the package root - run from there, its
+          # RUNPATH ($ORIGIN/../lib) points outside the folder and the Qt
+          # libraries are never found. Replace it with a tiny launcher
+          # script, which survives any archiver/extractor combination.
+          rm AppDir/AppRun
+          cat > AppDir/AppRun <<'EOF'
+          #!/bin/sh
+          HERE="$(dirname "$(readlink -f "$0")")"
+          exec "$HERE/usr/bin/eSchema" "$@"
+          EOF
+          chmod +x AppDir/AppRun
           cp LICENSE README.md AppDir/
           mv AppDir "eSchema-${{ github.ref_name }}-linux-x86_64"
-          zip -r "eSchema-${{ github.ref_name }}-linux-x86_64.zip" "eSchema-${{ github.ref_name }}-linux-x86_64"
+          # -y stores any remaining symlinks as symlinks instead of
+          # duplicating their targets.
+          zip -ry "eSchema-${{ github.ref_name }}-linux-x86_64.zip" "eSchema-${{ github.ref_name }}-linux-x86_64"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -174,10 +189,14 @@ jobs:
       - name: Package zip
         run: |
           mkdir dist
-          cp -r build/eSchema.app dist/
+          cp -R build/eSchema.app dist/
           cp LICENSE README.md dist/
           cd dist
-          zip -r "../eSchema-${{ github.ref_name }}-macos.zip" .
+          # -y keeps the Qt frameworks' internal symlinks as symlinks -
+          # without it every QtX.framework binary is stored twice (once at
+          # the symlinked top-level path, once under Versions/A/), inflating
+          # the zip by ~50% and breaking the bundle's expected layout.
+          zip -ry "../eSchema-${{ github.ref_name }}-macos.zip" .
 
       - uses: actions/upload-artifact@v4
         with:
