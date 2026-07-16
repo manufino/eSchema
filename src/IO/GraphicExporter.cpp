@@ -71,6 +71,20 @@ bool exportOneFile(Sheet *sheet, const QString &path,
         targetSize = QSizeF(options.totX, options.totY);
     targetSize = targetSize.expandedTo(QSizeF(1, 1));
 
+    // Hard ceiling on the output size: the CLI accepts any positive
+    // resolution, and resolution x a large drawing can demand a
+    // multi-gigabyte QImage - qCeil() on a huge double is UB and even a
+    // "successful" allocation just thrashes the machine. 32000 px per side
+    // matches the GUI's own size-mode limit.
+    constexpr qreal MaxSidePx = 32000.0;
+    if (targetSize.width() > MaxSidePx || targetSize.height() > MaxSidePx) {
+        if (error)
+            *error = QStringLiteral("export size %1x%2 px exceeds the %3 px per side limit")
+                    .arg(qRound(targetSize.width())).arg(qRound(targetSize.height()))
+                    .arg(qRound(MaxSidePx));
+        return false;
+    }
+
     const QRectF target(QPointF(0, 0), targetSize);
     const QRectF drawTarget = fitCentered(source, target);
 
@@ -79,6 +93,14 @@ bool exportOneFile(Sheet *sheet, const QString &path,
         // White background (not transparent): the scene itself paints none.
         QImage image(qCeil(targetSize.width()), qCeil(targetSize.height()),
                      QImage::Format_ARGB32);
+        // QImage doesn't throw on allocation failure - it returns a null
+        // image, and painting/saving into one would "succeed" confusingly.
+        if (image.isNull()) {
+            if (error)
+                *error = QStringLiteral("not enough memory for a %1x%2 px image")
+                        .arg(qCeil(targetSize.width())).arg(qCeil(targetSize.height()));
+            return false;
+        }
         image.fill(Qt::white);
         QPainter painter(&image);
         painter.setRenderHint(QPainter::Antialiasing, options.antialias);
@@ -105,7 +127,14 @@ bool exportOneFile(Sheet *sheet, const QString &path,
             return false;
         }
         sheet->render(&painter, drawTarget, source);
-        painter.end();
+        // end() reports whether the paint engine could flush everything to
+        // the file - ignoring it turned a full disk into a silently
+        // truncated export.
+        if (!painter.end()) {
+            if (error)
+                *error = QStringLiteral("unable to write \"%1\"").arg(path);
+            return false;
+        }
         return true;
     }
 
@@ -122,7 +151,11 @@ bool exportOneFile(Sheet *sheet, const QString &path,
             return false;
         }
         sheet->render(&painter, drawTarget, source);
-        painter.end();
+        if (!painter.end()) { // see the SVG branch
+            if (error)
+                *error = QStringLiteral("unable to write \"%1\"").arg(path);
+            return false;
+        }
         return true;
     }
 
@@ -143,7 +176,11 @@ bool exportOneFile(Sheet *sheet, const QString &path,
         }
         painter.setRenderHint(QPainter::Antialiasing);
         sheet->render(&painter, drawTarget, source);
-        painter.end();
+        if (!painter.end()) { // see the SVG branch
+            if (error)
+                *error = QStringLiteral("unable to write \"%1\"").arg(path);
+            return false;
+        }
         return true;
     }
 

@@ -24,6 +24,7 @@
 #include "LayerList.h"
 #include "Layer.h"
 #include <QFile>
+#include <QSaveFile>
 #include <QTextStream>
 
 namespace FidoCadWriter {
@@ -161,11 +162,19 @@ bool writeFile(const Sheet *sheet, const QString &filePath, QString *errorMessag
 bool writeExpandedFile(const Sheet *sheet, const QList<GraphicsPrimitive *> &primitives,
                         const QString &filePath, QString *errorMessage)
 {
+    // QSaveFile: the write is atomic - either commit() replaces the target
+    // with the complete new content, or the old file stays untouched. A
+    // plain QFile truncated the target up front and reported success
+    // without ever checking the stream, so a full disk (or a yanked USB
+    // stick) silently produced a mutilated file *and* let the caller mark
+    // the document clean and drop the autosave sidecar - data loss with no
+    // warning.
+    //
     // No QIODevice::Text: that flag makes Qt translate '\n' to the platform
     // newline (CRLF on Windows) on write. FIDOSPECS.md 2.1 accepts either
     // ending, but writing plain LF avoids rewriting every line ending of an
     // LF-authored file on its very first save under this app.
-    QFile file(filePath);
+    QSaveFile file(filePath);
     if (!file.open(QIODevice::WriteOnly)) {
         if (errorMessage)
             *errorMessage = file.errorString();
@@ -174,6 +183,12 @@ bool writeExpandedFile(const Sheet *sheet, const QList<GraphicsPrimitive *> &pri
 
     QTextStream stream(&file);
     stream << writeExpanded(sheet, primitives);
+    stream.flush();
+    if (stream.status() != QTextStream::Ok || !file.commit()) {
+        if (errorMessage)
+            *errorMessage = file.errorString();
+        return false;
+    }
     return true;
 }
 

@@ -409,7 +409,18 @@ bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage)
     }
 
     QTextStream stream(&file);
-    read(stream.readAll(), sheet);
+    const QString content = stream.readAll();
+    // A mid-read I/O error (network share dropped, media yanked) hands back
+    // partial text; the parser skips malformed lines by contract, so the
+    // truncation would open "successfully" as a mutilated document - and a
+    // later Save would overwrite the good file on disk with it. Fail
+    // instead of loading half a drawing.
+    if (stream.status() != QTextStream::Ok) {
+        if (errorMessage)
+            *errorMessage = file.errorString();
+        return false;
+    }
+    read(content, sheet);
     return true;
 }
 

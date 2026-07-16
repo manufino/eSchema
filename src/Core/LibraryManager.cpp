@@ -25,6 +25,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QSaveFile>
 #include <QFileInfo>
 #include <QTextStream>
 #include <QPainter>
@@ -314,7 +315,13 @@ bool LibraryManager::addUserMacro(const QString &libraryFilename, const QString 
     out << body;
     if (!body.endsWith(QLatin1Char('\n')))
         out << '\n';
+    out.flush();
     file.close();
+    // An append can't be made atomic like writeLibraryFile()'s full
+    // rewrite, but a failed write (full disk) must at least be reported
+    // instead of registering a macro the file doesn't actually contain.
+    if (out.status() != QTextStream::Ok || file.error() != QFileDevice::NoError)
+        return fail(QObject::tr("Unable to write the file %1").arg(filePath));
 
     // Registers the new macro in memory immediately, rather than requiring
     // loadLibraries() to be called again - matches every other mutation in
@@ -363,7 +370,13 @@ bool LibraryManager::writeLibraryFile(const MacroLibrary &library, QString *erro
     const QDir libDir(QCoreApplication::applicationDirPath() + QStringLiteral("/lib"));
     const QString filePath = libDir.filePath(library.filename + QStringLiteral(".fcl"));
 
-    QFile file(filePath);
+    // QSaveFile, deliberately: a plain WriteOnly QFile truncates the .fcl
+    // the moment it opens, so a write failing midway (full disk) used to
+    // destroy the whole user library while still reporting success -
+    // renaming a single macro could silently wipe every macro in the file.
+    // With QSaveFile either commit() lands the complete rewrite or the old
+    // file stays exactly as it was.
+    QSaveFile file(filePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         if (errorMessage)
             *errorMessage = QObject::tr("Unable to write the file %1").arg(filePath);
@@ -394,7 +407,12 @@ bool LibraryManager::writeLibraryFile(const MacroLibrary &library, QString *erro
         }
         out << '\n';
     }
-    file.close();
+    out.flush();
+    if (out.status() != QTextStream::Ok || !file.commit()) {
+        if (errorMessage)
+            *errorMessage = QObject::tr("Unable to write the file %1").arg(filePath);
+        return false;
+    }
     return true;
 }
 
