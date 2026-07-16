@@ -1596,6 +1596,7 @@
     </property>
     <addaction name="actionLayerManager"/>
     <addaction name="actionAttachImage"/>
+    <addaction name="actionSymbolWizard"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -2355,6 +2356,18 @@
    </property>
    <property name="shortcut">
     <string>D</string>
+   </property>
+  </action>
+  <action name="actionSymbolWizard">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/symbol_wizard.png</normaloff>:/res/resources/symbol_wizard.png</iconset>
+   </property>
+   <property name="text">
+    <string>Symbol wizard...</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate a DIP/SIP/quad package symbol from its parameters and save it into a library</string>
    </property>
   </action>
   <action name="actionDimensionAngular">

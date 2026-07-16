@@ -96,6 +96,10 @@ public slots:
     void clickCheckUpdatesAction();
     void clickLayerManagerAction();
     void clickAttachImageAction();
+    // Tools > Symbol wizard: generates a parametric package footprint
+    // (DIP/SIP/quad) and saves it as a macro into a user library - same
+    // anchor/serialize/save tail as Create macro from selection.
+    void clickSymbolWizardAction();
     // FCD code dock (dockFcdCode): Apply re-parses the text box and replaces
     // the whole drawing with it as one undo step; Refresh discards any local
     // edit and regenerates the text from the current drawing. See

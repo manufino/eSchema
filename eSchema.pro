@@ -104,6 +104,7 @@ SOURCES += \
 	src/Dialogs/DialogLayerList.cpp \
 	src/Dialogs/DialogOptions.cpp \
 	src/Dialogs/DialogShortcuts.cpp \
+	src/Dialogs/DialogSymbolWizard.cpp \
 	src/Widgets/ColorPicker.cpp \
 	src/Widgets/CommandPalette.cpp \
 	src/Widgets/GridPreviewWidget.cpp \
@@ -183,6 +184,7 @@ HEADERS += \
 	src/Dialogs/DialogLayerList.h \
 	src/Dialogs/DialogOptions.h \
 	src/Dialogs/DialogShortcuts.h \
+	src/Dialogs/DialogSymbolWizard.h \
 	src/Widgets/ColorPicker.h \
 	src/Widgets/CommandPalette.h \
 	src/Widgets/GridPreviewWidget.h \
@@ -215,6 +217,7 @@ FORMS += \
 	gui/DialogLayerList.ui \
 	gui/DialogOptions.ui \
 	gui/DialogShortcuts.ui \
+	gui/DialogSymbolWizard.ui \
     gui/MainWindow.ui \
 	gui/LayerToolBarWidget.ui
 

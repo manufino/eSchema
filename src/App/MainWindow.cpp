@@ -32,6 +32,8 @@
 #include "CommandPalette.h"
 #include "ui_MainWindow.h"
 #include "DialogAttachImage.h"
+#include "DialogSymbolWizard.h"
+#include <QRandomGenerator>
 #include "DialogExport.h"
 #include "DialogPrintOptions.h"
 #include "DxfReader.h"
@@ -468,6 +470,7 @@ void MainWindow::setConnections()
     connect(ui->actionZoomToSelection, &QAction::triggered, ui->graphicsView, &SheetView::adjustViewToSelection);
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionAttachImage, &QAction::triggered, this, &MainWindow::clickAttachImageAction);
+    connect(ui->actionSymbolWizard, &QAction::triggered, this, &MainWindow::clickSymbolWizardAction);
     connect(ui->actionShortcuts, &QAction::triggered, this, &MainWindow::clickShortcutsAction);
     connect(ui->btnApplyFcdCode, &QPushButton::clicked, this, &MainWindow::clickApplyFcdCodeAction);
     connect(ui->btnRefreshFcdCode, &QPushButton::clicked, this, &MainWindow::clickRefreshFcdCodeAction);
@@ -901,6 +904,56 @@ void MainWindow::clickAttachImageAction()
     // document dirty so the change actually gets offered a save, the same
     // trick checkForAutosaveRecovery() uses for a recovered drawing.
     sheetScene->undoStack()->push(new QUndoCommand(tr("Attach tracing image")));
+}
+
+void MainWindow::clickSymbolWizardAction()
+{
+    DialogSymbolWizard dialog(this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+
+    QList<GraphicsPrimitive *> primitives = dialog.buildPrimitives();
+    if (primitives.isEmpty())
+        return;
+
+    // Anchor at the library format's conventional (100,100) macro origin -
+    // same convention as Create macro from selection.
+    QRectF bounds;
+    bool first = true;
+    for (GraphicsPrimitive *primitive : std::as_const(primitives)) {
+        for (int i = 0; i < primitive->controlPointCount(); ++i) {
+            const QPointF point = primitive->controlPoint(i);
+            if (first) {
+                bounds = QRectF(point, QSizeF(0, 0));
+                first = false;
+            } else {
+                bounds = bounds.united(QRectF(point, QSizeF(0, 0)));
+            }
+        }
+    }
+    const QPointF offset = QPointF(100, 100) - bounds.topLeft();
+    for (GraphicsPrimitive *primitive : std::as_const(primitives))
+        primitive->translateControlPoints(offset);
+    const QString body = FidoCadWriter::writeSelection(primitives);
+    qDeleteAll(primitives);
+
+    // Random key, retried against a collision - same scheme as the
+    // reference FidoCadJ editor's own LibraryModel.createRandomMacroKey().
+    const QString libraryFilename = dialog.libraryFilename();
+    QString key;
+    for (int attempt = 0; attempt < 20; ++attempt) {
+        key = QString::number(QRandomGenerator::global()->bounded(100000000));
+        const QString fullKey = (libraryFilename + QLatin1Char('.') + key).toLower();
+        if (!LibraryManager::getInstance().macro(fullKey))
+            break;
+    }
+
+    QString errorMessage;
+    const bool ok = LibraryManager::getInstance().addUserMacro(
+                libraryFilename, dialog.libraryDisplayName(),
+                key, dialog.macroName(), dialog.category(), body, &errorMessage);
+    if (!ok)
+        QMessageBox::warning(this, tr("Symbol wizard"), errorMessage);
 }
 
 void MainWindow::updateWindowTitle()
