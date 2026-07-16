@@ -145,6 +145,8 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 ## What's new
 
 ### 1.0.7
+- Fixed a crash on the very first launch of a fresh install (no settings file yet), triggered by moving the mouse over the drawing area
+- Fixed the Linux/macOS portable packages: the app failed to start with "Qt libraries not found" because the zip step turned a symlink into a stray duplicate of the binary outside its library folder
 - **Parametric symbol wizard** (Tools > Symbol wizard): DIP/SIP/quad packages in through-hole, SMD, or schematic style, pin numbers and/or names, live preview, saved straight into any user library — including a brand-new one created from the same dialog
 - **Angular and radial dimension tools** with AutoCAD-style picking: hovering highlights the two lines (rectangle edges work too) or the circle, and the center is found automatically
 - **Title-block library**: ready-made A4/A3 drawing frames at real paper sizes
@@ -154,6 +156,8 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 - **Nord is the default theme** on a fresh install
 - Reliability fixes from a full code review: an undo/redo double free, dangling layer pointers after deleting a layer, verified atomic saves/exports, DXF import/export hardened against malformed files, and lifetime fixes around tool previews
 - Performance: settings reads are cached and selection/settings/clipboard notifications are coalesced, removing multi-second freezes with large selections or when applying options
+
+### 1.0.6
 - **Customizable toolbars** (View > Customize toolbars...): add, remove, and reorder the commands on the main and Modify toolbars
 - **Customizable keyboard shortcuts**: the shortcut list becomes a searchable editor — reassign or remove any command's binding, with conflict handling and one-click defaults
 - **Command palette** (Ctrl+Shift+P): search and run any command by name
