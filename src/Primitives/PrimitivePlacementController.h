@@ -22,6 +22,8 @@
 
 #include <QObject>
 #include <QPointF>
+#include <QLineF>
+#include <QRectF>
 #include <QString>
 
 class Sheet;
@@ -225,18 +227,52 @@ private:
     // undo stack as one `undoLabel` macro and resets the state, staying
     // armed for the next annotation.
     void finishDimensionAnnotation(const QString &undoLabel);
-    // Angular dimension: vertex, a point on each ray (clicks 1-3), then the
-    // fourth click places the measuring arc at the cursor's radius, on the
-    // cursor's side of the two rays. m_activePrimitive is the arc (an open
-    // complex curve with arrows); the label lives in m_dimensionExtras.
+    // Angular dimension, AutoCAD-style: pick two existing lines (any
+    // straight segment - lines, PCB tracks, rectangle and polygon edges),
+    // each highlighted on hover, then the third click places the measuring
+    // arc at the cursor's radius, on the cursor's side. The vertex is the
+    // lines' (extended) intersection; each ray aims at where its segment
+    // was clicked. m_activePrimitive is the arc (an open complex curve with
+    // arrows); the label lives in m_dimensionExtras.
     void updateAngularDimensionPreview(const QPointF &cursor);
     QPointF m_angleVertex;
     QPointF m_angleFirst;
     QPointF m_angleSecond;
-    // Radial dimension: center then a rim point - a radius arrow with its
-    // measure. m_activePrimitive is the radius line.
+    QLineF m_angleSegmentA;  // the first picked segment...
+    QPointF m_angleClickA;   // ...and where on it the user clicked
+    // Radial dimension, single click: hovering highlights the circle/arc
+    // outline under the cursor; clicking it drops a radius arrow from the
+    // automatically found center to the picked rim point, measure included.
     void updateRadialDimensionPreview(const QPointF &cursor);
     QPointF m_radialCenter;
+
+    // --- Hover picking shared by the two tools above -----------------------
+    // The cursor's raw (unsnapped) scene position - picks must never jump
+    // to the grid or an object-snap point, or the segment under the mouse
+    // could stop being under the pick.
+    QPointF cursorScenePos() const;
+    struct SegmentPick {
+        QLineF segment;
+        QPointF clicked;
+        bool valid = false;
+    };
+    // The straight segment (line/track/rectangle edge/polygon edge) within
+    // a few screen pixels of `scenePos`, nearest first.
+    SegmentPick segmentNear(const QPointF &scenePos) const;
+    struct CirclePick {
+        QPointF center;
+        QPointF rim;    // point on the outline nearest the cursor
+        qreal radius = 0.0;
+        QRectF rect;    // what to highlight (the ellipse/circle outline)
+        bool valid = false;
+    };
+    // The circle-like outline near `scenePos`: an ellipse's perimeter, or
+    // a complex curve's circumcircle (an Arc-tool arc), center included.
+    CirclePick circleNear(const QPointF &scenePos) const;
+    // Refreshes the Sheet's hover highlight per the active tool and state -
+    // called from handleMouseMove(), including while the tool is merely
+    // armed with nothing placed yet.
+    void updatePickHighlight();
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H

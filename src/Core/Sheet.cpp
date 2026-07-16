@@ -138,6 +138,28 @@ void Sheet::drawForeground(QPainter *painter, const QRectF &)
         }
     }
 
+    // Pick highlights for the angular/radial dimension tools: the hovered
+    // segment or circle outline (orange, like the snap indicator family)
+    // and the already-picked first segment (green). Constant screen width
+    // whatever the zoom, same trick as the indicator below.
+    if (m_hoverLineVisible || m_hoverEllipseVisible || m_lockedLineVisible) {
+        const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
+        QPen pen(QColor(255, 140, 0));
+        pen.setWidthF(3.0 / qMax(0.01, scale));
+        painter->setBrush(Qt::NoBrush);
+        if (m_lockedLineVisible) {
+            QPen lockedPen(QColor(30, 170, 60));
+            lockedPen.setWidthF(3.0 / qMax(0.01, scale));
+            painter->setPen(lockedPen);
+            painter->drawLine(m_lockedLine);
+        }
+        painter->setPen(pen);
+        if (m_hoverLineVisible)
+            painter->drawLine(m_hoverLine);
+        if (m_hoverEllipseVisible)
+            painter->drawEllipse(m_hoverEllipse);
+    }
+
     // The captured object-snap point, as a small constant-screen-size open
     // square - orange by default, so it can't be confused with the resize
     // handles; recolorable from the Options dialog's Snap page.
@@ -264,6 +286,48 @@ void Sheet::clearSnapIndicator()
     if (!m_snapIndicatorVisible)
         return;
     m_snapIndicatorVisible = false;
+    update();
+}
+
+void Sheet::setHoverHighlightLine(const QLineF &line)
+{
+    m_hoverLine = line;
+    m_hoverLineVisible = true;
+    m_hoverEllipseVisible = false;
+    update();
+}
+
+void Sheet::setHoverHighlightEllipse(const QRectF &rect)
+{
+    m_hoverEllipse = rect;
+    m_hoverEllipseVisible = true;
+    m_hoverLineVisible = false;
+    update();
+}
+
+void Sheet::setLockedHighlightLine(const QLineF &line)
+{
+    m_lockedLine = line;
+    m_lockedLineVisible = true;
+    update();
+}
+
+void Sheet::clearHoverHighlight()
+{
+    if (!m_hoverLineVisible && !m_hoverEllipseVisible)
+        return;
+    m_hoverLineVisible = false;
+    m_hoverEllipseVisible = false;
+    update();
+}
+
+void Sheet::clearPickHighlights()
+{
+    if (!m_hoverLineVisible && !m_hoverEllipseVisible && !m_lockedLineVisible)
+        return;
+    m_hoverLineVisible = false;
+    m_hoverEllipseVisible = false;
+    m_lockedLineVisible = false;
     update();
 }
 

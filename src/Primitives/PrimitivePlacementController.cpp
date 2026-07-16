@@ -38,7 +38,9 @@
 #include "SettingsManager.h"
 #include <QAction>
 #include <QCheckBox>
+#include <QCursor>
 #include <QGuiApplication>
+#include <limits>
 #include <QKeyEvent>
 #include <QInputDialog>
 #include <QFileDialog>
@@ -177,8 +179,8 @@ int PrimitivePlacementController::requiredPointCount(Tool tool) const
     case Tool::RegularPolygon: return 2; // center, then a vertex
     case Tool::Measure: return 2;
     case Tool::Dimension: return 3; // two measured points + the line's offset
-    case Tool::DimensionAngular: return 4; // vertex, two ray points, arc radius
-    case Tool::DimensionRadial: return 2; // center, rim point
+    case Tool::DimensionAngular: return 3; // two picked lines, then the arc
+    case Tool::DimensionRadial: return 1; // one click on a circle/arc outline
     case Tool::Connection: return 1;
     case Tool::Text: return 1;
     case Tool::PcbTrack: return 2;
@@ -260,6 +262,46 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
     if (m_activeTool == Tool::Select)
         return;
 
+    if (m_activeTool == Tool::DimensionAngular) {
+        // First click: pick the first line (AutoCAD-style). A miss keeps
+        // the tool armed and consumes nothing.
+        const SegmentPick pick = segmentNear(cursorScenePos());
+        if (!pick.valid)
+            return;
+        m_angleSegmentA = pick.segment;
+        m_angleClickA = pick.clicked;
+        m_sheet->setLockedHighlightLine(pick.segment);
+        auto *curve = static_cast<PrimitiveComplexCurve *>(
+                createPrimitiveForTool(Tool::DimensionAngular));
+        applyDefaults(curve);
+        curve->penStyleIsChanged(Qt::DashLine);
+        curve->appendVertex(pick.clicked);
+        curve->appendVertex(pick.clicked);
+        m_activePrimitive = curve;
+        m_pointsPlaced = 1;
+        m_sheet->addPrimitive(curve);
+        return;
+    }
+
+    if (m_activeTool == Tool::DimensionRadial) {
+        // Single click on a circle/arc outline: the center is found
+        // automatically and the whole annotation drops right here.
+        const CirclePick pick = circleNear(cursorScenePos());
+        if (!pick.valid)
+            return;
+        m_radialCenter = pick.center;
+        m_activePrimitive = createPrimitiveForTool(Tool::DimensionRadial);
+        applyDefaults(m_activePrimitive);
+        m_activePrimitive->setArrowAtEnd(true);
+        m_activePrimitive->setControlPoint(0, pick.center);
+        m_activePrimitive->setControlPoint(1, pick.rim);
+        m_sheet->addPrimitive(m_activePrimitive);
+        updateRadialDimensionPreview(pick.rim);
+        finishDimensionAnnotation(tr("Radial dimension"));
+        m_sheet->clearPickHighlights();
+        return;
+    }
+
     if (m_activeTool == Tool::Text) {
         const QString text = QInputDialog::getText(m_view, tr("Text"), tr("Content:"));
         if (text.isEmpty()) {
@@ -323,20 +365,6 @@ void PrimitivePlacementController::startPlacement(const QPointF &scenePos)
         m_activePrimitive->setControlPoint(0, scenePos);
         m_activePrimitive->setControlPoint(1, scenePos);
         emit measureUpdated(measureText(scenePos, scenePos));
-    } else if (m_activeTool == Tool::DimensionAngular) {
-        // First click: the angle's vertex. The curve previews the rays as
-        // they're picked; it only becomes the measuring arc at click 3.
-        m_angleVertex = scenePos;
-        auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
-        curve->appendVertex(scenePos);
-        curve->appendVertex(scenePos);
-        curve->penStyleIsChanged(Qt::DashLine);
-    } else if (m_activeTool == Tool::DimensionRadial) {
-        // First click: the center; the radius arrow follows the cursor.
-        m_radialCenter = scenePos;
-        m_activePrimitive->setControlPoint(0, scenePos);
-        m_activePrimitive->setControlPoint(1, scenePos);
-        m_activePrimitive->setArrowAtEnd(true);
     } else if (isVariableVertexTool(m_activeTool)) {
         // vertex 0 is fixed at the click; vertex 1 is the "live" preview vertex
         // that mouse-move updates until the next click.
@@ -494,7 +522,197 @@ void PrimitivePlacementController::discardActivePrimitive()
     for (GraphicsPrimitive *extra : std::as_const(m_dimensionExtras))
         m_sheet->removePrimitive(extra);
     m_dimensionExtras.clear();
+    m_sheet->clearPickHighlights();
     m_pointsPlaced = 0;
+}
+
+QPointF PrimitivePlacementController::cursorScenePos() const
+{
+    return m_view->mapToScene(m_view->mapFromGlobal(QCursor::pos()));
+}
+
+namespace {
+// Distance from `p` to the segment [a, b].
+qreal pointToSegmentDistance(const QPointF &p, const QPointF &a, const QPointF &b)
+{
+    const QPointF ab = b - a;
+    const qreal lengthSq = QPointF::dotProduct(ab, ab);
+    qreal t = lengthSq > 0 ? QPointF::dotProduct(p - a, ab) / lengthSq : 0.0;
+    t = qBound<qreal>(0.0, t, 1.0);
+    const QPointF diff = p - (a + ab * t);
+    return std::hypot(diff.x(), diff.y());
+}
+
+// Center of the circle through three points; invalid (returns false) when
+// they are (nearly) collinear.
+bool circumcenter(const QPointF &a, const QPointF &b, const QPointF &c, QPointF *center)
+{
+    const qreal d = 2.0 * (a.x() * (b.y() - c.y()) + b.x() * (c.y() - a.y())
+                           + c.x() * (a.y() - b.y()));
+    if (qAbs(d) < 1e-9)
+        return false;
+    const qreal aa = a.x() * a.x() + a.y() * a.y();
+    const qreal bb = b.x() * b.x() + b.y() * b.y();
+    const qreal cc = c.x() * c.x() + c.y() * c.y();
+    center->setX((aa * (b.y() - c.y()) + bb * (c.y() - a.y()) + cc * (a.y() - b.y())) / d);
+    center->setY((aa * (c.x() - b.x()) + bb * (a.x() - c.x()) + cc * (b.x() - a.x())) / d);
+    return true;
+}
+}
+
+PrimitivePlacementController::SegmentPick
+PrimitivePlacementController::segmentNear(const QPointF &scenePos) const
+{
+    // A few screen pixels of pick distance, whatever the zoom.
+    const qreal tolerance = 8.0 / qMax(0.01, m_view->transform().m11());
+    SegmentPick best;
+    qreal bestDistance = tolerance;
+    auto consider = [&](const QPointF &a, const QPointF &b) {
+        const qreal distance = pointToSegmentDistance(scenePos, a, b);
+        if (distance <= bestDistance) {
+            bestDistance = distance;
+            best.segment = QLineF(a, b);
+            best.clicked = scenePos;
+            best.valid = true;
+        }
+    };
+    for (GraphicsPrimitive *primitive : m_sheet->primitives()) {
+        if (primitive == m_activePrimitive || m_dimensionExtras.contains(primitive)
+                || !primitive->isOnCanvas())
+            continue;
+        switch (primitive->getPrimitiveType()) {
+        case GraphicsPrimitive::Line:
+        case GraphicsPrimitive::PcbTrack:
+            consider(primitive->controlPoint(0), primitive->controlPoint(1));
+            break;
+        case GraphicsPrimitive::Rectangle: {
+            const QRectF rect = QRectF(primitive->controlPoint(0),
+                                       primitive->controlPoint(1)).normalized();
+            consider(rect.topLeft(), rect.topRight());
+            consider(rect.topRight(), rect.bottomRight());
+            consider(rect.bottomRight(), rect.bottomLeft());
+            consider(rect.bottomLeft(), rect.topLeft());
+            break;
+        }
+        case GraphicsPrimitive::Polyline: {
+            const int count = primitive->controlPointCount();
+            for (int i = 0; i < count; ++i)
+                consider(primitive->controlPoint(i),
+                         primitive->controlPoint((i + 1) % count));
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    return best;
+}
+
+PrimitivePlacementController::CirclePick
+PrimitivePlacementController::circleNear(const QPointF &scenePos) const
+{
+    const qreal tolerance = 8.0 / qMax(0.01, m_view->transform().m11());
+    CirclePick best;
+    qreal bestDistance = tolerance;
+
+    for (GraphicsPrimitive *primitive : m_sheet->primitives()) {
+        if (primitive == m_activePrimitive || m_dimensionExtras.contains(primitive)
+                || !primitive->isOnCanvas())
+            continue;
+
+        if (primitive->getPrimitiveType() == GraphicsPrimitive::Ellipse) {
+            const QRectF rect = QRectF(primitive->controlPoint(0),
+                                       primitive->controlPoint(1)).normalized();
+            const QPointF center = rect.center();
+            // Nearest perimeter point by dense parametric sampling - plenty
+            // for a click pick.
+            qreal bestSampleDistance = std::numeric_limits<qreal>::max();
+            QPointF rim;
+            constexpr int Samples = 90;
+            for (int i = 0; i < Samples; ++i) {
+                const qreal angle = 2.0 * M_PI * i / Samples;
+                const QPointF sample(center.x() + rect.width() / 2.0 * std::cos(angle),
+                                     center.y() + rect.height() / 2.0 * std::sin(angle));
+                const QPointF diff = scenePos - sample;
+                const qreal distance = std::hypot(diff.x(), diff.y());
+                if (distance < bestSampleDistance) {
+                    bestSampleDistance = distance;
+                    rim = sample;
+                }
+            }
+            if (bestSampleDistance <= bestDistance) {
+                bestDistance = bestSampleDistance;
+                best.center = center;
+                best.rim = rim;
+                const QPointF span = rim - center;
+                best.radius = std::hypot(span.x(), span.y());
+                best.rect = rect;
+                best.valid = true;
+            }
+        } else if (primitive->getPrimitiveType() == GraphicsPrimitive::Spline
+                   && primitive->controlPointCount() >= 3) {
+            // An Arc-tool arc (or any circle-ish spline): the circumcircle
+            // through three spread vertices gives center and radius; the
+            // cursor must be near the drawn chain itself, not just near
+            // that circle.
+            const int count = primitive->controlPointCount();
+            QPointF center;
+            if (!circumcenter(primitive->controlPoint(0),
+                              primitive->controlPoint(count / 2),
+                              primitive->controlPoint(count - 1), &center))
+                continue;
+            qreal chainDistance = std::numeric_limits<qreal>::max();
+            const int segments = primitive->isClosedShape() ? count : count - 1;
+            for (int i = 0; i < segments; ++i) {
+                chainDistance = qMin(chainDistance,
+                        pointToSegmentDistance(scenePos, primitive->controlPoint(i),
+                                               primitive->controlPoint((i + 1) % count)));
+            }
+            if (chainDistance <= bestDistance) {
+                const QPointF spanFirst = primitive->controlPoint(0) - center;
+                const qreal radius = std::hypot(spanFirst.x(), spanFirst.y());
+                const QPointF toCursor = scenePos - center;
+                const qreal cursorDistance = std::hypot(toCursor.x(), toCursor.y());
+                bestDistance = chainDistance;
+                best.center = center;
+                best.radius = radius;
+                best.rim = cursorDistance > 0
+                        ? center + toCursor * (radius / cursorDistance)
+                        : primitive->controlPoint(0);
+                best.rect = QRectF(center - QPointF(radius, radius),
+                                   QSizeF(radius * 2.0, radius * 2.0));
+                best.valid = true;
+            }
+        }
+    }
+    return best;
+}
+
+void PrimitivePlacementController::updatePickHighlight()
+{
+    const Tool tool = m_activePrimitive ? m_activeTool : currentTool();
+    const QPointF raw = cursorScenePos();
+
+    if (tool == Tool::DimensionAngular && (!m_activePrimitive || m_pointsPlaced == 1)) {
+        const SegmentPick pick = segmentNear(raw);
+        if (pick.valid)
+            m_sheet->setHoverHighlightLine(pick.segment);
+        else
+            m_sheet->clearHoverHighlight(); // the locked first pick stays
+        emit measureUpdated(!m_activePrimitive
+                ? tr("Angular dimension: click the first line")
+                : tr("Angular dimension: click the second line"));
+        return;
+    }
+    if (tool == Tool::DimensionRadial && !m_activePrimitive) {
+        const CirclePick pick = circleNear(raw);
+        if (pick.valid)
+            m_sheet->setHoverHighlightEllipse(pick.rect);
+        else
+            m_sheet->clearHoverHighlight();
+        emit measureUpdated(tr("Radial dimension: click the outline of a circle or arc"));
+        return;
+    }
 }
 
 // The measured distance as the dimension label's text: always the physical
@@ -910,40 +1128,56 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &rawScenePos)
     if (m_activeTool == Tool::DimensionAngular) {
         auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
         if (m_pointsPlaced == 1) {
-            // Second click: a point on the first ray.
-            if (scenePos == m_angleVertex)
+            // Second click: pick the second line. The vertex is the two
+            // lines' (extended) intersection; each ray aims at where its
+            // segment was clicked, so the same pair of lines can dimension
+            // any of the four angles they form.
+            const SegmentPick pick = segmentNear(cursorScenePos());
+            if (!pick.valid)
                 return true;
-            m_angleFirst = scenePos;
-            m_pointsPlaced = 2;
-            // Preview both rays as a V while the second one is chosen.
-            replaceCurveVertices(curve, { m_angleFirst, m_angleVertex, m_angleVertex });
-            return true;
-        }
-        if (m_pointsPlaced == 2) {
-            // Third click: a point on the second ray - from here the curve
-            // becomes the measuring arc following the cursor.
-            if (scenePos == m_angleVertex)
+            QPointF vertex;
+            if (m_angleSegmentA.intersects(pick.segment, &vertex)
+                    == QLineF::NoIntersection) {
+                emit measureUpdated(tr("The two lines are parallel - no angle to dimension"));
                 return true;
-            m_angleSecond = scenePos;
+            }
+            auto rayPoint = [&vertex](const QLineF &segment, const QPointF &clicked) {
+                // The clicked point's projection onto the segment's
+                // infinite line decides which of the two opposite rays
+                // this side of the angle uses.
+                const QPointF a = segment.p1();
+                const QPointF direction = segment.p2() - a;
+                const qreal lengthSq = QPointF::dotProduct(direction, direction);
+                QPointF onLine = a;
+                if (lengthSq > 0)
+                    onLine = a + direction
+                            * (QPointF::dotProduct(clicked - a, direction) / lengthSq);
+                QPointF ray = onLine - vertex;
+                if (qFuzzyIsNull(ray.x()) && qFuzzyIsNull(ray.y())) {
+                    // Clicked exactly at the vertex - aim at the segment's
+                    // endpoint farther from it instead.
+                    const QPointF p1 = segment.p1() - vertex;
+                    const QPointF p2 = segment.p2() - vertex;
+                    ray = QPointF::dotProduct(p1, p1) > QPointF::dotProduct(p2, p2) ? p1 : p2;
+                }
+                return vertex + ray;
+            };
+            m_angleVertex = vertex;
+            m_angleFirst = rayPoint(m_angleSegmentA, m_angleClickA);
+            m_angleSecond = rayPoint(pick.segment, pick.clicked);
+            if (m_angleFirst == m_angleVertex || m_angleSecond == m_angleVertex)
+                return true; // degenerate segments - keep waiting
             m_pointsPlaced = 3;
             curve->penStyleIsChanged(Qt::SolidLine);
             curve->setArrowAtStart(true);
             curve->setArrowAtEnd(true);
-            updateAngularDimensionPreview(scenePos);
+            m_sheet->clearPickHighlights();
+            updateAngularDimensionPreview(cursorScenePos());
             return true;
         }
-        // Fourth click: the arc's final radius/side.
+        // Third click: the arc's final radius/side.
         updateAngularDimensionPreview(scenePos);
         finishDimensionAnnotation(tr("Angular dimension"));
-        return true;
-    }
-
-    if (m_activeTool == Tool::DimensionRadial) {
-        // Second click: the rim point - the radius arrow is final.
-        if (scenePos == m_radialCenter)
-            return true;
-        updateRadialDimensionPreview(scenePos);
-        finishDimensionAnnotation(tr("Radial dimension"));
         return true;
     }
 
@@ -971,6 +1205,12 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &rawScenePos)
 
 bool PrimitivePlacementController::handleMouseMove(const QPointF &rawScenePos)
 {
+    // Hover highlighting for the pick-driven dimension tools - live even
+    // while the tool is merely armed, before anything was clicked.
+    const Tool hoverTool = m_activePrimitive ? m_activeTool : currentTool();
+    if (hoverTool == Tool::DimensionAngular || hoverTool == Tool::DimensionRadial)
+        updatePickHighlight();
+
     if (!m_activePrimitive)
         return false;
     const QPointF scenePos = constrainedPlacementPoint(rawScenePos);
@@ -1019,23 +1259,11 @@ bool PrimitivePlacementController::handleMouseMove(const QPointF &rawScenePos)
     }
 
     if (m_activeTool == Tool::DimensionAngular) {
-        auto *curve = static_cast<PrimitiveComplexCurve *>(m_activePrimitive);
-        if (m_pointsPlaced == 1) {
-            // Choosing the first ray point - a single rubber ray.
-            replaceCurveVertices(curve, { m_angleVertex, scenePos });
-        } else if (m_pointsPlaced == 2) {
-            // Choosing the second ray point - both rays as a V.
-            replaceCurveVertices(curve, { m_angleFirst, m_angleVertex, scenePos });
-        } else {
-            // Rays fixed - the measuring arc follows the cursor's radius
-            // and side.
+        // While m_pointsPlaced == 1 the hover highlight (handled above) is
+        // the whole feedback; once both lines are picked the measuring arc
+        // follows the cursor's radius and side.
+        if (m_pointsPlaced == 3)
             updateAngularDimensionPreview(scenePos);
-        }
-        return true;
-    }
-
-    if (m_activeTool == Tool::DimensionRadial) {
-        updateRadialDimensionPreview(scenePos);
         return true;
     }
 

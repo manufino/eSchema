@@ -28,6 +28,8 @@
 #include <QString>
 #include <QPointF>
 #include <QSizeF>
+#include <QLineF>
+#include <QRectF>
 
 #include "GraphicsPrimitive.h"
 
@@ -80,6 +82,21 @@ public:
     // Hides the captured-point highlight - callers invoke it when their
     // drag/placement interaction ends.
     void clearSnapIndicator();
+
+    // --- Pick highlights ----------------------------------------------------
+    // Transient hover/selection highlights for the pick-driven dimension
+    // tools (see PrimitivePlacementController's angular/radial branches):
+    // the segment or circle outline under the cursor, plus the already-
+    // picked first segment in a distinct color. Plain drawForeground()
+    // state like the snap indicator - deliberately not QGraphicsItems, so
+    // a bulk load's QGraphicsScene::clear() can never leave a dangling
+    // pointer behind in the controller.
+    void setHoverHighlightLine(const QLineF &line);
+    void setHoverHighlightEllipse(const QRectF &rect);
+    void setLockedHighlightLine(const QLineF &line);
+    // Hides just the hover part, keeping the locked first-pick visible.
+    void clearHoverHighlight();
+    void clearPickHighlights();
 
     // --- Guides ------------------------------------------------------------
     // Illustrator/Photoshop-style guide lines, dragged out of the rulers:
@@ -181,6 +198,12 @@ private:
     bool m_objectSnapEnabled = false;
     bool m_snapIndicatorVisible = false;
     QPointF m_snapIndicator;
+    QLineF m_hoverLine;
+    bool m_hoverLineVisible = false;
+    QRectF m_hoverEllipse;
+    bool m_hoverEllipseVisible = false;
+    QLineF m_lockedLine;
+    bool m_lockedLineVisible = false;
     qreal m_connectionDiameter = 2.0;
     qreal m_lineWidth = 0.5;
     qreal m_lineWidthCircles = 0.35;
