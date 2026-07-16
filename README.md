@@ -21,6 +21,7 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 - Line, Bézier curve, closed polygon, complex (spline) curve — with node add/remove editing directly on the canvas
 - Rectangle and ellipse (filled or outlined)
 - Arc (three clicks, live preview) and regular polygon (3–64 sides) tools, both emitting standard FidoCadJ primitives
+- Linear dimension tool: two clicks to measure, a third to place the dimension line — arrows, extension lines, and the measured distance in millimeters, all built from standard primitives
 - Connection dot and PCB track
 - PCB pad
 - Text labels, with superscript/subscript markup
@@ -41,7 +42,8 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 - Snap-to-grid for every placement, move, and resize operation, with one-click toggles for both right on the toolbar
 - Object snap: clicks and drags capture endpoints, midpoints, centers, and intersections of what's already drawn, with a visual marker — each target kind individually configurable
 - A measure tool (distance and angle between two clicks, live in the status bar)
-- Photoshop/Illustrator-style rulers along the top and left edges of the canvas, synced live with the grid step and current zoom/pan
+- Photoshop/Illustrator-style rulers along the top and left edges of the canvas, synced live with the grid step and current zoom/pan — drag guide lines out of them: positions snap to the guides (and object snap captures their crossings), and they never reach print or export output
+- Mouse-wheel zoom anchored to the point under the cursor, at any zoom level and anywhere on the sheet
 - Align and distribute tools for tidying up a selection (left/right/top/bottom, center, even spacing), plus snapping a whole selection back onto the grid
 - Zoom to fit the whole drawing or just the current selection
 - A background tracing image drawn under the grid (Tools > Tracing image...), for redrawing schematics from photos or scans — persisted in the file, invisible to a plain FidoCadJ
@@ -49,10 +51,11 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 ### A real editing workflow
 - Full undo/redo history for every operation (create, move, resize, mirror, rotate, delete, node edits)
 - Boolean operations between closed shapes — union, subtraction, intersection — with results that stay fully FidoCadJ-compatible (optionally as smooth complex curves)
-- Shape tools: convert rectangles/ellipses/curves to editable polygons (and back to smooth curves), simplify nodes, fillet or chamfer corners, and grow/shrink a shape by a parallel outline offset
+- Shape tools: convert rectangles/ellipses/curves to editable polygons (and back to smooth curves), simplify nodes, fillet or chamfer corners, and grow/shrink a shape by a parallel outline offset (sharp corners preserved, original optionally kept, rectangles and ellipses stay exact)
+- AutoCAD-style precision edits with live previews: split a line/curve/track at a clicked point, trim away the stretch of a line between its intersections, extend an end until it meets the first shape on its way
 - Whole-selection transforms: rotate by an arbitrary angle, scale by percentage, and replicate on a grid or circularly (clock-face style, with a mouse-picked center)
 - A dedicated Modify toolbar grouping every shape-editing command: rotate, mirror, booleans, transforms, align/distribute, macro explode
-- Cut / copy / paste / duplicate, multi-selection, select all, invert selection, select same type — including pasting an image straight from the clipboard, and Alt+drag to drag off a duplicate
+- Cut / copy / paste / duplicate, multi-selection, select all, invert selection, select same type — including pasting an image straight from the clipboard, paste in place (Ctrl+Shift+V), mirror as copy, and Alt+drag to drag off a duplicate
 - Editable geometry right in the Properties panel: a line's length, a rectangle's or ellipse's width and height
 - Find (Ctrl+F) across text, macro names, and name/value labels
 - Nudge the selection by one grid step with Alt+arrow keys
@@ -63,7 +66,7 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 - One export dialog for PNG, JPG, SVG, PDF, EPS and DXF, sized either by resolution (pixels per unit) or by an exact pixel size, with optional antialiasing, black & white, and one-file-per-layer splitting
 - Copy the current selection (or the whole drawing) straight to the clipboard as an image
 - "Copy split" and "Save split as..." to copy/save with every macro expanded into raw primitives, leaving the drawing itself untouched
-- Print with mirroring, black & white, landscape orientation, custom margins, and an option to print a single layer only
+- Print with mirroring, black & white, landscape orientation, custom margins, and an option to print a single layer only — fit to page or at true real scale (one unit = 0.127 mm, adjustable percentage) for dimensionally exact output, e.g. toner-transfer PCB etching
 
 ### Native FidoCadJ file I/O
 - Opens and saves the standard `.fcd` drawing format and `.fcl` library format
@@ -78,12 +81,16 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 - Autosave with a configurable interval, and crash recovery on the next startup if eSchema didn't close cleanly
 - Optional `.bak` backup copy of the previous version on every save
 - Recent Files menu (configurable length), drag-and-drop of `.fcd`/`.dxf` files straight onto the main window, and an option to reopen the last file on startup
+- Files with content outside the drawing area (e.g. negative coordinates) are shifted back onto the sheet on open, so nothing loads stranded out of sight
 - Update checker: automatic on startup (can be turned off) or on demand from the Help menu
 
 ### A UI that adapts to you
 - Dockable, floatable, tabbable panels (Libraries, Properties, FCD code) — arrange your workspace however you like; the layout, window size, and position are all remembered between sessions
+- Customizable toolbars: add, remove, and reorder the commands on the main and Modify toolbars, like in professional CAD packages
+- Customizable keyboard shortcuts: reassign or remove any command's shortcut from a searchable editor, with conflict handling and one-click restore of the defaults
+- A command palette (Ctrl+Shift+P): search and run any command by name, VS Code-style
 - A searchable Options dialog organized in pages, with a live grid preview and per-page defaults — from toolbar icon size and mouse-wheel behavior to snap targets and marker colors
-- Light and dark themes, with custom stylesheet support
+- Seven built-in themes — Light, Dark, Nord, Midnight, Graphite, Sepia, Ocean — each with its own gradients and UI font, plus custom stylesheet support
 - A fully translated, multi-language interface (see below)
 
 ---
@@ -136,6 +143,20 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 ---
 
 ## What's new
+
+### 1.0.6
+- **Customizable toolbars** (View > Customize toolbars...): add, remove, and reorder the commands on the main and Modify toolbars
+- **Customizable keyboard shortcuts**: the shortcut list becomes a searchable editor — reassign or remove any command's binding, with conflict handling and one-click defaults
+- **Command palette** (Ctrl+Shift+P): search and run any command by name
+- **Guide lines** dragged out of the rulers, Illustrator-style: positions snap to them, object snap captures their crossings, and they stay out of print/export output
+- New **Dimension tool** (D): arrows, extension lines, and the measured distance in millimeters, placed with a live preview and built from plain primitives
+- **AutoCAD-style edits with live previews**: split at point, trim to intersection, extend to intersection
+- **Paste in place** (Ctrl+Shift+V) and **Mirror as copy**
+- **Offset outline** improvements: optionally keep the original shape, corners stay sharp, rectangles and ellipses produce exact rectangles/ellipses
+- **Real-scale printing**: fit to page or a true physical scale (one unit = 0.127 mm, adjustable percentage)
+- **Five new built-in themes** — Nord, Midnight, Graphite, Sepia, Ocean — with gradients and per-theme fonts, plus many dark-theme legibility fixes (dialog buttons, menu bar, layer and library icons)
+- Mouse-wheel **zoom anchored to the cursor**; files with off-sheet content are pulled back into view on open
+- Icons on every menu entry, red control-point markers on all drawing-tool icons, and an Options dialog that applies changes instantly instead of freezing
 
 ### 1.0.5
 - **Object snap**: clicks and drags capture endpoints, midpoints, centers, and intersections of what's already drawn, with a visual marker and per-kind configuration
