@@ -288,6 +288,21 @@ public:
     QHash<QString, BlockDef> blocks;
     ParseContext ctx;
 
+    // Block prototype primitives are never handed to the sheet (only their
+    // clones are - see addInsert()), and on a failed read the top-level
+    // list isn't consumed either; without this destructor both leaked on
+    // every import containing BLOCKS. readFile() clears topLevel as it
+    // transfers ownership to the sheet, so nothing here double-deletes.
+    ~ImportInterface() override
+    {
+        for (const BlockDef &block : std::as_const(blocks)) {
+            for (const ParsedPrimitive &pp : block.entities)
+                delete pp.primitive;
+        }
+        for (const ParsedPrimitive &pp : std::as_const(topLevel))
+            delete pp.primitive;
+    }
+
     bool inBlock = false;
     QString currentBlockName;
     int insertDepth = 0;
@@ -609,7 +624,22 @@ bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage, QStr
 
     ImportInterface iface;
     dxfRW reader(filePath.toLocal8Bit().constData());
-    const bool ok = reader.read(&iface, /*ext=*/false);
+    // The one deliberate try/catch in the codebase: libdxfrw is vendored
+    // third-party C++ fed untrusted files, with residual std::bad_alloc/
+    // length_error paths (unguarded std::string/std::vector growth). eSchema
+    // itself reports every error via return codes, so an escaped exception
+    // would otherwise cross an application with no handler at all and kill
+    // the process; catching here converts it into the same failure message
+    // the return-code path already shows.
+    bool ok = false;
+    try {
+        ok = reader.read(&iface, /*ext=*/false);
+    } catch (const std::exception &e) {
+        if (errorMessage)
+            *errorMessage = QStringLiteral("libdxfrw read() threw: %1")
+                    .arg(QString::fromLatin1(e.what()));
+        return false;
+    }
     if (!ok) {
         if (errorMessage)
             *errorMessage = QStringLiteral("libdxfrw read() failed");
@@ -634,6 +664,10 @@ bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage, QStr
         pp.primitive->setLayer(layerMapping.value(pp.dxfLayer, LayerList::getInstance().getMaster()));
         sheet->addPrimitive(pp.primitive);
     }
+    // Ownership of everything above moved to the sheet (or was deleted) -
+    // clear the list so ~ImportInterface only cleans up what's actually
+    // left over (the block prototypes, and topLevel on failure paths).
+    iface.topLevel.clear();
 
     if (warnings) {
         for (auto it = iface.ctx.unsupportedCounts.constBegin(); it != iface.ctx.unsupportedCounts.constEnd(); ++it) {

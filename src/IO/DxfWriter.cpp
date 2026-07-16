@@ -413,12 +413,23 @@ bool writeFile(const Sheet *sheet, const QString &filePath, QString *errorMessag
 
     dxfRW writer(filePath.toLocal8Bit().constData());
     iface.writer = &writer;
-    const bool ok = writer.write(&iface, DRW::AC1015, /*bin=*/false);
+    // Exception barrier around the vendored third-party library - see the
+    // matching catch in DxfReader::readFile() for the rationale.
+    bool ok = false;
+    QString thrown;
+    try {
+        ok = writer.write(&iface, DRW::AC1015, /*bin=*/false);
+    } catch (const std::exception &e) {
+        thrown = QString::fromLatin1(e.what());
+    }
 
     qDeleteAll(owned);
 
-    if (!ok && errorMessage)
-        *errorMessage = QStringLiteral("libdxfrw write() failed");
+    if (!ok && errorMessage) {
+        *errorMessage = thrown.isEmpty()
+                ? QStringLiteral("libdxfrw write() failed")
+                : QStringLiteral("libdxfrw write() threw: %1").arg(thrown);
+    }
     return ok;
 }
 

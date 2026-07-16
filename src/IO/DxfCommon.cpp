@@ -106,11 +106,22 @@ QVector<QPointF> sampleArc(const QPointF &center, qreal radius,
 {
     QVector<QPointF> points;
 
-    qreal sweep = endAngleDeg - startAngleDeg;
-    while (sweep <= 0)
+    // Malformed/hostile DXF can hand in absurd angles (libdxfrw parses them
+    // with atof, unvalidated). Reject non-finite input outright, and
+    // normalize with fmod instead of a += 360 loop: with |sweep| beyond
+    // ~1e18 that loop never terminated (360 < half an ulp), permanently
+    // freezing the app on File > Import DXF - and huge positive sweeps
+    // overflowed the int(steps) conversion (UB).
+    if (!std::isfinite(startAngleDeg) || !std::isfinite(endAngleDeg)
+            || !std::isfinite(radius) || !std::isfinite(center.x())
+            || !std::isfinite(center.y()))
+        return points;
+
+    qreal sweep = std::fmod(endAngleDeg - startAngleDeg, 360.0);
+    if (sweep <= 0)
         sweep += 360.0;
 
-    const int steps = qMax(1, int(std::ceil(sweep / stepDeg)));
+    const int steps = qBound(1, int(std::ceil(sweep / qMax(0.001, stepDeg))), 3600);
     for (int i = 0; i <= steps; ++i) {
         const qreal angle = startAngleDeg + sweep * i / steps;
         const qreal rad = qDegreesToRadians(angle);
