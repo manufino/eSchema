@@ -33,22 +33,31 @@
 
 namespace {
 
-// Recolors every opaque pixel of an icon to a single flat color while
-// keeping its original alpha (shape) untouched - turns the app's
-// monochrome black line icons into white ones for the dark theme, and
-// back again for every other theme.
+// Recolors an icon's neutral (unsaturated - black/gray) pixels to `color`
+// while keeping their alpha (shape) untouched - turns the app's black line
+// icons light for the dark themes. Saturated pixels are deliberately left
+// alone, so the red control-point squares on the drawing-tool icons stay
+// red on every theme instead of being flattened into the tint color.
 QPixmap tintPixmap(const QPixmap &source, const QColor &color)
 {
-    QPixmap result(source.size());
+    QImage image = source.toImage().convertToFormat(QImage::Format_ARGB32);
+    for (int y = 0; y < image.height(); ++y) {
+        QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));
+        for (int x = 0; x < image.width(); ++x) {
+            const QRgb pixel = line[x];
+            const int alpha = qAlpha(pixel);
+            if (alpha == 0)
+                continue;
+            const int red = qRed(pixel), green = qGreen(pixel), blue = qBlue(pixel);
+            const int spread = qMax(red, qMax(green, blue)) - qMin(red, qMin(green, blue));
+            if (spread > 40)
+                continue; // a colored pixel (e.g. a red handle) - keep it
+            line[x] = qRgba(color.red(), color.green(), color.blue(), alpha);
+        }
+    }
+
+    QPixmap result = QPixmap::fromImage(image);
     result.setDevicePixelRatio(source.devicePixelRatio());
-    result.fill(Qt::transparent);
-
-    QPainter painter(&result);
-    painter.drawPixmap(0, 0, source);
-    painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
-    painter.fillRect(result.rect(), color);
-    painter.end();
-
     return result;
 }
 
