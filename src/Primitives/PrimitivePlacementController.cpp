@@ -476,20 +476,14 @@ void PrimitivePlacementController::discardActivePrimitive()
     m_pointsPlaced = 0;
 }
 
-// The measured distance as the dimension label's text, honoring the same
-// unit preference as the status bar readout.
+// The measured distance as the dimension label's text: always the physical
+// length in millimeters (one logical unit = 0.127 mm) - a dimension
+// annotation states a real-world size, unlike the status bar readout with
+// its configurable units. The single place to extend if an imperial-units
+// mode is ever added.
 QString PrimitivePlacementController::dimensionLabel(qreal length) const
 {
-    const int unitsDisplay = qBound(0, SettingsManager::getInstance()
-                                    .loadSetting("units_display").toInt(), 2);
-    switch (unitsDisplay) {
-    case 1:
-        return QString::number(length, 'f', 1);
-    case 2:
-        return tr("%1 mm").arg(length * 0.127, 0, 'f', 2);
-    default:
-        return tr("%1 (%2 mm)").arg(length, 0, 'f', 1).arg(length * 0.127, 0, 'f', 2);
-    }
+    return tr("%1 mm").arg(length * 0.127, 0, 'f', 2);
 }
 
 // Lays the whole annotation out for the dimension line passing through

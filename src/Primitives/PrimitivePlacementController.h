@@ -198,8 +198,8 @@ private:
     // m_activePrimitive is the dimension line itself; the extension lines
     // and the label live in m_dimensionExtras while previewing, and
     // everything is pushed onto the undo stack as one macro at the final
-    // click. The measured distance is formatted per "units_display" and the
-    // label sized per "dimension_text_size" (Options > Drawing).
+    // click. The measured distance is stated in millimeters and the label
+    // sized per "dimension_text_size" (Options > Drawing).
     void updateDimensionPreview(const QPointF &offsetPoint);
     QString dimensionLabel(qreal length) const;
     QPointF m_dimensionStart;
