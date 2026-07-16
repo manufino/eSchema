@@ -48,13 +48,39 @@
         </widget>
        </item>
        <item row="1" column="0">
+        <widget class="QLabel" name="lblStyle">
+         <property name="text">
+          <string>Style</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="cboxStyle">
+         <item>
+          <property name="text">
+           <string>Through-hole footprint</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>SMD footprint</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Schematic symbol (line pins)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
         <widget class="QLabel" name="lblPins">
          <property name="text">
           <string>Pins</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QSpinBox" name="spinPins">
          <property name="minimum">
           <number>2</number>
@@ -70,14 +96,14 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="lblPitch">
          <property name="text">
           <string>Pin pitch (units)</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <widget class="QSpinBox" name="spinPitch">
          <property name="toolTip">
           <string>One unit is 0.127 mm; 20 units = 2.54 mm (100 mil)</string>
@@ -93,17 +119,17 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="lblRowSpacing">
          <property name="text">
           <string>Row spacing (units)</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="QSpinBox" name="spinRowSpacing">
          <property name="toolTip">
-          <string>Distance between the two pin rows (opposite sides for a quad package)</string>
+          <string>Distance between the two pin rows (opposite sides for a quad package); the body width for a schematic symbol</string>
          </property>
          <property name="minimum">
           <number>20</number>
@@ -116,14 +142,14 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="lblPadSize">
          <property name="text">
           <string>Pad size (units)</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QSpinBox" name="spinPadSize">
          <property name="minimum">
           <number>2</number>
@@ -136,14 +162,14 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item row="6" column="0">
         <widget class="QLabel" name="lblHoleSize">
          <property name="text">
           <string>Hole diameter (units)</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="6" column="1">
         <widget class="QSpinBox" name="spinHoleSize">
          <property name="minimum">
           <number>0</number>
@@ -156,13 +182,36 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0" colspan="2">
+       <item row="7" column="0" colspan="2">
         <widget class="QCheckBox" name="chkPinNumbers">
          <property name="text">
           <string>Add pin numbers</string>
          </property>
          <property name="checked">
           <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="lblPinNames">
+         <property name="text">
+          <string>Pin names</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QPlainTextEdit" name="txtPinNames">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>72</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Optional, one name per pin per line - drawn next to the numbers, or in their place when numbers are off</string>
+         </property>
+         <property name="placeholderText">
+          <string>One name per line (optional)</string>
          </property>
         </widget>
        </item>
