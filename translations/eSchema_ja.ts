@@ -1685,69 +1685,114 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="53" />
+        <source>Style</source>
+        <translation>スタイル</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="61" />
+        <source>Through-hole footprint</source>
+        <translation>スルーホール・フットプリント</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="66" />
+        <source>SMD footprint</source>
+        <translation>SMD フットプリント</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="71" />
+        <source>Schematic symbol (line pins)</source>
+        <translation>回路図シンボル（線ピン）</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="79" />
         <source>Pins</source>
         <translation>ピン数</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="76" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="102" />
         <source>Pin pitch (units)</source>
         <translation>ピンピッチ（単位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="83" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="109" />
         <source>One unit is 0.127 mm; 20 units = 2.54 mm (100 mil)</source>
         <translation>1 単位は 0.127 mm、20 単位 = 2.54 mm（100 mil）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="99" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="125" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="172" />
         <source>Row spacing (units)</source>
         <translation>列間隔（単位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="106" />
-        <source>Distance between the two pin rows (opposite sides for a quad package)</source>
-        <translation>2 つのピン列の間隔(クアッドでは対向する辺)</translation>
+        <location filename="../gui/DialogSymbolWizard.ui" line="132" />
+        <source>Distance between the two pin rows (opposite sides for a quad package); the body width for a schematic symbol</source>
+        <translation>2 つのピン列の間隔（クアッドでは対向する辺）。回路図シンボルでは本体の幅</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="122" />
+        <source>Distance between the two pin rows (opposite sides for a quad package)</source>
+        <translation type="vanished">2 つのピン列の間隔(クアッドでは対向する辺)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="148" />
         <source>Pad size (units)</source>
         <translation>パッドサイズ（単位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="142" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="168" />
         <source>Hole diameter (units)</source>
         <translation>穴径（単位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="162" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="188" />
         <source>Add pin numbers</source>
         <translation>ピン番号を付ける</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="183" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="198" />
+        <source>Pin names</source>
+        <translation>ピン名</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="211" />
+        <source>Optional, one name per pin per line - drawn next to the numbers, or in their place when numbers are off</source>
+        <translation>省略可、1 行に 1 ピン分の名前 — 番号の横に描画され、番号がオフのときは番号の代わりになります</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="214" />
+        <source>One name per line (optional)</source>
+        <translation>1 行に 1 つの名前（省略可）</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="232" />
         <source>Symbol name</source>
         <translation>シンボル名</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="197" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="246" />
         <source>Category</source>
         <translation>カテゴリ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="204" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="273" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="253" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="484" />
         <source>Wizard</source>
         <translation>ウィザード</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="211" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="260" />
         <source>Library</source>
         <translation>ライブラリ</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="72" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="107" />
         <source>My symbols</source>
         <translation>マイシンボル</translation>
+    </message>
+    <message>
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="171" />
+        <source>Body width (units)</source>
+        <translation>本体の幅（単位）</translation>
     </message>
 </context>
 <context>

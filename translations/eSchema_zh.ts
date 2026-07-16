@@ -1685,69 +1685,114 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="53" />
+        <source>Style</source>
+        <translation>样式</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="61" />
+        <source>Through-hole footprint</source>
+        <translation>通孔封装</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="66" />
+        <source>SMD footprint</source>
+        <translation>贴片（SMD）封装</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="71" />
+        <source>Schematic symbol (line pins)</source>
+        <translation>原理图符号（线状引脚）</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="79" />
         <source>Pins</source>
         <translation>引脚数</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="76" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="102" />
         <source>Pin pitch (units)</source>
         <translation>引脚间距（单位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="83" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="109" />
         <source>One unit is 0.127 mm; 20 units = 2.54 mm (100 mil)</source>
         <translation>一个单位为 0.127 毫米；20 个单位 = 2.54 毫米（100 mil）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="99" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="125" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="172" />
         <source>Row spacing (units)</source>
         <translation>列间距（单位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="106" />
-        <source>Distance between the two pin rows (opposite sides for a quad package)</source>
-        <translation>两列引脚之间的距离（四边封装为相对两边）</translation>
+        <location filename="../gui/DialogSymbolWizard.ui" line="132" />
+        <source>Distance between the two pin rows (opposite sides for a quad package); the body width for a schematic symbol</source>
+        <translation>两列引脚之间的距离（四边封装为相对两边）；原理图符号则为主体宽度</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="122" />
+        <source>Distance between the two pin rows (opposite sides for a quad package)</source>
+        <translation type="vanished">两列引脚之间的距离（四边封装为相对两边）</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="148" />
         <source>Pad size (units)</source>
         <translation>焊盘尺寸（单位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="142" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="168" />
         <source>Hole diameter (units)</source>
         <translation>孔径（单位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="162" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="188" />
         <source>Add pin numbers</source>
         <translation>添加引脚编号</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="183" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="198" />
+        <source>Pin names</source>
+        <translation>引脚名称</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="211" />
+        <source>Optional, one name per pin per line - drawn next to the numbers, or in their place when numbers are off</source>
+        <translation>可选，每行一个引脚名称——绘制在编号旁边，关闭编号时则取代编号</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="214" />
+        <source>One name per line (optional)</source>
+        <translation>每行一个名称（可选）</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="232" />
         <source>Symbol name</source>
         <translation>符号名称</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="197" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="246" />
         <source>Category</source>
         <translation>类别</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="204" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="273" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="253" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="484" />
         <source>Wizard</source>
         <translation>向导</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="211" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="260" />
         <source>Library</source>
         <translation>库</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="72" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="107" />
         <source>My symbols</source>
         <translation>我的符号</translation>
+    </message>
+    <message>
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="171" />
+        <source>Body width (units)</source>
+        <translation>主体宽度（单位）</translation>
     </message>
 </context>
 <context>

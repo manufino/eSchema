@@ -1693,69 +1693,114 @@ Riassegnarla al comando selezionato?</translation>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="53" />
+        <source>Style</source>
+        <translation>Stile</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="61" />
+        <source>Through-hole footprint</source>
+        <translation>Footprint a foro passante</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="66" />
+        <source>SMD footprint</source>
+        <translation>Footprint SMD</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="71" />
+        <source>Schematic symbol (line pins)</source>
+        <translation>Simbolo schematico (pin a linee)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="79" />
         <source>Pins</source>
         <translation>Pin</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="76" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="102" />
         <source>Pin pitch (units)</source>
         <translation>Passo pin (unità)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="83" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="109" />
         <source>One unit is 0.127 mm; 20 units = 2.54 mm (100 mil)</source>
         <translation>Un'unità è 0,127 mm; 20 unità = 2,54 mm (100 mil)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="99" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="125" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="172" />
         <source>Row spacing (units)</source>
         <translation>Distanza tra le file (unità)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="106" />
-        <source>Distance between the two pin rows (opposite sides for a quad package)</source>
-        <translation>Distanza tra le due file di pin (lati opposti per un package quad)</translation>
+        <location filename="../gui/DialogSymbolWizard.ui" line="132" />
+        <source>Distance between the two pin rows (opposite sides for a quad package); the body width for a schematic symbol</source>
+        <translation>Distanza tra le due file di pin (lati opposti per un package quad); larghezza del corpo per un simbolo schematico</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="122" />
+        <source>Distance between the two pin rows (opposite sides for a quad package)</source>
+        <translation type="vanished">Distanza tra le due file di pin (lati opposti per un package quad)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="148" />
         <source>Pad size (units)</source>
         <translation>Dimensione piazzola (unità)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="142" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="168" />
         <source>Hole diameter (units)</source>
         <translation>Diametro foro (unità)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="162" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="188" />
         <source>Add pin numbers</source>
         <translation>Aggiungi numeri dei pin</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="183" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="198" />
+        <source>Pin names</source>
+        <translation>Nomi dei pin</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="211" />
+        <source>Optional, one name per pin per line - drawn next to the numbers, or in their place when numbers are off</source>
+        <translation>Opzionale, un nome per pin per riga: disegnati accanto ai numeri, o al loro posto se i numeri sono disattivati</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="214" />
+        <source>One name per line (optional)</source>
+        <translation>Un nome per riga (opzionale)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="232" />
         <source>Symbol name</source>
         <translation>Nome del simbolo</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="197" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="246" />
         <source>Category</source>
         <translation>Categoria</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="204" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="273" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="253" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="484" />
         <source>Wizard</source>
         <translation>Wizard</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="211" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="260" />
         <source>Library</source>
         <translation>Libreria</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="72" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="107" />
         <source>My symbols</source>
         <translation>I miei simboli</translation>
+    </message>
+    <message>
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="171" />
+        <source>Body width (units)</source>
+        <translation>Larghezza corpo (unità)</translation>
     </message>
 </context>
 <context>

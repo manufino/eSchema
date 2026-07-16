@@ -1685,69 +1685,114 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/DialogSymbolWizard.ui" line="53" />
+        <source>Style</source>
+        <translation>शैली</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="61" />
+        <source>Through-hole footprint</source>
+        <translation>थ्रू-होल फुटप्रिंट</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="66" />
+        <source>SMD footprint</source>
+        <translation>SMD फुटप्रिंट</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="71" />
+        <source>Schematic symbol (line pins)</source>
+        <translation>योजनाबद्ध प्रतीक (रेखा पिन)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="79" />
         <source>Pins</source>
         <translation>पिन</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="76" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="102" />
         <source>Pin pitch (units)</source>
         <translation>पिन पिच (इकाइयाँ)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="83" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="109" />
         <source>One unit is 0.127 mm; 20 units = 2.54 mm (100 mil)</source>
         <translation>एक इकाई 0.127 मिमी है; 20 इकाइयाँ = 2.54 मिमी (100 मिल)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="99" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="125" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="172" />
         <source>Row spacing (units)</source>
         <translation>पंक्तियों की दूरी (इकाइयाँ)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="106" />
-        <source>Distance between the two pin rows (opposite sides for a quad package)</source>
-        <translation>पिनों की दो पंक्तियों के बीच की दूरी (क्वाड पैकेज में विपरीत भुजाएँ)</translation>
+        <location filename="../gui/DialogSymbolWizard.ui" line="132" />
+        <source>Distance between the two pin rows (opposite sides for a quad package); the body width for a schematic symbol</source>
+        <translation>पिनों की दो पंक्तियों के बीच की दूरी (क्वाड पैकेज में विपरीत भुजाएँ); योजनाबद्ध प्रतीक में मुख्य भाग की चौड़ाई</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="122" />
+        <source>Distance between the two pin rows (opposite sides for a quad package)</source>
+        <translation type="vanished">पिनों की दो पंक्तियों के बीच की दूरी (क्वाड पैकेज में विपरीत भुजाएँ)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="148" />
         <source>Pad size (units)</source>
         <translation>पैड का आकार (इकाइयाँ)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="142" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="168" />
         <source>Hole diameter (units)</source>
         <translation>छेद का व्यास (इकाइयाँ)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="162" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="188" />
         <source>Add pin numbers</source>
         <translation>पिन नंबर जोड़ें</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="183" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="198" />
+        <source>Pin names</source>
+        <translation>पिन के नाम</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="211" />
+        <source>Optional, one name per pin per line - drawn next to the numbers, or in their place when numbers are off</source>
+        <translation>वैकल्पिक, प्रति पंक्ति एक पिन का नाम - नंबरों के बगल में बनाए जाते हैं, या नंबर बंद होने पर उनकी जगह</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="214" />
+        <source>One name per line (optional)</source>
+        <translation>प्रति पंक्ति एक नाम (वैकल्पिक)</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogSymbolWizard.ui" line="232" />
         <source>Symbol name</source>
         <translation>प्रतीक का नाम</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="197" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="246" />
         <source>Category</source>
         <translation>श्रेणी</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="204" />
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="273" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="253" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="484" />
         <source>Wizard</source>
         <translation>विज़ार्ड</translation>
     </message>
     <message>
-        <location filename="../gui/DialogSymbolWizard.ui" line="211" />
+        <location filename="../gui/DialogSymbolWizard.ui" line="260" />
         <source>Library</source>
         <translation>लाइब्रेरी</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="72" />
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="107" />
         <source>My symbols</source>
         <translation>मेरे प्रतीक</translation>
+    </message>
+    <message>
+        <location filename="../src/Dialogs/DialogSymbolWizard.cpp" line="171" />
+        <source>Body width (units)</source>
+        <translation>मुख्य भाग की चौड़ाई (इकाइयाँ)</translation>
     </message>
 </context>
 <context>
