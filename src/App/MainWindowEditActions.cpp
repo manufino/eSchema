@@ -989,6 +989,34 @@ void MainWindow::clickOffsetOutlineAction()
     QUndoStack *undo = sheetScene->undoStack();
     undo->beginMacro(tr("Offset outline"));
     for (GraphicsPrimitive *primitive : eligible) {
+        // Rectangles and ellipses get an exact same-type result: the
+        // defining rect grown/shrunk by the distance on each side. For a
+        // rectangle that IS the true parallel offset - and stays a clean
+        // 2-point rectangle instead of a path-derived polygon with a
+        // redundant node where the path closed. For an ellipse it's the
+        // natural CAD expectation (an ellipse with offset semi-axes; the
+        // mathematically exact offset curve isn't an ellipse at all).
+        const GraphicsPrimitive::PrimitiveTypes type = primitive->getPrimitiveType();
+        if (type == GraphicsPrimitive::Rectangle || type == GraphicsPrimitive::Ellipse) {
+            const QRectF grown = QRectF(primitive->controlPoint(0),
+                                        primitive->controlPoint(1)).normalized()
+                    .adjusted(-distance, -distance, distance, distance);
+            if (grown.width() <= 0.0 || grown.height() <= 0.0) {
+                primitive->setSelected(true); // fully eroded - keep the original
+                continue;
+            }
+            GraphicsPrimitive *result = clonePrimitive(primitive, sheetScene);
+            if (!result)
+                continue;
+            result->setControlPoint(0, grown.topLeft());
+            result->setControlPoint(1, grown.bottomRight());
+            if (!keepOriginal)
+                undo->push(new DeletePrimitiveCommand(sheetScene, primitive));
+            undo->push(new CreatePrimitiveCommand(sheetScene, result));
+            result->setSelected(true);
+            continue;
+        }
+
         const QPainterPath outline = primitive->booleanOutline();
         QPainterPathStroker stroker;
         stroker.setWidth(2.0 * qAbs(distance));
