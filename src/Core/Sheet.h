@@ -91,7 +91,11 @@ public:
     // state like the snap indicator - deliberately not QGraphicsItems, so
     // a bulk load's QGraphicsScene::clear() can never leave a dangling
     // pointer behind in the controller.
-    void setHoverHighlightLine(const QLineF &line);
+    // `color` lets pick-driven commands keep their semantic colors (e.g.
+    // trim previews the doomed stretch in red, extend the added one in
+    // green); the default is the shared hover orange.
+    void setHoverHighlightLine(const QLineF &line,
+                               const QColor &color = QColor(255, 140, 0));
     void setHoverHighlightEllipse(const QRectF &rect);
     void setLockedHighlightLine(const QLineF &line);
     // Hides just the hover part, keeping the locked first-pick visible.
@@ -203,6 +207,7 @@ private:
     bool m_snapIndicatorVisible = false;
     QPointF m_snapIndicator;
     QLineF m_hoverLine;
+    QColor m_hoverLineColor = QColor(255, 140, 0);
     bool m_hoverLineVisible = false;
     QRectF m_hoverEllipse;
     bool m_hoverEllipseVisible = false;

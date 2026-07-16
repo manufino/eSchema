@@ -1072,6 +1072,12 @@ void MainWindow::clickSplitAtPointAction()
     ui->statusbar->clearMessage();
     if (!accepted)
         return;
+    // Global shortcuts stay live inside the picker's nested event loop -
+    // Ctrl+Z past the primitive's creation, Del, or File > New can have
+    // destroyed it while we were waiting for the click. Revalidate before
+    // touching the captured pointer.
+    if (!sheetScene->primitives().contains(primitive))
+        return;
 
     GraphicsPrimitive *first = nullptr;
     GraphicsPrimitive *second = nullptr;
@@ -1269,36 +1275,27 @@ void MainWindow::clickTrimToIntersectionAction()
         return TrimPlan{ target, a, b, lower, upper };
     };
 
-    // The would-be-removed stretch, previewed as a dashed red overlay - a
-    // plain QGraphicsItem, never a primitive, so it can't touch the
-    // document or the undo stack.
-    auto *preview = new QGraphicsLineItem;
-    QPen previewPen(QColor(220, 40, 40, 200));
-    previewPen.setCosmetic(true);
-    previewPen.setWidth(3);
-    previewPen.setStyle(Qt::DashLine);
-    preview->setPen(previewPen);
-    preview->setZValue(10000);
-    preview->setAcceptedMouseButtons(Qt::NoButton);
-    preview->setVisible(false);
-    sheetScene->addItem(preview);
-
+    // The would-be-removed stretch, previewed in red. Sheet foreground
+    // state, deliberately not a QGraphicsItem: if the document is replaced
+    // while the pick's nested event loop runs (Ctrl+N is still live), the
+    // scene's clear() would destroy an overlay item and leave this function
+    // holding a dangling pointer - plain state can't dangle.
     ui->statusbar->showMessage(
             tr("Click the part of a line to remove (right click or Esc cancels)"), 0);
     QPointF picked;
     ScenePointPicker picker(ui->graphicsView, sheetScene, false);
-    picker.setHoverCallback([&computePlan, preview](const QPointF &pos) {
+    picker.setHoverCallback([this, &computePlan](const QPointF &pos) {
         if (const auto plan = computePlan(pos)) {
-            preview->setLine(QLineF(plan->a + (plan->b - plan->a) * plan->lower,
-                                    plan->a + (plan->b - plan->a) * plan->upper));
-            preview->setVisible(true);
+            sheetScene->setHoverHighlightLine(
+                    QLineF(plan->a + (plan->b - plan->a) * plan->lower,
+                           plan->a + (plan->b - plan->a) * plan->upper),
+                    QColor(220, 40, 40));
         } else {
-            preview->setVisible(false);
+            sheetScene->clearHoverHighlight();
         }
     });
     const bool accepted = picker.run(&picked);
-    sheetScene->removeItem(preview);
-    delete preview;
+    sheetScene->clearPickHighlights();
     ui->statusbar->clearMessage();
     if (!accepted)
         return;
@@ -1418,33 +1415,23 @@ void MainWindow::clickExtendToIntersectionAction()
         return ExtendPlan{ target, endIndex, end, bestPoint };
     };
 
-    // The would-be-added stretch, previewed as a dashed green overlay.
-    auto *preview = new QGraphicsLineItem;
-    QPen previewPen(QColor(30, 170, 60, 200));
-    previewPen.setCosmetic(true);
-    previewPen.setWidth(3);
-    previewPen.setStyle(Qt::DashLine);
-    preview->setPen(previewPen);
-    preview->setZValue(10000);
-    preview->setAcceptedMouseButtons(Qt::NoButton);
-    preview->setVisible(false);
-    sheetScene->addItem(preview);
-
+    // The would-be-added stretch, previewed in green - Sheet foreground
+    // state, not a QGraphicsItem, for the same document-replaced-mid-pick
+    // reason as the trim preview above.
     ui->statusbar->showMessage(
             tr("Click a line near the end to extend (right click or Esc cancels)"), 0);
     QPointF picked;
     ScenePointPicker picker(ui->graphicsView, sheetScene, false);
-    picker.setHoverCallback([&computePlan, preview](const QPointF &pos) {
+    picker.setHoverCallback([this, &computePlan](const QPointF &pos) {
         if (const auto plan = computePlan(pos)) {
-            preview->setLine(QLineF(plan->end, plan->reached));
-            preview->setVisible(true);
+            sheetScene->setHoverHighlightLine(QLineF(plan->end, plan->reached),
+                                              QColor(30, 170, 60));
         } else {
-            preview->setVisible(false);
+            sheetScene->clearHoverHighlight();
         }
     });
     const bool accepted = picker.run(&picked);
-    sheetScene->removeItem(preview);
-    delete preview;
+    sheetScene->clearPickHighlights();
     ui->statusbar->clearMessage();
     if (!accepted)
         return;

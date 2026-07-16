@@ -114,6 +114,12 @@ void Sheet::takePrimitive(GraphicsPrimitive *primitive)
 
 void Sheet::removePrimitive(GraphicsPrimitive *primitive)
 {
+    // A full no-op (not just a no-op take followed by a delete) when the
+    // primitive isn't ours: a caller holding a pointer that a bulk load's
+    // clear() already destroyed would otherwise turn a harmless stale call
+    // into a double free.
+    if (!m_primitives.contains(primitive))
+        return;
     takePrimitive(primitive);
     delete primitive;
 }
@@ -172,7 +178,7 @@ void Sheet::drawForeground(QPainter *painter, const QRectF &)
     // whatever the zoom, same trick as the indicator below.
     if (m_hoverLineVisible || m_hoverEllipseVisible || m_lockedLineVisible) {
         const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
-        QPen pen(QColor(255, 140, 0));
+        QPen pen(m_hoverLineVisible ? m_hoverLineColor : QColor(255, 140, 0));
         pen.setWidthF(3.0 / qMax(0.01, scale));
         painter->setBrush(Qt::NoBrush);
         if (m_lockedLineVisible) {
@@ -317,9 +323,10 @@ void Sheet::clearSnapIndicator()
     update();
 }
 
-void Sheet::setHoverHighlightLine(const QLineF &line)
+void Sheet::setHoverHighlightLine(const QLineF &line, const QColor &color)
 {
     m_hoverLine = line;
+    m_hoverLineColor = color;
     m_hoverLineVisible = true;
     m_hoverEllipseVisible = false;
     update();

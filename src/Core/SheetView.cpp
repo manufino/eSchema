@@ -259,13 +259,19 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
     QPoint origin = mapFromGlobal(QCursor::pos());
     QPointF relativeOrigin = mapToScene(origin);
 
-    // An in-progress guide drag owns the mouse until release.
+    // An in-progress guide drag owns the mouse until release. The index is
+    // revalidated on every move: "Clear guides" is a menu action (so it can
+    // carry a keyboard shortcut) and could empty the list mid-drag.
     if (m_draggedGuide >= 0 && (event->buttons() & Qt::LeftButton)) {
         if (auto *sheet = qobject_cast<Sheet *>(scene())) {
-            const Sheet::Guide guide = sheet->guides().at(m_draggedGuide);
-            sheet->moveGuide(m_draggedGuide, guidePositionFor(guide, event->pos()));
-            setCursor(guide.orientation == Qt::Vertical ? Qt::SplitHCursor
-                                                        : Qt::SplitVCursor);
+            if (m_draggedGuide >= sheet->guides().size()) {
+                m_draggedGuide = -1;
+            } else {
+                const Sheet::Guide guide = sheet->guides().at(m_draggedGuide);
+                sheet->moveGuide(m_draggedGuide, guidePositionFor(guide, event->pos()));
+                setCursor(guide.orientation == Qt::Vertical ? Qt::SplitHCursor
+                                                            : Qt::SplitVCursor);
+            }
         }
         emit mouseMoved(relativeOrigin);
         return;
@@ -355,6 +361,8 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
 {
     // Dropping a dragged guide outside the drawing area removes it - the
     // standard "throw it back at the ruler" gesture for deleting a guide.
+    // (removeGuide itself bounds-checks, so a mid-drag Clear guides is
+    // harmless here.)
     if (m_draggedGuide >= 0) {
         if (auto *sheet = qobject_cast<Sheet *>(scene())) {
             if (!viewport()->rect().contains(event->pos()))

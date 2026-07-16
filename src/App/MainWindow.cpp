@@ -1549,6 +1549,8 @@ void MainWindow::clickNewAction()
     if (!confirmDiscardChanges())
         return;
 
+    if (placementController)
+        placementController->cancelPlacement(); // see openFile()
     sheetScene->clearPrimitives();
     sheetScene->undoStack()->setClean();
     setCurrentFilePath(QString());
@@ -1621,6 +1623,13 @@ void MainWindow::normalizeLoadedDrawingPosition()
 
 bool MainWindow::openFile(const QString &filePath)
 {
+    // A placement in progress holds a raw pointer to its preview primitive,
+    // which the bulk load's clearPrimitives() (QGraphicsScene::clear())
+    // would destroy out from under it - the next mouse move would then
+    // write through freed memory. Abandon the placement first.
+    if (placementController)
+        placementController->cancelPlacement();
+
     QString error;
     if (!FidoCadReader::readFile(filePath, sheetScene, &error)) {
         QMessageBox::warning(this, tr("Error"), tr("Unable to open the file:\n%1").arg(error));
@@ -1654,6 +1663,8 @@ bool MainWindow::importDxfFile(const QString &filePath)
     // Same non-undoable bulk-load contract as Open/FidoCadReader::read() -
     // this replaces the current sheet's contents entirely, matching this
     // app's single-always-open-document model rather than merging into it.
+    if (placementController)
+        placementController->cancelPlacement(); // see openFile()
     QString error;
     QStringList warnings;
     if (!DxfReader::readFile(filePath, sheetScene, &error, &warnings)) {
@@ -1700,6 +1711,12 @@ void MainWindow::clickRefreshFcdCodeAction()
 
 void MainWindow::clickApplyFcdCodeAction()
 {
+    // Whatever placement was mid-flight would end up pushed/deleted as part
+    // of the wholesale replacement below while the controller still holds
+    // its pointer - abandon it first (see the same guard in openFile()).
+    if (placementController)
+        placementController->cancelPlacement();
+
     // FidoCadReader::parse() never fails (malformed/unrecognized lines are
     // just skipped per FIDOSPECS.md's robustness contract) - so there's
     // nothing to validate before replacing the drawing with the result.

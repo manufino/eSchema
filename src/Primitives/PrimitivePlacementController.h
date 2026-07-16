@@ -80,6 +80,13 @@ public:
     bool handleMouseRightClick();
     bool handleKeyPress(QKeyEvent *event);
 
+    // Abandons whatever placement is in progress (removing the preview
+    // primitive and any dimension extras from the sheet) and returns the
+    // toolbar to Select. Public because every document-replacing operation
+    // (New/Open/DXF import/Apply FCD code) must call it before clearing the
+    // scene: the controller's raw preview pointers would otherwise dangle.
+    void cancelPlacement();
+
     // Arms a single macro instance for placement: the next click on the
     // sheet drops it there (like Connection/Pad/Text - a single-click tool,
     // no chaining), after which placement returns to Select, exactly as any
@@ -119,7 +126,6 @@ private:
     // toolbar's checked state at that point is exactly what the user just
     // picked).
     void discardActivePrimitive();
-    void cancelPlacement();
     bool isVariableVertexTool(Tool tool) const;
     // The point placement should actually use for `scenePos` while Shift is
     // held: for line-like segments (Line/PCB track chains, polygon/curve
