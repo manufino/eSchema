@@ -300,6 +300,19 @@ private:
     // customization ("toolbar_custom_<objectName>") - called once at startup.
     void loadToolbarCustomizations();
     QHash<QToolBar *, QStringList> m_defaultToolbarLayouts;
+
+    // --- Command catalog / keyboard shortcuts ------------------------------
+    // Every command the command palette and the shortcut editor expose:
+    // the menu bar's commands (grouped under their top-level menu's title,
+    // recursively through submenus, skipping dynamically built entries) plus
+    // the drawing tools. Same objectName-based rules as
+    // toolbarActionCatalog(), but keeping the category alongside.
+    QList<QPair<QString, QAction *>> commandCatalogByCategory() const;
+    // Captures each command's shipped shortcut, then applies any persisted
+    // customization ("shortcut_custom_<objectName>") - called once at
+    // startup, before the user can open the editor.
+    void loadShortcutCustomizations();
+    QHash<QAction *, QKeySequence> m_defaultShortcuts;
     // Inserts a new vertex into `primitive` (a polygon or complex curve, per
     // GraphicsPrimitive::supportsNodeEditing()) at the edge nearest
     // `scenePos`, as one undoable step - wired to the canvas context menu's

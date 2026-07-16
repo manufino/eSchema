@@ -348,6 +348,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionCustomizeToolbars, &QAction::triggered,
             this, &MainWindow::clickCustomizeToolbarsAction);
 
+    // Per-command shortcut customization (Help > Keyboard shortcuts).
+    loadShortcutCustomizations();
+
     // 0 = unlimited (QUndoStack's own default). Only effective while the
     // stack is empty, hence set once here; a change from the Options dialog
     // takes effect at the next start (its tooltip says so).
@@ -781,7 +784,13 @@ void MainWindow::clickAboutAction()
 
 void MainWindow::clickShortcutsAction()
 {
-    shortcutsDialog = new DialogShortcuts(this);
+    QList<DialogShortcuts::Command> commands;
+    const auto catalog = commandCatalogByCategory();
+    for (const auto &entry : catalog) {
+        commands.append({ entry.first, entry.second,
+                          m_defaultShortcuts.value(entry.second) });
+    }
+    shortcutsDialog = new DialogShortcuts(commands, this);
     connect(shortcutsDialog, &QDialog::finished, shortcutsDialog, &QObject::deleteLater);
     shortcutsDialog->show();
 }
@@ -1161,14 +1170,9 @@ void MainWindow::clickCustomizeToolbarsAction()
     }
 }
 
-// Every command reachable from the menu bar (grouped under its top-level
-// menu's name) plus the drawing tools, handed to the palette as the very
-// same QAction objects the menus use - so enabled state, icons and
-// shortcuts always match, and triggering one is exactly a menu click.
-void MainWindow::clickCommandPaletteAction()
+QList<QPair<QString, QAction *>> MainWindow::commandCatalogByCategory() const
 {
-    CommandPalette palette(this);
-
+    QList<QPair<QString, QAction *>> catalog;
     std::function<void(QMenu *, const QString &)> collect =
             [&](QMenu *menu, const QString &category) {
         for (QAction *action : menu->actions()) {
@@ -1179,12 +1183,10 @@ void MainWindow::clickCommandPaletteAction()
                 continue;
             }
             // Dynamically built entries (recent files, ...) have no stable
-            // objectName; the palette itself would be a pointless entry.
+            // objectName to key customizations on.
             if (action->objectName().isEmpty() || action->text().isEmpty())
                 continue;
-            if (action == ui->actionCommandPalette)
-                continue;
-            palette.addCommand(category, action);
+            catalog.append({ category, action });
         }
     };
     for (QAction *topLevel : ui->menubar->actions()) {
@@ -1197,7 +1199,37 @@ void MainWindow::clickCommandPaletteAction()
     for (QAction *action : ui->toolBarPrimitive->actions()) {
         if (!action->isSeparator() && !action->objectName().isEmpty()
                 && !action->text().isEmpty())
-            palette.addCommand(tr("Drawing tools"), action);
+            catalog.append({ tr("Drawing tools"), action });
+    }
+    return catalog;
+}
+
+void MainWindow::loadShortcutCustomizations()
+{
+    const SettingsManager &settings = SettingsManager::getInstance();
+    const auto catalog = commandCatalogByCategory();
+    for (const auto &entry : catalog) {
+        QAction *action = entry.second;
+        m_defaultShortcuts.insert(action, action->shortcut());
+        const QVariant saved = settings.loadSetting(
+                QStringLiteral("shortcut_custom_") + action->objectName());
+        if (saved.isValid())
+            action->setShortcut(QKeySequence::fromString(saved.toString(),
+                                                         QKeySequence::PortableText));
+    }
+}
+
+// Every command reachable from the menu bar (grouped under its top-level
+// menu's name) plus the drawing tools, handed to the palette as the very
+// same QAction objects the menus use - so enabled state, icons and
+// shortcuts always match, and triggering one is exactly a menu click.
+void MainWindow::clickCommandPaletteAction()
+{
+    CommandPalette palette(this);
+    const auto catalog = commandCatalogByCategory();
+    for (const auto &entry : catalog) {
+        if (entry.second != ui->actionCommandPalette) // a pointless entry
+            palette.addCommand(entry.first, entry.second);
     }
 
     // Just under the menu bar, centered - where command palettes usually
