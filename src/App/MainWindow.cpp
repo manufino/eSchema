@@ -1410,15 +1410,17 @@ void MainWindow::positionMenuBarSearch()
 {
     if (!m_menuBarSearch)
         return;
-    // Just after the last top-level menu (Help), with a little breathing
-    // room, vertically centered in the bar.
+    // Centered on the window's width, vertically centered in the bar -
+    // never left of the menus though: on a narrow window the centered spot
+    // would overlap them, so it gets pushed right just past the last menu.
     int menusRight = 0;
     const QList<QAction *> topLevel = ui->menubar->actions();
     if (!topLevel.isEmpty())
         menusRight = ui->menubar->actionGeometry(topLevel.last()).right();
     constexpr int Margin = 16;
+    const int centered = (ui->menubar->width() - m_menuBarSearch->width()) / 2;
     const int fieldHeight = qMax(18, ui->menubar->height() - 6);
-    m_menuBarSearch->setGeometry(menusRight + Margin,
+    m_menuBarSearch->setGeometry(qMax(centered, menusRight + Margin),
                                  (ui->menubar->height() - fieldHeight) / 2,
                                  m_menuBarSearch->width(), fieldHeight);
 }
