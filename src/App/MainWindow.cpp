@@ -405,16 +405,20 @@ void MainWindow::setConnections()
     connect(ui->actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::clickCheckUpdatesAction);
     connect(ui->actionCommandPalette, &QAction::triggered, this, &MainWindow::clickCommandPaletteAction);
-    // The command palette's launcher in the menu bar's unused right-hand
-    // corner: focusing the field opens the palette right under it (see
-    // eventFilter()), carrying over anything already typed.
+    // The command palette's launcher in the menu bar's unused space:
+    // focusing the field opens the palette right under it (see
+    // eventFilter()), carrying over anything already typed. Positioned
+    // manually just after the last menu (QMenuBar's corner widget would
+    // pin it to the far right instead) - see positionMenuBarSearch(),
+    // re-run on every menu bar resize via the same event filter.
     m_menuBarSearch = new QLineEdit(ui->menubar);
     m_menuBarSearch->setObjectName(QStringLiteral("menuBarSearch"));
     m_menuBarSearch->setPlaceholderText(tr("Search commands..."));
     m_menuBarSearch->setToolTip(ui->actionCommandPalette->toolTip());
     m_menuBarSearch->setFixedWidth(220);
     m_menuBarSearch->installEventFilter(this);
-    ui->menubar->setCornerWidget(m_menuBarSearch, Qt::TopRightCorner);
+    ui->menubar->installEventFilter(this);
+    positionMenuBarSearch();
     connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
     connect(ui->graphicsView, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
     connect(ui->graphicsView, &SheetView::mouseMoved, this, [this](QPointF scenePos) {
@@ -1402,8 +1406,33 @@ void MainWindow::clickCommandPaletteAction()
     openCommandPalette(mapToGlobal(QPoint(width() / 2, menuBar()->height() + 4)));
 }
 
+void MainWindow::positionMenuBarSearch()
+{
+    if (!m_menuBarSearch)
+        return;
+    // Just after the last top-level menu (Help), with a little breathing
+    // room, vertically centered in the bar.
+    int menusRight = 0;
+    const QList<QAction *> topLevel = ui->menubar->actions();
+    if (!topLevel.isEmpty())
+        menusRight = ui->menubar->actionGeometry(topLevel.last()).right();
+    constexpr int Margin = 16;
+    const int fieldHeight = qMax(18, ui->menubar->height() - 6);
+    m_menuBarSearch->setGeometry(menusRight + Margin,
+                                 (ui->menubar->height() - fieldHeight) / 2,
+                                 m_menuBarSearch->width(), fieldHeight);
+}
+
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
+    // Keeps the search field glued after the menus whatever the bar does
+    // (resize, first show, style/font change reflowing the menu widths).
+    if (watched == ui->menubar
+            && (event->type() == QEvent::Resize || event->type() == QEvent::Show
+                || event->type() == QEvent::LayoutRequest)) {
+        positionMenuBarSearch();
+    }
+
     // The menu bar's corner search field is a launcher, not a real editor:
     // the moment it gains focus (click or tab), the palette itself opens
     // right under it and takes over the typing. The guard keeps the

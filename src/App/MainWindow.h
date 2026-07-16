@@ -220,6 +220,10 @@ private:
     // signals blocked, since this reflects the selection rather than being
     // an edit itself.
     void updatePropertiesPanel();
+    // Places the menu bar's search field just after the last top-level
+    // menu (with a small gap), vertically centered - re-run from
+    // eventFilter() whenever the menu bar resizes or relayouts.
+    void positionMenuBarSearch();
     // Builds and runs the command palette anchored at `topCenter` (global),
     // optionally seeded with `initialText` - shared by the Ctrl+Shift+P
     // action (centered under the menu bar) and the menu bar's corner
