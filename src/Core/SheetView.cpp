@@ -73,6 +73,14 @@ void SheetView::drawTracingImage(QPainter *painter, const QRectF &rect)
 
 void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 {
+    // The configured background must be painted whether or not the grid is
+    // shown - hiding the grid used to skip this fill too, visibly changing
+    // the canvas color to the view's default instead of just dropping the
+    // grid marks.
+    painter->setPen(Qt::NoPen);
+    painter->setBrush(QBrush(backgroundColor));
+    painter->drawRect(rect);
+
     if (!gridEnabled) {
         drawTracingImage(painter, rect);
         return;
@@ -95,10 +103,6 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
     // area crosses into negative coordinates.
     const qreal left = std::floor(rect.left() / step) * step;
     const qreal top = std::floor(rect.top() / step) * step;
-
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(QBrush(backgroundColor));
-    painter->drawRect(rect);
 
     drawTracingImage(painter, rect);
 
