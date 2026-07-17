@@ -20,6 +20,7 @@
 #include "SheetView.h"
 #include "PrimitivePlacementController.h"
 #include <QScrollBar>
+#include <QPainterPath>
 #include <cmath>
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
@@ -42,12 +43,16 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
     // Antialiasing is applied by loadSettings() per the "render_antialias"
     // setting (Options > Interface).
     setTransformationAnchor(QGraphicsView::NoAnchor);
-    // Native rubber-band selection: clicking empty canvas and dragging draws
-    // the selection rectangle and selects the primitives it touches. Clicking
+    // Rubber-band selection is implemented by hand (see the m_rubber*
+    // members) instead of Qt's RubberBandDrag: AutoCAD's window/crossing
+    // distinction - drag left-to-right selects only what's fully contained
+    // (solid blue), right-to-left also what's merely touched (dashed
+    // green) - needs both a per-direction selection mode and a custom
+    // rectangle look, neither of which the native mode offers. Clicking
     // directly on a primitive still reaches its own mousePressEvent first
-    // (GraphicsPrimitive's manual drag handling), so this only kicks in over
-    // empty space.
-    setDragMode(QGraphicsView::RubberBandDrag);
+    // (GraphicsPrimitive's manual drag handling), so the band only starts
+    // over empty space.
+    setDragMode(QGraphicsView::NoDrag);
 }
 
 void SheetView::setGrid(int size, QColor clr)
@@ -167,6 +172,27 @@ void SheetView::drawBackground(QPainter *painter, const QRectF &rect)
 void SheetView::drawForeground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsView::drawForeground(painter, rect); // Sheet's own foreground
+
+    // The window/crossing rubber band: solid blue while dragging
+    // left-to-right (window - only fully contained primitives), dashed
+    // green right-to-left (crossing - touched ones too), matching the
+    // AutoCAD convention the selection semantics follow.
+    if (m_rubberActive) {
+        const QRect viewRect = QRect(m_rubberOrigin, m_rubberCurrent).normalized();
+        const QPolygonF scenePoly = mapToScene(viewRect);
+        const bool windowMode = m_rubberCurrent.x() >= m_rubberOrigin.x();
+        const QColor color = windowMode ? QColor(60, 110, 220) : QColor(50, 160, 70);
+        QPen pen(color);
+        pen.setCosmetic(true);
+        if (!windowMode)
+            pen.setStyle(Qt::DashLine);
+        painter->setPen(pen);
+        QColor fill = color;
+        fill.setAlpha(35);
+        painter->setBrush(fill);
+        painter->drawPolygon(scenePoly);
+        painter->setBrush(Qt::NoBrush);
+    }
 
     auto *sheet = qobject_cast<Sheet *>(scene());
     if (!sheet || sheet->guides().isEmpty())
@@ -303,6 +329,15 @@ void SheetView::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
+    // The window/crossing rubber band follows the cursor (viewport
+    // repainted: the rectangle is drawn in drawForeground()).
+    if (m_rubberActive && (event->buttons() & Qt::LeftButton)) {
+        m_rubberCurrent = event->pos();
+        viewport()->update();
+        emit mouseMoved(relativeOrigin);
+        return;
+    }
+
     // Hovering near a guide (with no drag in progress) shows the grab
     // cursor, so guides read as adjustable rather than as static decoration.
     if (!event->buttons()) {
@@ -373,6 +408,16 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         m_originX = event->position().x();
         m_originY = event->position().y();
     }
+
+    // A left press on empty canvas starts the hand-made window/crossing
+    // rubber band (see the constructor's dragMode comment). The base call
+    // below still runs first-hand for item clicks (selection, drags) and
+    // clears the selection on an empty-space press, exactly as before.
+    if (event->button() == Qt::LeftButton && !itemAt(event->pos())) {
+        m_rubberActive = true;
+        m_rubberOrigin = event->pos();
+        m_rubberCurrent = event->pos();
+    }
     QGraphicsView::mousePressEvent(event);
 }
 
@@ -393,6 +438,34 @@ void SheetView::mouseReleaseEvent(QMouseEvent *event)
 
     if (m_placementController && m_placementController->isPlacementToolActive())
         return;
+
+    // Finish the window/crossing rubber band: left-to-right selects only
+    // primitives fully contained in the rectangle, right-to-left also the
+    // merely touched ones (AutoCAD semantics). Ctrl/Shift extends the
+    // current selection instead of replacing it (the empty-space press
+    // already cleared it in the plain case).
+    if (m_rubberActive && event->button() == Qt::LeftButton) {
+        m_rubberActive = false;
+        const QRect viewRect = QRect(m_rubberOrigin, m_rubberCurrent).normalized();
+        if (viewRect.width() > 3 || viewRect.height() > 3) {
+            const bool windowMode = m_rubberCurrent.x() >= m_rubberOrigin.x();
+            QPainterPath path;
+            path.addPolygon(mapToScene(viewRect));
+            path.closeSubpath();
+            const QList<QGraphicsItem *> hits = scene()->items(
+                        path, windowMode ? Qt::ContainsItemShape
+                                         : Qt::IntersectsItemShape);
+            const bool extend = event->modifiers()
+                    & (Qt::ControlModifier | Qt::ShiftModifier);
+            if (!extend)
+                scene()->clearSelection();
+            for (QGraphicsItem *item : hits) {
+                if (item->flags() & QGraphicsItem::ItemIsSelectable)
+                    item->setSelected(true);
+            }
+        }
+        viewport()->update();
+    }
 
     QGraphicsView::mouseReleaseEvent(event);
 }

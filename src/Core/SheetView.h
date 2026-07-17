@@ -150,6 +150,12 @@ private:
     // Index (into Sheet::guides()) of the guide a left-drag is currently
     // moving, -1 when none - releasing it outside the viewport deletes it.
     int m_draggedGuide = -1;
+    // Hand-made rubber-band selection with AutoCAD window/crossing
+    // semantics (see the constructor's dragMode comment). Coordinates are
+    // viewport pixels; the polygon is mapped to the scene at paint/release.
+    bool m_rubberActive = false;
+    QPoint m_rubberOrigin;
+    QPoint m_rubberCurrent;
 };
 
 #endif // SHEETVIEW_H
