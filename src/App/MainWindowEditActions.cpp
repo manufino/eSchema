@@ -2610,6 +2610,8 @@ void MainWindow::pasteFromText(const QString &text, const QString &undoLabel, bo
     const int step = stepVal.isValid() && stepVal.toInt() > 0 ? stepVal.toInt() : 10;
     const QPointF offset = inPlace ? QPointF(0, 0) : QPointF(step, step);
 
+    const bool wasEmpty = sheetScene->primitives().isEmpty();
+
     sheetScene->clearSelection();
     QUndoStack *undo = sheetScene->undoStack();
     const bool multiple = pasted.size() > 1;
@@ -2624,6 +2626,13 @@ void MainWindow::pasteFromText(const QString &text, const QString &undoLabel, bo
     }
     if (multiple)
         undo->endMacro();
+
+    // Pasting into an empty drawing: the content lands wherever its source
+    // coordinates put it, which can easily be entirely off-screen - fit the
+    // view to it so the result is immediately visible. A paste into an
+    // existing drawing keeps the current view untouched.
+    if (wasEmpty)
+        ui->graphicsView->adjustView();
 }
 
 // Companion to pasteFromText(): the clipboard holds a bitmap (e.g. from
