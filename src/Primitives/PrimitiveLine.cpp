@@ -58,14 +58,20 @@ void PrimitiveLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
 
     const QPointF p1 = mapFromScene(m_p1);
     const QPointF p2 = mapFromScene(m_p2);
-    painter->drawLine(p1, p2);
 
+    // Arrows first: the visible segment is shortened to each arrowhead's
+    // base (matching the reference editor - see paintArrow()'s comment),
+    // so the stroke never pokes through an empty arrow or dashes into a
+    // filled one.
+    QPointF start = p1;
+    QPointF end = p2;
     if (arrowAtStart())
-        PrimitiveArrowUtils::paintArrow(painter, p1, p2, arrowStyleLimiter(), arrowStyleEmpty(),
-                                        arrowLength(), arrowHalfWidth());
+        start = PrimitiveArrowUtils::paintArrow(painter, p1, p2, arrowStyleLimiter(),
+                                                arrowStyleEmpty(), arrowLength(), arrowHalfWidth());
     if (arrowAtEnd())
-        PrimitiveArrowUtils::paintArrow(painter, p2, p1, arrowStyleLimiter(), arrowStyleEmpty(),
-                                        arrowLength(), arrowHalfWidth());
+        end = PrimitiveArrowUtils::paintArrow(painter, p2, p1, arrowStyleLimiter(),
+                                              arrowStyleEmpty(), arrowLength(), arrowHalfWidth());
+    painter->drawLine(start, end);
 
     paintLabels(painter);
 }

@@ -31,25 +31,27 @@
 // function instead of copy-pasting the triangle/limiter-bar drawing 3 times.
 namespace PrimitiveArrowUtils {
 
-// Paints an arrowhead at `tip`, pointing away from `tail` (i.e. the arrow points
-// in the tail->tip direction), using the given FCJ arrow style bits.
-inline void paintArrow(QPainter *painter, const QPointF &tip, const QPointF &tail,
-                       bool limiterStyle, bool emptyStyle, qreal length, qreal halfWidth)
+// Paints an arrowhead at `tip`, pointing away from `tail` (i.e. the arrow
+// points in the tail->tip direction), using the given FCJ arrow style bits,
+// exactly like the reference FidoCadJ editor's Arrow.drawArrow():
+// - the triangle is ALWAYS drawn - filled normally, outline-only with the
+//   empty style (the two style bits combine, they are not alternatives;
+//   drawing only the bar for the limiter style was wrong);
+// - the limiter style ADDS a short bar perpendicular to the line at the
+//   tip (the classic dimension-line terminator), on top of the triangle.
+// Returns the triangle's base point (tip pulled back by `length`): the
+// caller shortens its stroke to there when length > 0, again matching the
+// reference (PrimitiveLine.draw()'s issue-#172 handling), so the line
+// never pokes through an empty arrowhead.
+inline QPointF paintArrow(QPainter *painter, const QPointF &tip, const QPointF &tail,
+                          bool limiterStyle, bool emptyStyle, qreal length, qreal halfWidth)
 {
     QPointF dir = tip - tail;
     const qreal len = std::hypot(dir.x(), dir.y());
     if (len < 1e-6)
-        return;
+        return tip;
     dir /= len; // unit vector from tail to tip
     const QPointF normal(-dir.y(), dir.x());
-
-    if (limiterStyle) {
-        // A limiter is just a short bar perpendicular to the line at the tip.
-        const QPointF a = tip + normal * halfWidth;
-        const QPointF b = tip - normal * halfWidth;
-        painter->drawLine(a, b);
-        return;
-    }
 
     const QPointF base = tip - dir * length;
     const QPointF left = base + normal * halfWidth;
@@ -65,6 +67,14 @@ inline void paintArrow(QPainter *painter, const QPointF &tip, const QPointF &tai
         path.addPolygon(triangle);
         painter->fillPath(path, painter->pen().color());
     }
+
+    if (limiterStyle) {
+        const QPointF a = tip + normal * halfWidth;
+        const QPointF b = tip - normal * halfWidth;
+        painter->drawLine(a, b);
+    }
+
+    return length > 0 ? base : tip;
 }
 
 } // namespace PrimitiveArrowUtils

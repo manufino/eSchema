@@ -70,7 +70,13 @@ public:
     QPainterPath curvePath() const { return buildSplinePath(); }
 
 private:
-    QPainterPath buildSplinePath() const;
+    // `startOverride`/`endOverride` (local coordinates, open curves only)
+    // replace the first/last interpolation point - used by paint() to pull
+    // the curve back to an arrowhead's base, like the reference editor
+    // (PrimitiveComplexCurve.java swaps the extreme interpolation points
+    // with the arrow bases before building the spline).
+    QPainterPath buildSplinePath(const QPointF *startOverride = nullptr,
+                                 const QPointF *endOverride = nullptr) const;
 
     QVector<QPointF> m_vertices;
     bool m_closed = false;

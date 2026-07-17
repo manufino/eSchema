@@ -31,17 +31,22 @@ PrimitiveComplexCurve::PrimitiveComplexCurve(QGraphicsItem *parent)
 // Bezier conversion (the standard "spline through points" construction), so the
 // curve actually passes through every given point instead of just being guided
 // by them the way a plain Bezier's control points would.
-QPainterPath PrimitiveComplexCurve::buildSplinePath() const
+QPainterPath PrimitiveComplexCurve::buildSplinePath(const QPointF *startOverride,
+                                                    const QPointF *endOverride) const
 {
     QPainterPath path;
     const int n = m_vertices.size();
     if (n < 2)
         return path;
 
-    auto at = [this, n](int i) -> QPointF {
+    auto at = [this, n, startOverride, endOverride](int i) -> QPointF {
         if (m_closed)
             return mapFromScene(m_vertices.at((i % n + n) % n));
         i = qBound(0, i, n - 1);
+        if (i == 0 && startOverride)
+            return *startOverride;
+        if (i == n - 1 && endOverride)
+            return *endOverride;
         return mapFromScene(m_vertices.at(i));
     };
 
@@ -91,21 +96,33 @@ void PrimitiveComplexCurve::paint(QPainter *painter, const QStyleOptionGraphicsI
     painter->setPen(pen);
     painter->setBrush(isFilled() && m_closed ? QBrush(pen.color()) : QBrush(Qt::NoBrush));
 
-    const QPainterPath path = buildSplinePath();
-    painter->drawPath(path);
-
-    if (!m_closed) {
-        if (arrowAtStart())
-            PrimitiveArrowUtils::paintArrow(painter, mapFromScene(m_vertices.first()),
-                                            mapFromScene(m_vertices.at(1)),
-                                            arrowStyleLimiter(), arrowStyleEmpty(),
-                                            arrowLength(), arrowHalfWidth());
-        if (arrowAtEnd())
-            PrimitiveArrowUtils::paintArrow(painter, mapFromScene(m_vertices.last()),
-                                            mapFromScene(m_vertices.at(m_vertices.size() - 2)),
-                                            arrowStyleLimiter(), arrowStyleEmpty(),
-                                            arrowLength(), arrowHalfWidth());
+    // Arrows first: on an open curve the first/last interpolation point is
+    // pulled back to the arrowhead's base (same as the reference editor),
+    // so the spline never pokes through an empty arrow.
+    QPointF startBase, endBase;
+    const QPointF *startOverride = nullptr;
+    const QPointF *endOverride = nullptr;
+    if (!m_closed && m_vertices.size() >= 2) {
+        if (arrowAtStart()) {
+            startBase = PrimitiveArrowUtils::paintArrow(
+                        painter, mapFromScene(m_vertices.first()),
+                        mapFromScene(m_vertices.at(1)),
+                        arrowStyleLimiter(), arrowStyleEmpty(),
+                        arrowLength(), arrowHalfWidth());
+            startOverride = &startBase;
+        }
+        if (arrowAtEnd()) {
+            endBase = PrimitiveArrowUtils::paintArrow(
+                        painter, mapFromScene(m_vertices.last()),
+                        mapFromScene(m_vertices.at(m_vertices.size() - 2)),
+                        arrowStyleLimiter(), arrowStyleEmpty(),
+                        arrowLength(), arrowHalfWidth());
+            endOverride = &endBase;
+        }
     }
+
+    const QPainterPath path = buildSplinePath(startOverride, endOverride);
+    painter->drawPath(path);
 
     paintLabels(painter);
 }

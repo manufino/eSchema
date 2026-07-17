@@ -63,16 +63,22 @@ void PrimitiveBezier::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     const QPointF c2 = mapFromScene(m_points[2]);
     const QPointF p2 = mapFromScene(m_points[3]);
 
-    QPainterPath path(p1);
-    path.cubicTo(c1, c2, p2);
-    painter->drawPath(path);
-
+    // Arrows first: the curve's endpoint is pulled back to each arrowhead's
+    // base, exactly like the reference editor (PrimitiveBezier.java feeds
+    // drawArrow()'s return into the cubic's endpoints), so the stroke never
+    // pokes through an empty arrow.
+    QPointF start = p1;
+    QPointF end = p2;
     if (arrowAtStart())
-        PrimitiveArrowUtils::paintArrow(painter, p1, c1, arrowStyleLimiter(), arrowStyleEmpty(),
-                                        arrowLength(), arrowHalfWidth());
+        start = PrimitiveArrowUtils::paintArrow(painter, p1, c1, arrowStyleLimiter(),
+                                                arrowStyleEmpty(), arrowLength(), arrowHalfWidth());
     if (arrowAtEnd())
-        PrimitiveArrowUtils::paintArrow(painter, p2, c2, arrowStyleLimiter(), arrowStyleEmpty(),
-                                        arrowLength(), arrowHalfWidth());
+        end = PrimitiveArrowUtils::paintArrow(painter, p2, c2, arrowStyleLimiter(),
+                                              arrowStyleEmpty(), arrowLength(), arrowHalfWidth());
+
+    QPainterPath path(start);
+    path.cubicTo(c1, c2, end);
+    painter->drawPath(path);
 
     paintLabels(painter);
 }
