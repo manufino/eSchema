@@ -1882,77 +1882,77 @@ Reassign it to the selected command?</source>
         <translation>eSchema</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="66" />
+        <location filename="../gui/MainWindow.ui" line="56" />
         <source>Libraries</source>
         <translation>库</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="100" />
+        <location filename="../gui/MainWindow.ui" line="90" />
         <source>Search libraries ...</source>
         <translation>搜索库...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="241" />
+        <location filename="../gui/MainWindow.ui" line="231" />
         <source>Properties</source>
         <translation>属性</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="311" />
+        <location filename="../gui/MainWindow.ui" line="301" />
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="352" />
+        <location filename="../gui/MainWindow.ui" line="342" />
         <source>Text font</source>
         <translation>文本字体</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="384" />
+        <location filename="../gui/MainWindow.ui" line="374" />
         <source>Line style</source>
         <translation>线型</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="397" />
+        <location filename="../gui/MainWindow.ui" line="387" />
         <source>Fill</source>
         <translation>填充</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="464" />
+        <location filename="../gui/MainWindow.ui" line="454" />
         <source>Value</source>
         <translation>值</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="493" />
+        <location filename="../gui/MainWindow.ui" line="483" />
         <source>Layer</source>
         <translation>图层</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="506" />
+        <location filename="../gui/MainWindow.ui" line="496" />
         <source>Opacity</source>
         <translation>不透明度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="528" />
+        <location filename="../gui/MainWindow.ui" line="518" />
         <source>%</source>
         <translation>%</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="550" />
+        <location filename="../gui/MainWindow.ui" line="540" />
         <source>Keep aspect ratio</source>
         <translation>保持宽高比</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="573" />
+        <location filename="../gui/MainWindow.ui" line="563" />
         <source>Black and white</source>
         <translation>黑白</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="593" />
+        <location filename="../gui/MainWindow.ui" line="583" />
         <source>Start arrow</source>
         <translation>起始箭头</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="613" />
+        <location filename="../gui/MainWindow.ui" line="603" />
         <source>End arrow</source>
         <translation>结束箭头</translation>
     </message>
@@ -1965,271 +1965,272 @@ Reassign it to the selected command?</source>
         <translation type="vanished">限位横杠</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="649" />
+        <location filename="../gui/MainWindow.ui" line="639" />
         <source>Arrow length</source>
         <translation>箭头长度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="693" />
+        <location filename="../gui/MainWindow.ui" line="683" />
         <source>Arrow width</source>
         <translation>箭头宽度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="737" />
+        <location filename="../gui/MainWindow.ui" line="727" />
         <source>Closed curve</source>
         <translation>闭合曲线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="757" />
+        <location filename="../gui/MainWindow.ui" line="747" />
         <source>Track width</source>
         <translation>走线宽度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="801" />
+        <location filename="../gui/MainWindow.ui" line="791" />
         <source>Pad width</source>
         <translation>焊盘宽度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="845" />
+        <location filename="../gui/MainWindow.ui" line="835" />
         <source>Pad height</source>
         <translation>焊盘高度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="889" />
+        <location filename="../gui/MainWindow.ui" line="879" />
         <source>Hole diameter</source>
         <translation>孔径</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="933" />
+        <location filename="../gui/MainWindow.ui" line="923" />
         <source>Pad style</source>
         <translation>焊盘样式</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="953" />
+        <location filename="../gui/MainWindow.ui" line="943" />
         <source>Round</source>
         <translation>圆形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="958" />
+        <location filename="../gui/MainWindow.ui" line="948" />
         <source>Rectangular</source>
         <translation>矩形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="963" />
+        <location filename="../gui/MainWindow.ui" line="953" />
         <source>Rounded rectangular</source>
         <translation>圆角矩形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="977" />
-        <location filename="../gui/MainWindow.ui" line="2490" />
-        <location filename="../gui/MainWindow.ui" line="2493" />
+        <location filename="../gui/MainWindow.ui" line="967" />
+        <location filename="../gui/MainWindow.ui" line="2531" />
+        <location filename="../gui/MainWindow.ui" line="2534" />
         <source>Text</source>
         <translation>文本</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="996" />
+        <location filename="../gui/MainWindow.ui" line="986" />
         <source>Use ^ for superscript and _ for subscript (e.g. R^2, V_out); each extra ^ or _ nests one level deeper. Use \^ and \_ to write the literal ^ and _ characters.</source>
         <translation>使用 ^ 表示上标，_ 表示下标（例如 R^2、V_out）；每多一个 ^ 或 _ 会多嵌套一级。使用 \^ 和 \_ 可输入 ^ 和 _ 字符本身。</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1009" />
+        <location filename="../gui/MainWindow.ui" line="999" />
         <source>Character width</source>
         <translation>字符宽度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1047" />
+        <location filename="../gui/MainWindow.ui" line="1037" />
         <source>Character height</source>
         <translation>字符高度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1085" />
+        <location filename="../gui/MainWindow.ui" line="1075" />
         <source>Orientation</source>
         <translation>方向</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1107" />
+        <location filename="../gui/MainWindow.ui" line="1097" />
         <source>°</source>
         <translation>°</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1129" />
+        <location filename="../gui/MainWindow.ui" line="1119" />
         <source>Bold</source>
         <translation>粗体</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1149" />
+        <location filename="../gui/MainWindow.ui" line="1139" />
         <source>Italic</source>
         <translation>斜体</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1169" />
+        <location filename="../gui/MainWindow.ui" line="1159" />
         <source>Mirrored</source>
         <translation>镜像</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1189" />
+        <location filename="../gui/MainWindow.ui" line="1179" />
         <source>Length</source>
         <translation>长度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1233" />
+        <location filename="../gui/MainWindow.ui" line="1223" />
         <source>Width</source>
         <translation>宽度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1277" />
+        <location filename="../gui/MainWindow.ui" line="1267" />
         <source>Height</source>
         <translation>高度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1341" />
+        <location filename="../gui/MainWindow.ui" line="1331" />
         <source>FCD code</source>
         <translation>FCD 代码</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1380" />
+        <location filename="../gui/MainWindow.ui" line="1370" />
         <source>Re-parse the text above and replace the whole drawing with it, as one undo step</source>
         <translation>重新解析上方文本并用其替换整个绘图，作为一个可撤销的步骤</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1383" />
+        <location filename="../gui/MainWindow.ui" line="1373" />
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1390" />
+        <location filename="../gui/MainWindow.ui" line="1380" />
         <source>Discard the text above and regenerate it from the current drawing</source>
         <translation>放弃上方文本并根据当前绘图重新生成</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1393" />
+        <location filename="../gui/MainWindow.ui" line="1383" />
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1426" />
+        <location filename="../gui/MainWindow.ui" line="1416" />
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1445" />
-        <location filename="../src/App/MainWindow.cpp" line="1290" />
+        <location filename="../gui/MainWindow.ui" line="1446" />
+        <location filename="../src/App/MainWindow.cpp" line="1507" />
         <source>Open recent</source>
         <translation>打开最近的文件</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1454" />
+        <location filename="../gui/MainWindow.ui" line="1455" />
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1496" />
+        <location filename="../gui/MainWindow.ui" line="1497" />
         <source>Align and distribute</source>
         <translation>对齐与分布</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1516" />
+        <location filename="../gui/MainWindow.ui" line="1517" />
         <source>Shape</source>
         <translation>形状</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1537" />
+        <location filename="../gui/MainWindow.ui" line="1538" />
         <source>Boolean operations</source>
         <translation>布尔运算</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1548" />
+        <location filename="../gui/MainWindow.ui" line="1549" />
         <source>View</source>
         <translation>视图</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1568" />
+        <location filename="../gui/MainWindow.ui" line="1569" />
         <source>Tools</source>
         <translation>工具</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1578" />
+        <location filename="../gui/MainWindow.ui" line="1579" />
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1603" />
+        <location filename="../gui/MainWindow.ui" line="1605" />
         <source>ToolBarStandard</source>
         <translation>ToolBarStandard</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1653" />
+        <location filename="../gui/MainWindow.ui" line="1655" />
         <source>ToolBarModify</source>
         <translation>ToolBarModify</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1703" />
+        <location filename="../gui/MainWindow.ui" line="1705" />
         <source>ToolBarPrimitive</source>
         <translation>ToolBarPrimitive</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1755" />
+        <location filename="../gui/MainWindow.ui" line="1757" />
         <source>New drawing</source>
         <translation>新建绘图</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1758" />
+        <location filename="../gui/MainWindow.ui" line="1760" />
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1770" />
+        <location filename="../gui/MainWindow.ui" line="1772" />
         <source>Open a file</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1773" />
+        <location filename="../gui/MainWindow.ui" line="1775" />
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1782" />
+        <location filename="../gui/MainWindow.ui" line="1784" />
         <source>Import from DXF...</source>
         <translation>从 DXF 导入...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1794" />
+        <location filename="../gui/MainWindow.ui" line="1796" />
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1797" />
+        <location filename="../gui/MainWindow.ui" line="1799" />
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1809" />
+        <location filename="../gui/MainWindow.ui" line="1811" />
         <source>Save as</source>
         <translation>另存为</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1812" />
+        <location filename="../gui/MainWindow.ui" line="1814" />
+        <location filename="../gui/MainWindow.ui" line="1880" />
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1824" />
+        <location filename="../gui/MainWindow.ui" line="1826" />
         <source>Save split as...</source>
         <translation>拆分保存为...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1827" />
+        <location filename="../gui/MainWindow.ui" line="1829" />
         <source>Save a copy of the drawing with every macro expanded into raw primitives</source>
         <translation>保存一份将所有宏展开为原始图元的绘图副本</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1836" />
-        <location filename="../src/App/MainWindow.cpp" line="2231" />
+        <location filename="../gui/MainWindow.ui" line="1838" />
+        <location filename="../src/App/MainWindow.cpp" line="2593" />
         <source>Print</source>
         <translation>打印</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1839" />
+        <location filename="../gui/MainWindow.ui" line="1841" />
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
@@ -2238,393 +2239,423 @@ Reassign it to the selected command?</source>
         <translation type="vanished">关闭</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1851" />
+        <location filename="../gui/MainWindow.ui" line="1853" />
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1860" />
+        <location filename="../gui/MainWindow.ui" line="1862" />
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1863" />
+        <location filename="../gui/MainWindow.ui" line="1865" />
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1872" />
+        <location filename="../gui/MainWindow.ui" line="1874" />
+        <source>Save all</source>
+        <translation>全部保存</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1877" />
+        <source>Save every open drawing with unsaved changes</source>
+        <translation>保存所有含未保存更改的打开图纸</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1889" />
+        <source>Next document</source>
+        <translation>下一个文档</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1892" />
+        <source>Ctrl+Tab</source>
+        <translation>Ctrl+Tab</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1901" />
+        <source>Previous document</source>
+        <translation>上一个文档</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1904" />
+        <source>Ctrl+Shift+Tab</source>
+        <translation>Ctrl+Shift+Tab</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1913" />
         <source>Export...</source>
         <translation>导出...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1875" />
+        <location filename="../gui/MainWindow.ui" line="1916" />
         <source>Export the drawing as PNG, JPG, SVG, PDF, EPS, or DXF</source>
         <translation>将绘图导出为 PNG、JPG、SVG、PDF、EPS 或 DXF</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1878" />
+        <location filename="../gui/MainWindow.ui" line="1919" />
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1890" />
-        <location filename="../src/App/MainWindow.cpp" line="1043" />
+        <location filename="../gui/MainWindow.ui" line="1931" />
+        <location filename="../src/App/MainWindow.cpp" line="1260" />
         <source>Undo</source>
         <translation>撤销</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1893" />
+        <location filename="../gui/MainWindow.ui" line="1934" />
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1905" />
-        <location filename="../src/App/MainWindow.cpp" line="1046" />
+        <location filename="../gui/MainWindow.ui" line="1946" />
+        <location filename="../src/App/MainWindow.cpp" line="1263" />
         <source>Redo</source>
         <translation>重做</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1908" />
+        <location filename="../gui/MainWindow.ui" line="1949" />
         <source>Ctrl+Shift+Z</source>
         <translation>Ctrl+Shift+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1920" />
+        <location filename="../gui/MainWindow.ui" line="1961" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2585" />
         <source>Cut</source>
         <translation>剪切</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1923" />
+        <location filename="../gui/MainWindow.ui" line="1964" />
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1935" />
+        <location filename="../gui/MainWindow.ui" line="1976" />
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1938" />
+        <location filename="../gui/MainWindow.ui" line="1979" />
         <source>Ctrl+C</source>
         <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1950" />
+        <location filename="../gui/MainWindow.ui" line="1991" />
         <source>Copy split</source>
         <translation>拆分复制</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1953" />
+        <location filename="../gui/MainWindow.ui" line="1994" />
         <source>Copy the selection with every macro expanded into raw primitives</source>
         <translation>复制所选内容，并将所有宏展开为原始图元</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1962" />
+        <location filename="../gui/MainWindow.ui" line="2003" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2527" />
         <source>Copy as image</source>
         <translation>复制为图像</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1965" />
+        <location filename="../gui/MainWindow.ui" line="2006" />
         <source>Copy the selection (or the whole drawing) to the clipboard as an image</source>
         <translation>将所选内容（或整个绘图）作为图像复制到剪贴板</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1968" />
+        <location filename="../gui/MainWindow.ui" line="2009" />
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1980" />
+        <location filename="../gui/MainWindow.ui" line="2021" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2688" />
         <source>Paste</source>
         <translation>粘贴</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1983" />
+        <location filename="../gui/MainWindow.ui" line="2024" />
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1995" />
+        <location filename="../gui/MainWindow.ui" line="2036" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2709" />
         <source>Paste in place</source>
         <translation>原位粘贴</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1998" />
+        <location filename="../gui/MainWindow.ui" line="2039" />
         <source>Paste the clipboard exactly where it was copied from, with no offset</source>
         <translation>将剪贴板内容粘贴到复制时的原始位置，不偏移</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2001" />
+        <location filename="../gui/MainWindow.ui" line="2042" />
         <source>Ctrl+Shift+V</source>
         <translation>Ctrl+Shift+V</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2013" />
+        <location filename="../gui/MainWindow.ui" line="2054" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2056" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2717" />
         <source>Duplicate</source>
         <translation>复制副本</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2016" />
+        <location filename="../gui/MainWindow.ui" line="2057" />
         <source>Ctrl+D</source>
         <translation>Ctrl+D</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2028" />
+        <location filename="../gui/MainWindow.ui" line="2069" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="885" />
         <source>Rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2031" />
+        <location filename="../gui/MainWindow.ui" line="2072" />
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2043" />
+        <location filename="../gui/MainWindow.ui" line="2084" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="835" />
         <source>Mirror</source>
         <translation>镜像</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2046" />
+        <location filename="../gui/MainWindow.ui" line="2087" />
         <source>S</source>
         <translation>S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2058" />
+        <location filename="../gui/MainWindow.ui" line="2099" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="863" />
         <source>Mirror as copy</source>
         <translation>镜像复制</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2061" />
+        <location filename="../gui/MainWindow.ui" line="2102" />
         <source>Create a mirrored copy of the selection, leaving the original in place</source>
         <translation>创建所选内容的镜像副本，原件保持不动</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2070" />
+        <location filename="../gui/MainWindow.ui" line="2111" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2077" />
         <source>Convert macro to primitives</source>
         <translation>将宏转换为图元</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2082" />
+        <location filename="../gui/MainWindow.ui" line="2123" />
         <source>Create macro from selection...</source>
         <translation>从所选内容创建宏...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2091" />
+        <location filename="../gui/MainWindow.ui" line="2132" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2332" />
         <source>Align left</source>
         <translation>左对齐</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2100" />
+        <location filename="../gui/MainWindow.ui" line="2141" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2348" />
         <source>Align right</source>
         <translation>右对齐</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2109" />
+        <location filename="../gui/MainWindow.ui" line="2150" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2364" />
         <source>Align top</source>
         <translation>顶对齐</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2118" />
+        <location filename="../gui/MainWindow.ui" line="2159" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2380" />
         <source>Align bottom</source>
         <translation>底对齐</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2127" />
+        <location filename="../gui/MainWindow.ui" line="2168" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2405" />
         <source>Align horizontal center</source>
         <translation>水平居中对齐</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2136" />
+        <location filename="../gui/MainWindow.ui" line="2177" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2429" />
         <source>Align vertical center</source>
         <translation>垂直居中对齐</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2145" />
+        <location filename="../gui/MainWindow.ui" line="2186" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2456" />
         <source>Distribute horizontally</source>
         <translation>水平分布</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2154" />
+        <location filename="../gui/MainWindow.ui" line="2195" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2479" />
         <source>Distribute vertically</source>
         <translation>垂直分布</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2166" />
+        <location filename="../gui/MainWindow.ui" line="2207" />
         <source>Select all</source>
         <translation>全选</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2169" />
+        <location filename="../gui/MainWindow.ui" line="2210" />
         <source>Ctrl+A</source>
         <translation>Ctrl+A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2178" />
+        <location filename="../gui/MainWindow.ui" line="2219" />
         <source>Find...</source>
         <translation>查找...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2181" />
+        <location filename="../gui/MainWindow.ui" line="2222" />
         <source>Ctrl+F</source>
         <translation>Ctrl+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2193" />
+        <location filename="../gui/MainWindow.ui" line="2234" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2161" />
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2196" />
+        <location filename="../gui/MainWindow.ui" line="2237" />
         <source>Del</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2235" />
+        <location filename="../gui/MainWindow.ui" line="2276" />
         <source>About Qt</source>
         <translation>关于 Qt</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2319" />
+        <location filename="../gui/MainWindow.ui" line="2360" />
         <source>Measure</source>
         <translation>测量</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2322" />
+        <location filename="../gui/MainWindow.ui" line="2363" />
         <source>Measure: click two points to read their distance and angle in the status bar</source>
         <translation>测量：点击两点，在状态栏读取距离和角度</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2325" />
+        <location filename="../gui/MainWindow.ui" line="2366" />
         <source>W</source>
         <translation>W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2337" />
+        <location filename="../gui/MainWindow.ui" line="2378" />
         <source>Dimension</source>
         <translation>标注</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2340" />
+        <location filename="../gui/MainWindow.ui" line="2381" />
         <source>Dimension: click two points, then place the dimension line with its measured distance</source>
         <translation>标注：点击两个点，然后放置带有测量距离的标注线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2343" />
+        <location filename="../gui/MainWindow.ui" line="2384" />
         <source>D</source>
         <translation>D</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2352" />
+        <location filename="../gui/MainWindow.ui" line="2393" />
         <source>Symbol wizard...</source>
         <translation>符号向导...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2355" />
+        <location filename="../gui/MainWindow.ui" line="2396" />
         <source>Generate a DIP/SIP/quad package symbol from its parameters and save it into a library</source>
         <translation>根据参数生成 DIP/SIP/四边封装符号并保存到库中</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2367" />
+        <location filename="../gui/MainWindow.ui" line="2408" />
         <source>Angular dimension</source>
         <translation>角度标注</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2370" />
+        <location filename="../gui/MainWindow.ui" line="2411" />
         <source>Angular dimension: click the vertex and a point on each side, then place the arc with the measured angle</source>
         <translation>角度标注：点击顶点和两边各一点，然后放置带有测量角度的圆弧</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2382" />
+        <location filename="../gui/MainWindow.ui" line="2423" />
         <source>Radial dimension</source>
         <translation>半径标注</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2385" />
+        <location filename="../gui/MainWindow.ui" line="2426" />
         <source>Radial dimension: click the center and a point on the rim to place a radius arrow with its measure</source>
         <translation>半径标注：点击圆心和圆周上一点，放置带有测量值的半径箭头</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2397" />
+        <location filename="../gui/MainWindow.ui" line="2438" />
         <source>Regular polygon</source>
         <translation>正多边形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2400" />
+        <location filename="../gui/MainWindow.ui" line="2441" />
         <source>Regular polygon: click the center, then a vertex</source>
         <translation>正多边形：先点击中心，再点击一个顶点</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2403" />
+        <location filename="../gui/MainWindow.ui" line="2444" />
         <source>N</source>
         <translation>N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2415" />
+        <location filename="../gui/MainWindow.ui" line="2456" />
         <source>Arc</source>
         <translation>圆弧</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2418" />
+        <location filename="../gui/MainWindow.ui" line="2459" />
         <source>Arc: click the start point, the end point, then a point the arc passes through</source>
         <translation>圆弧：依次点击起点、终点，然后点击圆弧经过的一点</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2421" />
+        <location filename="../gui/MainWindow.ui" line="2462" />
         <source>U</source>
         <translation>U</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2595" />
+        <location filename="../gui/MainWindow.ui" line="2636" />
         <source>Fit the view to the selection</source>
         <translation>缩放视图以适应所选内容</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2598" />
+        <location filename="../gui/MainWindow.ui" line="2639" />
         <source>Fit the view to the bounding box of the selected elements</source>
         <translation>缩放视图以适应所选元素的边界框</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2601" />
+        <location filename="../gui/MainWindow.ui" line="2642" />
         <source>Ctrl+Shift+F</source>
         <translation>Ctrl+Shift+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2613" />
+        <location filename="../gui/MainWindow.ui" line="2654" />
         <source>Show grid</source>
         <translation>显示网格</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2616" />
+        <location filename="../gui/MainWindow.ui" line="2657" />
         <source>Toggle the grid</source>
         <translation>切换网格显示</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2624" />
+        <location filename="../gui/MainWindow.ui" line="2665" />
         <source>Snap to grid</source>
         <translation>对齐网格</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2627" />
+        <location filename="../gui/MainWindow.ui" line="2668" />
         <source>Toggle snap to grid</source>
         <translation>切换网格对齐</translation>
     </message>
@@ -2633,12 +2664,12 @@ Reassign it to the selected command?</source>
         <translation type="vanished">背景位图</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2208" />
+        <location filename="../gui/MainWindow.ui" line="2249" />
         <source>Options</source>
         <translation>选项</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2217" />
+        <location filename="../gui/MainWindow.ui" line="2258" />
         <source>About eSchema</source>
         <translation>关于 eSchema</translation>
     </message>
@@ -2647,632 +2678,649 @@ Reassign it to the selected command?</source>
         <translation type="vanished">图层</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2247" />
-        <location filename="../gui/MainWindow.ui" line="2250" />
+        <location filename="../gui/MainWindow.ui" line="2288" />
+        <location filename="../gui/MainWindow.ui" line="2291" />
         <source>Line</source>
         <translation>直线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2253" />
+        <location filename="../gui/MainWindow.ui" line="2294" />
         <source>L</source>
         <translation>L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2265" />
-        <location filename="../gui/MainWindow.ui" line="2268" />
+        <location filename="../gui/MainWindow.ui" line="2306" />
+        <location filename="../gui/MainWindow.ui" line="2309" />
         <source>Rectangle</source>
         <translation>矩形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2271" />
+        <location filename="../gui/MainWindow.ui" line="2312" />
         <source>G</source>
         <translation>G</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2283" />
-        <location filename="../gui/MainWindow.ui" line="2286" />
+        <location filename="../gui/MainWindow.ui" line="2324" />
+        <location filename="../gui/MainWindow.ui" line="2327" />
         <source>Polygon</source>
         <translation>多边形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2289" />
+        <location filename="../gui/MainWindow.ui" line="2330" />
         <source>P</source>
         <translation>P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2301" />
-        <location filename="../gui/MainWindow.ui" line="2304" />
+        <location filename="../gui/MainWindow.ui" line="2342" />
+        <location filename="../gui/MainWindow.ui" line="2345" />
         <source>Ellipse</source>
         <translation>椭圆</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2307" />
+        <location filename="../gui/MainWindow.ui" line="2348" />
         <source>E</source>
         <translation>E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2436" />
-        <location filename="../gui/MainWindow.ui" line="2439" />
+        <location filename="../gui/MainWindow.ui" line="2477" />
+        <location filename="../gui/MainWindow.ui" line="2480" />
         <source>Select</source>
         <translation>选择</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2442" />
+        <location filename="../gui/MainWindow.ui" line="2483" />
         <source>A</source>
         <translation>A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2454" />
-        <location filename="../gui/MainWindow.ui" line="2457" />
+        <location filename="../gui/MainWindow.ui" line="2495" />
+        <location filename="../gui/MainWindow.ui" line="2498" />
         <source>Bezier</source>
         <translation>贝塞尔</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2460" />
+        <location filename="../gui/MainWindow.ui" line="2501" />
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2472" />
-        <location filename="../gui/MainWindow.ui" line="2475" />
+        <location filename="../gui/MainWindow.ui" line="2513" />
+        <location filename="../gui/MainWindow.ui" line="2516" />
         <source>Curve</source>
         <translation>曲线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2478" />
+        <location filename="../gui/MainWindow.ui" line="2519" />
         <source>O</source>
         <translation>O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2496" />
+        <location filename="../gui/MainWindow.ui" line="2537" />
         <source>T</source>
         <translation>T</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2508" />
-        <location filename="../gui/MainWindow.ui" line="2511" />
+        <location filename="../gui/MainWindow.ui" line="2549" />
+        <location filename="../gui/MainWindow.ui" line="2552" />
         <source>Connection</source>
         <translation>连接点</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2514" />
+        <location filename="../gui/MainWindow.ui" line="2555" />
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2526" />
-        <location filename="../gui/MainWindow.ui" line="2529" />
+        <location filename="../gui/MainWindow.ui" line="2567" />
+        <location filename="../gui/MainWindow.ui" line="2570" />
         <source>PCB track</source>
         <translation>PCB 走线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2532" />
+        <location filename="../gui/MainWindow.ui" line="2573" />
         <source>I</source>
         <translation>I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2544" />
-        <location filename="../gui/MainWindow.ui" line="2547" />
+        <location filename="../gui/MainWindow.ui" line="2585" />
+        <location filename="../gui/MainWindow.ui" line="2588" />
         <source>PCB pad</source>
         <translation>PCB 焊盘</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2550" />
+        <location filename="../gui/MainWindow.ui" line="2591" />
         <source>Z</source>
         <translation>Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2562" />
-        <location filename="../gui/MainWindow.ui" line="2565" />
+        <location filename="../gui/MainWindow.ui" line="2603" />
+        <location filename="../gui/MainWindow.ui" line="2606" />
         <source>Image</source>
         <translation>图像</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2568" />
+        <location filename="../gui/MainWindow.ui" line="2609" />
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2580" />
+        <location filename="../gui/MainWindow.ui" line="2621" />
         <source>Fit view</source>
         <translation>适应视图</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2583" />
+        <location filename="../gui/MainWindow.ui" line="2624" />
         <source>Fit the drawing view</source>
         <translation>适应绘图视图</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2226" />
-        <location filename="../src/App/MainWindow.cpp" line="1127" />
-        <location filename="../src/App/MainWindow.cpp" line="1138" />
+        <location filename="../gui/MainWindow.ui" line="2267" />
+        <location filename="../src/App/MainWindow.cpp" line="1344" />
+        <location filename="../src/App/MainWindow.cpp" line="1355" />
         <source>Check for updates</source>
         <translation>检查更新</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="292" />
+        <location filename="../gui/MainWindow.ui" line="282" />
         <source>Select one or more objects to see and edit their properties here.</source>
         <translation>选择一个或多个对象即可在此查看和编辑其属性。</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="633" />
+        <location filename="../gui/MainWindow.ui" line="623" />
         <source>Arrow style</source>
         <translation>箭头样式</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1848" />
+        <location filename="../gui/MainWindow.ui" line="1436" />
+        <source>Window</source>
+        <translation>窗口</translation>
+    </message>
+    <message>
+        <location filename="../gui/MainWindow.ui" line="1850" />
         <source>Close tab</source>
         <translation>关闭标签页</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2636" />
+        <location filename="../gui/MainWindow.ui" line="2677" />
         <source>Keyboard shortcuts</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2648" />
-        <location filename="../gui/MainWindow.ui" line="2651" />
+        <location filename="../gui/MainWindow.ui" line="2689" />
+        <location filename="../gui/MainWindow.ui" line="2692" />
         <source>Layer management</source>
         <translation>图层管理</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2654" />
+        <location filename="../gui/MainWindow.ui" line="2695" />
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2663" />
+        <location filename="../gui/MainWindow.ui" line="2704" />
         <source>Tracing image...</source>
         <translation>描图图像...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2666" />
+        <location filename="../gui/MainWindow.ui" line="2707" />
         <source>Attach or remove a reference image drawn under the grid, for tracing over</source>
         <translation>附加或移除绘制在网格下方用于描图的参考图像</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2681" />
+        <location filename="../gui/MainWindow.ui" line="2722" />
         <source>Basic tools</source>
         <translation>基本工具</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2696" />
-        <location filename="../src/App/MainWindow.cpp" line="1654" />
+        <location filename="../gui/MainWindow.ui" line="2737" />
+        <location filename="../src/App/MainWindow.cpp" line="1893" />
         <source>Drawing tools</source>
         <translation>绘图工具</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2705" />
+        <location filename="../gui/MainWindow.ui" line="2746" />
         <source>Customize toolbars...</source>
         <translation>自定义工具栏...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2708" />
+        <location filename="../gui/MainWindow.ui" line="2749" />
         <source>Add, remove, and reorder the commands on the toolbars</source>
         <translation>添加、移除和重新排列工具栏上的命令</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2717" />
+        <location filename="../gui/MainWindow.ui" line="2758" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="1385" />
         <source>Split at point</source>
         <translation>在点处拆分</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2720" />
+        <location filename="../gui/MainWindow.ui" line="2761" />
         <source>Split the selected line, curve or track in two at a clicked point</source>
         <translation>在点击的点处将选中的线、曲线或走线一分为二</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2729" />
+        <location filename="../gui/MainWindow.ui" line="2770" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="1548" />
         <source>Trim to intersection</source>
         <translation>修剪到交点</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2732" />
+        <location filename="../gui/MainWindow.ui" line="2773" />
         <source>Remove the clicked part of a line up to where it crosses other primitives</source>
         <translation>删除线上被点击的部分，直到它与其他图元的交点</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2741" />
+        <location filename="../gui/MainWindow.ui" line="2782" />
         <source>Extend to intersection</source>
         <translation>延伸到交点</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2744" />
+        <location filename="../gui/MainWindow.ui" line="2785" />
         <source>Extend the nearest end of a line until it meets another primitive</source>
         <translation>将线最近的一端延伸到与另一图元相交</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2753" />
+        <location filename="../gui/MainWindow.ui" line="2794" />
         <source>Clear guides</source>
         <translation>清除参考线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2756" />
+        <location filename="../gui/MainWindow.ui" line="2797" />
         <source>Remove every guide line dragged out of the rulers</source>
         <translation>删除所有从标尺拖出的参考线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2765" />
+        <location filename="../gui/MainWindow.ui" line="2806" />
         <source>Command palette...</source>
         <translation>命令面板...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2768" />
+        <location filename="../gui/MainWindow.ui" line="2809" />
         <source>Search and run any command by name</source>
         <translation>按名称搜索并运行任何命令</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2771" />
+        <location filename="../gui/MainWindow.ui" line="2812" />
         <source>Ctrl+Shift+P</source>
         <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2786" />
+        <location filename="../gui/MainWindow.ui" line="2827" />
         <source>Snap to objects</source>
         <translation>对象捕捉</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2789" />
+        <location filename="../gui/MainWindow.ui" line="2830" />
         <source>Snap clicks and drags to endpoints, midpoints, centers, and intersections of what's already drawn</source>
         <translation>将点击和拖动捕捉到已绘制图形的端点、中点、中心和交点</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2804" />
+        <location filename="../gui/MainWindow.ui" line="2845" />
         <source>Modify tools</source>
         <translation>修改工具</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2816" />
+        <location filename="../gui/MainWindow.ui" line="2857" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="933" />
         <source>Union</source>
         <translation>并集</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2819" />
+        <location filename="../gui/MainWindow.ui" line="2860" />
         <source>Merge the selected closed shapes into a single shape</source>
         <translation>将选中的闭合图形合并为一个图形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2831" />
+        <location filename="../gui/MainWindow.ui" line="2872" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="938" />
         <source>Subtraction</source>
         <translation>差集</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2834" />
+        <location filename="../gui/MainWindow.ui" line="2875" />
         <source>Subtract the other selected closed shapes from the first one (in drawing order)</source>
         <translation>从第一个图形中减去其余选中的闭合图形（按绘制顺序）</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2846" />
+        <location filename="../gui/MainWindow.ui" line="2887" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="943" />
         <source>Intersection</source>
         <translation>交集</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2849" />
+        <location filename="../gui/MainWindow.ui" line="2890" />
         <source>Keep only the area shared by all the selected closed shapes</source>
         <translation>仅保留所有选中闭合图形的公共区域</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2861" />
+        <location filename="../gui/MainWindow.ui" line="2902" />
         <source>Smooth curved results</source>
         <translation>平滑曲线结果</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2864" />
+        <location filename="../gui/MainWindow.ui" line="2905" />
         <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
         <translation>将含曲线的结果转换为复杂曲线（节点少得多，角略微圆滑），而不是展平的多边形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2876" />
+        <location filename="../gui/MainWindow.ui" line="2917" />
         <source>Move with base point...</source>
         <translation>按基点移动...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2879" />
+        <location filename="../gui/MainWindow.ui" line="2920" />
         <source>Pick a base point on the selection, then its destination - the selection moves by that exact displacement, with snapping on both points</source>
         <translation>在所选内容上拾取基点，再拾取目标点——所选内容将精确按该位移移动，两个点均可捕捉</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2891" />
+        <location filename="../gui/MainWindow.ui" line="2932" />
         <source>Copy with base point...</source>
         <translation>按基点复制...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2894" />
+        <location filename="../gui/MainWindow.ui" line="2935" />
         <source>Pick a base point on the selection, then its destination - a copy is placed at that exact displacement, with snapping on both points</source>
         <translation>在所选内容上拾取基点，再拾取目标点——将在该精确位移处放置一份副本，两个点均可捕捉</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2906" />
+        <location filename="../gui/MainWindow.ui" line="2947" />
         <source>Rotate by angle...</source>
         <translation>按角度旋转...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2909" />
+        <location filename="../gui/MainWindow.ui" line="2950" />
         <source>Rotate the selection by an arbitrary angle; rectangles and ellipses are converted to polygons/curves first</source>
         <translation>将所选内容旋转任意角度；矩形和椭圆会先转换为多边形/曲线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2921" />
+        <location filename="../gui/MainWindow.ui" line="2962" />
         <source>Scale...</source>
         <translation>缩放...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2924" />
+        <location filename="../gui/MainWindow.ui" line="2965" />
         <source>Scale the selection by a percentage around the first selected primitive's first point</source>
         <translation>以百分比围绕第一个选中图元的第一个点缩放所选内容</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2936" />
+        <location filename="../gui/MainWindow.ui" line="2977" />
         <source>Array of copies...</source>
         <translation>复制阵列...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2939" />
+        <location filename="../gui/MainWindow.ui" line="2980" />
         <source>Replicate the selection on a grid of rows and columns</source>
         <translation>将所选内容按行列网格复制</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2951" />
+        <location filename="../gui/MainWindow.ui" line="2992" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="975" />
         <source>Convert to polygon</source>
         <translation>转换为多边形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2954" />
+        <location filename="../gui/MainWindow.ui" line="2995" />
         <source>Rewrite the selected rectangles, ellipses, and closed curves as node-editable polygons</source>
         <translation>将选中的矩形、椭圆和闭合曲线重写为节点可编辑的多边形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2966" />
+        <location filename="../gui/MainWindow.ui" line="3007" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="980" />
         <source>Convert to complex curve</source>
         <translation>转换为复杂曲线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2969" />
+        <location filename="../gui/MainWindow.ui" line="3010" />
         <source>Rewrite the selected rectangles, ellipses, and polygons as smooth complex curves</source>
         <translation>将选中的矩形、椭圆和多边形重写为平滑的复杂曲线</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2981" />
+        <location filename="../gui/MainWindow.ui" line="3022" />
         <source>Simplify nodes...</source>
         <translation>简化节点...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2984" />
+        <location filename="../gui/MainWindow.ui" line="3025" />
         <source>Remove nodes that deviate less than the given tolerance from the selected polygons and curves</source>
         <translation>从选中的多边形和曲线中移除偏差小于给定容差的节点</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2996" />
+        <location filename="../gui/MainWindow.ui" line="3037" />
         <source>Fillet corners...</source>
         <translation>圆角...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2999" />
+        <location filename="../gui/MainWindow.ui" line="3040" />
         <source>Round every corner of the selected polygons and rectangles with an arc of the given radius</source>
         <translation>用给定半径的圆弧将选中多边形和矩形的每个角倒圆</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3011" />
+        <location filename="../gui/MainWindow.ui" line="3052" />
         <source>Chamfer corners...</source>
         <translation>倒角...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3014" />
+        <location filename="../gui/MainWindow.ui" line="3055" />
         <source>Cut every corner of the selected polygons and rectangles at the given distance</source>
         <translation>在给定距离处切掉选中多边形和矩形的每个角</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3026" />
+        <location filename="../gui/MainWindow.ui" line="3067" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2005" />
         <source>Snap selection to grid</source>
         <translation>将所选内容对齐到网格</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3029" />
+        <location filename="../gui/MainWindow.ui" line="3070" />
         <source>Round every point of the selection to the snap step - handy after a DXF import or drawing with snapping off</source>
         <translation>将所选内容的每个点取整到捕捉步长——在导入 DXF 或关闭捕捉绘图后很有用</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3041" />
+        <location filename="../gui/MainWindow.ui" line="3082" />
         <source>Offset outline...</source>
         <translation>轮廓偏移...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3044" />
+        <location filename="../gui/MainWindow.ui" line="3085" />
         <source>Grow or shrink the selected closed shapes by a parallel offset of their outline</source>
         <translation>通过轮廓的平行偏移放大或缩小选中的闭合图形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3053" />
+        <location filename="../gui/MainWindow.ui" line="3094" />
         <source>Invert selection</source>
         <translation>反转选择</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3056" />
+        <location filename="../gui/MainWindow.ui" line="3097" />
         <source>Ctrl+Shift+I</source>
         <translation>Ctrl+Shift+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3068" />
+        <location filename="../gui/MainWindow.ui" line="3109" />
         <source>Select same type</source>
         <translation>选择相同类型</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3071" />
+        <location filename="../gui/MainWindow.ui" line="3112" />
         <source>Select every primitive of the same type as the current selection</source>
         <translation>选择与当前选择类型相同的所有图元</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3086" />
+        <location filename="../gui/MainWindow.ui" line="3127" />
         <source>Show rulers</source>
         <translation>显示标尺</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="674" />
+        <location filename="../src/App/MainWindow.cpp" line="883" />
         <source>Search commands...</source>
         <translation>搜索命令...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1043" />
+        <location filename="../src/App/MainWindow.cpp" line="1260" />
         <source>Undo: %1</source>
         <translation>撤销:%1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1046" />
+        <location filename="../src/App/MainWindow.cpp" line="1263" />
         <source>Redo: %1</source>
         <translation>重做:%1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1117" />
+        <location filename="../src/App/MainWindow.cpp" line="1334" />
         <source>Update available</source>
         <translation>有可用更新</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1118" />
+        <location filename="../src/App/MainWindow.cpp" line="1335" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>有新版本的 eSchema 可用（%1）。
 是否立即下载？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1128" />
+        <location filename="../src/App/MainWindow.cpp" line="1345" />
         <source>eSchema is already up to date.</source>
         <translation>eSchema 已是最新版本。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1139" />
+        <location filename="../src/App/MainWindow.cpp" line="1356" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>无法检查更新。请检查您的网络连接。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1181" />
+        <location filename="../src/App/MainWindow.cpp" line="1398" />
         <source>Attach tracing image</source>
         <translation>附加描图图像</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1231" />
+        <location filename="../src/App/MainWindow.cpp" line="1448" />
         <source>Symbol wizard</source>
         <translation>符号向导</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1237" />
+        <location filename="../src/App/MainWindow.cpp" line="1454" />
         <source>New drawing* (unsaved)</source>
         <translation>新建绘图*(未保存)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1291" />
+        <location filename="../src/App/MainWindow.cpp" line="1508" />
         <source>The file no longer exists:
 %1</source>
         <translation>文件已不存在：
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1303" />
+        <location filename="../src/App/MainWindow.cpp" line="1520" />
         <source>Clear list</source>
         <translation>清空列表</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1369" />
-        <location filename="../src/App/MainWindow.cpp" line="1912" />
-        <location filename="../src/App/MainWindow.cpp" line="2022" />
-        <location filename="../src/App/MainWindow.cpp" line="2059" />
-        <location filename="../src/App/MainWindow.cpp" line="2225" />
-        <location filename="../src/App/MainWindow.cpp" line="2375" />
+        <location filename="../src/App/MainWindow.cpp" line="1586" />
+        <location filename="../src/App/MainWindow.cpp" line="2272" />
+        <location filename="../src/App/MainWindow.cpp" line="2384" />
+        <location filename="../src/App/MainWindow.cpp" line="2421" />
+        <location filename="../src/App/MainWindow.cpp" line="2587" />
+        <location filename="../src/App/MainWindow.cpp" line="2737" />
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1369" />
-        <location filename="../src/App/MainWindow.cpp" line="2225" />
+        <location filename="../src/App/MainWindow.cpp" line="1586" />
+        <location filename="../src/App/MainWindow.cpp" line="2587" />
         <source>Unable to save the file:
 %1</source>
         <translation>无法保存文件:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1391" />
+        <location filename="../src/App/MainWindow.cpp" line="1677" />
         <source>Unsaved changes</source>
         <translation>未保存的更改</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1392" />
+        <location filename="../src/App/MainWindow.cpp" line="1678" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>有未保存的更改。是否要保存?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1896" />
+        <location filename="../src/App/MainWindow.cpp" line="2240" />
         <source>an untitled drawing</source>
         <translation>未命名的绘图</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1899" />
-        <location filename="../src/App/MainWindow.cpp" line="1924" />
+        <location filename="../src/App/MainWindow.cpp" line="2249" />
+        <location filename="../src/App/MainWindow.cpp" line="2282" />
         <source>Autosave recovery</source>
         <translation>自动保存恢复</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1900" />
+        <location filename="../src/App/MainWindow.cpp" line="2250" />
+        <source>eSchema wasn't closed properly last time.
+Autosaves were found for:
+%1
+
+Do you want to recover them?</source>
+        <translation>eSchema 上次未正常关闭。
+找到以下自动保存：
+%1
+
+要恢复它们吗？</translation>
+    </message>
+    <message>
         <source>eSchema wasn't closed properly last time.
 An autosave was found for %1.
 
 Do you want to recover it?</source>
-        <translation>eSchema 上次未正常关闭。
+        <translation type="vanished">eSchema 上次未正常关闭。
 找到了 %1 的自动保存文件。
 
 是否要恢复它？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1913" />
+        <location filename="../src/App/MainWindow.cpp" line="2273" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>无法恢复自动保存的文件：
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1939" />
+        <location filename="../src/App/MainWindow.cpp" line="2299" />
         <source>Open drawing</source>
         <translation>打开绘图</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1940" />
-        <location filename="../src/App/MainWindow.cpp" line="2196" />
-        <location filename="../src/App/MainWindow.cpp" line="2212" />
+        <location filename="../src/App/MainWindow.cpp" line="2300" />
+        <location filename="../src/App/MainWindow.cpp" line="2558" />
+        <location filename="../src/App/MainWindow.cpp" line="2574" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1989" />
+        <location filename="../src/App/MainWindow.cpp" line="2349" />
         <source>The drawing had elements outside the drawing area and was moved onto the sheet</source>
         <translation>图纸中有元素位于绘图区域之外，已移动到图纸上</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2022" />
-        <location filename="../src/App/MainWindow.cpp" line="2059" />
+        <location filename="../src/App/MainWindow.cpp" line="2384" />
+        <location filename="../src/App/MainWindow.cpp" line="2421" />
         <source>Unable to open the file:
 %1</source>
         <translation>无法打开文件:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2037" />
-        <location filename="../src/App/MainWindow.cpp" line="2072" />
+        <location filename="../src/App/MainWindow.cpp" line="2399" />
+        <location filename="../src/App/MainWindow.cpp" line="2434" />
         <source>Import from DXF</source>
         <translation>从 DXF 导入</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2038" />
+        <location filename="../src/App/MainWindow.cpp" line="2400" />
         <source>DXF (*.dxf)</source>
         <translation>DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2073" />
+        <location filename="../src/App/MainWindow.cpp" line="2435" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -3281,44 +3329,44 @@ Do you want to recover it?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2130" />
+        <location filename="../src/App/MainWindow.cpp" line="2492" />
         <source>Edit FCD code</source>
         <translation>编辑 FCD 代码</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2195" />
+        <location filename="../src/App/MainWindow.cpp" line="2557" />
         <source>Save drawing as</source>
         <translation>绘图另存为</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2211" />
+        <location filename="../src/App/MainWindow.cpp" line="2573" />
         <source>Save split as</source>
         <translation>拆分保存为</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2231" />
-        <location filename="../src/App/MainWindow.cpp" line="2345" />
+        <location filename="../src/App/MainWindow.cpp" line="2593" />
+        <location filename="../src/App/MainWindow.cpp" line="2707" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2527" />
         <source>The drawing is empty.</source>
         <translation>绘图为空。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2268" />
+        <location filename="../src/App/MainWindow.cpp" line="2630" />
         <source>Print preview</source>
         <translation>打印预览</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2345" />
+        <location filename="../src/App/MainWindow.cpp" line="2707" />
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2353" />
+        <location filename="../src/App/MainWindow.cpp" line="2715" />
         <source>Export drawing</source>
         <translation>导出绘图</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2376" />
+        <location filename="../src/App/MainWindow.cpp" line="2738" />
         <source>Could not export the file:
 %1</source>
         <translation>无法导出文件：
