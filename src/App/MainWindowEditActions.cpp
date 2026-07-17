@@ -752,6 +752,7 @@ void MainWindow::updateEditActionsState()
     ui->actionArray->setEnabled(hasSelection);
     ui->actionSnapSelectionToGrid->setEnabled(hasSelection);
     ui->actionSelectSameType->setEnabled(hasSelection);
+    ui->actionZoomToSelection->setEnabled(hasSelection);
 }
 
 // Reuses the very same ui->action* objects the Edit menu bar entry is

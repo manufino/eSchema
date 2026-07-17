@@ -2602,6 +2602,9 @@
    </property>
   </action>
   <action name="actionZoomToSelection">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../resources.qrc">
      <normaloff>:/res/resources/remix/zoom-in-line.png</normaloff>:/res/resources/remix/zoom-in-line.png</iconset>
