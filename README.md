@@ -144,6 +144,17 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 
 ## What's new
 
+### 1.0.9
+- **Multiple documents**: any number of drawings open at once, as tabs in the drawing area — drag a tab to split them side by side, stack them back together, or float a drawing in its own window, all with Qt's native dock drag-and-drop and IDE-style slim tabs with a close button
+- **Per-document everything**: each drawing keeps its own undo/redo history, file path, and layer configuration (names, colors, visibility, locks, master layer) — switching tabs swaps them seamlessly, and every existing command simply acts on the active drawing
+- **Window menu**: the open documents listed with the active one checked, plus **Ctrl+Tab / Ctrl+Shift+Tab** to cycle through them
+- **Save all** (Ctrl+Shift+S): saves every modified document in one go — named files silently in place, untitled ones through Save As each
+- **Autosave covers every open document**: each modified drawing gets its own recovery sidecar, and after a crash the next launch offers to restore all of them, each into its own tab
+- **AutoCAD window/crossing selection**: dragging left-to-right (solid blue) selects only what's fully inside the rectangle, right-to-left (dashed green) also what it merely touches; Ctrl/Shift extends the existing selection
+- Opening an already-open file activates its tab instead of loading a duplicate; dropping several files on the window opens each in its own tab; new drawings are numbered "New drawing 1, 2, ..."
+- The command palette now opens only via its shortcut or by typing in its search field — no more accidental popups when switching tabs
+- Every class and method in the source headers is now documented
+
 ### 1.0.8
 - **Pixel-faithful FidoCadJ rendering**: text em size, vertical stretching and label anchoring now follow the reference editor's exact formulas, label TY font families and sizes are honored (e.g. Bitstream Charter) and round-tripped, dash patterns and round caps match `Globals.dash`, and arrow terminators combine the triangle with the limiter bar and shorten the stroke to the arrowhead's base - side-by-side drawings now look the same
 - **Dynamic cursor tooltip** while drawing (length/angle, width × height, radius - Options > Drawing) and **object snap tracking**: hovered snap points become alignment references with dashed alignment lines, AutoCAD-style (Options > Snap)
