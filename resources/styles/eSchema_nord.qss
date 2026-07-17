@@ -43,6 +43,9 @@ padding-top:2px;
 padding-bottom:2px;
 color: #d8dee9;
 }
+QMenu::item:disabled {
+color: #737d8c;
+}
 QMenu::item:selected {
 color: #eceff4;
 background-color: qlineargradient(spread:reflect, x1:0.523, y1:0, x2:0.522, y2:0.99322, stop:0 rgba(94, 129, 172, 235), stop:0.508772 rgba(76, 110, 156, 220), stop:0.997301 rgba(129, 161, 193, 235));
