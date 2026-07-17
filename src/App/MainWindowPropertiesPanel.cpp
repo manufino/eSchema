@@ -132,11 +132,18 @@ void MainWindow::updatePropertiesPanel()
         ui->lineEdit->clear();
         ui->lineEdit_2->clear();
         // The panel is otherwise completely blank - tell the user why,
-        // instead of leaving a mysteriously empty dock.
+        // instead of leaving a mysteriously empty dock. The trailing
+        // spacer must stop expanding meanwhile, or it would keep half the
+        // vertical space for itself and push the (also expanding) hint row
+        // into the bottom half instead of letting it center in the dock.
         ui->labelNoSelection->setVisible(true);
+        ui->verticalSpacerProp->changeSize(20, 0, QSizePolicy::Minimum, QSizePolicy::Minimum);
+        ui->gridLayoutProp->invalidate();
         return;
     }
     ui->labelNoSelection->setVisible(false);
+    ui->verticalSpacerProp->changeSize(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    ui->gridLayoutProp->invalidate();
 
     // Nome/Valore apply to every primitive type (FIDOSPECS.md 6.1-6.3: every
     // primitive can carry a name/value TY label, one way or another).
