@@ -182,6 +182,9 @@ void SettingsManager::writeMissingDefaults()
     def("object_snap_midpoints", true);
     def("object_snap_centers", true);
     def("object_snap_intersections", true);
+    // AutoCAD-style: hovered snap points become alignment references (see
+    // Sheet::snapPosition()'s tracking pass).
+    def("object_snap_tracking", true);
     def("snap_indicator_color", QColor(255, 128, 0).name());
     def("handle_color", QColor(Qt::red).name());
     def("snap_to_guides", true);
@@ -202,6 +205,9 @@ void SettingsManager::writeMissingDefaults()
     def("text_default_font", "Courier New");
     def("nudge_step_multiplier", 1);
     def("dimension_text_size", 4);
+    // Live length/angle readout at the cursor while drawing (see
+    // PrimitivePlacementController::updatePlacementTooltip()).
+    def("dynamic_tooltip", true);
 
     // COLORS
     def("background_color", QColor("white").name());

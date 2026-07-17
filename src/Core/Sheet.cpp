@@ -24,6 +24,7 @@
 #include "PrimitivePad.h"
 #include "LayerList.h"
 #include <QGraphicsView>
+#include <QFontMetricsF>
 #include <utility>
 
 namespace {
@@ -216,6 +217,62 @@ void Sheet::drawForeground(QPainter *painter, const QRectF &)
         painter->drawRect(QRectF(m_snapIndicator - QPointF(half, half),
                                  QSizeF(half * 2.0, half * 2.0)));
     }
+
+    // Snap tracking: a small cross on every acquired point and a dashed
+    // alignment line whenever the cursor is locked onto one - same color
+    // family and constant-screen-size trick as the indicator above.
+    if (!m_trackingPoints.isEmpty() || !m_trackingLines.isEmpty()) {
+        const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
+        QColor trackColor(SettingsManager::getInstance()
+                          .loadSetting("snap_indicator_color").toString());
+        if (!trackColor.isValid())
+            trackColor = QColor(255, 128, 0);
+        QPen crossPen(trackColor);
+        crossPen.setWidthF(1.5 / qMax(0.01, scale));
+        painter->setPen(crossPen);
+        painter->setBrush(Qt::NoBrush);
+        const qreal arm = 4.0 / qMax(0.01, scale);
+        for (const QPointF &point : std::as_const(m_trackingPoints)) {
+            painter->drawLine(QLineF(point - QPointF(arm, 0), point + QPointF(arm, 0)));
+            painter->drawLine(QLineF(point - QPointF(0, arm), point + QPointF(0, arm)));
+        }
+        if (!m_trackingLines.isEmpty()) {
+            QPen dashPen(trackColor);
+            dashPen.setWidthF(1.0 / qMax(0.01, scale));
+            dashPen.setStyle(Qt::DashLine);
+            painter->setPen(dashPen);
+            for (const QLineF &line : std::as_const(m_trackingLines))
+                painter->drawLine(line);
+        }
+    }
+
+    // Placement tooltip: the live length/angle (or size) readout hugging
+    // the cursor while drawing. Painted in device coordinates so neither
+    // the box nor its text scales with the zoom; a dark translucent bubble
+    // with light text stays readable on any canvas color.
+    if (m_placementTooltipVisible && !m_placementTooltipText.isEmpty()) {
+        painter->save();
+        const QTransform sceneToDevice = painter->worldTransform();
+        painter->resetTransform();
+        QFont font = painter->font();
+        font.setPointSizeF(8.5);
+        painter->setFont(font);
+        const QFontMetricsF metrics(font);
+        const QPointF devicePos = sceneToDevice.map(m_placementTooltipAnchor)
+                + QPointF(14.0, 18.0);
+        QRectF box = metrics.boundingRect(QRectF(0, 0, 1000, 1000),
+                                          Qt::AlignLeft | Qt::AlignTop,
+                                          m_placementTooltipText);
+        box.moveTopLeft(devicePos);
+        box.adjust(-5.0, -3.0, 5.0, 3.0);
+        painter->setPen(QPen(QColor(255, 255, 255, 60)));
+        painter->setBrush(QColor(45, 45, 45, 215));
+        painter->drawRoundedRect(box, 3.0, 3.0);
+        painter->setPen(Qt::white);
+        painter->drawText(box.adjusted(5.0, 3.0, -5.0, -3.0),
+                          Qt::AlignLeft | Qt::AlignTop, m_placementTooltipText);
+        painter->restore();
+    }
 }
 
 QPointF Sheet::snapPosition(const QPointF &scenePos,
@@ -228,6 +285,11 @@ QPointF Sheet::snapPosition(const QPointF &scenePos,
     const qreal scale = views().isEmpty() ? 1.0 : views().first()->transform().m11();
     const qreal radius = (radiusPx > 0 ? radiusPx : 12.0) / qMax(0.01, scale);
 
+    const QVariant trackingSetting = SettingsManager::getInstance()
+            .loadSetting("object_snap_tracking");
+    const bool trackingEnabled = m_objectSnapEnabled
+            && (trackingSetting.isValid() ? trackingSetting.toBool() : true);
+
     if (m_objectSnapEnabled) {
         const std::optional<QPointF> captured =
                 ObjectSnap::snapPoint(this, scenePos, radius, excluded);
@@ -237,10 +299,31 @@ QPointF Sheet::snapPosition(const QPointF &scenePos,
                 m_snapIndicator = *captured;
                 update();
             }
+            // Snap tracking: hovering a snappable point acquires it - from
+            // now on (until this interaction ends) the cursor can align
+            // with it from a distance, AutoCAD-style.
+            if (trackingEnabled) {
+                m_trackingPoints.removeAll(*captured);
+                m_trackingPoints.prepend(*captured);
+                // A handful is plenty; stale acquisitions just add noise.
+                while (m_trackingPoints.size() > 3)
+                    m_trackingPoints.removeLast();
+            }
+            if (!m_trackingLines.isEmpty()) {
+                m_trackingLines.clear();
+                update();
+            }
             return *captured;
         }
     }
-    clearSnapIndicator();
+    // Hide only the indicator here: this runs on every tracked mouse move,
+    // and the acquisitions must survive until the interaction ends
+    // (clearSnapIndicator(), which external callers invoke at that point,
+    // clears them too).
+    if (m_snapIndicatorVisible) {
+        m_snapIndicatorVisible = false;
+        update();
+    }
     QPointF snapped = Utils::instance().snapToGrid(scenePos);
 
     // Guides snap per axis, each axis to its nearest guide within the
@@ -268,6 +351,41 @@ QPointF Sheet::snapPosition(const QPointF &scenePos,
                 }
             }
         }
+    }
+
+    // Snap tracking: lock each axis onto the nearest acquired point the raw
+    // cursor is aligned with (within the same capture radius), overriding
+    // grid/guides on that axis - aligning with two points at once lands on
+    // their crossing. The dashed alignment lines drawn from each winning
+    // point to the result are what makes the lock legible.
+    QList<QLineF> trackingLines;
+    if (trackingEnabled && !m_trackingPoints.isEmpty()) {
+        const QPointF *winX = nullptr, *winY = nullptr;
+        qreal bestX = radius, bestY = radius;
+        for (const QPointF &point : std::as_const(m_trackingPoints)) {
+            const qreal dx = qAbs(scenePos.x() - point.x());
+            if (dx <= bestX) {
+                bestX = dx;
+                winX = &point;
+            }
+            const qreal dy = qAbs(scenePos.y() - point.y());
+            if (dy <= bestY) {
+                bestY = dy;
+                winY = &point;
+            }
+        }
+        if (winX)
+            snapped.setX(winX->x());
+        if (winY)
+            snapped.setY(winY->y());
+        if (winX && !qFuzzyCompare(winX->y(), snapped.y()))
+            trackingLines.append(QLineF(*winX, snapped));
+        if (winY && winY != winX && !qFuzzyCompare(winY->x(), snapped.x()))
+            trackingLines.append(QLineF(*winY, snapped));
+    }
+    if (trackingLines != m_trackingLines) {
+        m_trackingLines = trackingLines;
+        update();
     }
     return snapped;
 }
@@ -322,9 +440,30 @@ int Sheet::guideNear(const QPointF &scenePos, qreal tolerance) const
 
 void Sheet::clearSnapIndicator()
 {
-    if (!m_snapIndicatorVisible)
+    if (!m_snapIndicatorVisible && m_trackingPoints.isEmpty() && m_trackingLines.isEmpty())
         return;
     m_snapIndicatorVisible = false;
+    m_trackingPoints.clear();
+    m_trackingLines.clear();
+    update();
+}
+
+void Sheet::setPlacementTooltip(const QPointF &anchor, const QString &text)
+{
+    if (m_placementTooltipVisible && m_placementTooltipAnchor == anchor
+            && m_placementTooltipText == text)
+        return;
+    m_placementTooltipVisible = true;
+    m_placementTooltipAnchor = anchor;
+    m_placementTooltipText = text;
+    update();
+}
+
+void Sheet::clearPlacementTooltip()
+{
+    if (!m_placementTooltipVisible)
+        return;
+    m_placementTooltipVisible = false;
     update();
 }
 

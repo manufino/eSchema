@@ -433,6 +433,7 @@ void PrimitivePlacementController::finishPlacement()
     m_pointsPlaced = 0;
     m_activeTool = Tool::Select;
     m_armedMacroKey.clear();
+    m_sheet->clearPlacementTooltip();
 
     // Unlike Rectangle/Text/etc., staying on the tool wouldn't let the next
     // click place another image anyway - it always needs a fresh file pick
@@ -524,6 +525,7 @@ void PrimitivePlacementController::discardActivePrimitive()
         m_sheet->removePrimitive(extra);
     m_dimensionExtras.clear();
     m_sheet->clearPickHighlights();
+    m_sheet->clearPlacementTooltip();
     m_pointsPlaced = 0;
 }
 
@@ -1206,6 +1208,15 @@ bool PrimitivePlacementController::handleMousePress(const QPointF &rawScenePos)
 
 bool PrimitivePlacementController::handleMouseMove(const QPointF &rawScenePos)
 {
+    const bool consumed = handleMouseMoveImpl(rawScenePos);
+    // After the preview moved: same constrained point it just used, so the
+    // readout can never disagree with what's on screen.
+    updatePlacementTooltip(constrainedPlacementPoint(rawScenePos));
+    return consumed;
+}
+
+bool PrimitivePlacementController::handleMouseMoveImpl(const QPointF &rawScenePos)
+{
     // Hover highlighting for the pick-driven dimension tools - live even
     // while the tool is merely armed, before anything was clicked.
     const Tool hoverTool = m_activePrimitive ? m_activeTool : currentTool();
@@ -1330,4 +1341,111 @@ bool PrimitivePlacementController::handleKeyPress(QKeyEvent *event)
         return true;
     }
     return false;
+}
+
+QString PrimitivePlacementController::tooltipLength(qreal length) const
+{
+    // Same unit preference as the status bar and the Measure tool
+    // (Options > Interface > Coordinates display); one logical unit is
+    // 1/200 inch = 0.127 mm (FIDOSPECS.md 3).
+    const int unitsDisplay = qBound(0, SettingsManager::getInstance()
+                                    .loadSetting("units_display").toInt(), 2);
+    switch (unitsDisplay) {
+    case 1:
+        return QString::number(length, 'f', 1);
+    case 2:
+        return tr("%1 mm").arg(length * 0.127, 0, 'f', 2);
+    default:
+        return tr("%1 (%2 mm)").arg(length, 0, 'f', 1).arg(length * 0.127, 0, 'f', 2);
+    }
+}
+
+void PrimitivePlacementController::updatePlacementTooltip(const QPointF &scenePos)
+{
+    const QVariant enabled = SettingsManager::getInstance().loadSetting("dynamic_tooltip");
+    if ((enabled.isValid() && !enabled.toBool()) || !m_activePrimitive) {
+        m_sheet->clearPlacementTooltip();
+        return;
+    }
+
+    // Length and visual angle of the segment from `from` to the cursor -
+    // y grows downward on screen, hence the sign flip (same convention as
+    // measureText()).
+    const auto segmentText = [this](const QPointF &from, const QPointF &to) {
+        const QPointF delta = to - from;
+        const qreal length = std::hypot(delta.x(), delta.y());
+        const qreal angle = qRadiansToDegrees(std::atan2(-delta.y(), delta.x()));
+        return tr("%1   %2°").arg(tooltipLength(length)).arg(angle, 0, 'f', 1);
+    };
+
+    QString text;
+    switch (m_activeTool) {
+    case Tool::Line:
+    case Tool::PcbTrack:
+        // Chained tools: the active primitive is always the current
+        // segment, so point 0 is this segment's own start.
+        text = segmentText(m_activePrimitive->controlPoint(0), scenePos);
+        break;
+    case Tool::Polygon:
+    case Tool::Curve: {
+        // The last vertex is the live preview one - measure from the last
+        // actually-fixed vertex before it.
+        const int count = m_activePrimitive->controlPointCount();
+        if (count >= 2)
+            text = segmentText(m_activePrimitive->controlPoint(count - 2), scenePos);
+        break;
+    }
+    case Tool::Bezier:
+        if (m_pointsPlaced >= 1)
+            text = segmentText(m_activePrimitive->controlPoint(m_pointsPlaced - 1), scenePos);
+        break;
+    case Tool::Rectangle:
+    case Tool::Ellipse: {
+        const QPointF corner = m_activePrimitive->controlPoint(0);
+        text = tr("%1 × %2")
+                .arg(tooltipLength(qAbs(scenePos.x() - corner.x())))
+                .arg(tooltipLength(qAbs(scenePos.y() - corner.y())));
+        break;
+    }
+    case Tool::RegularPolygon: {
+        const QPointF delta = scenePos - m_regularPolygonCenter;
+        text = tr("R %1   %2°")
+                .arg(tooltipLength(std::hypot(delta.x(), delta.y())))
+                .arg(qRadiansToDegrees(std::atan2(-delta.y(), delta.x())), 0, 'f', 1);
+        break;
+    }
+    case Tool::Arc:
+        if (m_pointsPlaced == 1) {
+            // Choosing the end point - a straight chord so far.
+            text = segmentText(m_arcStart, scenePos);
+        } else {
+            // Bulging through the cursor - the circumcircle's radius is
+            // the arc's own.
+            QPointF center;
+            if (circumcenter(m_arcStart, scenePos, m_arcEnd, &center)) {
+                const QPointF delta = scenePos - center;
+                text = tr("R %1").arg(tooltipLength(std::hypot(delta.x(), delta.y())));
+            }
+        }
+        break;
+    case Tool::Measure:
+        text = segmentText(m_measureStart, scenePos);
+        break;
+    case Tool::Dimension:
+        // Only while the two measured points are being picked - once the
+        // annotation itself follows the cursor, its own label already
+        // previews the value.
+        if (m_pointsPlaced == 1)
+            text = segmentText(m_dimensionStart, scenePos);
+        break;
+    default:
+        // Single-click drops (Text/Connection/Pad/Macro/Image) and the
+        // pick-driven dimensions: nothing measurable at the cursor.
+        break;
+    }
+
+    if (text.isEmpty())
+        m_sheet->clearPlacementTooltip();
+    else
+        m_sheet->setPlacementTooltip(scenePos, text);
 }

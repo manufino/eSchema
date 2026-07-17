@@ -186,6 +186,8 @@ void DialogOptions::loadSettings()
     ui->chkSnapCenters->setChecked(val.isValid() ? val.toBool() : true);
     val = settings.loadSetting("object_snap_intersections");
     ui->chkSnapIntersections->setChecked(val.isValid() ? val.toBool() : true);
+    val = settings.loadSetting("object_snap_tracking");
+    ui->chkSnapTracking->setChecked(val.isValid() ? val.toBool() : true);
     val = settings.loadSetting("snap_indicator_color");
     ui->pickSnapIndicatorColor->setColor(QColor(val.isValid() && QColor(val.toString()).isValid()
                                                  ? val.toString() : QStringLiteral("#ff8000")));
@@ -219,6 +221,8 @@ void DialogOptions::loadSettings()
     ui->spinNudgeMultiplier->setValue(val.toInt() > 0 ? val.toInt() : 1);
     val = settings.loadSetting("dimension_text_size");
     ui->spinDimensionTextSize->setValue(val.toInt() > 0 ? val.toInt() : 4);
+    val = settings.loadSetting("dynamic_tooltip");
+    ui->chkDynamicTooltip->setChecked(val.isValid() ? val.toBool() : true);
 }
 
 void DialogOptions::saveSettings()
@@ -267,6 +271,7 @@ void DialogOptions::saveSettings()
     settings.saveSetting("object_snap_midpoints", ui->chkSnapMidpoints->isChecked());
     settings.saveSetting("object_snap_centers", ui->chkSnapCenters->isChecked());
     settings.saveSetting("object_snap_intersections", ui->chkSnapIntersections->isChecked());
+    settings.saveSetting("object_snap_tracking", ui->chkSnapTracking->isChecked());
     settings.saveSetting("snap_indicator_color", ui->pickSnapIndicatorColor->getColor().name());
     settings.saveSetting("handle_color", ui->pickHandleColor->getColor().name());
     settings.saveSetting("snap_to_guides", ui->chkSnapGuides->isChecked());
@@ -282,6 +287,7 @@ void DialogOptions::saveSettings()
     settings.saveSetting("text_default_font", ui->fontComboDefaultText->currentFont().family());
     settings.saveSetting("nudge_step_multiplier", ui->spinNudgeMultiplier->value());
     settings.saveSetting("dimension_text_size", ui->spinDimensionTextSize->value());
+    settings.saveSetting("dynamic_tooltip", ui->chkDynamicTooltip->isChecked());
 }
 
 void DialogOptions::syncGridPreview()
@@ -390,6 +396,7 @@ void DialogOptions::restorePageDefaults(int pageIndex)
         ui->chkSnapMidpoints->setChecked(true);
         ui->chkSnapCenters->setChecked(true);
         ui->chkSnapIntersections->setChecked(true);
+        ui->chkSnapTracking->setChecked(true);
         ui->pickSnapIndicatorColor->setColor(QColor(QStringLiteral("#ff8000")));
         ui->pickHandleColor->setColor(QColor(QStringLiteral("#ff0000")));
         ui->chkSnapGuides->setChecked(true);
@@ -405,6 +412,7 @@ void DialogOptions::restorePageDefaults(int pageIndex)
         ui->fontComboDefaultText->setCurrentFont(QFont(QStringLiteral("Courier New")));
         ui->spinNudgeMultiplier->setValue(1);
         ui->spinDimensionTextSize->setValue(4);
+        ui->chkDynamicTooltip->setChecked(true);
         break;
     default:
         break;

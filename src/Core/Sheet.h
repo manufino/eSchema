@@ -79,9 +79,30 @@ public:
                          const QList<const GraphicsPrimitive *> &excluded = {});
     void setObjectSnapEnabled(bool enabled) { m_objectSnapEnabled = enabled; clearSnapIndicator(); }
     bool objectSnapEnabled() const { return m_objectSnapEnabled; }
-    // Hides the captured-point highlight - callers invoke it when their
-    // drag/placement interaction ends.
+    // Hides the captured-point highlight and forgets the snap-tracking
+    // acquisitions below - callers invoke it when their drag/placement
+    // interaction ends.
     void clearSnapIndicator();
+
+    // --- Object snap tracking (AutoCAD-style) -------------------------------
+    // Optional companion to object snap ("object_snap_tracking" setting):
+    // every point object snap captures is also *acquired* (small cross,
+    // drawForeground()), and afterwards, whenever the cursor comes back
+    // into horizontal or vertical alignment with an acquired point - within
+    // the same capture radius - snapPosition() locks that axis onto it and
+    // shows a dashed alignment line from the point to the result. Aligning
+    // with two acquired points at once yields their crossing. Acquisitions
+    // live for the duration of one interaction (cleared by
+    // clearSnapIndicator() with the rest of the transient snap state).
+
+    // --- Placement tooltip ---------------------------------------------------
+    // The dynamic cursor readout while drawing ("dynamic_tooltip" setting):
+    // PrimitivePlacementController feeds it the live geometry text (length/
+    // angle, width x height...) and the scene point to hug; drawForeground()
+    // paints it zoom-independent next to that point. Plain Sheet state like
+    // every other overlay, so scene clears can't leave dangling pointers.
+    void setPlacementTooltip(const QPointF &anchor, const QString &text);
+    void clearPlacementTooltip();
 
     // --- Pick highlights ----------------------------------------------------
     // Transient hover/selection highlights for the pick-driven dimension
@@ -211,6 +232,14 @@ private:
     bool m_objectSnapEnabled = false;
     bool m_snapIndicatorVisible = false;
     QPointF m_snapIndicator;
+    // Snap-tracking acquisitions (most recent first, capped small) and the
+    // alignment lines currently locking the cursor onto one of them.
+    QList<QPointF> m_trackingPoints;
+    QList<QLineF> m_trackingLines;
+    // Placement tooltip (see setPlacementTooltip()).
+    bool m_placementTooltipVisible = false;
+    QPointF m_placementTooltipAnchor;
+    QString m_placementTooltipText;
     QLineF m_hoverLine;
     QColor m_hoverLineColor = QColor(255, 140, 0);
     bool m_hoverLineVisible = false;

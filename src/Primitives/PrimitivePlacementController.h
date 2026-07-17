@@ -279,6 +279,22 @@ private:
     // called from handleMouseMove(), including while the tool is merely
     // armed with nothing placed yet.
     void updatePickHighlight();
+
+    // The pre-tooltip body of handleMouseMove() - split out so the public
+    // wrapper can refresh the tooltip once, after whichever of the many
+    // per-tool branches ran, instead of before every return.
+    bool handleMouseMoveImpl(const QPointF &rawScenePos);
+    // Dynamic cursor tooltip ("dynamic_tooltip" setting, Options > Drawing):
+    // refreshes the Sheet's placement tooltip with the live geometry of
+    // whatever is being drawn - segment length and angle, rectangle/ellipse
+    // width x height, regular polygon and arc radius - or hides it for the
+    // tools with nothing measurable (text, connection, macro drops...).
+    // Called at the end of every handleMouseMove() with the same
+    // constrained position the preview itself just used.
+    void updatePlacementTooltip(const QPointF &scenePos);
+    // The length text per the status bar's units preference (units, mm, or
+    // both - "units_display"), shared by the tooltip's formats.
+    QString tooltipLength(qreal length) const;
 };
 
 #endif // PRIMITIVEPLACEMENTCONTROLLER_H
