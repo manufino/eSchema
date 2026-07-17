@@ -94,6 +94,10 @@ public:
     QDockWidget *dock = nullptr;
     PrimitivePlacementController *placement = nullptr;
     SelectionHandleController *handles = nullptr;
+    // The sidecar autosaveTick() last wrote for this document (runtime
+    // only) - lets clearAutosaveFor() delete the right file even after a
+    // Save As changed where future sidecars would go.
+    QString lastAutosavePath;
 
 private:
     struct LayerState {

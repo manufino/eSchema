@@ -809,7 +809,7 @@ void MainWindow::resetActiveDocument()
     sheetScene->clearPrimitives();
     sheetScene->undoStack()->setClean();
     setCurrentFilePath(QString());
-    clearAutosave();
+    clearAutosaveFor(m_activeDocument);
     // setClean() alone doesn't fire indexChanged() - the FCD code dock would
     // otherwise keep showing the previous document.
     syncFcdCodeFromSheet();
@@ -840,6 +840,9 @@ void MainWindow::closeDocument(Document *document)
     const int index = m_documents.indexOf(document);
     Document *next = m_documents.value(index + 1 < m_documents.size() ? index + 1 : index - 1);
 
+    // A confirmed close (saved or deliberately discarded) - its recovery
+    // sidecar is moot either way.
+    clearAutosaveFor(document);
     m_documents.removeAll(document);
     m_undoGroup->removeStack(document->sheet()->undoStack());
     // m_activeDocument is about to dangle - clear it so setActiveDocument()
@@ -1236,6 +1239,14 @@ void MainWindow::setConnections()
     // unsaved-changes checks - so File > Exit and the window's own titlebar
     // X button behave identically.
     connect(ui->actionExit, &QAction::triggered, this, &QWidget::close);
+    connect(ui->actionSaveAll, &QAction::triggered, this, &MainWindow::clickSaveAllAction);
+    // Window menu: cycling shortcuts plus a per-document list rebuilt on
+    // every open (see rebuildWindowMenu()).
+    connect(ui->actionNextDocument, &QAction::triggered,
+            this, [this]() { cycleActiveDocument(1); });
+    connect(ui->actionPreviousDocument, &QAction::triggered,
+            this, [this]() { cycleActiveDocument(-1); });
+    connect(ui->menuWindow, &QMenu::aboutToShow, this, &MainWindow::rebuildWindowMenu);
 
     // Undo/Redo through the QUndoGroup: whichever tab is active supplies
     // the group's active stack (see setActiveDocument()), so the two
@@ -1559,7 +1570,7 @@ void MainWindow::updateRulersVisibility()
     }
 }
 
-bool MainWindow::saveToPath(const QString &filePath)
+bool MainWindow::saveDocumentToPath(Document *document, const QString &filePath)
 {
     // Optional safety net (Options > General): keep the previous on-disk
     // version as <name>.fcd.bak before overwriting it.
@@ -1571,18 +1582,87 @@ bool MainWindow::saveToPath(const QString &filePath)
     }
 
     QString error;
-    if (!FidoCadWriter::writeFile(sheetScene, filePath, &error)) {
+    if (!FidoCadWriter::writeFile(document->sheet(), filePath, &error)) {
         QMessageBox::warning(this, tr("Error"), tr("Unable to save the file:\n%1").arg(error));
         return false;
     }
     // Marks the undo stack's current position as "the saved state" - isClean()
     // (used by confirmDiscardChanges()) reports true again until the next
     // change, rather than staying permanently "dirty" after the first edit.
-    sheetScene->undoStack()->setClean();
+    document->sheet()->undoStack()->setClean();
     // The drawing is now safely on disk at filePath - any outstanding
     // recovery sidecar for it is redundant.
-    clearAutosave();
+    clearAutosaveFor(document);
+    updateDocumentTitle(document);
     return true;
+}
+
+bool MainWindow::saveToPath(const QString &filePath)
+{
+    return saveDocumentToPath(m_activeDocument, filePath);
+}
+
+void MainWindow::cycleActiveDocument(int step)
+{
+    const int count = m_documents.size();
+    if (count < 2)
+        return;
+    int index = m_documents.indexOf(m_activeDocument);
+    index = ((index < 0 ? 0 : index) + step + count) % count;
+    Document *document = m_documents.at(index);
+    if (document->dock)
+        document->dock->raise();
+    setActiveDocument(document);
+}
+
+void MainWindow::rebuildWindowMenu()
+{
+    // Drop the previous per-document entries (marked with a property so
+    // the two static cycling actions and the separator survive).
+    const QList<QAction *> actions = ui->menuWindow->actions();
+    for (QAction *action : actions) {
+        if (action->property("eschemaDocumentEntry").toBool()) {
+            ui->menuWindow->removeAction(action);
+            delete action;
+        }
+    }
+    for (Document *document : std::as_const(m_documents)) {
+        QString title = document->displayName();
+        if (!document->sheet()->undoStack()->isClean())
+            title += QLatin1Char('*');
+        QAction *action = ui->menuWindow->addAction(title);
+        action->setProperty("eschemaDocumentEntry", true);
+        action->setCheckable(true);
+        action->setChecked(document == m_activeDocument);
+        connect(action, &QAction::triggered, this, [this, document]() {
+            // Guard against a document closed while the menu was open.
+            if (!m_documents.contains(document))
+                return;
+            if (document->dock)
+                document->dock->raise();
+            setActiveDocument(document);
+        });
+    }
+}
+
+void MainWindow::clickSaveAllAction()
+{
+    // Named dirty documents save silently in place; untitled ones need a
+    // path, so each is activated (for visual context) and runs the regular
+    // Save As flow - cancelling one just moves on to the next.
+    const QList<Document *> documents = m_documents;
+    for (Document *document : documents) {
+        if (document->sheet()->undoStack()->isClean())
+            continue;
+        if (!document->filePath().isEmpty()) {
+            saveDocumentToPath(document, document->filePath());
+        } else {
+            setActiveDocument(document);
+            if (document->dock)
+                document->dock->raise();
+            clickSaveAsAction();
+        }
+    }
 }
 
 // If there are unsaved changes, asks whether to save them before whatever the
@@ -2019,27 +2099,70 @@ void MainWindow::closeEvent(QCloseEvent *event)
     SettingsManager::getInstance().saveSetting("window_dock_state", saveState(DockStateVersion));
     SettingsManager::getInstance().saveSetting("window_geometry", saveGeometry());
     // A clean, deliberate exit - nothing left to recover next launch.
-    clearAutosave();
+    clearAllAutosaves();
     event->accept();
 }
 
-QString MainWindow::autosaveTargetPath() const
+QString MainWindow::autosaveTargetPathFor(const Document *document) const
 {
-    if (!currentFilePath.isEmpty()) {
-        const QFileInfo info(currentFilePath);
+    if (!document->filePath().isEmpty()) {
+        const QFileInfo info(document->filePath());
         return info.absolutePath() + QLatin1Char('/') + info.completeBaseName()
                 + QStringLiteral(".autosave.fcd");
     }
     const QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir().mkpath(dir);
-    return dir + QStringLiteral("/untitled.autosave.fcd");
+    // Keyed by the untitled number, so several unsaved drawings each keep
+    // their own sidecar.
+    return dir + QStringLiteral("/untitled-%1.autosave.fcd")
+            .arg(qMax(1, document->untitledNumber()));
 }
 
-void MainWindow::clearAutosave()
+QStringList MainWindow::pendingAutosaves()
 {
-    const QString path = SettingsManager::getInstance().loadSetting("pending_autosave_path").toString();
-    if (!path.isEmpty())
-        QFile::remove(path);
+    return SettingsManager::getInstance().loadSetting("pending_autosaves").toStringList();
+}
+
+void MainWindow::setPendingAutosaves(const QStringList &entries)
+{
+    SettingsManager::getInstance().saveSetting("pending_autosaves", entries);
+}
+
+void MainWindow::clearAutosaveFor(Document *document)
+{
+    if (!document)
+        return;
+    // Both the last sidecar actually written and the would-be-current one
+    // (they differ right after a Save As moved the document elsewhere).
+    QStringList sidecars { document->lastAutosavePath, autosaveTargetPathFor(document) };
+    document->lastAutosavePath.clear();
+    QStringList pending = pendingAutosaves();
+    bool changed = false;
+    for (const QString &sidecar : sidecars) {
+        if (sidecar.isEmpty())
+            continue;
+        QFile::remove(sidecar);
+        for (int i = pending.size() - 1; i >= 0; --i) {
+            if (pending.at(i).section(QLatin1Char('|'), 0, 0) == sidecar) {
+                pending.removeAt(i);
+                changed = true;
+            }
+        }
+    }
+    if (changed)
+        setPendingAutosaves(pending);
+}
+
+void MainWindow::clearAllAutosaves()
+{
+    for (const QString &entry : pendingAutosaves())
+        QFile::remove(entry.section(QLatin1Char('|'), 0, 0));
+    setPendingAutosaves(QStringList());
+    // Legacy single-slot keys from pre-multidocument versions.
+    const QString legacy = SettingsManager::getInstance()
+            .loadSetting("pending_autosave_path").toString();
+    if (!legacy.isEmpty())
+        QFile::remove(legacy);
     SettingsManager::getInstance().saveSetting("pending_autosave_path", QString());
     SettingsManager::getInstance().saveSetting("pending_autosave_original", QString());
 }
@@ -2059,63 +2182,107 @@ void MainWindow::restartAutosaveTimer()
 
 void MainWindow::autosaveTick()
 {
-    // A clean document is already safe - either never edited, or its last
-    // edit is already on disk at currentFilePath - nothing to recover.
-    if (sheetScene->undoStack()->isClean())
-        return;
+    // Every dirty document, active or not - a clean one is already safe
+    // (never edited, or its last edit is on disk at its own path).
+    QStringList pending = pendingAutosaves();
+    bool changed = false;
+    for (Document *document : std::as_const(m_documents)) {
+        if (document->sheet()->undoStack()->isClean())
+            continue;
 
-    const QString path = autosaveTargetPath();
-    QString error;
-    // Best-effort: a failed autosave (e.g. a read-only directory) shouldn't
-    // interrupt editing with an error dialog every few minutes.
-    if (!FidoCadWriter::writeFile(sheetScene, path, &error))
-        return;
+        const QString path = autosaveTargetPathFor(document);
+        QString error;
+        // Best-effort: a failed autosave (e.g. a read-only directory)
+        // shouldn't interrupt editing with an error dialog every few
+        // minutes.
+        if (!FidoCadWriter::writeFile(document->sheet(), path, &error))
+            continue;
 
-    SettingsManager::getInstance().saveSetting("pending_autosave_path", path);
-    SettingsManager::getInstance().saveSetting("pending_autosave_original", currentFilePath);
+        document->lastAutosavePath = path;
+        const QString entry = path + QLatin1Char('|') + document->filePath();
+        if (!pending.contains(entry)) {
+            // Drop any older entry for the same sidecar (e.g. the original
+            // path changed) before recording the fresh one.
+            for (int i = pending.size() - 1; i >= 0; --i) {
+                if (pending.at(i).section(QLatin1Char('|'), 0, 0) == path)
+                    pending.removeAt(i);
+            }
+            pending.append(entry);
+            changed = true;
+        }
+    }
+    if (changed)
+        setPendingAutosaves(pending);
 }
 
 void MainWindow::checkForAutosaveRecovery()
 {
-    const QString path = SettingsManager::getInstance().loadSetting("pending_autosave_path").toString();
-    if (path.isEmpty() || !QFileInfo::exists(path)) {
-        // A stale pointer (e.g. the sidecar was deleted by hand) - forget it
-        // rather than asking about a file that doesn't exist.
-        clearAutosave();
+    // Collect every recoverable entry: the multi-document registry, plus
+    // the legacy single-slot keys a pre-multidocument version may have left.
+    QStringList entries = pendingAutosaves();
+    const QString legacyPath = SettingsManager::getInstance()
+            .loadSetting("pending_autosave_path").toString();
+    if (!legacyPath.isEmpty()) {
+        entries.append(legacyPath + QLatin1Char('|') + SettingsManager::getInstance()
+                       .loadSetting("pending_autosave_original").toString());
+        SettingsManager::getInstance().saveSetting("pending_autosave_path", QString());
+        SettingsManager::getInstance().saveSetting("pending_autosave_original", QString());
+    }
+    // Drop stale pointers (sidecars deleted by hand) up front.
+    QStringList recoverable;
+    QStringList names;
+    for (const QString &entry : std::as_const(entries)) {
+        const QString sidecar = entry.section(QLatin1Char('|'), 0, 0);
+        if (!QFileInfo::exists(sidecar))
+            continue;
+        recoverable.append(entry);
+        const QString original = entry.section(QLatin1Char('|'), 1);
+        names.append(original.isEmpty() ? tr("an untitled drawing")
+                                        : QFileInfo(original).fileName());
+    }
+    if (recoverable.isEmpty()) {
+        setPendingAutosaves(QStringList());
         return;
     }
 
-    const QString original = SettingsManager::getInstance().loadSetting("pending_autosave_original").toString();
-    const QString description = original.isEmpty() ? tr("an untitled drawing")
-                                                     : QFileInfo(original).fileName();
     const auto answer = QMessageBox::question(
                 this, tr("Autosave recovery"),
                 tr("eSchema wasn't closed properly last time.\n"
-                   "An autosave was found for %1.\n\n"
-                   "Do you want to recover it?").arg(description),
+                   "Autosaves were found for:\n%1\n\n"
+                   "Do you want to recover them?").arg(names.join(QLatin1Char('\n'))),
                 QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 
     if (answer != QMessageBox::Yes) {
-        clearAutosave();
+        clearAllAutosaves();
         return;
     }
 
-    QString error;
-    if (!FidoCadReader::readFile(path, sheetScene, &error)) {
-        QMessageBox::warning(this, tr("Error"),
-                              tr("Could not recover the autosave:\n%1").arg(error));
-        clearAutosave();
-        return;
-    }
-    normalizeLoadedDrawingPosition();
+    for (const QString &entry : std::as_const(recoverable)) {
+        const QString sidecar = entry.section(QLatin1Char('|'), 0, 0);
+        const QString original = entry.section(QLatin1Char('|'), 1);
 
-    if (!original.isEmpty())
-        setCurrentFilePath(original);
-    // Recovered content was never actually written to the real file (if
-    // any) - readFile()'s bulk load leaves the stack clean like a normal
-    // Open, so push a no-op command purely to flip isClean() to false.
-    sheetScene->undoStack()->push(new QUndoCommand(tr("Autosave recovery")));
-    clearAutosave();
+        // Each recovery lands in its own document: reuse the startup's
+        // pristine untitled one first, then fresh tabs.
+        if (!(currentFilePath.isEmpty() && sheetScene->primitives().isEmpty()
+              && sheetScene->undoStack()->isClean()))
+            createDocument();
+
+        QString error;
+        if (!FidoCadReader::readFile(sidecar, sheetScene, &error)) {
+            QMessageBox::warning(this, tr("Error"),
+                                  tr("Could not recover the autosave:\n%1").arg(error));
+            continue;
+        }
+        normalizeLoadedDrawingPosition();
+        if (!original.isEmpty())
+            setCurrentFilePath(original);
+        // Recovered content was never actually written to the real file (if
+        // any) - readFile()'s bulk load leaves the stack clean like a normal
+        // Open, so push a no-op command purely to flip isClean() to false.
+        sheetScene->undoStack()->push(new QUndoCommand(tr("Autosave recovery")));
+        updateDocumentTitle(m_activeDocument);
+    }
+    clearAllAutosaves();
 }
 
 void MainWindow::clickNewAction()
@@ -2220,7 +2387,7 @@ bool MainWindow::openFile(const QString &filePath)
     normalizeLoadedDrawingPosition();
     sheetScene->undoStack()->setClean();
     setCurrentFilePath(filePath);
-    clearAutosave();
+    clearAutosaveFor(m_activeDocument);
     syncFcdCodeFromSheet(); // setClean() alone doesn't fire indexChanged()
     return true;
 }
@@ -2260,7 +2427,7 @@ bool MainWindow::importDxfFile(const QString &filePath)
     // an import, not a native Open, so the next Save still goes through Save
     // As rather than silently overwriting the .dxf with .fcd content.
     setCurrentFilePath(QString());
-    clearAutosave();
+    clearAutosaveFor(m_activeDocument);
     syncFcdCodeFromSheet(); // setClean() alone doesn't fire indexChanged()
 
     if (!warnings.isEmpty()) {

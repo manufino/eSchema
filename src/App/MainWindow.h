@@ -391,7 +391,16 @@ private:
     // translation and the view refitted, so nothing opens stranded out of
     // sight. A no-op for well-placed files.
     void normalizeLoadedDrawingPosition();
-    bool saveToPath(const QString &filePath);
+    // Writes `document` to `filePath` (backup per the option), marks its
+    // stack clean, drops its recovery sidecar and refreshes its titles.
+    bool saveDocumentToPath(Document *document, const QString &filePath);
+    bool saveToPath(const QString &filePath); // the active document
+    // File > Save all (Ctrl+Shift+S): every dirty document at once.
+    void clickSaveAllAction();
+    // Window menu: rebuilt on aboutToShow with one checkable entry per open
+    // document; Ctrl+Tab / Ctrl+Shift+Tab cycle through them.
+    void rebuildWindowMenu();
+    void cycleActiveDocument(int step);
     void setCurrentFilePath(const QString &filePath);
     void updateWindowTitle();
     // Moves (or inserts) `filePath` to the top of the persisted recent-files
@@ -416,35 +425,39 @@ private:
     // chose to discard them) and false if the user cancelled.
     bool confirmDiscardChanges();
 
-    // Where autosaveTick() writes the recovery sidecar for the document
-    // currently open: "<name>.autosave.fcd" next to a named file, or one
-    // fixed slot under the app data directory for an untitled document
-    // (there is only ever one open document in this single-document app,
-    // so no collision risk).
-    QString autosaveTargetPath() const;
-    // Deletes the sidecar file (if any) and forgets it in the settings -
-    // called whenever the document transitions away from needing recovery:
-    // a successful Save, New, Open/Import (the previous document's context
-    // is gone either way), or a clean, deliberate close.
-    void clearAutosave();
+    // Where autosaveTick() writes `document`'s recovery sidecar:
+    // "<name>.autosave.fcd" next to a named file, or a per-untitled-number
+    // slot ("untitled-N.autosave.fcd") under the app data directory, so
+    // several unsaved drawings never collide.
+    QString autosaveTargetPathFor(const Document *document) const;
+    // The pending-recovery registry in the settings: one "sidecar|original"
+    // entry per autosaved document ("original" empty for untitled ones).
+    static QStringList pendingAutosaves();
+    static void setPendingAutosaves(const QStringList &entries);
+    // Deletes `document`'s sidecar file (if any) and forgets its registry
+    // entry - called whenever that document stops needing recovery: a
+    // successful Save, a load replacing its content, a confirmed close.
+    void clearAutosaveFor(Document *document);
+    // Deletes every sidecar and empties the registry - a clean, deliberate
+    // application exit leaves nothing to recover.
+    void clearAllAutosaves();
     // (Re)starts the autosave timer per the "autosave_enabled"/
     // "autosave_interval_minutes" settings - wired to
     // SettingsManager::settingIsChanged so a change in the Options dialog
     // takes effect immediately, not just on the next launch.
     void restartAutosaveTimer();
-    // Writes the open drawing to autosaveTargetPath() if there are unsaved
-    // changes (a clean document is already safe, nothing to recover) and
-    // records the sidecar's path in the settings - wired to the autosave
-    // timer's timeout().
+    // Writes EVERY dirty document to its own sidecar (clean ones are
+    // already safe) and records them in the registry - wired to the
+    // autosave timer's timeout(). Best-effort: a failed write (read-only
+    // dir) never interrupts editing.
     void autosaveTick();
     // Called once at the tail of the constructor, before main.cpp can open
-    // any command-line file: if a previous run left a recovery sidecar
-    // behind (i.e. it wasn't cleared by a clean shutdown - see
-    // clearAutosave()), offers to load it. A plain QUndoCommand is pushed
-    // after a successful recovery purely to make the stack report dirty
-    // (recovered content was never actually written to the real file, if
-    // any) - QUndoCommand's base redo()/undo() are no-ops, so this changes
-    // nothing about the drawing itself, only isClean()'s answer.
+    // any command-line file: if a previous run left recovery sidecars
+    // behind (i.e. they weren't cleared by a clean shutdown), offers to
+    // load them - each into its own document. A plain QUndoCommand is
+    // pushed after each successful recovery purely to make that stack
+    // report dirty (recovered content was never actually written to the
+    // real file, if any).
     void checkForAutosaveRecovery();
     // Reactions to UpdateChecker's signals - shared by both the silent
     // startup check and the manual "Check for updates" action. Only the

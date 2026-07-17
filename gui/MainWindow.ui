@@ -1422,6 +1422,7 @@
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveAll"/>
     <addaction name="actionSaveSplit"/>
     <addaction name="separator"/>
     <addaction name="actionPrint"/>
@@ -1429,6 +1430,16 @@
     <addaction name="separator"/>
     <addaction name="actionClose"/>
     <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionNextDocument"/>
+    <addaction name="actionPreviousDocument"/>
+    <addaction name="separator"/>
+    <!-- One checkable entry per open document is appended dynamically on
+         aboutToShow - see MainWindow::rebuildWindowMenu(). -->
    </widget>
    <widget class="QMenu" name="menuRecentFiles">
     <property name="title">
@@ -1578,6 +1589,7 @@
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuTools"/>
+   <addaction name="menuWindow"/>
    <addaction name="menuInformation"/>
   </widget>
   <widget class="StatusBar" name="statusbar">
@@ -1851,6 +1863,45 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionSaveAll">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/save-3-line.png</normaloff>:/res/resources/remix/save-3-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save all</string>
+   </property>
+   <property name="toolTip">
+    <string>Save every open drawing with unsaved changes</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionNextDocument">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/arrow-go-forward-line.png</normaloff>:/res/resources/remix/arrow-go-forward-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Next document</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Tab</string>
+   </property>
+  </action>
+  <action name="actionPreviousDocument">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/arrow-go-back-line.png</normaloff>:/res/resources/remix/arrow-go-back-line.png</iconset>
+   </property>
+   <property name="text">
+    <string>Previous document</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Tab</string>
    </property>
   </action>
   <action name="actionExport">
