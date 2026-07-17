@@ -22,6 +22,8 @@
 
 #include <QPixmap>
 
+class QWidget;
+
 // Applies the app-wide QSS + QPalette selected by the "gui_style"/
 // "stylesheet_path" settings (see SettingsManager and DialogOptions'
 // interface-style combo box).
@@ -41,6 +43,14 @@ public:
     // QAction/QAbstractButton re-tint - layer eye/lock glyphs, macro tree
     // icons.
     static QPixmap themedIcon(const QPixmap &source);
+
+    // Re-tints every QAction/QAbstractButton icon under `widget` for the
+    // active theme, through the same original-icon registry apply() uses -
+    // so a later theme switch can still restore the true originals. Call
+    // it from the constructor of any window created on demand (e.g. the
+    // Layer manager): apply()'s own pass only reaches windows that already
+    // exist when the theme is applied.
+    static void applyToWidget(QWidget *widget);
 };
 
 #endif // THEME_MANAGER_H

@@ -20,6 +20,7 @@
 #include "DialogLayerList.h"
 #include "ui_DialogLayerList.h"
 #include "LayerIcons.h"
+#include "ThemeManager.h"
 
 DialogLayerList::DialogLayerList(QWidget *parent) :
     QDialog(parent),
@@ -42,6 +43,11 @@ DialogLayerList::DialogLayerList(QWidget *parent) :
     ui->btnSetAllLocked->setIconSize(QSize(25, 25));
     ui->btnSetAllUnlocked->setIcon(QIcon(LayerIcons::renderLockIcon(false)));
     ui->btnSetAllUnlocked->setIconSize(QSize(25, 25));
+
+    // This dialog is created on demand, long after ThemeManager::apply()
+    // re-tinted every then-existing window's icons - without this pass all
+    // the black line icons above stay black (invisible) on dark themes.
+    ThemeManager::applyToWidget(this);
 
     connect(ui->btnAddNewLayer, &QPushButton::clicked,
             this, &DialogLayerList::addNewLayer);

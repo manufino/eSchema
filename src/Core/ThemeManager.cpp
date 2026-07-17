@@ -101,25 +101,30 @@ void retintIcon(QObject *owner, const QIcon &currentIcon, bool dark,
     setIcon(dark ? tintIcon(it.value(), kDarkIconColor) : it.value());
 }
 
-// Walks every currently-alive top-level window (MainWindow plus any open
-// dialogs) and swaps every QAction/QAbstractButton icon between its
+// Swaps every QAction/QAbstractButton icon under `root` between its
 // original (light/black) version and a white-tinted one.
+void retintWidgetIcons(QWidget *root, bool dark)
+{
+    const QList<QAction *> actions = root->findChildren<QAction *>();
+    for (QAction *action : actions) {
+        retintIcon(action, action->icon(), dark,
+                   [action](const QIcon &icon) { action->setIcon(icon); });
+    }
+
+    const QList<QAbstractButton *> buttons = root->findChildren<QAbstractButton *>();
+    for (QAbstractButton *button : buttons) {
+        retintIcon(button, button->icon(), dark,
+                   [button](const QIcon &icon) { button->setIcon(icon); });
+    }
+}
+
+// Walks every currently-alive top-level window (MainWindow plus any open
+// dialogs).
 void retintIcons(bool dark)
 {
     const QList<QWidget *> topLevels = qApp->topLevelWidgets();
-    for (QWidget *topLevel : topLevels) {
-        const QList<QAction *> actions = topLevel->findChildren<QAction *>();
-        for (QAction *action : actions) {
-            retintIcon(action, action->icon(), dark,
-                       [action](const QIcon &icon) { action->setIcon(icon); });
-        }
-
-        const QList<QAbstractButton *> buttons = topLevel->findChildren<QAbstractButton *>();
-        for (QAbstractButton *button : buttons) {
-            retintIcon(button, button->icon(), dark,
-                       [button](const QIcon &icon) { button->setIcon(icon); });
-        }
-    }
+    for (QWidget *topLevel : topLevels)
+        retintWidgetIcons(topLevel, dark);
 }
 
 // RulerWidget/LayerComboBox/PenStyleComboBox read palette() directly in
@@ -184,6 +189,11 @@ bool ThemeManager::darkThemeActive()
 QPixmap ThemeManager::themedIcon(const QPixmap &source)
 {
     return darkThemeActive() ? tintPixmap(source, kDarkIconColor) : source;
+}
+
+void ThemeManager::applyToWidget(QWidget *widget)
+{
+    retintWidgetIcons(widget, darkThemeActive());
 }
 
 void ThemeManager::apply()
