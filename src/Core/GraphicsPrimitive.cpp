@@ -299,16 +299,17 @@ void GraphicsPrimitive::paintLabels(QPainter *painter) const
     painter->save();
     painter->setPen(drawColor());
     // Sized and anchored exactly like the reference FidoCadJ editor's
-    // GraphicPrimitive.drawText(): em = macroFontSize*12/7 + 0.5 drawing
-    // units with the default macro font size of 4, the stored position
-    // being the text's TOP - the baseline sits one ascent below it. The
-    // font is built at a large fixed pixel size and scaled down by the
-    // painter, keeping fractional precision (QFont pixel sizes are
-    // integers) and device independence (point sizes resolve against each
-    // output device's DPI).
+    // GraphicPrimitive.drawText(): em = macroFontSize*12/7 drawing units
+    // (its "+ .5" is a device-pixel rounding aid added after the zoom
+    // multiplication, not part of the logical size) with the default macro
+    // font size of 4, the stored position being the text's TOP - the
+    // baseline sits one ascent below it. The font is built at a large
+    // fixed pixel size and scaled down by the painter, keeping fractional
+    // precision (QFont pixel sizes are integers) and device independence
+    // (point sizes resolve against each output device's DPI).
     QFont font(QStringLiteral("Courier New"));
     font.setPixelSize(84);
-    const qreal scale = (4.0 * 12.0 / 7.0 + 0.5) / 84.0;
+    const qreal scale = 4.0 * 12.0 / 7.0 / 84.0;
     const qreal ascent = QFontMetricsF(font).ascent();
     const auto drawLabel = [&](const QPointF &scenePos, const QString &text) {
         painter->save();

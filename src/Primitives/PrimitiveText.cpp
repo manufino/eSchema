@@ -27,12 +27,15 @@
 namespace {
 
 // FidoCadJ sizes text by its x-size: the font's em height, in drawing
-// units, is sizex*12/7 + 0.5 (PrimitiveAdvText.draw() in the reference
-// editor). The font itself is built at a fixed large pixel size and the
-// painter scaled down to the target: QFont pixel sizes are integers, so
-// sizing the font directly at ~5 units would round away up to 10% of the
-// em, and point sizes are out - they resolve against each output device's
-// DPI (screen, printer, SVG generator), moving text between devices.
+// units, is sizex*12/7 (PrimitiveAdvText.draw() in the reference editor -
+// its "+ .5" is added after the zoom multiplication, i.e. it's a
+// device-pixel rounding aid that vanishes from the logical size as the
+// zoom grows, NOT part of the em). The font itself is built at a fixed
+// large pixel size and the painter scaled down to the target: QFont pixel
+// sizes are integers, so sizing the font directly at ~5 units would round
+// away up to 10% of the em, and point sizes are out - they resolve against
+// each output device's DPI (screen, printer, SVG generator), moving text
+// between devices.
 constexpr int BaseFontPixels = 84;
 
 // FidoCadJ falls back to 10/7 when either size is zero.
@@ -42,7 +45,7 @@ inline int effectiveSizeY(int sizeX, int sizeY) { return (sizeX == 0 || sizeY ==
 // Painter scale from the base font down to the target em.
 qreal renderScaleFor(int sizeX, int sizeY)
 {
-    return (effectiveSizeX(sizeX, sizeY) * 12.0 / 7.0 + 0.5) / BaseFontPixels;
+    return effectiveSizeX(sizeX, sizeY) * 12.0 / 7.0 / BaseFontPixels;
 }
 
 // The reference editor's vertical stretch: PrimitiveAdvText.draw() tests
