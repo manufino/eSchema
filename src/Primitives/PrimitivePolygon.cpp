@@ -60,8 +60,8 @@ void PrimitivePolygon::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         return;
 
     QPen pen(drawColor());
-    pen.setStyle(penStyle);
     pen.setWidthF(effectiveLineWidth());
+    applyLineStyle(pen);
     painter->setPen(pen);
     painter->setBrush(isFilled() ? QBrush(pen.color()) : QBrush(Qt::NoBrush));
 

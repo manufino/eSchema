@@ -52,8 +52,8 @@ void PrimitiveLine::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
         return;
 
     QPen pen(drawColor());
-    pen.setStyle(penStyle);
     pen.setWidthF(effectiveLineWidth());
+    applyLineStyle(pen);
     painter->setPen(pen);
 
     const QPointF p1 = mapFromScene(m_p1);

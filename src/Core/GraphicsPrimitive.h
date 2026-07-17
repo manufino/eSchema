@@ -84,6 +84,16 @@ public:
     // which isn't a subclass and so can't reach the protected field directly.
     Qt::PenStyle lineStyle() const { return penStyle; }
 
+    // Applies this primitive's line style to `pen` using the reference
+    // FidoCadJ editor's own dash patterns instead of Qt's built-in ones:
+    // Globals.dash[i] is applied by Graphics2DSwing.applyStroke() as
+    // dash[i]*zoom/2 device pixels - i.e. dash[i]/2 drawing units,
+    // independent of the pen width, where Qt's built-in patterns are
+    // multiples of it. Also sets FidoCadJ's round cap/join. Call it with
+    // the pen's width already final (the pattern is re-expressed in
+    // width units, as QPen requires).
+    void applyLineStyle(QPen &pen) const;
+
     // The stroke width every line-like primitive (Line/Bezier/Rectangle/
     // Ellipse/Polygon/ComplexCurve) actually draws with: read live from the
     // owning Sheet's document-wide default every time, rather than storing

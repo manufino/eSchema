@@ -298,6 +298,41 @@ qreal labelScale(const GraphicsPrimitive *primitive)
 
 }
 
+void GraphicsPrimitive::applyLineStyle(QPen &pen) const
+{
+    // FidoCadJ draws every stroke with round caps and joins (BasicStroke
+    // CAP_ROUND/JOIN_ROUND in Graphics2DSwing.applyStroke()).
+    pen.setCapStyle(Qt::RoundCap);
+    pen.setJoinStyle(Qt::RoundJoin);
+    if (penStyle == Qt::SolidLine) {
+        pen.setStyle(Qt::SolidLine);
+        return;
+    }
+
+    // Globals.dash[1..4] halved (see the header comment), in drawing units.
+    static const QVector<qreal> dashed { 2.5, 2.5 };
+    static const QVector<qreal> dotted { 1.0, 1.0 };
+    static const QVector<qreal> dashDot { 1.0, 2.5 };
+    static const QVector<qreal> dashDotDot { 1.0, 2.5, 2.5, 2.5 };
+    const QVector<qreal> *pattern = nullptr;
+    switch (penStyle) {
+    case Qt::DashLine: pattern = &dashed; break;
+    case Qt::DotLine: pattern = &dotted; break;
+    case Qt::DashDotLine: pattern = &dashDot; break;
+    case Qt::DashDotDotLine: pattern = &dashDotDot; break;
+    default:
+        pen.setStyle(penStyle);
+        return;
+    }
+
+    const qreal width = pen.widthF() > 0 ? pen.widthF() : 1.0;
+    QList<qreal> widthUnits;
+    widthUnits.reserve(pattern->size());
+    for (qreal length : *pattern)
+        widthUnits.append(length / width);
+    pen.setDashPattern(widthUnits);
+}
+
 QRectF GraphicsPrimitive::labelBoundingRect() const
 {
     const bool drawName = showName && !objName.isEmpty();

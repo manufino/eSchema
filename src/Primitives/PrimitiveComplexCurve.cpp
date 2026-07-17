@@ -86,8 +86,8 @@ void PrimitiveComplexCurve::paint(QPainter *painter, const QStyleOptionGraphicsI
         return;
 
     QPen pen(drawColor());
-    pen.setStyle(penStyle);
     pen.setWidthF(effectiveLineWidth());
+    applyLineStyle(pen);
     painter->setPen(pen);
     painter->setBrush(isFilled() && m_closed ? QBrush(pen.color()) : QBrush(Qt::NoBrush));
 
