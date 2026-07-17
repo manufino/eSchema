@@ -737,6 +737,8 @@ void MainWindow::updateEditActionsState()
 
     ui->actionScaleSelection->setEnabled(hasSelection);
     ui->actionRotateByAngle->setEnabled(hasSelection);
+    ui->actionMoveBasePoint->setEnabled(hasSelection);
+    ui->actionCopyBasePoint->setEnabled(hasSelection);
     ui->actionArray->setEnabled(hasSelection);
     ui->actionSnapSelectionToGrid->setEnabled(hasSelection);
     ui->actionSelectSameType->setEnabled(hasSelection);
@@ -759,6 +761,8 @@ void MainWindow::showCanvasContextMenu(const QPoint &globalPos, const QPointF &s
     menu.addAction(ui->actionDuplicate);
     menu.addAction(ui->actionDelete);
     menu.addSeparator();
+    menu.addAction(ui->actionMoveBasePoint);
+    menu.addAction(ui->actionCopyBasePoint);
     menu.addAction(ui->actionRotate);
     menu.addAction(ui->actionMirror);
     menu.addAction(ui->actionMirrorCopy);
@@ -1671,6 +1675,117 @@ void MainWindow::clickScaleSelectionAction()
     }
     if (multiple)
         undo->endMacro();
+}
+
+void MainWindow::clickMoveBasePointAction()
+{
+    moveOrCopyWithBasePoint(false);
+}
+
+void MainWindow::clickCopyBasePointAction()
+{
+    moveOrCopyWithBasePoint(true);
+}
+
+// AutoCAD's Move/Copy gesture: "specify base point" then "specify
+// destination" - both picks fully snapped (object snap and tracking
+// included), so a vertex can be carried exactly onto another primitive's
+// vertex. Between the two picks a half-opacity copy of the selection
+// follows the cursor, offset by the live displacement.
+void MainWindow::moveOrCopyWithBasePoint(bool copyMode)
+{
+    const QList<GraphicsPrimitive *> selected = selectedPrimitivesInOrder();
+    if (selected.isEmpty())
+        return;
+
+    ui->statusbar->showMessage(
+            tr("Specify the base point (right click or Esc cancels)"), 0);
+    QPointF base;
+    bool accepted = false;
+    {
+        ScenePointPicker basePicker(ui->graphicsView, sheetScene, true);
+        accepted = basePicker.run(&base);
+    }
+    if (!accepted) {
+        ui->statusbar->clearMessage();
+        return;
+    }
+    // The selection may have been altered inside the picker's nested event
+    // loop (global shortcuts stay live there) - same guard as Split/Offset.
+    for (GraphicsPrimitive *primitive : selected) {
+        if (!sheetScene->primitives().contains(primitive)) {
+            ui->statusbar->clearMessage();
+            return;
+        }
+    }
+
+    // Live preview: one half-opacity clone per selected primitive, cloned
+    // once here and only *translated* per mouse move - never rebuilt, so
+    // even a large selection previews cheaply. Never on the undo stack.
+    QList<GraphicsPrimitive *> preview;
+    QList<QVector<QPointF>> previewBase;
+    for (GraphicsPrimitive *primitive : selected) {
+        if (GraphicsPrimitive *clone = clonePrimitive(primitive, sheetScene)) {
+            clone->setOpacity(0.55);
+            sheetScene->addPrimitive(clone);
+            preview.append(clone);
+            previewBase.append(clone->controlPointSnapshot());
+        }
+    }
+    auto clearPreview = [this, &preview]() {
+        for (GraphicsPrimitive *primitive : std::as_const(preview))
+            sheetScene->removePrimitive(primitive);
+        preview.clear();
+    };
+
+    ui->statusbar->showMessage(
+            tr("Specify the destination point (right click or Esc cancels)"), 0);
+    QPointF destination;
+    ScenePointPicker destinationPicker(ui->graphicsView, sheetScene, true);
+    destinationPicker.setHoverCallback([this, base, &preview, &previewBase](const QPointF &pos) {
+        // Preview against the snapped position, so what's shown is exactly
+        // where the click would land.
+        const QPointF delta = sheetScene->snapPosition(pos) - base;
+        for (int i = 0; i < preview.size(); ++i) {
+            QVector<QPointF> moved = previewBase.at(i);
+            for (QPointF &point : moved)
+                point += delta;
+            preview.at(i)->restoreControlPoints(moved);
+        }
+    });
+    accepted = destinationPicker.run(&destination);
+    clearPreview();
+    ui->statusbar->clearMessage();
+    if (!accepted)
+        return;
+    for (GraphicsPrimitive *primitive : selected) {
+        if (!sheetScene->primitives().contains(primitive))
+            return;
+    }
+
+    const QPointF delta = destination - base;
+    if (delta.isNull())
+        return;
+
+    if (copyMode) {
+        sheetScene->clearSelection();
+        QUndoStack *undo = sheetScene->undoStack();
+        undo->beginMacro(tr("Copy with base point"));
+        for (GraphicsPrimitive *primitive : selected) {
+            GraphicsPrimitive *copy = clonePrimitive(primitive, sheetScene);
+            if (!copy)
+                continue;
+            copy->translateControlPoints(delta);
+            undo->push(new CreatePrimitiveCommand(sheetScene, copy));
+            copy->setSelected(true);
+        }
+        undo->endMacro();
+    } else {
+        QHash<GraphicsPrimitive *, QPointF> deltas;
+        for (GraphicsPrimitive *primitive : selected)
+            deltas.insert(primitive, delta);
+        moveSelectedPrimitives(deltas, tr("Move with base point"));
+    }
 }
 
 // Rotates the selection by an arbitrary angle around the first selected

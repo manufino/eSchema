@@ -21,6 +21,8 @@
         <file>resources/fillet.png</file>
         <file>resources/chamfer.png</file>
         <file>resources/offset.png</file>
+        <file>resources/move_base.png</file>
+        <file>resources/copy_base.png</file>
         <file>resources/simplify.png</file>
         <file>resources/rulers.png</file>
         <file>resources/shape_tools.png</file>

@@ -1495,6 +1495,9 @@
     <addaction name="actionDuplicate"/>
     <addaction name="actionDelete"/>
     <addaction name="separator"/>
+    <addaction name="actionMoveBasePoint"/>
+    <addaction name="actionCopyBasePoint"/>
+    <addaction name="separator"/>
     <addaction name="actionRotate"/>
     <addaction name="actionMirror"/>
     <addaction name="actionMirrorCopy"/>
@@ -2874,6 +2877,36 @@
    </property>
    <property name="toolTip">
     <string>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</string>
+   </property>
+  </action>
+  <action name="actionMoveBasePoint">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/move_base.png</normaloff>:/res/resources/move_base.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move with base point...</string>
+   </property>
+   <property name="toolTip">
+    <string>Pick a base point on the selection, then its destination - the selection moves by that exact displacement, with snapping on both points</string>
+   </property>
+  </action>
+  <action name="actionCopyBasePoint">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/copy_base.png</normaloff>:/res/resources/copy_base.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy with base point...</string>
+   </property>
+   <property name="toolTip">
+    <string>Pick a base point on the selection, then its destination - a copy is placed at that exact displacement, with snapping on both points</string>
    </property>
   </action>
   <action name="actionRotateByAngle">

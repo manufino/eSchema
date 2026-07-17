@@ -504,6 +504,8 @@ void MainWindow::setConnections()
     });
     connect(ui->actionRotateByAngle, &QAction::triggered, this, &MainWindow::clickRotateByAngleAction);
     connect(ui->actionScaleSelection, &QAction::triggered, this, &MainWindow::clickScaleSelectionAction);
+    connect(ui->actionMoveBasePoint, &QAction::triggered, this, &MainWindow::clickMoveBasePointAction);
+    connect(ui->actionCopyBasePoint, &QAction::triggered, this, &MainWindow::clickCopyBasePointAction);
     connect(ui->actionArray, &QAction::triggered, this, &MainWindow::clickArrayAction);
     connect(ui->actionSnapSelectionToGrid, &QAction::triggered, this, &MainWindow::clickSnapSelectionToGridAction);
     connect(ui->actionConvertToPolygon, &QAction::triggered, this, &MainWindow::clickConvertToPolygonAction);

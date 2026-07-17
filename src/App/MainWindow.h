@@ -158,6 +158,12 @@ public slots:
     // Whole-selection transforms and replication.
     void clickScaleSelectionAction();
     void clickRotateByAngleAction();
+    // AutoCAD-style move/copy: pick a base point on the selection, then a
+    // destination - the exact displacement between the two snapped picks is
+    // applied (move) or given to a fresh copy of the selection (copy), with
+    // a live half-opacity preview following the cursor in between.
+    void clickMoveBasePointAction();
+    void clickCopyBasePointAction();
     void clickArrayAction();
     void clickSnapSelectionToGridAction();
     // Selection conveniences.
@@ -280,6 +286,8 @@ private:
     // MovePrimitiveCommand, macro-grouped so the whole alignment undoes in
     // one step.
     void moveSelectedPrimitives(const QHash<GraphicsPrimitive *, QPointF> &deltas, const QString &undoLabel);
+    // Shared body of the two base-point actions (see their doc comment).
+    void moveOrCopyWithBasePoint(bool copyMode);
     // Moves the whole selection by one snap step in `direction` (a unit
     // vector), as one undoable step - wired to Alt+arrow shortcuts in
     // setConnections(), matching the reference FidoCadJ editor's own
