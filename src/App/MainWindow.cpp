@@ -33,6 +33,7 @@
 #include "ui_MainWindow.h"
 #include "DialogAttachImage.h"
 #include "DialogSymbolWizard.h"
+#include "ArrowStyleComboBox.h"
 #include <QRandomGenerator>
 #include <QLineEdit>
 #include "DialogExport.h"
@@ -623,16 +624,13 @@ void MainWindow::setConnections()
                 primitive->setArrowAtEnd(checked);
         }
     });
-    connect(ui->checkBoxArrowEmpty, &QCheckBox::toggled, this, [this](bool checked) {
+    connect(ui->comboArrowStyle, &ArrowStyleComboBox::arrowStyleChanged, this, [this](int style) {
+        // FCJ style bits: 0x01 limiter bar, 0x02 empty triangle.
         for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
-            if (primitive->supportsArrows())
-                primitive->setArrowStyleEmpty(checked);
-        }
-    });
-    connect(ui->checkBoxArrowLimiter, &QCheckBox::toggled, this, [this](bool checked) {
-        for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
-            if (primitive->supportsArrows())
-                primitive->setArrowStyleLimiter(checked);
+            if (primitive->supportsArrows()) {
+                primitive->setArrowStyleLimiter(style & 0x01);
+                primitive->setArrowStyleEmpty(style & 0x02);
+            }
         }
     });
     connect(ui->spinArrowLength, &QDoubleSpinBox::valueChanged, this, [this](double value) {

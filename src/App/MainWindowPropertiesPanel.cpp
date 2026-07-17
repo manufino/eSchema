@@ -71,8 +71,7 @@ void MainWindow::updatePropertiesPanel()
     const QSignalBlocker blockGrayscale(ui->checkBoxGrayscale);
     const QSignalBlocker blockArrowStart(ui->checkBoxArrowStart);
     const QSignalBlocker blockArrowEnd(ui->checkBoxArrowEnd);
-    const QSignalBlocker blockArrowEmpty(ui->checkBoxArrowEmpty);
-    const QSignalBlocker blockArrowLimiter(ui->checkBoxArrowLimiter);
+    const QSignalBlocker blockArrowStyle(ui->comboArrowStyle);
     const QSignalBlocker blockArrowLength(ui->spinArrowLength);
     const QSignalBlocker blockArrowHalfWidth(ui->spinArrowHalfWidth);
     const QSignalBlocker blockCurveClosed(ui->checkBoxCurveClosed);
@@ -111,8 +110,7 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->label_11, ui->checkBoxGrayscale, false);
         showRow(ui->labelArrowStart, ui->checkBoxArrowStart, false);
         showRow(ui->labelArrowEnd, ui->checkBoxArrowEnd, false);
-        showRow(ui->labelArrowEmpty, ui->checkBoxArrowEmpty, false);
-        showRow(ui->labelArrowLimiter, ui->checkBoxArrowLimiter, false);
+        showRow(ui->labelArrowStyle, ui->comboArrowStyle, false);
         showRow(ui->labelArrowLength, ui->spinArrowLength, false);
         showRow(ui->labelArrowHalfWidth, ui->spinArrowHalfWidth, false);
         showRow(ui->labelCurveClosed, ui->checkBoxCurveClosed, false);
@@ -133,8 +131,12 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->labelShapeHeight, ui->spinShapeHeight, false);
         ui->lineEdit->clear();
         ui->lineEdit_2->clear();
+        // The panel is otherwise completely blank - tell the user why,
+        // instead of leaving a mysteriously empty dock.
+        ui->labelNoSelection->setVisible(true);
         return;
     }
+    ui->labelNoSelection->setVisible(false);
 
     // Nome/Valore apply to every primitive type (FIDOSPECS.md 6.1-6.3: every
     // primitive can carry a name/value TY label, one way or another).
@@ -213,15 +215,15 @@ void MainWindow::updatePropertiesPanel()
     const bool hasArrows = primitive->supportsArrows();
     showRow(ui->labelArrowStart, ui->checkBoxArrowStart, hasArrows);
     showRow(ui->labelArrowEnd, ui->checkBoxArrowEnd, hasArrows);
-    showRow(ui->labelArrowEmpty, ui->checkBoxArrowEmpty, hasArrows);
-    showRow(ui->labelArrowLimiter, ui->checkBoxArrowLimiter, hasArrows);
+    showRow(ui->labelArrowStyle, ui->comboArrowStyle, hasArrows);
     showRow(ui->labelArrowLength, ui->spinArrowLength, hasArrows);
     showRow(ui->labelArrowHalfWidth, ui->spinArrowHalfWidth, hasArrows);
     if (hasArrows) {
         ui->checkBoxArrowStart->setChecked(primitive->arrowAtStart());
         ui->checkBoxArrowEnd->setChecked(primitive->arrowAtEnd());
-        ui->checkBoxArrowEmpty->setChecked(primitive->arrowStyleEmpty());
-        ui->checkBoxArrowLimiter->setChecked(primitive->arrowStyleLimiter());
+        ui->comboArrowStyle->setCurrentArrowStyle(
+                    (primitive->arrowStyleLimiter() ? 0x01 : 0)
+                    | (primitive->arrowStyleEmpty() ? 0x02 : 0));
         ui->spinArrowLength->setValue(primitive->arrowLength());
         ui->spinArrowHalfWidth->setValue(primitive->arrowHalfWidth());
     }
