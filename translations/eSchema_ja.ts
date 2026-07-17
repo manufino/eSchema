@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
+<?xml version='1.0' encoding='utf-8'?>
 <TS version="2.1" language="ja_JP">
 <context>
     <name>ColorPicker</name>
@@ -764,7 +763,7 @@ li.checked::marker { content: "\2612"; }
     </message>
     <message>
         <location filename="../gui/DialogOptions.ui" line="230" />
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="441" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="449" />
         <source>Language</source>
         <translation>言語</translation>
     </message>
@@ -789,72 +788,92 @@ li.checked::marker { content: "\2612"; }
         <translation>スタイルシート</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="882" />
+        <location filename="../gui/DialogOptions.ui" line="842" />
+        <source>Object snap tracking</source>
+        <translation>オブジェクトスナップトラッキング</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="845" />
+        <source>Hovering a snap point acquires it; the cursor then aligns with acquired points from a distance, along dashed alignment lines</source>
+        <translation>スナップ点にカーソルを重ねると取得され、以降は離れた位置からでも取得済みの点と破線の位置合わせ線に沿って整列します</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="895" />
         <source>Snap to guides</source>
         <translation>ガイドにスナップ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="885" />
+        <location filename="../gui/DialogOptions.ui" line="898" />
         <source>Snap positions to the guide lines dragged out of the rulers</source>
         <translation>定規からドラッグしたガイド線に位置をスナップします</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="895" />
+        <location filename="../gui/DialogOptions.ui" line="908" />
         <source>Guide color</source>
         <translation>ガイドの色</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1002" />
+        <location filename="../gui/DialogOptions.ui" line="1015" />
         <source>Default polygon sides</source>
         <translation>正多角形の既定の辺数</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1022" />
+        <location filename="../gui/DialogOptions.ui" line="1035" />
         <source>Curve sampling step (units)</source>
         <translation>曲線サンプリング間隔（単位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1029" />
+        <location filename="../gui/DialogOptions.ui" line="1042" />
         <source>Spacing of the points generated along arcs, boolean results, and shape conversions - smaller is smoother but heavier</source>
         <translation>円弧・ブール演算結果・形状変換で生成される点の間隔。小さいほど滑らかですが重くなります</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1048" />
+        <location filename="../gui/DialogOptions.ui" line="1061" />
         <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
         <translation>曲線を含む結果を、平坦化した多角形ではなく複雑曲線（ノード数が大幅に少なく、角がわずかに丸くなります）に変換します</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1051" />
+        <location filename="../gui/DialogOptions.ui" line="1064" />
         <source>Smooth curved results</source>
         <translation>曲線結果を滑らかに</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1058" />
+        <location filename="../gui/DialogOptions.ui" line="1071" />
         <source>Default text font</source>
         <translation>テキストの既定フォント</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1068" />
+        <location filename="../gui/DialogOptions.ui" line="1081" />
         <source>Nudge step (Alt+arrows)</source>
         <translation>微調整の移動量（Alt+矢印）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1075" />
+        <location filename="../gui/DialogOptions.ui" line="1088" />
         <source>How many snap steps one Alt+arrow press moves the selection</source>
         <translation>Alt+矢印を 1 回押すごとに選択範囲が動くスナップ間隔の数</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1091" />
+        <location filename="../gui/DialogOptions.ui" line="1104" />
         <source>Dimension text size</source>
         <translation>寸法テキストのサイズ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1098" />
+        <location filename="../gui/DialogOptions.ui" line="1111" />
         <source>Height (drawing units) of the distance label the Dimension tool places</source>
         <translation>寸法ツールが配置する距離ラベルの高さ（図面単位）</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1137" />
+        <location filename="../gui/DialogOptions.ui" line="1127" />
+        <source>Dynamic tooltip at the cursor while drawing</source>
+        <translation>描画中のカーソル近傍の動的ツールチップ</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="1130" />
+        <source>Shows the live length and angle (or width × height) next to the cursor while placing a primitive</source>
+        <translation>図形の配置中に長さと角度（または幅 × 高さ）をカーソルの横に表示します</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="1163" />
         <source>Restore page defaults</source>
         <translation>このページを既定値に戻す</translation>
     </message>
@@ -1040,22 +1059,22 @@ li.checked::marker { content: "\2612"; }
         <translation>線分の交点</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="842" />
+        <location filename="../gui/DialogOptions.ui" line="855" />
         <source>Snap marker color</source>
         <translation>スナップマーカーの色</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="862" />
+        <location filename="../gui/DialogOptions.ui" line="875" />
         <source>Handle color</source>
         <translation>ハンドルの色</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="936" />
+        <location filename="../gui/DialogOptions.ui" line="949" />
         <source>Drawing line width</source>
         <translation>図面線の太さ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="959" />
+        <location filename="../gui/DialogOptions.ui" line="972" />
         <source>Selection tolerance</source>
         <translation>選択許容範囲</translation>
     </message>
@@ -1063,7 +1082,7 @@ li.checked::marker { content: "\2612"; }
         <location filename="../gui/DialogOptions.ui" line="391" />
         <location filename="../gui/DialogOptions.ui" line="457" />
         <location filename="../gui/DialogOptions.ui" line="786" />
-        <location filename="../gui/DialogOptions.ui" line="966" />
+        <location filename="../gui/DialogOptions.ui" line="979" />
         <source> px</source>
         <translation> px</translation>
     </message>
@@ -1073,7 +1092,7 @@ li.checked::marker { content: "\2612"; }
         <translation>マクロプレビューサイズ</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="982" />
+        <location filename="../gui/DialogOptions.ui" line="995" />
         <source>Connection dot size</source>
         <translation>接続点のサイズ</translation>
     </message>
@@ -1087,12 +1106,12 @@ li.checked::marker { content: "\2612"; }
         <translation type="vanished">デフォルトに戻す</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1157" />
+        <location filename="../gui/DialogOptions.ui" line="1183" />
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1164" />
+        <location filename="../gui/DialogOptions.ui" line="1190" />
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
@@ -1101,7 +1120,7 @@ li.checked::marker { content: "\2612"; }
         <translation type="vanished">キャンセル</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1171" />
+        <location filename="../gui/DialogOptions.ui" line="1197" />
         <source>Apply</source>
         <translation>適用</translation>
     </message>
@@ -1116,7 +1135,7 @@ li.checked::marker { content: "\2612"; }
         <translation>スタイルシート (*.qss)</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="442" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="450" />
         <source>The new language will take effect the next time eSchema starts.</source>
         <translation>新しい言語は eSchema の次回起動時に有効になります。</translation>
     </message>
@@ -3522,50 +3541,72 @@ Do you want to recover it?</source>
         <translation>辺の数：</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="487" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="726" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="488" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="728" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1357" />
         <source>%1 mm</source>
         <translation>%1 mm</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="490" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="491" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1359" />
         <source>%1 (%2 mm)</source>
         <translation>%1 (%2 mm)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="493" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="494" />
         <source>dx: %1   dy: %2   length: %3   angle: %4°</source>
         <translation>dx: %1   dy: %2   長さ: %3   角度: %4°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="704" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="706" />
         <source>Angular dimension: click the first line</source>
         <translation>角度寸法：1 本目の線をクリック</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="705" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="707" />
         <source>Angular dimension: click the second line</source>
         <translation>角度寸法：2 本目の線をクリック</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="714" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="716" />
         <source>Radial dimension: click the outline of a circle or arc</source>
         <translation>半径寸法：円または円弧の輪郭をクリック</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1125" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1127" />
         <source>Dimension</source>
         <translation>寸法</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1142" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1144" />
         <source>The two lines are parallel - no angle to dimension</source>
         <translation>2 本の線が平行のため、寸法を取る角度がありません</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1181" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1183" />
         <source>Angular dimension</source>
         <translation>角度寸法</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1378" />
+        <source>%1   %2°</source>
+        <translation>%1   %2°</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1405" />
+        <source>%1 × %2</source>
+        <translation>%1 × %2</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1412" />
+        <source>R %1   %2°</source>
+        <translation>R %1   %2°</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1427" />
+        <source>R %1</source>
+        <translation>R %1</translation>
     </message>
     <message>
         <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="301" />
@@ -3577,8 +3618,8 @@ Do you want to recover it?</source>
         <translation type="vanished">dx: %1   dy: %2   長さ: %3 (%4 mm)   角度: %5°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="903" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="912" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="905" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="914" />
         <source>Insert image</source>
         <translation>画像を挿入</translation>
     </message>
@@ -3794,27 +3835,27 @@ snap to grid</source>
         <translation>プリミティブ 0  マクロ 0</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="74" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="79" />
         <source>X %1 Y %2</source>
         <translation>X %1 Y %2</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="77" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="82" />
         <source>X %1mm Y %2mm</source>
         <translation>X %1mm Y %2mm</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="80" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="85" />
         <source>X %1 Y %2 (X %3mm Y %4mm)</source>
         <translation>X %1 Y %2 (X %3mm Y %4mm)</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="88" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="93" />
         <source>Zoom %1%</source>
         <translation>ズーム %1%</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="100" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="105" />
         <source>Primitives %1  Macros %2</source>
         <translation>プリミティブ %1  マクロ %2</translation>
     </message>

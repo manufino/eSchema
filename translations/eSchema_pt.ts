@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
+<?xml version='1.0' encoding='utf-8'?>
 <TS version="2.1" language="pt_BR">
 <context>
     <name>ColorPicker</name>
@@ -764,7 +763,7 @@ li.checked::marker { content: "\2612"; }
     </message>
     <message>
         <location filename="../gui/DialogOptions.ui" line="230" />
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="441" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="449" />
         <source>Language</source>
         <translation>Idioma</translation>
     </message>
@@ -789,72 +788,92 @@ li.checked::marker { content: "\2612"; }
         <translation>Folha de estilos</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="882" />
+        <location filename="../gui/DialogOptions.ui" line="842" />
+        <source>Object snap tracking</source>
+        <translation>Rastreamento de captura de objetos</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="845" />
+        <source>Hovering a snap point acquires it; the cursor then aligns with acquired points from a distance, along dashed alignment lines</source>
+        <translation>Passar sobre um ponto de captura o adquire; o cursor então se alinha com os pontos adquiridos à distância, ao longo de linhas de alinhamento tracejadas</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="895" />
         <source>Snap to guides</source>
         <translation>Ajustar às guias</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="885" />
+        <location filename="../gui/DialogOptions.ui" line="898" />
         <source>Snap positions to the guide lines dragged out of the rulers</source>
         <translation>Ajusta as posições às guias arrastadas das réguas</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="895" />
+        <location filename="../gui/DialogOptions.ui" line="908" />
         <source>Guide color</source>
         <translation>Cor das guias</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1002" />
+        <location filename="../gui/DialogOptions.ui" line="1015" />
         <source>Default polygon sides</source>
         <translation>Lados predefinidos do polígono</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1022" />
+        <location filename="../gui/DialogOptions.ui" line="1035" />
         <source>Curve sampling step (units)</source>
         <translation>Passo de amostragem das curvas (unidades)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1029" />
+        <location filename="../gui/DialogOptions.ui" line="1042" />
         <source>Spacing of the points generated along arcs, boolean results, and shape conversions - smaller is smoother but heavier</source>
         <translation>Espaçamento dos pontos gerados ao longo de arcos, resultados booleanos e conversões de forma - menor é mais suave mas mais pesado</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1048" />
+        <location filename="../gui/DialogOptions.ui" line="1061" />
         <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
         <translation>Converte os resultados curvos em curvas complexas (muito menos nós, cantos ligeiramente arredondados) em vez de polígonos achatados</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1051" />
+        <location filename="../gui/DialogOptions.ui" line="1064" />
         <source>Smooth curved results</source>
         <translation>Resultados curvos suavizados</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1058" />
+        <location filename="../gui/DialogOptions.ui" line="1071" />
         <source>Default text font</source>
         <translation>Tipo de letra predefinido do texto</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1068" />
+        <location filename="../gui/DialogOptions.ui" line="1081" />
         <source>Nudge step (Alt+arrows)</source>
         <translation>Passo de deslocação (Alt+setas)</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1075" />
+        <location filename="../gui/DialogOptions.ui" line="1088" />
         <source>How many snap steps one Alt+arrow press moves the selection</source>
         <translation>Quantos passos de ajuste a seleção se move por cada pressão de Alt+seta</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1091" />
+        <location filename="../gui/DialogOptions.ui" line="1104" />
         <source>Dimension text size</source>
         <translation>Tamanho do texto de cota</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1098" />
+        <location filename="../gui/DialogOptions.ui" line="1111" />
         <source>Height (drawing units) of the distance label the Dimension tool places</source>
         <translation>Altura (unidades de desenho) da etiqueta de distância colocada pela ferramenta Cota</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1137" />
+        <location filename="../gui/DialogOptions.ui" line="1127" />
+        <source>Dynamic tooltip at the cursor while drawing</source>
+        <translation>Dica dinâmica junto ao cursor ao desenhar</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="1130" />
+        <source>Shows the live length and angle (or width × height) next to the cursor while placing a primitive</source>
+        <translation>Mostra o comprimento e o ângulo atuais (ou largura × altura) junto ao cursor ao posicionar uma primitiva</translation>
+    </message>
+    <message>
+        <location filename="../gui/DialogOptions.ui" line="1163" />
         <source>Restore page defaults</source>
         <translation>Repor predefinições da página</translation>
     </message>
@@ -1040,22 +1059,22 @@ li.checked::marker { content: "\2612"; }
         <translation>Interseções de segmentos</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="842" />
+        <location filename="../gui/DialogOptions.ui" line="855" />
         <source>Snap marker color</source>
         <translation>Cor do marcador de ajuste</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="862" />
+        <location filename="../gui/DialogOptions.ui" line="875" />
         <source>Handle color</source>
         <translation>Cor das alças</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="936" />
+        <location filename="../gui/DialogOptions.ui" line="949" />
         <source>Drawing line width</source>
         <translation>Espessura da linha de desenho</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="959" />
+        <location filename="../gui/DialogOptions.ui" line="972" />
         <source>Selection tolerance</source>
         <translation>Tolerância de seleção</translation>
     </message>
@@ -1063,7 +1082,7 @@ li.checked::marker { content: "\2612"; }
         <location filename="../gui/DialogOptions.ui" line="391" />
         <location filename="../gui/DialogOptions.ui" line="457" />
         <location filename="../gui/DialogOptions.ui" line="786" />
-        <location filename="../gui/DialogOptions.ui" line="966" />
+        <location filename="../gui/DialogOptions.ui" line="979" />
         <source> px</source>
         <translation> px</translation>
     </message>
@@ -1073,7 +1092,7 @@ li.checked::marker { content: "\2612"; }
         <translation>Tamanho da pré-visualização de macros</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="982" />
+        <location filename="../gui/DialogOptions.ui" line="995" />
         <source>Connection dot size</source>
         <translation>Tamanho do ponto de conexão</translation>
     </message>
@@ -1087,12 +1106,12 @@ li.checked::marker { content: "\2612"; }
         <translation type="vanished">Restaurar padrões</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1157" />
+        <location filename="../gui/DialogOptions.ui" line="1183" />
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1164" />
+        <location filename="../gui/DialogOptions.ui" line="1190" />
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -1101,7 +1120,7 @@ li.checked::marker { content: "\2612"; }
         <translation type="vanished">Cancelar</translation>
     </message>
     <message>
-        <location filename="../gui/DialogOptions.ui" line="1171" />
+        <location filename="../gui/DialogOptions.ui" line="1197" />
         <source>Apply</source>
         <translation>Aplicar</translation>
     </message>
@@ -1116,7 +1135,7 @@ li.checked::marker { content: "\2612"; }
         <translation>Folha de estilo (*.qss)</translation>
     </message>
     <message>
-        <location filename="../src/Dialogs/DialogOptions.cpp" line="442" />
+        <location filename="../src/Dialogs/DialogOptions.cpp" line="450" />
         <source>The new language will take effect the next time eSchema starts.</source>
         <translation>O novo idioma será ativado na próxima inicialização do eSchema.</translation>
     </message>
@@ -3522,50 +3541,72 @@ Deseja recuperá-lo?</translation>
         <translation>Número de lados:</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="487" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="726" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="488" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="728" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1357" />
         <source>%1 mm</source>
         <translation>%1 mm</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="490" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="491" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1359" />
         <source>%1 (%2 mm)</source>
         <translation>%1 (%2 mm)</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="493" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="494" />
         <source>dx: %1   dy: %2   length: %3   angle: %4°</source>
         <translation>dx: %1   dy: %2   comprimento: %3   ângulo: %4°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="704" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="706" />
         <source>Angular dimension: click the first line</source>
         <translation>Cota angular: clique na primeira linha</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="705" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="707" />
         <source>Angular dimension: click the second line</source>
         <translation>Cota angular: clique na segunda linha</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="714" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="716" />
         <source>Radial dimension: click the outline of a circle or arc</source>
         <translation>Cota radial: clique no contorno de um círculo ou arco</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1125" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1127" />
         <source>Dimension</source>
         <translation>Cota</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1142" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1144" />
         <source>The two lines are parallel - no angle to dimension</source>
         <translation>As duas linhas são paralelas - não há ângulo a cotar</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1181" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1183" />
         <source>Angular dimension</source>
         <translation>Cota angular</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1378" />
+        <source>%1   %2°</source>
+        <translation>%1   %2°</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1405" />
+        <source>%1 × %2</source>
+        <translation>%1 × %2</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1412" />
+        <source>R %1   %2°</source>
+        <translation>R %1   %2°</translation>
+    </message>
+    <message>
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="1427" />
+        <source>R %1</source>
+        <translation>R %1</translation>
     </message>
     <message>
         <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="301" />
@@ -3577,8 +3618,8 @@ Deseja recuperá-lo?</translation>
         <translation type="vanished">dx: %1   dy: %2   comprimento: %3 (%4 mm)   ângulo: %5°</translation>
     </message>
     <message>
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="903" />
-        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="912" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="905" />
+        <location filename="../src/Primitives/PrimitivePlacementController.cpp" line="914" />
         <source>Insert image</source>
         <translation>Inserir imagem</translation>
     </message>
@@ -3794,27 +3835,27 @@ o ajuste à grelha</translation>
         <translation>Primitivas 0  Macros 0</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="74" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="79" />
         <source>X %1 Y %2</source>
         <translation>X %1 Y %2</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="77" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="82" />
         <source>X %1mm Y %2mm</source>
         <translation>X %1mm Y %2mm</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="80" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="85" />
         <source>X %1 Y %2 (X %3mm Y %4mm)</source>
         <translation>X %1 Y %2 (X %3mm Y %4mm)</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="88" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="93" />
         <source>Zoom %1%</source>
         <translation>Zoom %1%</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="100" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="105" />
         <source>Primitives %1  Macros %2</source>
         <translation>Primitivas %1  Macros %2</translation>
     </message>
