@@ -18,6 +18,32 @@
  */
 
 #include "PenStyleComboBox.h"
+#include "GraphicsPrimitive.h"
+
+namespace {
+
+// The preview pen for one style: black on the fixed white background, with
+// the very same FidoCadJ dash patterns the canvas draws
+// (GraphicsPrimitive::fidoDashPattern()), rendered at a small "zoom" so
+// the pitch differences stay legible at widget size.
+QPen previewPen(Qt::PenStyle style)
+{
+    QPen pen(Qt::black);
+    pen.setWidthF(2.0);
+    pen.setCapStyle(Qt::RoundCap);
+    const QVector<qreal> pattern = GraphicsPrimitive::fidoDashPattern(style);
+    if (pattern.isEmpty())
+        return pen;
+    constexpr qreal PreviewZoom = 2.0;
+    QList<qreal> widthUnits;
+    widthUnits.reserve(pattern.size());
+    for (qreal length : pattern)
+        widthUnits.append(length * PreviewZoom / pen.widthF());
+    pen.setDashPattern(widthUnits);
+    return pen;
+}
+
+}
 
 PenStyleDelegate::PenStyleDelegate(QObject *parent)
     : QStyledItemDelegate(parent)
@@ -68,17 +94,12 @@ void PenStyleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     int midY = rect.top() + rect.height() / 2;
     QLine line(rect.left() + 10, midY, rect.right() - 10, midY);
 
-    QPen pen(static_cast<Qt::PenStyle>(index.data(Qt::UserRole).toInt()));
-    pen.setWidth(2);
+    // Always white background with a black line, whatever the theme - the
+    // previews mimic the drawing canvas, not the UI chrome.
+    painter->fillRect(rect, opt.state & QStyle::State_MouseOver
+                      ? QColor(0xd8, 0xe6, 0xf5) : QColor(Qt::white));
 
-    if (opt.state & QStyle::State_MouseOver)
-    {
-        // Add the hover effect
-        //pen.setColor(QColor("white"));
-        painter->fillRect(rect, QBrush(QColor("cyan")));
-    }
-
-    painter->setPen(pen);
+    painter->setPen(previewPen(static_cast<Qt::PenStyle>(index.data(Qt::UserRole).toInt())));
     painter->drawLine(line);
 
     painter->setPen(QPen(QColor("gray")));
@@ -152,15 +173,17 @@ void PenStyleComboBox::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // Draw the selected line in the closed ComboBox
+    // Draw the selected line in the closed ComboBox - white canvas-like
+    // background and black line whatever the theme, same FidoCadJ dash
+    // pattern as the drawing itself.
     QRect rect = this->rect();
     int midY = rect.top() + rect.height() / 2;
     QLine line(rect.left()+5, midY, rect.right()-5, midY);
 
-    QPen p = currentPen;
-    p.setWidth(lineWidth);
-    painter.setPen(p);
+    painter.setPen(QPen(QColor("gray"), 1));
+    painter.setBrush(QColor(Qt::white));
+    painter.drawRoundedRect(rect.adjusted(0, 0, -1, -1), 3, 3);
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(previewPen(currentPen.style()));
     painter.drawLine(line);
-    painter.setPen(QPen(QColor("gray"),1));
-    painter.drawRoundedRect(rect,3,3);
 }

@@ -56,10 +56,18 @@ public:
     ~PenStyleComboBox();
 
     Qt::PenStyle currentPenStyle() const { return currentPen.style(); }
-    // Selects the item matching `style`, without emitting currentIndexChanged
-    // extra times beyond Qt's own signal (callers wrap this in a
-    // QSignalBlocker when just syncing the display, not applying an edit).
-    void setCurrentPenStyle(Qt::PenStyle style) { setCurrentIndex(findData(QVariant(static_cast<int>(style)))); }
+    // Selects the item matching `style`. currentPen must be updated here
+    // directly, not just via the currentIndexChanged->penStyleChanged
+    // signal: the properties panel calls this under a QSignalBlocker (to
+    // sync the display without re-applying the edit), which would leave
+    // the closed combo painting the previous style - a dashed primitive
+    // read back as "solid".
+    void setCurrentPenStyle(Qt::PenStyle style)
+    {
+        currentPen.setStyle(style);
+        setCurrentIndex(findData(QVariant(static_cast<int>(style))));
+        update();
+    }
 
 public slots:
     void lineWidthChanged(qreal lineWidth);

@@ -93,6 +93,10 @@ public:
     // the pen's width already final (the pattern is re-expressed in
     // width units, as QPen requires).
     void applyLineStyle(QPen &pen) const;
+    // The reference dash pattern for `style`, in drawing units
+    // (Globals.dash[i]/2); empty for solid. Shared with PenStyleComboBox,
+    // whose previews must show the same patterns the canvas draws.
+    static QVector<qreal> fidoDashPattern(Qt::PenStyle style);
 
     // The stroke width every line-like primitive (Line/Bezier/Rectangle/
     // Ellipse/Polygon/ComplexCurve) actually draws with: read live from the
