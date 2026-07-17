@@ -348,6 +348,16 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         return;
     }
 
+    // A bare right-click must never touch the selection: its only job is
+    // summoning the context menu (contextMenuEvent below), which acts on
+    // the current selection. Forwarded to QGraphicsView, the press would
+    // clear the selection whenever it lands on empty canvas - so a
+    // right-click on free space next to the selected primitives would
+    // deselect them right before the menu opens. Only a left click (or
+    // Escape) deselects.
+    if (event->button() == Qt::RightButton)
+        return;
+
     if (event->button() == Qt::MiddleButton)
     {
         // Store original position.
