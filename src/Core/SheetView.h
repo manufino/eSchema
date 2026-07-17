@@ -150,11 +150,6 @@ private:
     // Index (into Sheet::guides()) of the guide a left-drag is currently
     // moving, -1 when none - releasing it outside the viewport deletes it.
     int m_draggedGuide = -1;
-    // Set when a right press just exited a drawing tool back to Select
-    // (mousePressEvent) - the QContextMenuEvent the same click generates
-    // right after must be swallowed, or the menu would pop over the very
-    // tool switch the click meant. The next right-click opens it normally.
-    bool m_suppressContextMenu = false;
 };
 
 #endif // SHEETVIEW_H
