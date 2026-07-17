@@ -19,6 +19,7 @@
 
 #include "LayerLockButton.h"
 #include "LayerIcons.h"
+#include "SettingsManager.h"
 #include "ThemeManager.h"
 
 LayerLockButton::LayerLockButton(Layer *layer, QWidget *parent)
@@ -26,16 +27,24 @@ LayerLockButton::LayerLockButton(Layer *layer, QWidget *parent)
 {
     this->layer = layer;
 
-    // themedIcon(): black line art, re-tinted light on dark themes (see
-    // LayerVisibilityButton for why once-at-construction is enough).
-    images.append(ThemeManager::themedIcon(LayerIcons::renderLockIcon(false)));
-    images.append(ThemeManager::themedIcon(LayerIcons::renderLockIcon(true)));
-
-    setStatus(layer->isLocked());
+    layerIsLocked = layer->isLocked();
+    refreshIcons();
+    // Live theme switches re-tint the glyphs (see refreshIcons()).
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, &LayerLockButton::refreshIcons);
 
     setMouseTracking(true);
     setCursor(layer->isMaster() ? Qt::ArrowCursor : Qt::PointingHandCursor);
     setText("");
+}
+
+void LayerLockButton::refreshIcons()
+{
+    // themedIcon(): black line art, re-tinted light on dark themes.
+    images.clear();
+    images.append(ThemeManager::themedIcon(LayerIcons::renderLockIcon(false)));
+    images.append(ThemeManager::themedIcon(LayerIcons::renderLockIcon(true)));
+    setPixmap(images[layerIsLocked ? 1 : 0]);
 }
 
 void LayerLockButton::setStatus(bool status)

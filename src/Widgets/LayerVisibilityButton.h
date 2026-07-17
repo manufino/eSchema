@@ -43,6 +43,13 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
 
+private slots:
+    // Rebuilds the theme-tinted pixmaps and re-applies the current one -
+    // connected to SettingsManager::settingIsChanged, so instances living
+    // in the always-alive layer toolbar pick a live theme switch up too
+    // (once-at-construction tinting only covered the recreated dialog).
+    void refreshIcons();
+
 private:
     QList<QPixmap> images;
     bool layerIsVisible;

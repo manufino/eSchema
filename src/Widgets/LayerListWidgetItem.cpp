@@ -18,6 +18,7 @@
  */
 
 #include "LayerListWidgetItem.h"
+#include "ThemeManager.h"
 
 LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : QListWidgetItem(parent) {
     setData(Qt::UserRole+5, QVariant::fromValue(layer));
@@ -43,12 +44,15 @@ LayerListWidgetItem::LayerListWidgetItem(Layer *layer,  QListWidget *parent) : Q
     LayerLabelName *label = new LayerLabelName(layer, widget);
     layout->addWidget(label);
 
-    // only add the icon on the master layer
+    // only add the icon on the master layer - themedIcon(): black line
+    // art, invisible on dark themes without the light re-tint (the rows
+    // are rebuilt on a live theme switch, see LayerListView's
+    // settingIsChanged connection, so this stays fresh too)
     if (layer->isMaster()) {
         QLabel *nonClickableIconLabel = new QLabel(widget);
         QIcon icon = QIcon(":/res/resources/remix/bookmark-3-line.png");
         QPixmap pixmap = icon.pixmap(icon.actualSize(QSize(28, 28)));
-        nonClickableIconLabel->setPixmap(pixmap);
+        nonClickableIconLabel->setPixmap(ThemeManager::themedIcon(pixmap));
         nonClickableIconLabel->setFixedSize(28, 28);
         layout->addWidget(nonClickableIconLabel);
     }

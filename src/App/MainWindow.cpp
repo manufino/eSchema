@@ -1184,8 +1184,13 @@ void MainWindow::refreshDockTabIcons()
     for (QTabBar *tabBar : tabBars) {
         for (int i = 0; i < tabBar->count(); ++i) {
             for (QDockWidget *dock : docks) {
+                // themedIcon(): the tab bar is no QAction/QAbstractButton,
+                // so the global re-tint pass never reaches it - black line
+                // art would stay invisible on dark themes. Re-run from
+                // applyLiveSettings() on a live theme switch.
                 if (tabBar->tabText(i) == dock->windowTitle())
-                    tabBar->setTabIcon(i, dock->windowIcon());
+                    tabBar->setTabIcon(i, QIcon(ThemeManager::themedIcon(
+                            dock->windowIcon().pixmap(20, 20))));
             }
         }
     }
@@ -1468,6 +1473,10 @@ QMenu *MainWindow::createPopupMenu()
 
 void MainWindow::applyLiveSettings()
 {
+    // A theme switch may just have happened (gui_style is a setting like
+    // any other) - the dock tab icons are re-tinted per theme in there.
+    refreshDockTabIcons();
+
     const int iconSizeSetting = SettingsManager::getInstance()
             .loadSetting("toolbar_icon_size").toInt();
     const int iconSize = iconSizeSetting > 0 ? qBound(16, iconSizeSetting, 64) : 25;

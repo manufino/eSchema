@@ -48,6 +48,10 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
 
+private slots:
+    // Same live theme-switch re-tint as LayerVisibilityButton::refreshIcons().
+    void refreshIcons();
+
 private:
     QList<QPixmap> images;
     bool layerIsLocked;

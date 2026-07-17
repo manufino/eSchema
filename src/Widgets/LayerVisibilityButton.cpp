@@ -18,6 +18,7 @@
  */
 
 #include "LayerVisibilityButton.h"
+#include "SettingsManager.h"
 #include "ThemeManager.h"
 
 LayerVisibilityButton::LayerVisibilityButton(Layer * layer, QWidget *parent)
@@ -25,22 +26,30 @@ LayerVisibilityButton::LayerVisibilityButton(Layer * layer, QWidget *parent)
 {
     this->layer = layer;
 
-    // themedIcon(): the eye glyphs are black line art, invisible on the
-    // dark themes' surfaces without the light re-tint. Applied once here -
-    // these buttons live inside DialogLayerList, which is recreated on
-    // every open, so a theme switch is picked up the next time it opens.
-    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-line.png")));
-    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-off-line.png")));
-    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-fill.png")));
-
-    if(layer->isMaster())
-        setPixmap(images[2]);
-    else
-        setStatus(layer->isVisible());
+    layerIsVisible = layer->isVisible();
+    refreshIcons();
+    // Live theme switches re-tint the glyphs (see refreshIcons()).
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, &LayerVisibilityButton::refreshIcons);
 
     setMouseTracking(true);
     setCursor(Qt::PointingHandCursor);
     setText("");
+}
+
+void LayerVisibilityButton::refreshIcons()
+{
+    // themedIcon(): the eye glyphs are black line art, invisible on the
+    // dark themes' surfaces without the light re-tint.
+    images.clear();
+    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-line.png")));
+    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-off-line.png")));
+    images.append(ThemeManager::themedIcon(QPixmap(":/res/resources/remix/eye-fill.png")));
+
+    if (layer->isMaster())
+        setPixmap(images[2]);
+    else
+        setPixmap(images[layerIsVisible ? 0 : 1]);
 }
 
 void LayerVisibilityButton::setStatus(bool status)

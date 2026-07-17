@@ -20,6 +20,7 @@
 #include "LayerComboBox.h"
 #include "LayerItemDelegate.h"
 #include "LayerIcons.h"
+#include "SettingsManager.h"
 #include "ThemeManager.h"
 #include "qpainterpath.h"
 #include <QAbstractItemView>
@@ -42,6 +43,12 @@ LayerComboBox::LayerComboBox(QWidget* parent)
     // wrong live layer after a reorder.
     connect(&LayerList::getInstance(), &LayerList::layerListChanged,
             this, [this](QList<Layer *> *list) { addLayerList(list); });
+
+    // A live theme switch saves "gui_style": rebuilding the rows re-tints
+    // the item icons (built with ThemeManager::themedIcon() at row-build
+    // time) for the new theme without reopening anything.
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, [this]() { addLayerList(LayerList::getInstance().getList()); });
 
     // view() lazily creates the popup's QAbstractItemView - forcing that
     // here lets the eye/lock click interception (eventFilter()) be wired up

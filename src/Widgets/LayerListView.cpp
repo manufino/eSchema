@@ -18,10 +18,17 @@
  */
 
 #include "LayerListView.h"
+#include "SettingsManager.h"
 
 LayerListView::LayerListView(QWidget *parent) : QListWidget(parent)
 {
     addLayerList(LayerList::getInstance().getList());
+    // A live theme switch saves "gui_style", which lands here as a
+    // settings change: rebuilding the rows re-tints every glyph (eyes,
+    // locks, the master bookmark) for the new theme while the dialog is
+    // open.
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, &LayerListView::updateList);
 }
 
 void LayerListView::addLayer(Layer *layer)
