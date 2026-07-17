@@ -130,6 +130,7 @@ void DialogOptions::loadSettings()
     // fallback) - reflect that when no explicit choice was ever saved.
     ui->cboxStyle->setCurrentIndex(styleIndex >= 0 ? styleIndex
                                                    : int(GuiStyleCodes.indexOf("nord")));
+    m_initialStyleIndex = ui->cboxStyle->currentIndex();
     val = settings.loadSetting("stylesheet_path");
     ui->txtStylesheetPath->setText(val.toString());
     updateStylesheetPathEnabled();
@@ -448,6 +449,16 @@ void DialogOptions::apply()
         m_initialLanguageIndex = ui->cboxLanguage->currentIndex();
         QMessageBox::information(this, tr("Language"),
                                   tr("The new language will take effect the next time eSchema starts."));
+    }
+
+    // The theme is applied live, but a restart still gives the cleanest
+    // result (every widget rebuilt from scratch against the new palette,
+    // stylesheet and icon tints) - recommend it once per actual change.
+    if (ui->cboxStyle->currentIndex() != m_initialStyleIndex) {
+        m_initialStyleIndex = ui->cboxStyle->currentIndex();
+        QMessageBox::information(this, tr("Theme"),
+                                  tr("The new theme has been applied. Restarting eSchema is "
+                                     "recommended so the whole interface picks it up completely."));
     }
 }
 

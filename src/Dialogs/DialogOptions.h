@@ -73,6 +73,7 @@ private:
     // against the current index on apply()/accept() to decide whether to warn that
     // a restart is needed, since the UI isn't retranslated live.
     int m_initialLanguageIndex = 0;
+    int m_initialStyleIndex = 0;
 };
 
 #endif // DIALOGOPTIONS_H
