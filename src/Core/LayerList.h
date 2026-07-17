@@ -62,6 +62,11 @@ public slots:
     // layer actively being drawn on.
     void setLocked(Layer *layer, bool locked);
     void setAllLockedOrUnlocked(bool locked);
+    // For callers that changed several layers' visible/locked flags directly
+    // on the Layer objects (Document::applyLayerState() restoring a whole
+    // per-document snapshot) - one appearance resync for the whole batch
+    // instead of one signal per property setter.
+    void notifyAppearanceChanged() { emit layerAppearanceChanged(); }
 
 signals:
     void layerListChanged(QList<Layer*> *layerList);

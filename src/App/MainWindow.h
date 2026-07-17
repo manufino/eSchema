@@ -39,12 +39,15 @@
 #include "GlobalUtils.h"
 #include "PrimitivePlacementController.h"
 #include "SelectionHandleController.h"
-
-
+#include "Document.h"
+#include "DocumentView.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+class QUndoGroup;
+class QDockWidget;
+class QTabBar;
 class QPrinter;
 class QTreeWidget;
 class QTreeWidgetItem;
@@ -376,10 +379,11 @@ private:
     // DXF and dropping a .dxf onto the window. Returns false on read errors
     // (already reported to the user).
     bool importDxfFile(const QString &filePath);
-    // The droppable local file carried by a drag's mime data - empty if the
-    // drag holds none (wrong extension, non-file payload). Shared by
-    // dragEnterEvent (to decide acceptance) and dropEvent.
-    static QString droppableFilePath(const QMimeData *mimeData);
+    // The droppable local files carried by a drag's mime data - empty if
+    // the drag holds none (wrong extension, non-file payload). Shared by
+    // dragEnterEvent (to decide acceptance) and dropEvent; each dropped
+    // file opens in its own tab.
+    static QStringList droppableFilePaths(const QMimeData *mimeData);
     // Called right after every bulk load (Open, DXF import, autosave
     // recovery): if the loaded content sticks out of the drawing area (the
     // fixed sceneRect - e.g. a file authored with negative coordinates),
@@ -464,8 +468,65 @@ private:
     void refreshFcdCodeIfClean();
 
 private:
+    // --- Multi-document infrastructure ------------------------------------
+    // Each open drawing is a QDockWidget in the nested "document area"
+    // QMainWindow, so drawings can be tabbed together, split side by side
+    // or floated with Qt's native dock dragging. The members below
+    // (sheetScene, currentFilePath, placementController,
+    // selectionHandleController) always mirror the ACTIVE document - the one
+    // whose view last had focus - so the ~90 action handlers that predate
+    // multidocument keep operating on "the current drawing" unchanged.
+    Document *createDocument();
+    Document *activeDocument() const { return m_activeDocument; }
+    // The document whose dock or view is `object`, or nullptr.
+    Document *documentForObject(QObject *object) const;
+    void setActiveDocument(Document *document);
+    // Confirms unsaved changes, then closes the document's dock (the last
+    // remaining one resets to a fresh untitled drawing instead).
+    void closeDocument(Document *document);
+    void updateDocumentTitle(Document *document);
+    // The lowest positive integer not currently used by an untitled
+    // document, so fresh drawings read "New drawing 1", "New drawing 2",
+    // ... and a closed number is reused rather than climbing forever.
+    int nextUntitledNumber() const;
+
+    // IDE-style docking chrome on top of Qt's native dock dragging
+    // (GroupedDragging gives tab tear-off/re-dock natively), for both the
+    // document docks (in m_documentArea) and the side panels:
+    // - a tabbed dock has NO title bar at all - its tab is the drag handle
+    //   and carries the close button (setupDockTabBars styles those);
+    // - the ONLY open document has neither bar nor tab - nothing to
+    //   reorganize;
+    // - a floating dock, or a lone split pane sitting next to others, gets
+    //   a slim tab-looking DockTitleTab as its drag handle + close button
+    //   instead of the fat native bar.
+    // updateDockTitleBars() re-evaluates this after every layout change
+    // (deferred: tabifiedDockWidgets() lags the actual re-layout).
+    void setupDockTabBars();       // style the native dock tab bars' close buttons
+    void updateDockTitleBars();    // apply the per-dock title-bar policy
+    void applyDockTitleBar(QDockWidget *dock, QMainWindow *area);
+    QList<QDockWidget *> allManagedDocks() const; // document + panel docks
+    QMainWindow *areaForDock(QDockWidget *dock) const;
+    QDockWidget *dockForTabText(const QString &text) const;
+    // The active document's view and its surrounding widget (rulers).
+    SheetView *activeView() const;
+    DocumentView *activeDocumentView() const;
+    // Resets the (already confirmed-discardable) active document to a fresh
+    // untitled state - shared by "close the last remaining dock" and the few
+    // in-place flows that replace the current content.
+    void resetActiveDocument();
+
     Ui::MainWindow *ui;
-    Sheet *sheetScene;
+    // The nested QMainWindow hosting the document docks - built in the
+    // constructor and placed in the central widget's layout.
+    QMainWindow *m_documentArea = nullptr;
+    QList<Document *> m_documents;
+    Document *m_activeDocument = nullptr;
+    QUndoGroup *m_undoGroup = nullptr;
+    // Connections bound to the active document's sheet/stack, remade on
+    // every activation (see setActiveDocument()).
+    QList<QMetaObject::Connection> m_documentConnections;
+    Sheet *sheetScene = nullptr; // the ACTIVE document's sheet
     DialogOptions *optionDialog;
     DialogAbout *aboutDialog = nullptr;
     // Single instance (see clickLayerManagerAction()): a second one would

@@ -39,6 +39,8 @@
 
 GraphicsPrimitive *MainWindow::firstSelectedPrimitive() const
 {
+    if (!sheetScene)
+        return nullptr; // mid-construction, before the first document exists
     for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
         if (primitive->isSelected())
             return primitive;
@@ -49,6 +51,8 @@ GraphicsPrimitive *MainWindow::firstSelectedPrimitive() const
 QList<GraphicsPrimitive *> MainWindow::selectedPrimitivesInOrder() const
 {
     QList<GraphicsPrimitive *> result;
+    if (!sheetScene)
+        return result; // mid-construction, before the first document exists
     for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
         if (primitive->isSelected())
             result.append(primitive);

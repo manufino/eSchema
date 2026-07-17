@@ -45,6 +45,8 @@ write_file($$OUT_PWD/appversion.h, APP_VERSION_LINE)
 INCLUDEPATH += $$OUT_PWD
 
 SOURCES += \
+	src/App/Document.cpp \
+	src/App/DocumentView.cpp \
 	src/main.cpp \
 	src/App/CommandLine.cpp \
 	src/App/MainWindow.cpp \
@@ -120,12 +122,15 @@ SOURCES += \
 	src/Widgets/LayerVisibilityButton.cpp \
 	src/Widgets/MacroPreviewWidget.cpp \
 	src/Widgets/ArrowStyleComboBox.cpp \
+	src/Widgets/DockTitleTab.cpp \
 	src/Widgets/PenStyleComboBox.cpp \
 	src/Widgets/RulerWidget.cpp \
 	src/Widgets/StatusBar.cpp \
 	src/Widgets/ToolBarPrimitive.cpp
 
 HEADERS += \
+	src/App/Document.h \
+	src/App/DocumentView.h \
 	src/App/CommandLine.h \
 	src/App/MainWindow.h \
 	src/Core/BooleanOps.h \
@@ -202,6 +207,7 @@ HEADERS += \
 	src/Widgets/LinkLabel.h \
 	src/Widgets/MacroPreviewWidget.h \
 	src/Widgets/ArrowStyleComboBox.h \
+	src/Widgets/DockTitleTab.h \
 	src/Widgets/PenStyleComboBox.h \
 	src/Widgets/RulerWidget.h \
 	src/Widgets/StatusBar.h \

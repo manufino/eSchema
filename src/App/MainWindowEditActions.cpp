@@ -1211,7 +1211,7 @@ void MainWindow::clickOffsetOutlineAction()
     ui->statusbar->showMessage(
             tr("Move the mouse to the side to offset toward, then click (right click or Esc cancels)"), 0);
     QPointF picked;
-    ScenePointPicker picker(ui->graphicsView, sheetScene, false);
+    ScenePointPicker picker(activeView(), sheetScene, false);
     picker.setHoverCallback([this, source, distance, &preview, &clearPreview](const QPointF &pos) {
         clearPreview();
         preview = buildOffsetPrimitives(source, distance, pos);
@@ -1269,7 +1269,7 @@ void MainWindow::clickSplitAtPointAction()
 
     ui->statusbar->showMessage(tr("Click the split point (right click or Esc cancels)"), 0);
     QPointF picked;
-    ScenePointPicker picker(ui->graphicsView, sheetScene);
+    ScenePointPicker picker(activeView(), sheetScene);
     const bool accepted = picker.run(&picked);
     ui->statusbar->clearMessage();
     if (!accepted)
@@ -1399,7 +1399,7 @@ void MainWindow::clickSplitAtPointAction()
 // intersections" and "direction to extend along".
 GraphicsPrimitive *MainWindow::pickedLineAt(const QPointF &scenePos) const
 {
-    const qreal tolerance = 8.0 / qMax(0.01, ui->graphicsView->transform().m11());
+    const qreal tolerance = 8.0 / qMax(0.01, activeView()->transform().m11());
     GraphicsPrimitive *best = nullptr;
     qreal bestDistSq = tolerance * tolerance;
     for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
@@ -1485,7 +1485,7 @@ void MainWindow::clickTrimToIntersectionAction()
     ui->statusbar->showMessage(
             tr("Click the part of a line to remove (right click or Esc cancels)"), 0);
     QPointF picked;
-    ScenePointPicker picker(ui->graphicsView, sheetScene, false);
+    ScenePointPicker picker(activeView(), sheetScene, false);
     picker.setHoverCallback([this, &computePlan](const QPointF &pos) {
         if (const auto plan = computePlan(pos)) {
             sheetScene->setHoverHighlightLine(
@@ -1623,7 +1623,7 @@ void MainWindow::clickExtendToIntersectionAction()
     ui->statusbar->showMessage(
             tr("Click a line near the end to extend (right click or Esc cancels)"), 0);
     QPointF picked;
-    ScenePointPicker picker(ui->graphicsView, sheetScene, false);
+    ScenePointPicker picker(activeView(), sheetScene, false);
     picker.setHoverCallback([this, &computePlan](const QPointF &pos) {
         if (const auto plan = computePlan(pos)) {
             sheetScene->setHoverHighlightLine(QLineF(plan->end, plan->reached),
@@ -1714,7 +1714,7 @@ void MainWindow::moveOrCopyWithBasePoint(bool copyMode)
     QPointF base;
     bool accepted = false;
     {
-        ScenePointPicker basePicker(ui->graphicsView, sheetScene, true);
+        ScenePointPicker basePicker(activeView(), sheetScene, true);
         accepted = basePicker.run(&base);
     }
     if (!accepted) {
@@ -1758,7 +1758,7 @@ void MainWindow::moveOrCopyWithBasePoint(bool copyMode)
     ui->statusbar->showMessage(
             tr("Specify the destination point (right click or Esc cancels)"), 0);
     QPointF destination;
-    ScenePointPicker destinationPicker(ui->graphicsView, sheetScene, true);
+    ScenePointPicker destinationPicker(activeView(), sheetScene, true);
     destinationPicker.setExcluded(previewExcluded);
     destinationPicker.setHoverCallback([this, base, &preview, &previewBase,
                                         &previewExcluded](const QPointF &pos) {
@@ -1886,7 +1886,7 @@ void MainWindow::clickArrayAction()
     // reopened with every field (and the picked center) preserved.
     int result = dialog.exec();
     while (result == DialogArray::PickRequested) {
-        ScenePointPicker picker(ui->graphicsView, sheetScene);
+        ScenePointPicker picker(activeView(), sheetScene);
         QPointF picked;
         if (picker.run(&picked))
             dialog.setSuggestedCenter(picked);
@@ -2241,7 +2241,7 @@ void MainWindow::findInDrawing(const QString &text, int direction)
 
     sheetScene->clearSelection();
     match->setSelected(true);
-    ui->graphicsView->centerOn(match->sceneBoundingRect().center());
+    activeView()->centerOn(match->sceneBoundingRect().center());
 
     findDialog->setStatusText(tr("%1 of %2").arg(lastFindIndex + 1).arg(matches.size()));
 }
@@ -2632,7 +2632,7 @@ void MainWindow::pasteFromText(const QString &text, const QString &undoLabel, bo
     // view to it so the result is immediately visible. A paste into an
     // existing drawing keeps the current view untouched.
     if (wasEmpty)
-        ui->graphicsView->adjustView();
+        activeView()->adjustView();
 }
 
 // Companion to pasteFromText(): the clipboard holds a bitmap (e.g. from
@@ -2662,7 +2662,7 @@ void MainWindow::pasteImageFromClipboard(const QImage &image)
         height = image.height() * scale;
     }
     const QPointF halfSize(width / 2.0, height / 2.0);
-    const QPointF center = ui->graphicsView->mapToScene(ui->graphicsView->viewport()->rect().center());
+    const QPointF center = activeView()->mapToScene(activeView()->viewport()->rect().center());
     primitiveImage->setControlPoint(0, center - halfSize);
     primitiveImage->setControlPoint(1, center + halfSize);
 

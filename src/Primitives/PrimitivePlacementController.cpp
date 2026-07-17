@@ -895,7 +895,10 @@ void PrimitivePlacementController::handleToolBarActionTriggered(QAction *action)
     discardActivePrimitive();
     m_armedMacroKey.clear();
 
-    if (action && action->objectName() == QStringLiteral("actionImage"))
+    // Only the active document's controller may open the image file picker
+    // - see setActive(): every document's controller hears this toolbar.
+    if (m_isActiveDocument
+            && action && action->objectName() == QStringLiteral("actionImage"))
         armImagePlacement();
 }
 

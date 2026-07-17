@@ -34,6 +34,11 @@
 #include "DialogAttachImage.h"
 #include "DialogSymbolWizard.h"
 #include "ArrowStyleComboBox.h"
+#include "DockTitleTab.h"
+#include <QUndoGroup>
+#include <QSet>
+#include <QDockWidget>
+#include <QMouseEvent>
 #include <QRandomGenerator>
 #include <QLineEdit>
 #include "DialogExport.h"
@@ -210,17 +215,25 @@ MainWindow::MainWindow(QWidget *parent)
     // them whenever a dock is moved/re-tabbed. Deferred with a 0-timer: at
     // the moment these signals fire, the internal tab bar hasn't been
     // rebuilt yet.
+    // The side panels join the same IDE-style docking as the document docks:
+    // grouped ones drop their title bar (the tab is the handle + close
+    // button), lone/floating ones keep it. Re-evaluate on every layout
+    // change, and re-sync their (icon-less by default) tab bars.
+    auto refreshPanelDocks = [this]() {
+        QTimer::singleShot(0, this, [this]() {
+            refreshDockTabIcons();
+            setupDockTabBars();
+            updateDockTitleBars();
+        });
+    };
     for (QDockWidget *dock : { ui->dockLibraries, ui->dockProperties, ui->dockFcdCode }) {
-        connect(dock, &QDockWidget::dockLocationChanged, this, [this]() {
-            QTimer::singleShot(0, this, &MainWindow::refreshDockTabIcons);
-        });
-        connect(dock, &QDockWidget::topLevelChanged, this, [this]() {
-            QTimer::singleShot(0, this, &MainWindow::refreshDockTabIcons);
-        });
-        connect(dock, &QDockWidget::visibilityChanged, this, [this]() {
-            QTimer::singleShot(0, this, &MainWindow::refreshDockTabIcons);
-        });
+        connect(dock, &QDockWidget::dockLocationChanged, this, refreshPanelDocks);
+        connect(dock, &QDockWidget::topLevelChanged, this, refreshPanelDocks);
+        connect(dock, &QDockWidget::visibilityChanged, this, refreshPanelDocks);
     }
+    // Same GroupedDragging the document area uses, so dragging a panel tab
+    // moves the whole group.
+    setDockOptions(dockOptions() | QMainWindow::GroupedDragging);
     refreshDockTabIcons();
 
     // Must run *after* restoreState(): corner ownership is itself part of
@@ -242,31 +255,40 @@ MainWindow::MainWindow(QWidget *parent)
     layerToolBarWidget = new LayerToolBarWidget(this);
     ui->toolBarTools->addWidget(layerToolBarWidget); // add the layer combobox to the toolbar
 
-    ui->rulerVertical->setOrientation(Qt::Vertical);
-
     // Dropping a .fcd/.dxf file anywhere on the window opens/imports it (see
-    // dragEnterEvent()/dropEvent()). The canvas must not accept drops itself:
-    // QGraphicsView forwards drag events to the scene, which accepts them by
-    // default, swallowing any drop over the drawing area before it could
-    // propagate up to this window's handler.
+    // dragEnterEvent()/dropEvent()). Each DocumentView's canvas refuses
+    // drops itself (see createDocument()): QGraphicsView forwards drag
+    // events to the scene, which accepts them by default, swallowing any
+    // drop over the drawing area before it could propagate up here.
     setAcceptDrops(true);
-    ui->graphicsView->setAcceptDrops(false);
 
-    sheetScene = new Sheet();
-    sheetScene->setSceneRect(0,0,5000,5000); // fix the scene dimensions
-
-    ui->graphicsView->setScene(sheetScene);
-
-    placementController = new PrimitivePlacementController(ui->graphicsView, sheetScene,
-                                                             ui->toolBarPrimitive, ui->cbPropLayer,
-                                                             ui->checkBox, this);
-    ui->graphicsView->setPlacementController(placementController);
-    // Measure-tool readout goes to the status bar's message area (see
-    // PrimitivePlacementController::measureUpdated()).
-    connect(placementController, &PrimitivePlacementController::measureUpdated,
-            this, [this](const QString &text) { ui->statusbar->showMessage(text); });
-
-    selectionHandleController = new SelectionHandleController(sheetScene, this);
+    // --- Multi-document setup ---------------------------------------------
+    m_undoGroup = new QUndoGroup(this);
+    // The document area is a nested QMainWindow: each open drawing is a
+    // QDockWidget inside it, so drawings can be tabbed together, split side
+    // by side (vertically or horizontally) or floated, all with Qt's native
+    // dock dragging. Nested + tabbed docks are what make the splits and the
+    // default "all tabbed together" grouping possible.
+    m_documentArea = new QMainWindow(this);
+    m_documentArea->setDockOptions(QMainWindow::AllowNestedDocks
+                                   | QMainWindow::AllowTabbedDocks
+                                   | QMainWindow::GroupedDragging);
+    m_documentArea->setDockNestingEnabled(true);
+    m_documentArea->setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::North);
+    // A nested QMainWindow needs a central widget or it leaves an empty gap
+    // the docks won't fill; a zero-size placeholder makes the docks take all
+    // the room.
+    auto *areaFiller = new QWidget(m_documentArea);
+    areaFiller->setMaximumSize(0, 0);
+    m_documentArea->setCentralWidget(areaFiller);
+    ui->centralwidget->layout()->addWidget(m_documentArea);
+    // Watch for the dock tab bars Qt creates on the fly (when docks get
+    // grouped) so "drag a tab out to detach it" can be wired onto each
+    // (see installDockTabBarFilters()).
+    m_documentArea->installEventFilter(this);
+    // The first document - createDocument() activates it, which is what
+    // populates sheetScene/placementController & co. for everything below.
+    createDocument();
 
     LibraryManager::getInstance().loadLibraries();
     buildLibraryPanel();
@@ -357,11 +379,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Per-command shortcut customization (Help > Keyboard shortcuts).
     loadShortcutCustomizations();
 
-    // 0 = unlimited (QUndoStack's own default). Only effective while the
-    // stack is empty, hence set once here; a change from the Options dialog
-    // takes effect at the next start (its tooltip says so).
-    sheetScene->undoStack()->setUndoLimit(
-            qMax(0, SettingsManager::getInstance().loadSetting("undo_limit").toInt()));
+    // (Each document's undo limit is set at creation - see createDocument().)
 
     setConnections();
     updateRecentFilesMenu();
@@ -393,78 +411,494 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    delete sheetScene;
+    // Sheets are owned (and deleted) by their Documents, which are QObject
+    // children of this window.
     delete layerToolBarWidget;
     delete ui;
 }
 
+int MainWindow::nextUntitledNumber() const
+{
+    QSet<int> used;
+    for (Document *document : m_documents) {
+        if (document->filePath().isEmpty() && document->untitledNumber() > 0)
+            used.insert(document->untitledNumber());
+    }
+    int number = 1;
+    while (used.contains(number))
+        ++number;
+    return number;
+}
+
+Document *MainWindow::createDocument()
+{
+    auto *document = new Document(this);
+    document->setUntitledNumber(nextUntitledNumber());
+    Sheet *sheet = document->sheet();
+    sheet->setSceneRect(0, 0, 5000, 5000); // fix the scene dimensions
+    // 0 = unlimited (QUndoStack's own default). Only effective while the
+    // stack is empty, hence set at creation; a change from the Options
+    // dialog takes effect for documents opened afterwards.
+    sheet->undoStack()->setUndoLimit(
+            qMax(0, SettingsManager::getInstance().loadSetting("undo_limit").toInt()));
+    sheet->setObjectSnapEnabled(ui->actionSnapToObjects->isChecked());
+    // Same live-settings values applyLiveSettings()/the ctor lambdas push
+    // into the active sheet - a document opened later must not start stale.
+    const qreal lineWidth = SettingsManager::getInstance().loadSetting("line_width").toDouble();
+    sheet->setLineWidth(lineWidth > 0 ? lineWidth : 0.5);
+    const qreal connectionDiameter =
+            SettingsManager::getInstance().loadSetting("connection_diameter").toDouble();
+    sheet->setConnectionDiameter(connectionDiameter > 0 ? connectionDiameter : 2.0);
+
+    auto *viewWidget = new DocumentView(m_documentArea);
+    document->viewWidget = viewWidget;
+    SheetView *view = viewWidget->view();
+    view->setScene(sheet);
+    view->setAcceptDrops(false); // drops are handled window-wide, see the ctor
+
+    document->placement = new PrimitivePlacementController(
+                view, sheet, ui->toolBarPrimitive, ui->cbPropLayer, ui->checkBox, document);
+    view->setPlacementController(document->placement);
+    // Measure-tool readout goes to the status bar's message area.
+    connect(document->placement, &PrimitivePlacementController::measureUpdated,
+            this, [this](const QString &text) { ui->statusbar->showMessage(text); });
+    document->handles = new SelectionHandleController(sheet, document);
+
+    // Per-view wiring, alive for the document's whole lifetime: a hidden
+    // tab's view receives no mouse events, so these never fire for
+    // background documents.
+    connect(view, &SheetView::mouseMoved, ui->statusbar, &StatusBar::sceneMousePos);
+    connect(view, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
+    connect(view, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
+    connect(view, &SheetView::contextMenuRequested, this, &MainWindow::showCanvasContextMenu);
+    connect(view, &SheetView::mouseMoved, this, [viewWidget](QPointF scenePos) {
+        viewWidget->horizontalRuler()->setMarkerPosition(scenePos.x(), true);
+        viewWidget->verticalRuler()->setMarkerPosition(scenePos.y(), true);
+    });
+    connect(view, &SheetView::mouseLeftView, this, [viewWidget]() {
+        viewWidget->horizontalRuler()->setMarkerPosition(0, false);
+        viewWidget->verticalRuler()->setMarkerPosition(0, false);
+    });
+
+    // Guides: dragging out of a ruler creates a guide line that follows the
+    // cursor; releasing it over the drawing keeps it, anywhere else (e.g.
+    // back on the ruler) discards it. The guide's coordinate is grid-snapped
+    // so dropped guides land on round positions.
+    auto guideCoordinate = [view](const QPoint &globalPos, Qt::Orientation orientation) {
+        const QPointF scenePos = view->mapToScene(
+                view->viewport()->mapFromGlobal(globalPos));
+        const QPointF snapped = view->snapToGrid(scenePos);
+        return orientation == Qt::Vertical ? snapped.x() : snapped.y();
+    };
+    auto wireRulerGuides = [this, view, sheet, guideCoordinate](RulerWidget *ruler,
+                                                                Qt::Orientation orientation) {
+        connect(ruler, &RulerWidget::guideDragStarted, this, [this]() {
+            m_rulerGuideIndex = -1;
+        });
+        connect(ruler, &RulerWidget::guideDragMoved, this,
+                [this, sheet, orientation, guideCoordinate](const QPoint &globalPos) {
+            const qreal position = guideCoordinate(globalPos, orientation);
+            if (m_rulerGuideIndex < 0)
+                m_rulerGuideIndex = sheet->addGuide(orientation, position);
+            else
+                sheet->moveGuide(m_rulerGuideIndex, position);
+        });
+        connect(ruler, &RulerWidget::guideDragFinished, this,
+                [this, view, sheet](const QPoint &globalPos) {
+            if (m_rulerGuideIndex >= 0
+                    && !view->viewport()->rect().contains(
+                            view->viewport()->mapFromGlobal(globalPos)))
+                sheet->removeGuide(m_rulerGuideIndex);
+            m_rulerGuideIndex = -1;
+        });
+    };
+    wireRulerGuides(viewWidget->horizontalRuler(), Qt::Horizontal);
+    wireRulerGuides(viewWidget->verticalRuler(), Qt::Vertical);
+
+    m_undoGroup->addStack(sheet->undoStack());
+    // The dock title's dirty star follows this document's own stack,
+    // active or not.
+    connect(sheet->undoStack(), &QUndoStack::cleanChanged,
+            this, [this, document]() { updateDocumentTitle(document); });
+
+    // The dock hosting this document's view. Closable/movable/floatable so
+    // it can be split out or floated with native dock dragging; DockWidget
+    // has no title-bar-less mode that still allows dragging, so the small
+    // title bar stays (it also carries the close button).
+    auto *dock = new QDockWidget(document->displayName(), m_documentArea);
+    dock->setWidget(viewWidget);
+    dock->setFeatures(QDockWidget::DockWidgetMovable
+                      | QDockWidget::DockWidgetFloatable
+                      | QDockWidget::DockWidgetClosable);
+    // Intercept the dock's own close (its title-bar X) to run the
+    // unsaved-changes prompt and actually remove the document.
+    dock->installEventFilter(this);
+    // Activate this document when its view is clicked or focused - the
+    // active document is "the one being worked on", which drives every
+    // panel and the ~90 action handlers.
+    view->viewport()->installEventFilter(this);
+    view->installEventFilter(this);
+    connect(dock, &QDockWidget::visibilityChanged, this, [this, document](bool visible) {
+        if (visible)
+            setActiveDocument(document);
+    });
+    document->dock = dock;
+
+    m_documentArea->addDockWidget(Qt::TopDockWidgetArea, dock);
+    // Default grouping: every new document is stacked as a TAB on top of
+    // the most recently opened one (not placed side by side) - the user
+    // splits them apart by dragging a dock out. m_documents still holds
+    // only the earlier documents here (the new one is appended just below),
+    // so last() is the correct dock to tab onto.
+    if (!m_documents.isEmpty()) {
+        if (Document *previous = m_documents.last(); previous->dock)
+            m_documentArea->tabifyDockWidget(previous->dock, dock);
+    }
+
+    // Re-evaluate title bars/tab close buttons after the layout change, and
+    // keep doing so whenever this dock is (un)grouped, floated or moved.
+    connect(dock, &QDockWidget::dockLocationChanged, this, [this]() {
+        setupDockTabBars();
+        updateDockTitleBars();
+    });
+    connect(dock, &QDockWidget::topLevelChanged, this, [this]() {
+        setupDockTabBars();
+        updateDockTitleBars();
+    });
+
+    m_documents.append(document);
+    updateRulersVisibility(); // apply the rulers setting to the new view too
+    dock->raise();            // bring the new document's tab to the front
+    setActiveDocument(document);
+    setupDockTabBars();       // tabifying above may have created a tab bar
+    // Deferred: tabifiedDockWidgets() only reflects the tabify above after
+    // Qt has re-laid-out the docks, so a synchronous updateDockTitleBars()
+    // here would still see the just-grouped docks as ungrouped (leaving
+    // their title bars up until the next event).
+    QTimer::singleShot(0, this, [this]() { updateDockTitleBars(); });
+    return document;
+}
+
+QList<QDockWidget *> MainWindow::allManagedDocks() const
+{
+    QList<QDockWidget *> docks;
+    for (Document *document : m_documents) {
+        if (document->dock)
+            docks.append(document->dock);
+    }
+    docks << ui->dockLibraries << ui->dockProperties << ui->dockFcdCode;
+    return docks;
+}
+
+QMainWindow *MainWindow::areaForDock(QDockWidget *dock) const
+{
+    // Document docks live in the nested area; the side panels on the window.
+    for (Document *document : m_documents) {
+        if (document->dock == dock)
+            return m_documentArea;
+    }
+    return const_cast<MainWindow *>(this);
+}
+
+QDockWidget *MainWindow::dockForTabText(const QString &text) const
+{
+    // A dock tab's text is exactly its dock's window title.
+    for (QDockWidget *dock : allManagedDocks()) {
+        if (dock->windowTitle() == text)
+            return dock;
+    }
+    return nullptr;
+}
+
+void MainWindow::setupDockTabBars()
+{
+    // Every dock tab bar (Qt creates/destroys them as docks are grouped),
+    // in both the document area and the window itself, gets close buttons
+    // and the tear-off event filter - once each.
+    QList<QTabBar *> bars = m_documentArea->findChildren<QTabBar *>();
+    bars += findChildren<QTabBar *>();
+    for (QTabBar *bar : bars) {
+        if (bar->property("eschemaDockTabs").toBool())
+            continue;
+        // A dock tab bar's tabs carry dock window titles; skip any other
+        // QTabBar (there are none today, but stay safe).
+        bar->setProperty("eschemaDockTabs", true);
+        bar->setTabsClosable(true);
+        // A faint grey X always visible; hovering it (only the X, not the
+        // whole tab) turns it white on a red pill. The image must be given
+        // explicitly - styling the close-button's background drops Qt's own
+        // X glyph.
+        bar->setStyleSheet(QStringLiteral(
+            "QTabBar::close-button {"
+            " image: url(:/res/resources/tab_close.png);"
+            " background: transparent; border-radius: 7px; }"
+            "QTabBar::close-button:hover {"
+            " image: url(:/res/resources/tab_close_hover.png);"
+            " background: #e04043; }"));
+        connect(bar, &QTabBar::tabCloseRequested, this, [this, bar](int index) {
+            QDockWidget *dock = dockForTabText(bar->tabText(index));
+            if (!dock)
+                return;
+            // A document dock runs the unsaved-changes flow; a side panel
+            // just hides (reopenable from the View menu).
+            if (Document *document = documentForObject(dock))
+                closeDocument(document);
+            else
+                dock->close();
+        });
+    }
+}
+
+void MainWindow::applyDockTitleBar(QDockWidget *dock, QMainWindow *area)
+{
+    // The fat native title bar is never shown. What a dock gets instead:
+    // - tabbed (and not floating): nothing at all - its tab is the handle
+    //   and carries the close button;
+    // - the ONLY open document (and not floating): nothing - there is no
+    //   layout to reorganize and it must not be closable away;
+    // - otherwise (floating, or a lone split pane next to other docks): a
+    //   slim tab-looking DockTitleTab as drag handle + close button.
+    const bool floating = dock->isFloating();
+    const bool tabbed = !area->tabifiedDockWidgets(dock).isEmpty();
+    const bool onlyDocument = (area == m_documentArea) && m_documents.size() <= 1;
+    const bool wantNone = !floating && (tabbed || onlyDocument);
+
+    QWidget *current = dock->titleBarWidget();
+    const bool currentIsTab = qobject_cast<DockTitleTab *>(current) != nullptr;
+
+    if (wantNone) {
+        if (!current || currentIsTab) {
+            auto *empty = new QWidget(dock);
+            empty->setFixedHeight(0);
+            dock->setTitleBarWidget(empty);
+            if (current)
+                current->deleteLater();
+        }
+    } else if (!currentIsTab) {
+        auto *tab = new DockTitleTab(dock);
+        connect(tab, &DockTitleTab::closeRequested, this, [this, dock]() {
+            // A document runs the unsaved-changes flow; a side panel just
+            // hides (reopenable from the View menu).
+            if (Document *document = documentForObject(dock))
+                closeDocument(document);
+            else
+                dock->close();
+        });
+        dock->setTitleBarWidget(tab);
+        if (current)
+            current->deleteLater();
+    }
+}
+
+void MainWindow::updateDockTitleBars()
+{
+    for (QDockWidget *dock : allManagedDocks())
+        applyDockTitleBar(dock, areaForDock(dock));
+}
+
+Document *MainWindow::documentForObject(QObject *object) const
+{
+    for (Document *document : m_documents) {
+        if (object == document->dock)
+            return document;
+        if (document->viewWidget) {
+            SheetView *view = document->viewWidget->view();
+            if (object == view || object == view->viewport())
+                return document;
+        }
+    }
+    return nullptr;
+}
+
+SheetView *MainWindow::activeView() const
+{
+    return m_activeDocument->viewWidget->view();
+}
+
+DocumentView *MainWindow::activeDocumentView() const
+{
+    return m_activeDocument->viewWidget;
+}
+
+void MainWindow::setActiveDocument(Document *document)
+{
+    if (!document || document == m_activeDocument || !m_documents.contains(document))
+        return;
+
+    if (m_activeDocument) {
+        // Whatever placement/preview the outgoing document had in flight
+        // must not stay armed while it's no longer the active one.
+        if (m_activeDocument->placement) {
+            m_activeDocument->placement->cancelPlacement();
+            m_activeDocument->placement->setActive(false);
+        }
+        // Freeze its layer definitions so the incoming document's don't
+        // clobber them (see Document's class comment).
+        m_activeDocument->captureLayerState();
+    }
+    for (const QMetaObject::Connection &connection : std::as_const(m_documentConnections))
+        disconnect(connection);
+    m_documentConnections.clear();
+
+    m_activeDocument = document;
+    sheetScene = document->sheet();
+    placementController = document->placement;
+    selectionHandleController = document->handles;
+    currentFilePath = document->filePath();
+    placementController->setActive(true);
+    document->applyLayerState();
+    m_undoGroup->setActiveStack(sheetScene->undoStack());
+
+    // Connections that must only ever fire for the ACTIVE document - a
+    // background load/edit must not hijack the panels or the status bar.
+    m_documentConnections << connect(sheetScene, &Sheet::primitivesChanged, this, [this]() {
+        int macroCount = 0;
+        for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
+            if (primitive->getPrimitiveType() == GraphicsPrimitive::PartLib)
+                ++macroCount;
+        }
+        ui->statusbar->primitiveCounts(sheetScene->primitives().size(), macroCount);
+    });
+    // Coalesced, not direct: see scheduleSelectionRefresh()'s own comment.
+    m_documentConnections << connect(sheetScene, &QGraphicsScene::selectionChanged,
+                                     this, &MainWindow::scheduleSelectionRefresh);
+    // Alt+drag duplicate: the drag itself is handled inside
+    // GraphicsPrimitive; dropping the in-place copy needs the FCD
+    // serialize/parse round trip, which lives here.
+    m_documentConnections << connect(sheetScene, &Sheet::altDragCloneRequested,
+                                     this, &MainWindow::cloneSelectionInPlace);
+    m_documentConnections << connect(sheetScene->undoStack(), &QUndoStack::indexChanged,
+                                     this, &MainWindow::refreshFcdCodeIfClean);
+    // A drag-resize/move only lands on the undo stack at mouse release, and
+    // never fires selectionChanged - without this the panel's new geometry
+    // fields (length/width/height) would keep showing pre-drag values.
+    m_documentConnections << connect(sheetScene->undoStack(), &QUndoStack::indexChanged,
+                                     this, &MainWindow::updatePropertiesPanel);
+
+    // Refresh every per-document surface for the new active document.
+    updateWindowTitle();
+    updateDocumentTitle(document);
+    updateRulers();
+    syncFcdCodeFromSheet();
+    scheduleSelectionRefresh();
+    int macroCount = 0;
+    for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
+        if (primitive->getPrimitiveType() == GraphicsPrimitive::PartLib)
+            ++macroCount;
+    }
+    ui->statusbar->primitiveCounts(sheetScene->primitives().size(), macroCount);
+}
+
+void MainWindow::updateDocumentTitle(Document *document)
+{
+    if (!document || !document->dock)
+        return;
+    QString title = document->displayName();
+    if (!document->sheet()->undoStack()->isClean())
+        title += QLatin1Char('*');
+    document->dock->setWindowTitle(title);
+    document->dock->setToolTip(document->filePath());
+    if (document == m_activeDocument)
+        updateWindowTitle();
+}
+
+void MainWindow::resetActiveDocument()
+{
+    if (placementController)
+        placementController->cancelPlacement();
+    sheetScene->clearPrimitives();
+    sheetScene->undoStack()->setClean();
+    setCurrentFilePath(QString());
+    clearAutosave();
+    // setClean() alone doesn't fire indexChanged() - the FCD code dock would
+    // otherwise keep showing the previous document.
+    syncFcdCodeFromSheet();
+    updateDocumentTitle(m_activeDocument);
+}
+
+void MainWindow::closeDocument(Document *document)
+{
+    if (!document)
+        return;
+
+    // confirmDiscardChanges() works on the active document - make the one
+    // being closed active first, which also gives the user visual context
+    // for the save/discard question.
+    setActiveDocument(document);
+    if (!confirmDiscardChanges())
+        return;
+
+    // The last remaining document never closes - it resets to a fresh
+    // untitled drawing instead, so there is always something to draw on.
+    if (m_documents.size() == 1) {
+        resetActiveDocument();
+        return;
+    }
+
+    // Pick the document to activate in its place (the next one, or the
+    // previous when closing the last) before tearing this one down.
+    const int index = m_documents.indexOf(document);
+    Document *next = m_documents.value(index + 1 < m_documents.size() ? index + 1 : index - 1);
+
+    m_documents.removeAll(document);
+    m_undoGroup->removeStack(document->sheet()->undoStack());
+    // m_activeDocument is about to dangle - clear it so setActiveDocument()
+    // below doesn't try to deactivate a half-deleted document.
+    if (m_activeDocument == document)
+        m_activeDocument = nullptr;
+    if (document->dock) {
+        m_documentArea->removeDockWidget(document->dock);
+        document->dock->deleteLater(); // also deletes its DocumentView child
+    }
+    document->deleteLater();
+
+    setActiveDocument(next);
+    // The survivors' chrome may change class (e.g. a pane whose tab-mate
+    // just left becomes a lone pane; the very last document loses its tab):
+    // re-evaluate once the layout has settled.
+    setupDockTabBars();
+    QTimer::singleShot(0, this, [this]() { updateDockTitleBars(); });
+}
+
 void MainWindow::setConnections()
 {
-    connect(ui->graphicsView, &SheetView::mouseMoved, ui->statusbar, &StatusBar::sceneMousePos);
     connect(ui->actionOptions, &QAction::triggered, this, &MainWindow::clickOptionAction);
     connect(ui->actionInformation, &QAction::triggered, this, &MainWindow::clickAboutAction);
     connect(ui->actionAbout_Qt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(ui->actionCheckUpdates, &QAction::triggered, this, &MainWindow::clickCheckUpdatesAction);
     connect(ui->actionCommandPalette, &QAction::triggered, this, &MainWindow::clickCommandPaletteAction);
-    // The command palette's launcher in the menu bar's unused space:
-    // focusing the field opens the palette right under it (see
-    // eventFilter()), carrying over anything already typed. Positioned
-    // manually just after the last menu (QMenuBar's corner widget would
-    // pin it to the far right instead) - see positionMenuBarSearch(),
-    // re-run on every menu bar resize via the same event filter.
+    // The command palette's launcher in the menu bar's unused space: the
+    // palette opens the moment the user starts TYPING in the field (never
+    // on mere focus - Qt shifts focus here in many programmatic cases, e.g.
+    // switching document tabs, and popping the palette on those was wrong),
+    // carrying the first character over. Positioned manually just after the
+    // last menu (QMenuBar's corner widget would pin it to the far right
+    // instead) - see positionMenuBarSearch(), re-run on every menu bar
+    // resize via the event filter.
     m_menuBarSearch = new QLineEdit(ui->menubar);
     m_menuBarSearch->setObjectName(QStringLiteral("menuBarSearch"));
     m_menuBarSearch->setPlaceholderText(tr("Search commands..."));
     m_menuBarSearch->setToolTip(ui->actionCommandPalette->toolTip());
     m_menuBarSearch->setFixedWidth(220);
-    m_menuBarSearch->installEventFilter(this);
     ui->menubar->installEventFilter(this);
     positionMenuBarSearch();
-    connect(ui->graphicsView, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
-    connect(ui->graphicsView, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
-    connect(ui->graphicsView, &SheetView::mouseMoved, this, [this](QPointF scenePos) {
-        ui->rulerHorizontal->setMarkerPosition(scenePos.x(), true);
-        ui->rulerVertical->setMarkerPosition(scenePos.y(), true);
-    });
-    connect(ui->graphicsView, &SheetView::mouseLeftView, this, [this]() {
-        ui->rulerHorizontal->setMarkerPosition(0, false);
-        ui->rulerVertical->setMarkerPosition(0, false);
+    // textEdited fires only for real user input, never for the clear()
+    // below or any other programmatic setText() - so this can't loop.
+    connect(m_menuBarSearch, &QLineEdit::textEdited, this, [this](const QString &typed) {
+        if (m_menuSearchOpening || typed.isEmpty())
+            return;
+        m_menuSearchOpening = true;
+        m_menuBarSearch->clear();
+        // Move focus off the field first, so closing the palette can't
+        // land focus back on it.
+        activeView()->setFocus();
+        const QPoint anchor = m_menuBarSearch->mapToGlobal(
+                QPoint(m_menuBarSearch->width() / 2, m_menuBarSearch->height() + 2));
+        openCommandPalette(anchor, typed);
+        m_menuSearchOpening = false;
     });
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, &MainWindow::updateRulersVisibility);
-    // Guides: dragging out of a ruler creates a guide line that follows the
-    // cursor; releasing it over the drawing keeps it, anywhere else (e.g.
-    // back on the ruler) discards it. The guide's coordinate is grid-snapped
-    // so dropped guides land on round positions.
-    auto guideCoordinate = [this](const QPoint &globalPos, Qt::Orientation orientation) {
-        const QPointF scenePos = ui->graphicsView->mapToScene(
-                ui->graphicsView->viewport()->mapFromGlobal(globalPos));
-        const QPointF snapped = ui->graphicsView->snapToGrid(scenePos);
-        return orientation == Qt::Vertical ? snapped.x() : snapped.y();
-    };
-    auto wireRulerGuides = [this, guideCoordinate](RulerWidget *ruler,
-                                                   Qt::Orientation orientation) {
-        connect(ruler, &RulerWidget::guideDragStarted, this, [this]() {
-            m_rulerGuideIndex = -1;
-        });
-        connect(ruler, &RulerWidget::guideDragMoved, this,
-                [this, orientation, guideCoordinate](const QPoint &globalPos) {
-            const qreal position = guideCoordinate(globalPos, orientation);
-            if (m_rulerGuideIndex < 0)
-                m_rulerGuideIndex = sheetScene->addGuide(orientation, position);
-            else
-                sheetScene->moveGuide(m_rulerGuideIndex, position);
-        });
-        connect(ruler, &RulerWidget::guideDragFinished, this, [this](const QPoint &globalPos) {
-            if (m_rulerGuideIndex >= 0
-                    && !ui->graphicsView->viewport()->rect().contains(
-                            ui->graphicsView->viewport()->mapFromGlobal(globalPos)))
-                sheetScene->removeGuide(m_rulerGuideIndex);
-            m_rulerGuideIndex = -1;
-        });
-    };
-    wireRulerGuides(ui->rulerHorizontal, Qt::Horizontal);
-    wireRulerGuides(ui->rulerVertical, Qt::Vertical);
     connect(ui->actionClearGuides, &QAction::triggered, this, [this]() {
         sheetScene->clearGuides();
     });
@@ -474,16 +908,10 @@ void MainWindow::setConnections()
     connect(ui->actionRulersVisible, &QAction::toggled, this, [](bool checked) {
         SettingsManager::getInstance().saveSetting("rulers_visible", checked);
     });
-    connect(sheetScene, &Sheet::primitivesChanged, this, [this]() {
-        int macroCount = 0;
-        for (GraphicsPrimitive *primitive : sheetScene->primitives()) {
-            if (primitive->getPrimitiveType() == GraphicsPrimitive::PartLib)
-                ++macroCount;
-        }
-        ui->statusbar->primitiveCounts(sheetScene->primitives().size(), macroCount);
-    });
-    connect(ui->actionAdjustView, &QAction::triggered, ui->graphicsView, &SheetView::adjustView);
-    connect(ui->actionZoomToSelection, &QAction::triggered, ui->graphicsView, &SheetView::adjustViewToSelection);
+    connect(ui->actionAdjustView, &QAction::triggered,
+            this, [this]() { activeView()->adjustView(); });
+    connect(ui->actionZoomToSelection, &QAction::triggered,
+            this, [this]() { activeView()->adjustViewToSelection(); });
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionAttachImage, &QAction::triggered, this, &MainWindow::clickAttachImageAction);
     connect(ui->actionSymbolWizard, &QAction::triggered, this, &MainWindow::clickSymbolWizardAction);
@@ -520,10 +948,6 @@ void MainWindow::setConnections()
     connect(ui->actionExtendToIntersection, &QAction::triggered, this, &MainWindow::clickExtendToIntersectionAction);
     connect(ui->actionSelectSameType, &QAction::triggered, this, &MainWindow::clickSelectSameTypeAction);
     connect(ui->actionInvertSelection, &QAction::triggered, this, &MainWindow::clickInvertSelectionAction);
-    // Alt+drag duplicate: the drag itself is handled inside GraphicsPrimitive;
-    // dropping the in-place copy needs the FCD serialize/parse round trip,
-    // which lives here.
-    connect(sheetScene, &Sheet::altDragCloneRequested, this, &MainWindow::cloneSelectionInPlace);
     connect(ui->actionConvertMacroToPrimitives, &QAction::triggered, this, &MainWindow::clickConvertMacroToPrimitivesAction);
     connect(ui->actionCreateMacro, &QAction::triggered, this, &MainWindow::clickCreateMacroAction);
     // Keeps every selection/clipboard-dependent Edit action's enabled state
@@ -536,8 +960,8 @@ void MainWindow::setConnections()
     // O(n²) - a multi-second freeze on large drawings. One queued refresh
     // per event-loop turn covers the whole batch (same pattern as
     // SettingsManager's coalesced change signal).
-    connect(sheetScene, &QGraphicsScene::selectionChanged,
-            this, &MainWindow::scheduleSelectionRefresh);
+    // (The selectionChanged connection itself is per-document - see
+    // setActiveDocument().)
     // The clipboard state is cached here (not read inside
     // updateEditActionsState()): querying the system clipboard is an OS
     // roundtrip, far too expensive for something that used to run once per
@@ -555,7 +979,7 @@ void MainWindow::setConnections()
     }
     updateEditActionsState();
 
-    connect(ui->graphicsView, &SheetView::contextMenuRequested, this, &MainWindow::showCanvasContextMenu);
+    // (contextMenuRequested is wired per view in createDocument().)
 
     // Properties panel: reflects the selection, and each field applies its
     // edit back to every selected primitive when the user actually changes
@@ -803,36 +1227,40 @@ void MainWindow::setConnections()
     connect(ui->actionSaveSplit, &QAction::triggered, this, &MainWindow::clickSaveSplitAction);
     connect(ui->actionPrint, &QAction::triggered, this, &MainWindow::clickPrintAction);
     connect(ui->actionExport, &QAction::triggered, this, &MainWindow::clickExportAction);
-    // QWidget::close() reaches closeEvent(), which does the unsaved-changes
-    // check - so File > Close and the window's own titlebar X button behave
-    // identically instead of needing separate logic.
-    connect(ui->actionClose, &QAction::triggered, this, &QWidget::close);
+    // Ctrl+W closes the active document (the standard gesture) - with only
+    // one left it resets to a fresh untitled drawing.
+    connect(ui->actionClose, &QAction::triggered, this, [this]() {
+        closeDocument(m_activeDocument);
+    });
+    // QWidget::close() reaches closeEvent(), which runs the per-document
+    // unsaved-changes checks - so File > Exit and the window's own titlebar
+    // X button behave identically.
+    connect(ui->actionExit, &QAction::triggered, this, &QWidget::close);
 
-    QUndoStack *undo = sheetScene->undoStack();
-    connect(ui->actionUndo, &QAction::triggered, undo, &QUndoStack::undo);
-    connect(ui->actionRestore, &QAction::triggered, undo, &QUndoStack::redo);
-    connect(undo, &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
-    connect(undo, &QUndoStack::canRedoChanged, ui->actionRestore, &QAction::setEnabled);
-    connect(undo, &QUndoStack::undoTextChanged, this, [this](const QString &text) {
+    // Undo/Redo through the QUndoGroup: whichever tab is active supplies
+    // the group's active stack (see setActiveDocument()), so the two
+    // actions, their enabled state and their command-name texts always
+    // reflect the current document.
+    connect(ui->actionUndo, &QAction::triggered, m_undoGroup, &QUndoGroup::undo);
+    connect(ui->actionRestore, &QAction::triggered, m_undoGroup, &QUndoGroup::redo);
+    connect(m_undoGroup, &QUndoGroup::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+    connect(m_undoGroup, &QUndoGroup::canRedoChanged, ui->actionRestore, &QAction::setEnabled);
+    connect(m_undoGroup, &QUndoGroup::undoTextChanged, this, [this](const QString &text) {
         ui->actionUndo->setText(text.isEmpty() ? tr("Undo") : tr("Undo: %1").arg(text));
     });
-    connect(undo, &QUndoStack::redoTextChanged, this, [this](const QString &text) {
+    connect(m_undoGroup, &QUndoGroup::redoTextChanged, this, [this](const QString &text) {
         ui->actionRestore->setText(text.isEmpty() ? tr("Redo") : tr("Redo: %1").arg(text));
     });
-    ui->actionUndo->setEnabled(undo->canUndo());
-    ui->actionRestore->setEnabled(undo->canRedo());
+    ui->actionUndo->setEnabled(m_undoGroup->canUndo());
+    ui->actionRestore->setEnabled(m_undoGroup->canRedo());
 
-    connect(undo, &QUndoStack::indexChanged, this, &MainWindow::refreshFcdCodeIfClean);
     // refreshFcdCodeIfClean() skips its (whole-document) serialization
     // while the dock is hidden - catch up the moment it's shown again.
+    // (The per-stack indexChanged connections live in setActiveDocument().)
     connect(ui->dockFcdCode, &QDockWidget::visibilityChanged, this, [this](bool visible) {
         if (visible)
             refreshFcdCodeIfClean();
     });
-    // A drag-resize/move only lands on the undo stack at mouse release, and
-    // never fires selectionChanged - without this the panel's new geometry
-    // fields (length/width/height) would keep showing pre-drag values.
-    connect(undo, &QUndoStack::indexChanged, this, &MainWindow::updatePropertiesPanel);
     syncFcdCodeFromSheet();
 
     connect(ui->txtSearch, &QLineEdit::textChanged, this, &MainWindow::filterLibraryPanel);
@@ -1020,6 +1448,10 @@ void MainWindow::updateWindowTitle()
 void MainWindow::setCurrentFilePath(const QString &filePath)
 {
     currentFilePath = filePath;
+    if (m_activeDocument) {
+        m_activeDocument->setFilePath(filePath);
+        updateDocumentTitle(m_activeDocument);
+    }
     updateWindowTitle();
     // Every path that becomes "the current document" (Open, Save As, a file
     // passed on the command line) is by definition the most recently used one.
@@ -1069,9 +1501,7 @@ void MainWindow::updateRecentFilesMenu()
                 updateRecentFilesMenu();
                 return;
             }
-            if (!confirmDiscardChanges())
-                return;
-            openFile(path);
+            openFile(path); // opens in its own tab, nothing to confirm
         }, Qt::QueuedConnection);
     }
 
@@ -1094,28 +1524,39 @@ void MainWindow::updateRulers()
     // point of the drawing (mismatched against the status bar's readout of
     // the same screen position). Routing through global screen coordinates
     // sidesteps whatever the actual offset between the two widgets is.
-    const QPoint viewportOriginGlobal = ui->graphicsView->viewport()->mapToGlobal(
-                ui->graphicsView->mapFromScene(QPointF(0, 0)));
-    const QPoint originInHorizontalRuler = ui->rulerHorizontal->mapFromGlobal(viewportOriginGlobal);
-    const QPoint originInVerticalRuler = ui->rulerVertical->mapFromGlobal(viewportOriginGlobal);
+    if (!m_activeDocument)
+        return; // mid-construction: the first document isn't active yet
+    SheetView *view = activeView();
+    RulerWidget *rulerHorizontal = activeDocumentView()->horizontalRuler();
+    RulerWidget *rulerVertical = activeDocumentView()->verticalRuler();
+    const QPoint viewportOriginGlobal = view->viewport()->mapToGlobal(
+                view->mapFromScene(QPointF(0, 0)));
+    const QPoint originInHorizontalRuler = rulerHorizontal->mapFromGlobal(viewportOriginGlobal);
+    const QPoint originInVerticalRuler = rulerVertical->mapFromGlobal(viewportOriginGlobal);
 
-    const QTransform transform = ui->graphicsView->transform();
-    ui->rulerHorizontal->setViewTransform(originInHorizontalRuler.x(), transform.m11());
-    ui->rulerVertical->setViewTransform(originInVerticalRuler.y(), transform.m22());
+    const QTransform transform = view->transform();
+    rulerHorizontal->setViewTransform(originInHorizontalRuler.x(), transform.m11());
+    rulerVertical->setViewTransform(originInVerticalRuler.y(), transform.m22());
 
-    const qreal minorStep = ui->graphicsView->minorGridStep();
-    const qreal majorStep = ui->graphicsView->majorGridStep();
-    ui->rulerHorizontal->setGridSteps(minorStep, majorStep);
-    ui->rulerVertical->setGridSteps(minorStep, majorStep);
+    const qreal minorStep = view->minorGridStep();
+    const qreal majorStep = view->majorGridStep();
+    rulerHorizontal->setGridSteps(minorStep, majorStep);
+    rulerVertical->setGridSteps(minorStep, majorStep);
 }
 
 void MainWindow::updateRulersVisibility()
 {
     const QVariant val = SettingsManager::getInstance().loadSetting("rulers_visible");
     const bool visible = val.isValid() ? val.toBool() : true;
-    ui->rulerHorizontal->setVisible(visible);
-    ui->rulerVertical->setVisible(visible);
-    ui->rulerCorner->setVisible(visible);
+    // Every document's rulers, not just the active tab's: the setting is
+    // app-wide.
+    for (Document *document : std::as_const(m_documents)) {
+        if (!document->viewWidget)
+            continue;
+        document->viewWidget->horizontalRuler()->setVisible(visible);
+        document->viewWidget->verticalRuler()->setVisible(visible);
+        document->viewWidget->rulerCorner()->setVisible(visible);
+    }
 }
 
 bool MainWindow::saveToPath(const QString &filePath)
@@ -1440,24 +1881,39 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         positionMenuBarSearch();
     }
 
-    // The menu bar's corner search field is a launcher, not a real editor:
-    // the moment it gains focus (click or tab), the palette itself opens
-    // right under it and takes over the typing. The guard keeps the
-    // focus-restore after the palette closes from re-triggering this.
-    if (watched == m_menuBarSearch && event->type() == QEvent::FocusIn
-            && !m_menuSearchOpening) {
-        m_menuSearchOpening = true;
-        const QString typed = m_menuBarSearch->text();
-        m_menuBarSearch->clear();
-        // Move focus away first, so closing the palette can't land focus
-        // back on the field and immediately reopen it.
-        ui->graphicsView->setFocus();
-        const QPoint anchor = m_menuBarSearch->mapToGlobal(
-                QPoint(m_menuBarSearch->width() / 2, m_menuBarSearch->height() + 2));
-        openCommandPalette(anchor, typed);
-        m_menuSearchOpening = false;
-        return true;
+    // New dock tab bars appear whenever document docks get grouped - wire
+    // the close buttons and tear-off gesture onto each as it shows up. (The
+    // side panels' tab bars are handled via their dock signals instead.)
+    if (watched == m_documentArea
+            && (event->type() == QEvent::ChildPolished || event->type() == QEvent::ChildAdded)) {
+        setupDockTabBars();
+        QTimer::singleShot(0, this, [this]() { updateDockTitleBars(); });
     }
+
+    // (Tab dragging - reorder, tear-off, re-dock - is Qt's native
+    // GroupedDragging behavior; nothing custom here.)
+
+    // A document dock's title-bar X: run the unsaved-changes prompt and
+    // actually remove the document, swallowing Qt's default hide-only close.
+    if (event->type() == QEvent::Close) {
+        if (Document *document = documentForObject(watched)) {
+            closeDocument(document);
+            return true;
+        }
+    }
+
+    // Clicking or focusing a document's view makes it the active document -
+    // "the one being worked on", which drives every panel and action. The
+    // event is not consumed: it still reaches the view's own handling
+    // (selection, placement) right after.
+    if ((event->type() == QEvent::MouseButtonPress
+         || event->type() == QEvent::FocusIn)) {
+        if (Document *document = documentForObject(watched))
+            setActiveDocument(document);
+    }
+
+    // The corner search field opens the palette on typing, not on focus -
+    // see its textEdited connection in setConnections().
     return QMainWindow::eventFilter(watched, event);
 }
 
@@ -1540,18 +1996,31 @@ void MainWindow::applyLiveSettings()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (confirmDiscardChanges()) {
-        // Persists the current dock/toolbar arrangement (Libraries/Properties
-        // panel position, size, floating, tabbing) so it's restored exactly
-        // as left on the next launch - see the constructor's restoreState().
-        SettingsManager::getInstance().saveSetting("window_dock_state", saveState(DockStateVersion));
-        SettingsManager::getInstance().saveSetting("window_geometry", saveGeometry());
-        // A clean, deliberate exit - nothing left to recover next launch.
-        clearAutosave();
-        event->accept();
-    } else {
-        event->ignore();
+    // Every dirty document gets its own save/discard question, activated
+    // first for visual context; a single Cancel aborts the whole close and
+    // leaves everything open. Copied because confirmDiscardChanges() can
+    // spin the event loop (save dialog), and a snapshot is simplest.
+    const QList<Document *> documents = m_documents;
+    for (Document *document : documents) {
+        if (document->isClean())
+            continue;
+        setActiveDocument(document);
+        if (document->dock)
+            document->dock->raise();
+        if (!confirmDiscardChanges()) {
+            event->ignore();
+            return;
+        }
     }
+
+    // Persists the current dock/toolbar arrangement (Libraries/Properties
+    // panel position, size, floating, tabbing) so it's restored exactly
+    // as left on the next launch - see the constructor's restoreState().
+    SettingsManager::getInstance().saveSetting("window_dock_state", saveState(DockStateVersion));
+    SettingsManager::getInstance().saveSetting("window_geometry", saveGeometry());
+    // A clean, deliberate exit - nothing left to recover next launch.
+    clearAutosave();
+    event->accept();
 }
 
 QString MainWindow::autosaveTargetPath() const
@@ -1651,27 +2120,15 @@ void MainWindow::checkForAutosaveRecovery()
 
 void MainWindow::clickNewAction()
 {
-    if (!confirmDiscardChanges())
-        return;
-
-    if (placementController)
-        placementController->cancelPlacement(); // see openFile()
-    sheetScene->clearPrimitives();
-    sheetScene->undoStack()->setClean();
-    setCurrentFilePath(QString());
-    // confirmDiscardChanges() above already resolved (saved or discarded)
-    // whatever the previous document's autosave might have been tracking.
-    clearAutosave();
-    // setClean() alone doesn't fire indexChanged() - the FCD code dock would
-    // otherwise keep showing the previous document.
-    syncFcdCodeFromSheet();
+    // Multidocument: a new drawing simply opens in its own tab - whatever
+    // was being worked on stays open next to it, nothing to confirm.
+    createDocument();
 }
 
 void MainWindow::clickOpenAction()
 {
-    if (!confirmDiscardChanges())
-        return;
-
+    // No unsaved-changes prompt anymore: the file opens in its own tab (or
+    // reuses a pristine untitled one) - see openFile().
     const QString path = QFileDialog::getOpenFileName(this, tr("Open drawing"), QString(),
                                                         tr("FidoCadJ (*.fcd)"));
     if (path.isEmpty())
@@ -1720,7 +2177,7 @@ void MainWindow::normalizeLoadedDrawingPosition()
     for (GraphicsPrimitive *primitive : sheetScene->primitives())
         primitive->translateControlPoints(delta);
 
-    ui->graphicsView->adjustView();
+    activeView()->adjustView();
     ui->statusbar->showMessage(
             tr("The drawing had elements outside the drawing area and was moved onto the sheet"),
             6000);
@@ -1728,6 +2185,26 @@ void MainWindow::normalizeLoadedDrawingPosition()
 
 bool MainWindow::openFile(const QString &filePath)
 {
+    // Already open? Just bring its dock forward instead of loading a second
+    // copy that would silently compete for the same file on save.
+    const QString absolutePath = QFileInfo(filePath).absoluteFilePath();
+    for (Document *document : std::as_const(m_documents)) {
+        if (!document->filePath().isEmpty()
+                && QFileInfo(document->filePath()).absoluteFilePath() == absolutePath) {
+            if (document->dock)
+                document->dock->raise();
+            setActiveDocument(document);
+            return true;
+        }
+    }
+
+    // Reuse the active document while it's still a pristine untitled one
+    // (the empty tab the app starts with); anything else keeps its tab and
+    // the file opens in a new one.
+    if (!(currentFilePath.isEmpty() && sheetScene->primitives().isEmpty()
+          && sheetScene->undoStack()->isClean()))
+        createDocument();
+
     // A placement in progress holds a raw pointer to its preview primitive,
     // which the bulk load's clearPrimitives() (QGraphicsScene::clear())
     // would destroy out from under it - the next mouse move would then
@@ -1743,8 +2220,6 @@ bool MainWindow::openFile(const QString &filePath)
     normalizeLoadedDrawingPosition();
     sheetScene->undoStack()->setClean();
     setCurrentFilePath(filePath);
-    // Whatever the previous document's autosave was tracking is moot now -
-    // its callers already resolved it via confirmDiscardChanges().
     clearAutosave();
     syncFcdCodeFromSheet(); // setClean() alone doesn't fire indexChanged()
     return true;
@@ -1752,9 +2227,8 @@ bool MainWindow::openFile(const QString &filePath)
 
 void MainWindow::clickImportDxfAction()
 {
-    if (!confirmDiscardChanges())
-        return;
-
+    // No unsaved-changes prompt: the import lands in its own tab (or reuses
+    // a pristine untitled one) - see importDxfFile().
     const QString path = QFileDialog::getOpenFileName(this, tr("Import from DXF"), QString(),
                                                         tr("DXF (*.dxf)"));
     if (path.isEmpty())
@@ -1765,9 +2239,13 @@ void MainWindow::clickImportDxfAction()
 
 bool MainWindow::importDxfFile(const QString &filePath)
 {
-    // Same non-undoable bulk-load contract as Open/FidoCadReader::read() -
-    // this replaces the current sheet's contents entirely, matching this
-    // app's single-always-open-document model rather than merging into it.
+    // Same tab policy as openFile(): reuse a pristine untitled document,
+    // otherwise import into a brand-new tab.
+    if (!(currentFilePath.isEmpty() && sheetScene->primitives().isEmpty()
+          && sheetScene->undoStack()->isClean()))
+        createDocument();
+
+    // Same non-undoable bulk-load contract as Open/FidoCadReader::read().
     if (placementController)
         placementController->cancelPlacement(); // see openFile()
     QString error;
@@ -1861,41 +2339,41 @@ void MainWindow::clickApplyFcdCodeAction()
     syncFcdCodeFromSheet();
 }
 
-QString MainWindow::droppableFilePath(const QMimeData *mimeData)
+QStringList MainWindow::droppableFilePaths(const QMimeData *mimeData)
 {
+    QStringList paths;
     if (!mimeData->hasUrls())
-        return QString();
-    // Only the first droppable file counts - this is a single-document app,
-    // so a multi-file drop can't open more than one anyway.
+        return paths;
+    // Every droppable file counts: each one opens in its own tab.
     for (const QUrl &url : mimeData->urls()) {
         const QString path = url.toLocalFile();
         if (path.endsWith(QStringLiteral(".fcd"), Qt::CaseInsensitive)
                 || path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
-            return path;
+            paths.append(path);
     }
-    return QString();
+    return paths;
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
-    if (!droppableFilePath(event->mimeData()).isEmpty())
+    if (!droppableFilePaths(event->mimeData()).isEmpty())
         event->acceptProposedAction();
 }
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
-    const QString path = droppableFilePath(event->mimeData());
-    if (path.isEmpty())
+    const QStringList paths = droppableFilePaths(event->mimeData());
+    if (paths.isEmpty())
         return;
 
     event->acceptProposedAction();
-    if (!confirmDiscardChanges())
-        return;
-
-    if (path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
-        importDxfFile(path);
-    else
-        openFile(path);
+    // Each file lands in its own tab - nothing to confirm anymore.
+    for (const QString &path : paths) {
+        if (path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
+            importDxfFile(path);
+        else
+            openFile(path);
+    }
 }
 
 void MainWindow::clickSaveAction()

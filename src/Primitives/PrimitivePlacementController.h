@@ -82,6 +82,13 @@ public:
     // scene: the controller's raw preview pointers would otherwise dangle.
     void cancelPlacement();
 
+    // Multidocument: every open document's controller is connected to the
+    // one shared drawing toolbar, so a toolbar click reaches them all -
+    // only the active tab's controller may react with side effects (the
+    // Image tool's immediate file picker). Mouse/key events need no such
+    // guard: they only ever come from this controller's own view.
+    void setActive(bool active) { m_isActiveDocument = active; }
+
     // Arms a single macro instance for placement: the next click on the
     // sheet drops it there (like Connection/Pad/Text - a single-click tool,
     // no chaining), after which placement returns to Select, exactly as any
@@ -175,6 +182,7 @@ private:
 
     GraphicsPrimitive *m_activePrimitive = nullptr;
     Tool m_activeTool = Tool::Select;
+    bool m_isActiveDocument = false; // see setActive()
     int m_pointsPlaced = 0;
     // Set by armMacroPlacement(), consumed by the next startPlacement() -
     // empty means no macro is armed. Kept separate from m_activeTool/
