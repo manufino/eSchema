@@ -73,11 +73,6 @@ public:
     bool handleMousePress(const QPointF &scenePos);
     bool handleMouseMove(const QPointF &scenePos);
     bool handleMouseDoubleClick(const QPointF &scenePos);
-    // Right-click ends a Line/PCB-track chain (see isChainableTool()'s doc
-    // comment) without leaving the tool. Returns false (unconsumed) for
-    // every other tool/state, matching FidoCadJ where right-click has no
-    // effect outside of ending that specific chain.
-    bool handleMouseRightClick();
     bool handleKeyPress(QKeyEvent *event);
 
     // Abandons whatever placement is in progress (removing the preview

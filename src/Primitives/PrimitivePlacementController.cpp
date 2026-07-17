@@ -964,22 +964,6 @@ void PrimitivePlacementController::armImagePlacement()
     m_sheet->addPrimitive(primitiveImage);
 }
 
-bool PrimitivePlacementController::handleMouseRightClick()
-{
-    if (!m_activePrimitive || !isChainableTool(m_activeTool))
-        return false;
-
-    // Ends the chain (discarding the not-yet-placed next segment) without
-    // leaving the tool - matching FidoCadJ, where right-click resets
-    // clickNumber to 0 but leaves actionSelected on LINE/PCB_LINE, ready for
-    // a fresh, independent segment. That's different from Escape, which
-    // leaves drawing mode entirely.
-    m_sheet->removePrimitive(m_activePrimitive);
-    m_activePrimitive = nullptr;
-    m_pointsPlaced = 0;
-    return true;
-}
-
 void PrimitivePlacementController::switchToolBarToSelectTool()
 {
     if (!m_toolBar)

@@ -341,10 +341,17 @@ void SheetView::mousePressEvent(QMouseEvent *event)
         }
     }
 
-    // Right-click ends a Line/PCB-track chain (matching FidoCadJ) without
-    // otherwise opening the default context menu behaviour.
+    // Right-click while a drawing tool is active exits back to the Select
+    // tool, AutoCAD-style ("right-click ends the command"): the in-progress
+    // primitive, if any, is discarded - segments of a Line/PCB-track chain
+    // already placed stay - and the toolbar returns to Select. The same
+    // click must not also pop the context menu (see contextMenuEvent): the
+    // tool switch is the whole gesture, the menu comes with the next
+    // right-click.
     if (event->button() == Qt::RightButton && m_placementController
-            && m_placementController->handleMouseRightClick()) {
+            && m_placementController->isPlacementToolActive()) {
+        m_placementController->cancelPlacement();
+        m_suppressContextMenu = true;
         return;
     }
 
@@ -399,9 +406,16 @@ void SheetView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void SheetView::contextMenuEvent(QContextMenuEvent *event)
 {
+    // The right press that just exited a drawing tool back to Select
+    // (mousePressEvent above) generates this same-click QContextMenuEvent -
+    // swallow it once, so the menu doesn't pop over the tool switch.
+    if (m_suppressContextMenu) {
+        m_suppressContextMenu = false;
+        return;
+    }
+
     // A placement tool being active means the user is mid-draw - right-click
-    // there already means "finish/cancel this chain" (see mousePressEvent
-    // above), not "show me a selection menu".
+    // there already exits to Select (mousePressEvent), never shows a menu.
     if (m_placementController && m_placementController->isPlacementToolActive())
         return;
 
