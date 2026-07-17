@@ -269,6 +269,35 @@ QColor GraphicsPrimitive::drawColor() const
                   base.alpha());
 }
 
+namespace {
+
+// Shared by labelBoundingRect()/paintLabels(): name/value labels are sized
+// and anchored exactly like the reference FidoCadJ editor's
+// GraphicPrimitive.drawText(). Its macroFontSize is parsed from the label
+// TY line's *x*-size (setValue(): setMacroFontSize(tokens[4])), which is 3
+// in standard files, and the em is macroFontSize*12/7 drawing units, the
+// stored position being the text's TOP (baseline one ascent below). The
+// font family, too, comes from the label TY line (e.g. Bitstream Charter)
+// rather than being hardcoded. The font is built at a large fixed pixel
+// size and scaled down by the painter: QFont pixel sizes are integers,
+// and point sizes resolve against each output device's DPI.
+constexpr int LabelBaseFontPixels = 84;
+
+QFont labelBaseFont(const GraphicsPrimitive *primitive)
+{
+    QFont font(primitive->labelFontName());
+    font.setPixelSize(LabelBaseFontPixels);
+    return font;
+}
+
+qreal labelScale(const GraphicsPrimitive *primitive)
+{
+    const int sizeX = primitive->labelSizeX() > 0 ? primitive->labelSizeX() : 3;
+    return sizeX * 12.0 / 7.0 / LabelBaseFontPixels;
+}
+
+}
+
 QRectF GraphicsPrimitive::labelBoundingRect() const
 {
     const bool drawName = showName && !objName.isEmpty();
@@ -278,15 +307,25 @@ QRectF GraphicsPrimitive::labelBoundingRect() const
     if ((!drawName && !drawValue) || controlPointCount() == 0)
         return QRectF();
 
-    // Generous estimate, avoids measuring text per call - sized for the
-    // FidoCadJ-matched label em (~7.4 units, see paintLabels()).
-    const QSizeF approxTextSize(110, 14);
+    // Exact per-label measurement (a generous fixed estimate here inflated
+    // every labeled primitive's boundingRect, which in turn made
+    // fit-to-view leave visible dead margins around the drawing).
+    const QFont font = labelBaseFont(this);
+    const qreal scale = labelScale(this);
+    const qreal ascent = QFontMetricsF(font).ascent();
+    const auto labelRect = [&](const QPointF &scenePos, const QString &text) {
+        const qreal width = DecoratedText::width(font, text) * scale;
+        qreal top = 0, bottom = 0;
+        DecoratedText::verticalExtent(font, text, top, bottom);
+        return QRectF(mapFromScene(scenePos) + QPointF(0, (ascent + top) * scale),
+                      QSizeF(width, (bottom - top) * scale));
+    };
     QRectF rect;
     if (drawName)
-        rect = rect.united(QRectF(mapFromScene(nameLabelPos()), approxTextSize));
+        rect = rect.united(labelRect(nameLabelPos(), objName));
     if (drawValue)
-        rect = rect.united(QRectF(mapFromScene(valueLabelPos()), approxTextSize));
-    return rect;
+        rect = rect.united(labelRect(valueLabelPos(), objValue));
+    return rect.adjusted(-1, -1, 1, 1);
 }
 
 void GraphicsPrimitive::paintLabels(QPainter *painter) const
@@ -298,18 +337,11 @@ void GraphicsPrimitive::paintLabels(QPainter *painter) const
 
     painter->save();
     painter->setPen(drawColor());
-    // Sized and anchored exactly like the reference FidoCadJ editor's
-    // GraphicPrimitive.drawText(): em = macroFontSize*12/7 drawing units
-    // (its "+ .5" is a device-pixel rounding aid added after the zoom
-    // multiplication, not part of the logical size) with the default macro
-    // font size of 4, the stored position being the text's TOP - the
-    // baseline sits one ascent below it. The font is built at a large
-    // fixed pixel size and scaled down by the painter, keeping fractional
-    // precision (QFont pixel sizes are integers) and device independence
-    // (point sizes resolve against each output device's DPI).
-    QFont font(QStringLiteral("Courier New"));
-    font.setPixelSize(84);
-    const qreal scale = 4.0 * 12.0 / 7.0 / 84.0;
+    // Sized, styled and anchored exactly like the reference FidoCadJ
+    // editor's GraphicPrimitive.drawText() - see labelBaseFont()/
+    // labelScale() above.
+    const QFont font = labelBaseFont(this);
+    const qreal scale = labelScale(this);
     const qreal ascent = QFontMetricsF(font).ascent();
     const auto drawLabel = [&](const QPointF &scenePos, const QString &text) {
         painter->save();

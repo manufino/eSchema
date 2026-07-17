@@ -38,12 +38,17 @@ QString buildLabelLine(const GraphicsPrimitive *primitive, const QString &text, 
     // fixed offset - matches whatever FidoCadReader will read back on the
     // next open, so a moved label round-trips instead of snapping back.
     const QPointF pos = labelIndex == 0 ? primitive->nameLabelPos() : primitive->valueLabelPos();
+    // Sizes and font family round-trip what FidoCadReader parsed ("*" for
+    // the default font, exactly like FidoCadJ's own saveText()).
+    const QString fontName = primitive->labelFontName();
     QStringList tokens {
         QStringLiteral("TY"),
         roundIntelligently(pos.x()), roundIntelligently(pos.y()),
-        QStringLiteral("4"), QStringLiteral("3"), QStringLiteral("0"), QStringLiteral("0"),
+        QString::number(primitive->labelSizeY()), QString::number(primitive->labelSizeX()),
+        QStringLiteral("0"), QStringLiteral("0"),
         QString::number(primitive->layerIndex()),
-        QStringLiteral("*"),
+        fontName == QLatin1String("Courier New") ? QStringLiteral("*")
+                                                 : encodeFontName(fontName),
         text
     };
     return tokens.join(QLatin1Char(' '));

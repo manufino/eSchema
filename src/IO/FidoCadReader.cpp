@@ -325,10 +325,24 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
             // of always re-deriving controlPoint(0) + labelOffset(), or a
             // previously-moved label would snap back to the default on
             // every reopen.
+            // Label font family and TY sizes: FidoCadJ reads them into
+            // macroFont/macroFontSize (GraphicPrimitive.setValue() parses
+            // tokens 8 and 4), so both label lines carry them - honoring
+            // them is required to render files using a non-default label
+            // font (e.g. Bitstream Charter) like the reference editor.
+            const auto readLabelStyle = [&tokens](GraphicsPrimitive *primitive) {
+                if (tokens.size() <= 8)
+                    return;
+                primitive->setLabelSize(tokens.at(3).toInt(), tokens.at(4).toInt());
+                const QString fontToken = tokens.at(8);
+                if (fontToken != QLatin1String("*"))
+                    primitive->setLabelFontName(FidoCadTokenUtils::decodeFontName(fontToken));
+            };
             if (code == QStringLiteral("TY") && macroCounter == 2) {
                 pending->setName(labelText(tokens, 9));
                 if (tokens.size() > 2)
                     pending->setNameLabelPos(QPointF(tokens.at(1).toDouble(), tokens.at(2).toDouble()));
+                readLabelStyle(pending);
                 macroCounter = 1;
                 continue;
             }
@@ -336,6 +350,7 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
                 pending->setValue(labelText(tokens, 9));
                 if (tokens.size() > 2)
                     pending->setValueLabelPos(QPointF(tokens.at(1).toDouble(), tokens.at(2).toDouble()));
+                readLabelStyle(pending);
                 macroCounter = 0;
                 commitPending();
                 continue;

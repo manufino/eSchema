@@ -110,6 +110,17 @@ public:
     void setName(const QString &name) { prepareGeometryChange(); objName = name; update(); }
     void setValue(const QString &value) { prepareGeometryChange(); objValue = value; update(); }
 
+    // The name/value labels' font family and TY sizes, parsed from the
+    // label TY lines (FidoCadReader) and round-tripped by FidoCadWriter -
+    // FidoCadJ's GraphicPrimitive.setValue() reads the same fields into
+    // macroFont/macroFontSize, so honoring them here is required for
+    // pixel-faithful label rendering of files using a non-default font.
+    QString labelFontName() const { return m_labelFontName; }
+    void setLabelFontName(const QString &name) { prepareGeometryChange(); m_labelFontName = name; update(); }
+    int labelSizeY() const { return m_labelSizeY; }
+    int labelSizeX() const { return m_labelSizeX; }
+    void setLabelSize(int sizeY, int sizeX) { prepareGeometryChange(); m_labelSizeY = sizeY; m_labelSizeX = sizeX; update(); }
+
     // FidoCadJ FCJ arrow attributes. Only meaningful for the line-like primitives
     // (LI/BE/CV/CP); the rest simply never read them.
     // prepareGeometryChange()/update() matter here (unlike when these were only
@@ -329,6 +340,10 @@ protected:
     PrimitiveTypes primitiveType;
     QString objName;
     QString  objValue;
+    // Matches FidoCadJ's Globals.defaultTextFont / default TY sizes 4x3.
+    QString m_labelFontName = QStringLiteral("Courier New");
+    int m_labelSizeY = 4;
+    int m_labelSizeX = 3;
     Layer *objLayer;
 
     QPointF m_dragAnchor; // last mouse scene position seen during an active drag
