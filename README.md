@@ -144,6 +144,16 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 
 ## What's new
 
+### 1.0.8
+- **Pixel-faithful FidoCadJ rendering**: text em size, vertical stretching and label anchoring now follow the reference editor's exact formulas, label TY font families and sizes are honored (e.g. Bitstream Charter) and round-tripped, dash patterns and round caps match `Globals.dash`, and arrow terminators combine the triangle with the limiter bar and shorten the stroke to the arrowhead's base - side-by-side drawings now look the same
+- **Dynamic cursor tooltip** while drawing (length/angle, width × height, radius - Options > Drawing) and **object snap tracking**: hovered snap points become alignment references with dashed alignment lines, AutoCAD-style (Options > Snap)
+- **Move/Copy with base point**: pick a base point on the selection, then its destination, with full snapping on both picks and a live half-opacity preview
+- **Right-click ends the command**: while drawing, a right click discards the preview, returns to the Select tool and opens the context menu in one gesture; right-clicking never deselects anymore
+- **Line style and arrow style combos** now paint the real patterns/terminators on a fixed white background in every theme, and the line style shown always matches the selected primitive
+- Theme polish: disabled menu entries are dimmed everywhere, every icon (layer eyes/locks, master bookmark, dock tabs, Layer manager) follows a live theme switch, and switching themes suggests a restart
+- Properties panel: arrow rows grouped together, and a centered hint appears when nothing is selected
+- Fixes: hiding the grid no longer changes the canvas background, pasting into an empty drawing fits the view to the result, and Fit-to-selection is disabled without a selection
+
 ### 1.0.7
 - Fixed a black drawing canvas, black toolbar icons, and a crash on mouse movement, all on the very first launch of a fresh install (no settings file yet)
 - Fixed theme rendering on Linux: toolbar areas no longer stay black in dark themes, and the light themes no longer inherit a dark desktop's system palette
