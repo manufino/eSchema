@@ -86,11 +86,30 @@ qreal sizeMultForLevel(int level)
     }
 }
 
+// The base font's nominal size, whether it was set in points (labels/UI
+// text) or in pixels (PrimitiveText's FidoCadJ-compatible sizing, where
+// pointSizeF() reports -1).
+qreal nominalSize(const QFont &font)
+{
+    return font.pointSizeF() > 0 ? font.pointSizeF() : font.pixelSize();
+}
+
+// A copy of `base` resized to `mult` times its nominal size, in whichever
+// unit the base font itself uses.
+QFont derivedFont(const QFont &base, qreal mult)
+{
+    QFont font(base);
+    if (base.pointSizeF() > 0)
+        font.setPointSizeF(base.pointSizeF() * mult);
+    else
+        font.setPixelSize(qMax(1, qRound(base.pixelSize() * mult)));
+    return font;
+}
+
 } // namespace
 
 qreal DecoratedText::width(const QFont &baseFont, const QString &str)
 {
-    const qreal baseSize = baseFont.pointSizeF();
     Tokenizer tokenizer(str);
     qreal totalWidth = 0;
     int level = 0;
@@ -101,8 +120,7 @@ qreal DecoratedText::width(const QFont &baseFont, const QString &str)
         } else if (t == Token::Index) {
             --level;
         } else {
-            QFont chunkFont(baseFont);
-            chunkFont.setPointSizeF(baseSize * sizeMultForLevel(level));
+            const QFont chunkFont = derivedFont(baseFont, sizeMultForLevel(level));
             totalWidth += QFontMetricsF(chunkFont).horizontalAdvance(tokenizer.chunk());
         }
     }
@@ -112,7 +130,7 @@ qreal DecoratedText::width(const QFont &baseFont, const QString &str)
 void DecoratedText::verticalExtent(const QFont &baseFont, const QString &str,
                                    qreal &top, qreal &bottom)
 {
-    const qreal baseSize = baseFont.pointSizeF();
+    const qreal baseSize = nominalSize(baseFont);
     const QFontMetricsF baseMetrics(baseFont);
     const qreal baseAscent = baseMetrics.ascent();
     const qreal baseDescent = baseMetrics.descent();
@@ -141,7 +159,7 @@ void DecoratedText::verticalExtent(const QFont &baseFont, const QString &str,
 void DecoratedText::draw(QPainter *painter, const QFont &baseFont,
                          const QPointF &baselinePos, const QString &str)
 {
-    const qreal baseSize = baseFont.pointSizeF();
+    const qreal baseSize = nominalSize(baseFont);
     Tokenizer tokenizer(str);
     qreal x = baselinePos.x();
     int level = 0;
@@ -153,8 +171,7 @@ void DecoratedText::draw(QPainter *painter, const QFont &baseFont,
             --level;
         } else {
             const qreal mult = sizeMultForLevel(level);
-            QFont chunkFont(baseFont);
-            chunkFont.setPointSizeF(baseSize * mult);
+            const QFont chunkFont = derivedFont(baseFont, mult);
             painter->setFont(chunkFont);
             // Positive level = superscript = raised above the baseline.
             const qreal shift = level * baseSize * mult * 0.5;

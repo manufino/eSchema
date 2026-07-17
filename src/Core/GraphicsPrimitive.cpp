@@ -26,6 +26,7 @@
 #include "MovePrimitiveCommand.h"
 #include <QGraphicsScene>
 #include <QPainterPathStroker>
+#include <QFontMetricsF>
 
 GraphicsPrimitive::GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent) : QGraphicsItem(parent)
 {
@@ -277,7 +278,9 @@ QRectF GraphicsPrimitive::labelBoundingRect() const
     if ((!drawName && !drawValue) || controlPointCount() == 0)
         return QRectF();
 
-    const QSizeF approxTextSize(60, 12); // generous estimate, avoids measuring text per call
+    // Generous estimate, avoids measuring text per call - sized for the
+    // FidoCadJ-matched label em (~7.4 units, see paintLabels()).
+    const QSizeF approxTextSize(110, 14);
     QRectF rect;
     if (drawName)
         rect = rect.united(QRectF(mapFromScene(nameLabelPos()), approxTextSize));
@@ -295,17 +298,33 @@ void GraphicsPrimitive::paintLabels(QPainter *painter) const
 
     painter->save();
     painter->setPen(drawColor());
+    // Sized and anchored exactly like the reference FidoCadJ editor's
+    // GraphicPrimitive.drawText(): em = macroFontSize*12/7 + 0.5 drawing
+    // units with the default macro font size of 4, the stored position
+    // being the text's TOP - the baseline sits one ascent below it. The
+    // font is built at a large fixed pixel size and scaled down by the
+    // painter, keeping fractional precision (QFont pixel sizes are
+    // integers) and device independence (point sizes resolve against each
+    // output device's DPI).
     QFont font(QStringLiteral("Courier New"));
-    font.setPointSizeF(3.0);
-
-    // DecoratedText: name/value labels support the same ^/_ superscript/
-    // subscript markup as standalone text, exactly like the reference
-    // FidoCadJ editor (GraphicPrimitive.drawText also goes through its
-    // DecoratedText). It sets the painter's font itself, per chunk.
+    font.setPixelSize(84);
+    const qreal scale = (4.0 * 12.0 / 7.0 + 0.5) / 84.0;
+    const qreal ascent = QFontMetricsF(font).ascent();
+    const auto drawLabel = [&](const QPointF &scenePos, const QString &text) {
+        painter->save();
+        painter->translate(mapFromScene(scenePos));
+        painter->scale(scale, scale);
+        // DecoratedText: name/value labels support the same ^/_ superscript/
+        // subscript markup as standalone text, exactly like the reference
+        // editor (GraphicPrimitive.drawText also goes through its
+        // DecoratedText). It sets the painter's font itself, per chunk.
+        DecoratedText::draw(painter, font, QPointF(0, ascent), text);
+        painter->restore();
+    };
     if (drawName)
-        DecoratedText::draw(painter, font, mapFromScene(nameLabelPos()), objName);
+        drawLabel(nameLabelPos(), objName);
     if (drawValue)
-        DecoratedText::draw(painter, font, mapFromScene(valueLabelPos()), objValue);
+        drawLabel(valueLabelPos(), objValue);
     painter->restore();
 }
 
