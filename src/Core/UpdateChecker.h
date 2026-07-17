@@ -49,10 +49,16 @@ signals:
     // `version` is the release tag with any leading "v" stripped (e.g.
     // "1.0.4"), `releaseUrl` its GitHub release page.
     void updateAvailable(const QString &version, const QUrl &releaseUrl);
+    // The running version already matches (or is newer than) the latest
+    // release - only the manual menu check shows anything for this.
     void upToDate();
+    // Network or parse error - the silent startup check ignores it, the
+    // manual check reports it to the user.
     void checkFailed();
 
 private:
+    // Parses the GitHub API JSON reply, compares versions, and emits exactly
+    // one of the three signals above.
     void handleReply(QNetworkReply *reply);
 
     QNetworkAccessManager *m_manager;

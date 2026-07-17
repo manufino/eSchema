@@ -31,10 +31,15 @@ class GraphicsPrimitive;
 class ResizePrimitiveCommand : public QUndoCommand
 {
 public:
+    // `controlPointIndex` selects which handle moved; `before`/`after` are
+    // its positions around the drag. The primitive is borrowed.
     ResizePrimitiveCommand(GraphicsPrimitive *primitive, int controlPointIndex,
                             const QPointF &before, const QPointF &after);
 
+    // Moves the control point back to its pre-drag position.
     void undo() override;
+    // Moves the control point to its post-drag position; harmless on the
+    // automatic call at push() time (the drag already left it there).
     void redo() override;
 
 private:

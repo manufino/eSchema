@@ -58,6 +58,8 @@ signals:
     void arrowStyleChanged(int style);
 
 private:
+    // Draws the closed combo as a white swatch previewing the current
+    // style's terminator (same look as the popup rows).
     void paintEvent(QPaintEvent *event) override;
 
     int m_style = 0;

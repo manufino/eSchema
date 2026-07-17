@@ -63,11 +63,25 @@ class UpdateChecker;
 class QToolBar;
 namespace BooleanOps { enum class Operation; }
 
+// The application's only top-level window and the hub everything else plugs
+// into: it owns the open Documents (docked/tabbed in a nested document
+// area), the menus/toolbars/status bar/side panels built from
+// MainWindow.ui, and every menu action handler. It mediates between the UI
+// widgets and the core singletons (SettingsManager, LayerList,
+// LibraryManager, ThemeManager) and drives file I/O, printing/exporting,
+// autosave/recovery, the command palette and shortcut/toolbar
+// customization. Implementation is split across MainWindow.cpp (window/
+// documents/files) and MainWindowEditActions.cpp / MainWindowPropertiesPanel
+// .cpp / MainWindowLibraryPanel.cpp (edit actions, properties panel,
+// library panel).
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
+    // Builds the whole UI: the document area with the first untitled
+    // document, panels, connections, theme, saved customizations, autosave
+    // recovery check.
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -95,6 +109,11 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 public slots:
+    // Menu/toolbar action handlers, one per QAction, named click<Action>():
+    // each acts on the ACTIVE document (through the sheetScene/
+    // currentFilePath mirrors) and pushes any drawing change onto its undo
+    // stack. Only the ones whose behavior isn't obvious from the name carry
+    // their own comment below.
     void clickOptionAction();
     void clickCustomizeToolbarsAction();
     void clickCommandPaletteAction();
@@ -191,6 +210,8 @@ private:
     // Renders the drawing onto the printer/preview page, scaled (preserving
     // aspect ratio) to fit within the printable area and centered on it.
     void renderForPrint(QPrinter *printer);
+    // Wires every signal/slot connection made once at startup: menu actions,
+    // window-level widgets, settings changes, clipboard, rulers, shortcuts.
     void setConnections();
     // Fills ui->toolBoxLib with one page per loaded macro library, each a
     // QTreeWidget grouping macro icon+name leaves under their category node
@@ -400,8 +421,13 @@ private:
     // Window menu: rebuilt on aboutToShow with one checkable entry per open
     // document; Ctrl+Tab / Ctrl+Shift+Tab cycle through them.
     void rebuildWindowMenu();
+    // Activates the document `step` positions away (+1/-1, wrapping around).
     void cycleActiveDocument(int step);
+    // Updates the active document's file path and everything derived from
+    // it (window title, dock title, recent files).
     void setCurrentFilePath(const QString &filePath);
+    // "name[*] - eSchema" from the active document's display name and
+    // dirty state.
     void updateWindowTitle();
     // Moves (or inserts) `filePath` to the top of the persisted recent-files
     // list and rebuilds the File > Apri recenti submenu from it.
@@ -493,10 +519,16 @@ private:
     Document *activeDocument() const { return m_activeDocument; }
     // The document whose dock or view is `object`, or nullptr.
     Document *documentForObject(QObject *object) const;
+    // Makes `document` the one every action operates on: swaps the
+    // sheetScene/currentFilePath/controller mirrors, swaps the layer-state
+    // snapshots, points the QUndoGroup at its stack, and remakes the
+    // per-document signal connections.
     void setActiveDocument(Document *document);
     // Confirms unsaved changes, then closes the document's dock (the last
     // remaining one resets to a fresh untitled drawing instead).
     void closeDocument(Document *document);
+    // Refreshes the document's dock/tab caption (display name + dirty star)
+    // and, when it's the active one, the window title too.
     void updateDocumentTitle(Document *document);
     // The lowest positive integer not currently used by an untitled
     // document, so fresh drawings read "New drawing 1", "New drawing 2",
@@ -519,7 +551,11 @@ private:
     void updateDockTitleBars();    // apply the per-dock title-bar policy
     void applyDockTitleBar(QDockWidget *dock, QMainWindow *area);
     QList<QDockWidget *> allManagedDocks() const; // document + panel docks
+    // Which QMainWindow (the document area or the window itself) hosts
+    // `dock` - the two areas apply the same title-bar policy separately.
     QMainWindow *areaForDock(QDockWidget *dock) const;
+    // The managed dock whose title matches a tab's text - how a native dock
+    // tab's close button finds its dock (Qt exposes no direct mapping).
     QDockWidget *dockForTabText(const QString &text) const;
     // The active document's view and its surrounding widget (rulers).
     SheetView *activeView() const;

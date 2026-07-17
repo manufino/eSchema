@@ -59,7 +59,10 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
+    // Rebuilds the visible list to the entries matching `needle` (substring
+    // match on command text and category), keeping the first row selected.
     void refilter(const QString &needle);
+    // Runs the selected command's QAction (if enabled) and closes the popup.
     void triggerCurrent();
 
     struct Entry {

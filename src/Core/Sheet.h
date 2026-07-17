@@ -35,6 +35,15 @@
 
 class QPainter;
 
+// The drawing itself: a QGraphicsScene holding the primitives in stable
+// document order, plus everything that belongs to one drawing - its undo
+// stack, the FidoCadJ document-wide settings (line widths, connection
+// diameter), session guides, the tracing background image, and the
+// transient interaction overlays (object snap indicator/tracking, placement
+// tooltip, pick highlights) painted by drawForeground(). One Sheet per
+// document page (owned by Document); SheetView displays it, FidoCadReader/
+// Writer load and save it, and it listens to the LayerList singleton to keep
+// primitive visibility in sync with layer state.
 class Sheet : public QGraphicsScene
 {
     Q_OBJECT
@@ -58,8 +67,13 @@ public:
     // alive so a later undo can hand it back via addPrimitive()).
     void takePrimitive(GraphicsPrimitive *primitive);
     const QList<GraphicsPrimitive*> &primitives() const { return m_primitives; }
+    // Deletes every primitive (and unlocks all layers) - the bulk reset used
+    // when loading a file into this sheet or starting over. Not undoable.
     void clearPrimitives();
 
+    // This drawing's undo stack - commands are pushed here by MainWindow and
+    // the controllers; with several documents open, MainWindow's QUndoGroup
+    // picks whichever stack belongs to the active document.
     QUndoStack *undoStack() { return &m_undoStack; }
 
     // Called by GraphicsPrimitive when a body drag starts with Alt held:

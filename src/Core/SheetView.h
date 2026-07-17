@@ -39,11 +39,20 @@ class PrimitivePlacementController;
 #define ZOOM_SCALE_MIN 0.3// Scala minima consentita
 #define ZOOM_SCALE_MAX 15.0// Scala massima consentita
 
+// The interactive viewport onto a Sheet: draws the grid/background/tracing
+// image behind the scene and the guides on top of it, and turns raw mouse
+// input into the app's gestures - wheel zoom, guide dragging, placement
+// clicks forwarded to the PrimitivePlacementController, the AutoCAD-style
+// window/crossing rubber band, and the context-menu request MainWindow
+// answers. Holds no Sheet* of its own (it reads scene() each time), so any
+// number of views can exist, one per open document (see DocumentView).
 class SheetView : public QGraphicsView
 {
     Q_OBJECT
 public:
     explicit SheetView(QWidget *parent = nullptr);
+    // Overrides the grid spacing/color loaded from settings - used by the
+    // print/export paths that render through a temporary view.
     void setGrid(int size, QColor clr);
 
     // Not owned - the controller is created and owned by MainWindow, which
@@ -70,6 +79,9 @@ public:
     qreal majorGridStep() const { return qMax(1, gridMarkSize / 10) * qMax(1, gridSize); }
 
 protected:
+    // Flat background color, then the tracing image, then the grid (dots/
+    // lines/both per the "grid_type" setting) - all view-side, so exports
+    // and prints (which render the Sheet directly) never include them.
     void drawBackground (QPainter* painter, const QRectF &rect);
     // Base implementation first (which forwards to Sheet::drawForeground -
     // pad holes, snap indicator), then the sheet's guide lines on top.
@@ -82,11 +94,32 @@ protected:
     // out since drawBackground() has an early-return path when the grid is
     // off that still needs this to run.
     void drawTracingImage(QPainter *painter, const QRectF &rect);
+    // Ctrl+wheel (or plain wheel per settings) zooms in integer levels
+    // around the cursor, clamped to [ZOOM_SCALE_MIN, ZOOM_SCALE_MAX];
+    // otherwise scrolls normally.
     void wheelEvent(QWheelEvent *event);
+    // Drives, in order: guide dragging, the placement preview (forwarded to
+    // the controller with the snapped position), the rubber-band update,
+    // and the mouseMoved()/mousePosChanged() signals the status bar and
+    // rulers track.
     void mouseMoveEvent(QMouseEvent *event);
+    // Left press: forwards a placement click to the controller, grabs a
+    // guide under the cursor, or - on empty canvas with the Select tool -
+    // starts the window/crossing rubber band. Right press while placing
+    // cancels the placement and switches back to the Select tool (the
+    // same click's contextMenuEvent then opens the menu).
     void mousePressEvent(QMouseEvent* event);
+    // Ends the active gesture: drops (or deletes, if released outside the
+    // viewport) a dragged guide, or resolves the rubber band into a
+    // selection - left-to-right selects only fully contained items,
+    // right-to-left also touched ones; Ctrl/Shift extends.
     void mouseReleaseEvent(QMouseEvent *event);
+    // Offers the double-click to the placement controller first (it ends
+    // multi-point chains like polylines); otherwise falls through to the
+    // items, e.g. a text primitive opening its edit dialog.
     void mouseDoubleClickEvent(QMouseEvent *event);
+    // Offers the key to the placement controller first (Escape cancels the
+    // in-progress placement); a bare Escape otherwise clears the selection.
     void keyPressEvent(QKeyEvent *event);
     // Right-clicking a not-yet-selected primitive replaces the selection with
     // just that one (so the menu MainWindow builds in response to
@@ -102,7 +135,10 @@ protected:
     void leaveEvent(QEvent *event) override;
 
 private:
+    // Reads every grid/color/zoom-related setting into the members below.
     void loadSettings();
+    // Applies the current zoomLevel to the view transform and emits
+    // zoomScaleIsChanged()/viewTransformChanged().
     void zoomUpdate();
     // The guide within grab distance (a few screen pixels) of `viewPos`, or
     // -1 - see Sheet::guideNear().
@@ -113,7 +149,11 @@ private:
     qreal guidePositionFor(const Sheet::Guide &guide, const QPoint &viewPos) const;
 
 public slots:
+    // Connected to SettingsManager::settingIsChanged - re-reads the settings
+    // and repaints, so Options changes show up live.
     void settingChanged();
+    // Fit-to-drawing: frames the bounding box of all primitives (with a
+    // margin), or resets to the default zoom on an empty sheet.
     void adjustView();
     // Fits the view to the bounding box of the current selection - a no-op
     // when nothing is selected, so it never surprises the user by silently
@@ -121,8 +161,13 @@ public slots:
     void adjustViewToSelection();
 
 signals:
+    // Cursor position in scene coordinates, on every move - the status
+    // bar's coordinate readout.
     void mouseMoved(QPointF point);
+    // New zoom level in percent - the status bar's zoom display.
     void zoomScaleIsChanged(unsigned int level);
+    // Companion to mouseMoved() for listeners that only need "the cursor
+    // moved" (the rulers' tracking marker reads the position itself).
     void mousePosChanged();
     // MainWindow builds and execs the actual QMenu (it owns the ui->action*
     // objects the menu reuses) - SheetView only decides where/on-what the

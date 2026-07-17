@@ -31,17 +31,28 @@
 #include "LayerList.h"
 
 
+// The layer combo box (toolbar + properties panel): each row shows the
+// layer's eye/lock/color/name via LayerItemDelegate, and the eye/lock icons
+// are directly clickable inside the popup. Kept in sync with the global
+// LayerList through layerListIsChanged().
 class LayerComboBox : public QComboBox {
     Q_OBJECT
 public:
     LayerComboBox(QWidget* parent = nullptr);
+    // Appends one row for `layer` (the Layer* is stored as item data).
     void addLayer(Layer *layer);
+    // Clears and repopulates from `list`, keeping the selection if possible.
     void addLayerList(QList<Layer*> *list);
+    // Moves the selection onto `layer` without side effects.
     void setMaster(Layer *layer);
+    // Selects whatever layer the global LayerList currently flags as master.
     void setAutoMaster();
+    // The Layer of the current row, or nullptr for an empty combo.
     Layer *selectedLayer() const;
 
 protected:
+    // Draws the closed combo like a popup row (color swatch + name) instead
+    // of Qt's default text-only rendering.
     void paintEvent(QPaintEvent *event) override;
     QSize sizeHint() const override;
     // Intercepts clicks on the popup's eye/lock icons (see
@@ -52,15 +63,22 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 signals:
+    // The user picked a different row (index into the roster) - the layer
+    // toolbar widget turns this into LayerList::setMaster().
     void layerSelectedChanged(int i);
 
 public slots:
+    // Full rebuild from the given roster - connected to
+    // LayerList::layerListChanged.
     void layerListIsChanged(QList<Layer*> *layerList);
 
 private slots:
+    // Re-emits a user row change as layerSelectedChanged().
     void currentIndexChanged(int index);
 
 private:
+    // True when no existing layer already uses `name` - guards the
+    // "add new layer" flow.
     bool layerNameIsUnique(QString name);
 
 

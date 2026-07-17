@@ -33,10 +33,15 @@ class GraphicsPrimitive;
 class MovePrimitiveCommand : public QUndoCommand
 {
 public:
+    // `before`/`after` are full control-point snapshots taken by the caller
+    // (SelectionHandleController) around the drag; the primitive is borrowed.
     MovePrimitiveCommand(GraphicsPrimitive *primitive, const QVector<QPointF> &before,
                           const QVector<QPointF> &after);
 
+    // Restores the pre-drag control points via setControlPoints().
     void undo() override;
+    // Applies the post-drag control points; harmless on the automatic call at
+    // push() time since the drag already left the primitive in that state.
     void redo() override;
 
 private:

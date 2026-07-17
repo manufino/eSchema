@@ -67,7 +67,12 @@ signals:
     void guideDragFinished(const QPoint &globalPos);
 
 protected:
+    // Draws the tick marks, unit labels and (when visible) the mouse marker
+    // from the current origin/scale mapping.
     void paintEvent(QPaintEvent *event) override;
+    // The three mouse overrides implement the guide-drag gesture reported
+    // by the signals above: press starts it, moves report the global
+    // position, release finishes it.
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;

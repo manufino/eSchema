@@ -25,16 +25,24 @@
 #include "Layer.h"
 #include "LayerList.h"
 
+// The editable layer-name cell of a layer manager row: a QLabel showing the
+// name that swaps into a QLineEdit on double click; confirming the edit
+// renames the Layer and broadcasts it via LayerList::update().
 class LayerLabelName : public QWidget {
     Q_OBJECT
 public:
+    // `layer` is borrowed (owned by LayerList) and must outlive this widget.
     LayerLabelName(Layer *layer, QWidget *parent = nullptr);
     ~LayerLabelName();
 
 protected:
+    // Catches the label's double click to start inline editing (label
+    // hidden, line edit shown and focused).
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
+    // Commits the edit: updates the label, renames the Layer, swaps the
+    // line edit away again, and fires LayerList::update().
     void lineEditEditingFinished();
 
 private:

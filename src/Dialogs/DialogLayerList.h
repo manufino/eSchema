@@ -29,6 +29,10 @@ namespace Ui {
 class DialogLayerList;
 }
 
+// The layer manager (Tools menu): a LayerListView of every layer with
+// buttons to reorder, add, delete, and bulk-toggle visibility/locking.
+// All mutations go through the LayerList singleton, so the toolbar combo
+// and the canvas stay in sync while the dialog is open.
 class DialogLayerList : public QDialog
 {
     Q_OBJECT
@@ -38,16 +42,24 @@ public:
     ~DialogLayerList();
 
 public slots:
+    // Move the selected layer one position up/down in the roster
+    // (LayerList::moveUp()/moveDown()); no-ops with nothing selected.
     void levelUp();
     void levelDown();
+    // Bulk toggles, one LayerList call each (master always stays visible
+    // and unlocked - see LayerList's guards).
     void setAllVisible();
     void setAllHidden();
     void setAllLocked();
     void setAllUnlocked();
+    // Deletes the selected layer (its primitives move to the master layer -
+    // see Sheet::reassignLayerBeforeRemoval()); refuses to delete the last one.
     void deleteCurrent();
+    // Appends a new layer with a unique default name and a random color.
     void addNewLayer();
 
 private:
+    // True when the list has a selected row (guards the per-layer buttons).
     bool layerIsSelected();
     QColor randomColor();
 

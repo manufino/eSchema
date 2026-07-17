@@ -25,11 +25,19 @@
 #include <QColor>
 #include "GlobalUtils.h"
 
+// One drawing layer: a name, a color, and the visible/locked/master flags.
+// Plain data holder with no signals of its own - all instances live in (and
+// are owned by) the process-wide LayerList singleton, which is the one that
+// notifies the UI when a layer changes. Primitives reference their layer by
+// raw Layer* (GraphicsPrimitive::layer()), so a Layer must never be deleted
+// without LayerList::layerAboutToBeRemoved() going out first.
 class Layer
 {
 public:
 
     Layer() = default;
+    // `level` is the FidoCadJ layer index (0-15); `isMaster` marks the layer
+    // new primitives are created on. Layers start visible and unlocked.
     Layer(QString name, QColor color = Utils::instance().randColor(),
           bool isMaster = false, int level = 0)
     {
@@ -40,9 +48,15 @@ public:
         m_master = isMaster;
     }
     // GET
+    // The color every primitive on this layer is drawn with.
     inline QColor color() const { return m_color; }
+    // User-visible layer name (shown in the layer combobox/manager).
     inline QString name() const { return m_name; }
+    // Whether primitives on this layer are drawn at all - Sheet resyncs each
+    // primitive's QGraphicsItem visibility from this on layerAppearanceChanged.
     inline bool isVisible() const { return m_visible; }
+    // Whether this is the active drawing layer - the one new primitives are
+    // assigned to (GraphicsPrimitive's constructor asks LayerList::getMaster()).
     inline bool isMaster() const { return m_master; }
     // Whether primitives on this layer can be selected/edited - matches the
     // reference FidoCadJ editor's LayerDesc.isLocked() (persisted as "FJC K"
@@ -50,6 +64,10 @@ public:
     inline bool isLocked() const { return m_locked; }
 
     // SET
+    // Plain field writes - none of these notify anyone. Callers that change
+    // a layer the UI can see must go through the LayerList slots (or call
+    // LayerList::update()/notifyAppearanceChanged() afterwards) so the
+    // widgets and sheets resync.
     inline void setColor(QColor color) { this->m_color = color; }
     inline void setVisible(bool visible) { this->m_visible = visible; }
     inline void setName(QString name) { this->m_name = name; }

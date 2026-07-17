@@ -51,6 +51,7 @@ public:
     // caller re-anchors before serializing). Caller owns them.
     QList<GraphicsPrimitive *> buildPrimitives() const;
 
+    // The user-entered display name and category for the generated macro.
     QString macroName() const;
     QString category() const;
     // The chosen (or newly typed) user library's display name and its
@@ -60,7 +61,11 @@ public:
     QString libraryFilename() const;
 
 private:
+    // Rebuilds the live preview from the current parameters (renders
+    // buildPrimitives() into the preview widget).
     void refreshPreview();
+    // Enables/relabels the parameter fields per the chosen package type
+    // (e.g. row spacing is meaningless for a single-row SIP).
     void syncTypeDependentFields();
     // Handles the library combo's trailing "New library..." sentinel:
     // prompts for a name and inserts it as a real entry (reverting to the

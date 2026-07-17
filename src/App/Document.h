@@ -64,6 +64,7 @@ public:
     Sheet *sheet() const { return m_sheets.at(m_activeSheet); }
     const QList<Sheet *> &sheets() const { return m_sheets; }
     int activeSheetIndex() const { return m_activeSheet; }
+    // Switches which sheet sheet() returns (bounds-checked no-op otherwise).
     void setActiveSheetIndex(int index);
     // Appends a fresh empty sheet (future multi-page support).
     Sheet *addSheet();
@@ -81,7 +82,12 @@ public:
     bool isClean() const;
 
     // --- Per-document layer definitions (see the class comment) ----------
+    // Snapshots the global LayerList's current definitions into this
+    // document (called on it when it stops being the active tab).
     void captureLayerState();
+    // Writes this document's snapshot back onto the same global Layer
+    // objects (growing the roster if needed, never shrinking it) and
+    // broadcasts the change - called on the newly activated tab.
     void applyLayerState();
 
     // Owned by this document (QObject children), created and wired by

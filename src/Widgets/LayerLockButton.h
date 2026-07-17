@@ -37,14 +37,18 @@ class LayerLockButton : public QLabel
     Q_OBJECT
 
 public:
+    // `layer` is borrowed (owned by LayerList) and must outlive this widget.
     explicit LayerLockButton(Layer *layer, QWidget *parent = nullptr);
+    // Swaps the padlock pixmap to match `locked` (no LayerList side effects).
     void setStatus(bool locked);
     bool getStatus() { return layerIsLocked; }
 
 signals:
+    // The user toggled the lock (fired after the LayerList was updated).
     void statusChanged(bool isLocked);
 
 protected:
+    // Left click toggles the layer's lock via LayerList::setLocked().
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
 

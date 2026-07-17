@@ -27,13 +27,20 @@
 #include "Layer.h"
 #include "LayerList.h"
 
+// A ColorPicker bound to one Layer: shows the layer's color and, when a new
+// one is picked, writes it back to the Layer and broadcasts the change
+// through LayerList::update() so every layer widget and the canvas refresh.
+// One per row of the layer manager list (see LayerListWidgetItem).
 class LayerColorPicker : public ColorPicker
 {
     Q_OBJECT
 public:
+    // `layer` is borrowed (owned by LayerList) and must outlive this widget -
+    // guaranteed by the list rebuilding itself on every layer removal.
     LayerColorPicker(Layer *layer, QWidget *parent = nullptr);
 
 private slots:
+    // Applies the picked color to the layer and fires LayerList::update().
     void layerColorChanged(QColor color);
 
 private:

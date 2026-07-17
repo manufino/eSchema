@@ -40,6 +40,8 @@ public slots:
     void setMacroKey(const QString &key);
 
 protected:
+    // Renders the macro's expanded body (LibraryManager::expandedBody())
+    // fitted and centered in the frame, or nothing for an empty key.
     void paintEvent(QPaintEvent *event) override;
 
 private:

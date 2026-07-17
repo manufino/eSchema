@@ -30,6 +30,10 @@ class QWidget;
 class ThemeManager
 {
 public:
+    // Reads the configured theme and applies it process-wide: loads the QSS
+    // file into qApp, sets the matching QPalette, and re-tints every
+    // registered QAction/QAbstractButton icon for light/dark surfaces.
+    // Called at startup and again whenever DialogOptions changes the theme.
     static void apply();
 
     // True while the active built-in theme uses dark surfaces (Dark, Nord,

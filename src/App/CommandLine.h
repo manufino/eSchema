@@ -62,7 +62,10 @@ public:
     QString wantedLanguage() const { return m_language; }
 
 private:
+    // Prints the -h usage text (mirroring FidoCadJ's own) to stdout.
     void printHelp() const;
+    // Runs the -c export of the already-loaded sheet through the shared
+    // GraphicExporter; returns the process exit code.
     int doConvert(Sheet *sheet);
 
     bool m_headless = false;

@@ -59,6 +59,7 @@ public:
     QPointF corner() const;
 
 private slots:
+    // Opens the image file picker and loads the chosen file into the fields.
     void browseForImage();
     // Bidirectional with updateHeightFromWidth(): whichever field the user
     // actually edited recomputes the other, with the image's own aspect
@@ -66,9 +67,12 @@ private slots:
     // ever directly editable).
     void updateSizeFromResolution();
     void updateHeightFromWidth();
+    // Flags the removal (imageRemoved()) and accepts the dialog.
     void removeImage();
 
 private:
+    // Reads/encodes the file into m_mimeSubtype/m_base64Data/m_image and
+    // refreshes the size fields.
     void loadImageFile(const QString &path);
     void updateHeightLabel();
 

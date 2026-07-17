@@ -24,9 +24,13 @@
 #include <QPainter>
 #include <QRect>
 
+// Paints one row of LayerComboBox's popup: visibility eye, lock, color
+// swatch and layer name, laid out by the shared rect helpers below.
 class LayerItemDelegate : public QStyledItemDelegate {
 public:
     LayerItemDelegate(QObject* parent = nullptr);
+    // Draws the eye/lock (per the row's Layer state), the color swatch and
+    // the name; dims the row when the layer is hidden.
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 

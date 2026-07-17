@@ -49,8 +49,14 @@ inline QString unableToReadFile(const QString &path)
 
 } // namespace SharedTexts
 
+// Small grab-bag of process-wide helpers with no better home: the grid
+// rendering style enum, random layer colors, and the one shared
+// snap-to-grid rule. Singleton so SheetView, GraphicsPrimitive and the
+// dialogs all apply identical behavior.
 class Utils {
 public:
+    // How SheetView::drawBackground() renders the grid (persisted as the
+    // "grid_type" setting, chosen in Options > Drawing).
     typedef enum {
         LinesAndDots,
         Dots,
@@ -63,6 +69,8 @@ public:
         return instance;
     }
 
+    // A fully random opaque color - the default for newly created layers
+    // when the caller doesn't pick one (see Layer's constructor).
     QColor randColor()
     {
         int red = QRandomGenerator::global()->bounded(256);

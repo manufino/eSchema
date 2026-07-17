@@ -41,6 +41,8 @@ public:
     explicit DialogPrintOptions(QWidget *parent = nullptr);
     ~DialogPrintOptions();
 
+    // Mirror the print horizontally (toner transfer), force all-black, or
+    // rotate the page to landscape - each maps 1:1 to a checkbox.
     bool mirror() const;
     bool blackWhite() const;
     bool landscape() const;
@@ -57,9 +59,11 @@ public:
     // Non-null only when "print only this layer" is checked.
     Layer *singleLayer() const;
 
+    // QDialog::accept() plus persisting the options for next time.
     void accept() override;
 
 private:
+    // Restores the previous session's options from SettingsManager.
     void loadSavedOptions();
 
     Ui::DialogPrintOptions *ui;

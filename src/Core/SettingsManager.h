@@ -27,6 +27,12 @@
 #include <QHash>
 #include <QVariant>
 
+// The application's persistent settings store, wrapping QSettings (the
+// per-user .ini/registry) behind a singleton with an in-memory read cache
+// and a coalesced change signal. Every configurable behavior in the app -
+// grid, snap, colors, theme, autosave, recent files, pending autosave
+// registry - goes through here; DialogOptions writes, everything else
+// listens to settingIsChanged() and re-reads what it cares about.
 class SettingsManager : public QObject
 {
     Q_OBJECT
@@ -34,9 +40,19 @@ class SettingsManager : public QObject
 public:
     static SettingsManager& getInstance();  // Method to get the singleton instance
 
+    // Persists one key (QSettings + cache) and queues a single coalesced
+    // settingIsChanged() emission for the current event-loop turn.
     void saveSetting(const QString& key, const QVariant& value);
+    // Reads one key through the cache; an invalid QVariant means the key has
+    // never been written (callers guard with .isValid() or a qMax clamp).
     QVariant loadSetting(const QString& key) const;
+    // Wipes ALL stored settings and rewrites the shipped defaults - the
+    // Options dialog's "Restore defaults" button.
     void restoreDefaultSettings();
+    // First-launch safety net (called from main): writes the shipped default
+    // for every missing key without touching existing values, so no reader
+    // ever sees an invalid variant (a raw 0 here once meant a divide-by-zero
+    // crash on a pristine install).
     void ensureDefaults();
 
 signals:

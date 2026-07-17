@@ -45,10 +45,18 @@ class GraphicsPrimitive;
 class CreatePrimitiveCommand : public QUndoCommand
 {
 public:
+    // Both pointers are borrowed at this point: `primitive` is already in
+    // `sheet` (placed by PrimitivePlacementController) and the sheet owns it.
     CreatePrimitiveCommand(Sheet *sheet, GraphicsPrimitive *primitive);
+    // Deletes the primitive only when this command still owns it, i.e. it was
+    // undone and never redone before the stack dropped the command.
     ~CreatePrimitiveCommand() override;
 
+    // Detaches the primitive from the sheet via Sheet::takePrimitive() (no
+    // deletion) and takes ownership of it.
     void undo() override;
+    // Puts the primitive back with Sheet::addPrimitive() and releases
+    // ownership; the automatic call on push() is a no-op (already added).
     void redo() override;
 
 private:

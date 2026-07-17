@@ -36,9 +36,15 @@ class GraphicsPrimitive;
 class MirrorPrimitiveCommand : public QUndoCommand
 {
 public:
+    // `axis` is the reflection axis orientation and `pivot` the scene point
+    // it passes through; the primitive is borrowed (owned by its Sheet).
     MirrorPrimitiveCommand(GraphicsPrimitive *primitive, Qt::Orientation axis, const QPointF &pivot);
 
+    // Mirrors again around the same axis/pivot - reflection is its own
+    // inverse, so this restores the original state.
     void undo() override;
+    // Applies GraphicsPrimitive::mirror(); this is the only place the mirror
+    // actually happens (nothing was applied before the push).
     void redo() override;
 
 private:

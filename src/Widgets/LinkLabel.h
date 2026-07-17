@@ -25,6 +25,9 @@
 #include <QUrl>
 #include <QMouseEvent>
 
+// A QLabel rendered as a hyperlink that opens its URL in the system browser
+// when clicked anywhere on the label (not just on the anchor text). Used by
+// the About dialog and the update-available notice.
 class LinkLabel : public QLabel {
     Q_OBJECT
 
@@ -34,15 +37,18 @@ public:
         setCursor(Qt::PointingHandCursor);
     }
 
+    // Shows `text` as the clickable anchor for `url`.
     void setLink(QString text, QUrl url) {
         url_ = url;
         setText(QString("<a href=\"%1\">%2</a>").arg(url.toString(), text));
     }
 
 signals:
+    // The label was clicked and the URL handed to QDesktopServices.
     void linkActivated(const QUrl& url);
 
 protected:
+    // Any left click on the label counts as following the link.
     void mousePressEvent(QMouseEvent* event) override {
         if (event->button() == Qt::LeftButton) {
             QDesktopServices::openUrl(url_);

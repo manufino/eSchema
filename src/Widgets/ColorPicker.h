@@ -24,6 +24,10 @@
 #include <QColorDialog>
 #include <QMouseEvent>
 
+// A clickable color swatch: a QLabel filled with the current color that
+// opens a QColorDialog on left click and announces the chosen color via
+// colorChanged(). Used directly in the Options dialog's color rows (as a
+// promoted widget in the .ui files) and subclassed by LayerColorPicker.
 class ColorPicker : public QLabel
 {
     Q_OBJECT
@@ -31,13 +35,18 @@ class ColorPicker : public QLabel
 public:
     ColorPicker(QWidget *parent = nullptr);
 
+    // The currently displayed color.
     QColor getColor() { return m_color; }
+    // Updates the swatch (background fill) - does NOT emit colorChanged(),
+    // so callers can initialize it without triggering their own handler.
     void setColor(QColor color);
 
 signals:
+    // A new color was picked in the dialog (never fired on a cancel).
     void colorChanged(QColor color);
 
 protected:
+    // Left click opens the QColorDialog preloaded with the current color.
     void mousePressEvent(QMouseEvent *event) override;
 
 private:

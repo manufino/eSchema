@@ -43,10 +43,17 @@ public:
     QSize minimumSizeHint() const override { return sizeHint(); }
 
 signals:
+    // The X was clicked - MainWindow closes the document (or just the dock,
+    // for the non-document panels).
     void closeRequested();
 
 protected:
+    // Rounded tab body from the live palette, the elided dock title, and
+    // the X (grey normally, white on a red pill while hovered).
     void paintEvent(QPaintEvent *event) override;
+    // The three mouse overrides only handle the X (press/release inside
+    // closeRect() emits closeRequested(); moves track hover) and ignore
+    // everything else so the dock's native drag still works.
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -56,6 +63,7 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
+    // The X glyph's hit/paint rectangle, centered in the tab's right end.
     QRect closeRect() const;
 
     QDockWidget *m_dock;

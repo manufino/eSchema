@@ -26,6 +26,11 @@
 
 #include "SettingsManager.h"
 
+// The main window's status bar: live cursor coordinates (grid-rounded, in
+// drawing units and/or millimeters per the "units_display" setting), the
+// zoom percentage, and the primitive/macro counters. Purely passive - every
+// readout is fed by the active document's SheetView/Sheet through the slots
+// below, so switching documents just means reconnecting the signals.
 class StatusBar : public QStatusBar
 {
     Q_OBJECT
@@ -33,17 +38,22 @@ public:
     StatusBar(QWidget *parent = nullptr);
 
 private:
+    // Reads grid step, mm conversion and units preference from settings.
     void loadSettings();
 
 public slots:
+    // Updates the coordinate readout - connected to SheetView::mouseMoved.
     void sceneMousePos(QPointF point);
+    // Updates the zoom readout - connected to SheetView::zoomScaleIsChanged.
     void zoomLevel(unsigned int level);
+    // Re-reads the settings so unit/grid changes apply live.
     void settingChanged();
     // totalPrimitives includes macros - macroCount is the subset of those
     // that are PartLib (MC) instances, shown separately.
     void primitiveCounts(int totalPrimitives, int macroCount);
 
 signals:
+    // Forwarded zoom-level change (kept for symmetry with zoomLevel()).
     void zoomChanged(unsigned int level);
 
 private:

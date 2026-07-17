@@ -54,10 +54,16 @@ public:
     ~DialogShortcuts();
 
 private:
+    // Hides tree rows not matching `needle` (command name or shortcut text).
     void filterTree(const QString &needle);
+    // Loads the selected command's shortcut into the key-capture field.
     void syncEditorToSelection();
+    // Applies the captured sequence to the selected command, offering to
+    // steal it from another command already using it.
     void assignCurrent();
+    // Removes the selected command's shortcut entirely.
     void clearCurrent();
+    // Puts every command back to its shipped default shortcut.
     void restoreAllDefaults();
     // The catalog row backing `item` - -1 for category rows.
     int commandIndexOf(QTreeWidgetItem *item) const;

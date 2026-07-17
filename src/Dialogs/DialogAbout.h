@@ -26,6 +26,9 @@ namespace Ui {
 class DialogAbout;
 }
 
+// The Information > About box: application name/version (filled from the
+// APP_VERSION define), license notice and project links (via LinkLabel).
+// Purely informative - no state, no interactions with the rest of the app.
 class DialogAbout : public QDialog
 {
     Q_OBJECT

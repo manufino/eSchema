@@ -30,9 +30,13 @@ class GraphicsPrimitive;
 class InsertNodeCommand : public QUndoCommand
 {
 public:
+    // `index` is the control-point slot the new vertex is inserted at and
+    // `scenePos` its position (both computed by MainWindow from the click).
     InsertNodeCommand(GraphicsPrimitive *primitive, int index, const QPointF &scenePos);
 
+    // Removes the vertex again via GraphicsPrimitive::removeControlPoint().
     void undo() override;
+    // Inserts the vertex via GraphicsPrimitive::insertControlPoint().
     void redo() override;
 
 private:

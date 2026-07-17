@@ -27,19 +27,26 @@
 #include "Layer.h"
 #include "LayerList.h"
 
+// The clickable visibility "eye" for one Layer (layer manager rows): shows
+// the open/closed eye per Layer::isVisible() and toggles it through
+// LayerList::setVisible() on click - which refuses to hide the master layer.
 class LayerVisibilityButton : public QLabel
 {
     Q_OBJECT
 
 public:
+    // `layer` is borrowed (owned by LayerList) and must outlive this widget.
     explicit LayerVisibilityButton(Layer * layer, QWidget *parent = nullptr);
+    // Swaps the eye pixmap to match `status` (no LayerList side effects).
     void setStatus(bool status);
     bool getStatus() {return layerIsVisible;}
 
 signals:
+    // The user toggled the eye (fired after the LayerList was updated).
     void statusChanged(bool isVisible);
 
 protected:
+    // Left click toggles the layer's visibility via LayerList::setVisible().
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
 

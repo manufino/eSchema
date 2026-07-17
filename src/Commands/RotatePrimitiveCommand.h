@@ -33,9 +33,15 @@ class GraphicsPrimitive;
 class RotatePrimitiveCommand : public QUndoCommand
 {
 public:
+    // `pivot` is the scene point the 90 degree turn revolves around; the
+    // primitive is borrowed (owned by its Sheet).
     RotatePrimitiveCommand(GraphicsPrimitive *primitive, const QPointF &pivot);
 
+    // Applies rotate90() three more times (270 degrees), completing the full
+    // turn back to the original state.
     void undo() override;
+    // Applies one GraphicsPrimitive::rotate90() around the pivot; this is the
+    // only place the rotation actually happens.
     void redo() override;
 
 private:

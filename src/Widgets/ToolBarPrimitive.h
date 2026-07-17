@@ -22,19 +22,29 @@
 
 #include <QToolBar>
 
+// The drawing-tools toolbar: enforces radio-button behavior across its
+// checkable tool actions (exactly one checked at a time, and re-clicking
+// the checked one keeps it checked instead of leaving no tool at all).
+// PrimitivePlacementController reads GetCurrent() to know the active tool
+// and listens to actionTriggered() for tool switches.
 class ToolBarPrimitive : public QToolBar
 {
 
 public:
     ToolBarPrimitive(QWidget *parent = nullptr);
 
+    // The currently checked tool action (never nullptr once the toolbar is
+    // populated - Select is checked by default).
     QAction *GetCurrent() { return lastChecked; }
 
 private slots:
+    // Keeps the radio invariant on every click: unchecks the others and
+    // remembers the newly checked action.
     void handleActionTriggered(QAction *action);
 
 
 private:
+    // Unchecks every checkable action except `selectedAction`.
     void uncheckOtherActions(QAction *selectedAction);
 
     QAction *lastChecked = nullptr;

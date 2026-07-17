@@ -44,6 +44,8 @@ public:
     void setStatusText(const QString &text);
 
 signals:
+    // Jump to the next/previous primitive matching `text` - handled by
+    // MainWindow, which selects and frames the match.
     void findNext(const QString &text);
     void findPrevious(const QString &text);
 

@@ -34,7 +34,10 @@ public:
     // once by QUndoStack::push() right after construction) removes it.
     RemoveNodeCommand(GraphicsPrimitive *primitive, int index);
 
+    // Re-inserts the removed vertex at its captured index/position via
+    // GraphicsPrimitive::insertControlPoint().
     void undo() override;
+    // Removes the vertex via GraphicsPrimitive::removeControlPoint().
     void redo() override;
 
 private:

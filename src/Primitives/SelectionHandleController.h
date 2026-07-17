@@ -34,9 +34,13 @@ class SelectionHandleController : public QObject
 {
     Q_OBJECT
 public:
+    // Watches `sheet`'s selectionChanged()/changed() signals from now on;
+    // one controller per document (created in MainWindow::createDocument()).
     explicit SelectionHandleController(Sheet *sheet, QObject *parent = nullptr);
 
 private slots:
+    // Rebuilds the handle set: one PrimitiveHandleItem per point of the
+    // newly selected primitive (or none for empty/multi selections).
     void onSelectionChanged();
     // Re-syncs handle positions from their primitive's live control points.
     // Needed because dragging the primitive body itself (not a handle) also
@@ -45,6 +49,7 @@ private slots:
     void refreshHandlePositions();
 
 private:
+    // Removes and deletes every handle item currently on the scene.
     void clearHandles();
 
     Sheet *m_sheet;

@@ -65,7 +65,11 @@ public:
     // Set it before calling loadLibraries(); empty means "bundled only".
     void setExternalLibraryDirectory(const QString &dir) { m_externalLibraryDir = dir; }
 
+    // Every loaded library in load order - the library panel's tree is built
+    // straight from this.
     const QList<MacroLibrary> &libraries() const { return m_libraries; }
+    // Looks up one macro by its "prefix.name" key (see MacroDescriptor::key),
+    // or nullptr for an unknown key - how "MC" lines resolve their symbol.
     const MacroDescriptor *macro(const QString &key) const;
 
     // The macro's body expanded into primitives, still in the library's own
@@ -154,6 +158,8 @@ public:
     bool deleteMacro(const QString &key, QString *errorMessage = nullptr);
 
 signals:
+    // Fired at the end of every loadLibraries() - the library panel rebuilds
+    // its tree, caches (expanded bodies, icons) have already been dropped.
     void librariesReloaded();
 
 private:
@@ -162,7 +168,11 @@ private:
     LibraryManager(const LibraryManager &) = delete;
     LibraryManager &operator=(const LibraryManager &) = delete;
 
+    // Parses one ".fcl" file into a MacroLibrary appended to m_libraries and
+    // indexes its macros into m_macrosByKey.
     void loadLibraryFile(const QString &filePath);
+    // The lazily created hidden Sheet handed to FidoCadReader when expanding
+    // macro bodies (see m_parseContext below).
     Sheet *parseContext();
     // Non-const pointer into m_libraries for the given filename, or nullptr -
     // shared by every mutator above.

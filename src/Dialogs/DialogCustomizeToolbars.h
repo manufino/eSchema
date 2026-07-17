@@ -61,10 +61,16 @@ public:
     QHash<QToolBar *, QStringList> layouts() const;
 
 private:
+    // Switches the editor onto toolbar `index` (storing the previous one's
+    // edits first).
     void loadToolbar(int index);
     void storeCurrentList();       // list widget -> m_toolbars[m_currentIndex]
+    // Refills both list widgets from the current toolbar's layout (right)
+    // and the catalog commands not already in it (left).
     void rebuildLists();
+    // A row for `objectName`: the action's icon+text, or the separator entry.
     QListWidgetItem *makeCommandItem(const QString &objectName) const;
+    // Moves the selected "toolbar commands" row up/down by `delta`.
     void moveCurrentRow(int delta);
 
     Ui::DialogCustomizeToolbars *ui;

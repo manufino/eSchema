@@ -54,6 +54,10 @@ class PrimitivePlacementController : public QObject
 {
     Q_OBJECT
 public:
+    // One controller per document, wired by MainWindow::createDocument():
+    // `view`/`sheet` are that document's own, while `toolBar`, `layerCombo`
+    // and `fillCheckBox` are the shared window-level widgets supplying the
+    // active tool and the defaults for newly created primitives.
     PrimitivePlacementController(SheetView *view, Sheet *sheet, ToolBarPrimitive *toolBar,
                                  LayerComboBox *layerCombo, QCheckBox *fillCheckBox,
                                  QObject *parent = nullptr);
@@ -117,9 +121,15 @@ private:
                       Text, Connection, PcbTrack, Pad, Macro, Image, Measure, Dimension,
                       DimensionAngular, DimensionRadial };
 
+    // The Tool matching the toolbar's currently checked action (or Macro
+    // when one is armed).
     Tool currentTool() const;
     int requiredPointCount(Tool tool) const; // -1 means variable vertex count
+    // First click of a tool: creates the primitive (createPrimitiveForTool),
+    // applies defaults, adds it to the sheet as the live preview.
     void startPlacement(const QPointF &scenePos);
+    // Last click of a tool: pushes the finished primitive onto the undo
+    // stack (CreatePrimitiveCommand) and resets/chains per the tool.
     void finishPlacement();
     // Removes the in-progress primitive (if any) from the sheet and resets
     // the point-count/active-primitive state, without touching the toolbar
@@ -128,6 +138,8 @@ private:
     // toolbar's checked state at that point is exactly what the user just
     // picked).
     void discardActivePrimitive();
+    // True for the tools whose vertex count is open-ended (Polygon, Curve) -
+    // they end on double-click/Enter rather than at a fixed click count.
     bool isVariableVertexTool(Tool tool) const;
     // The point placement should actually use for `scenePos` while Shift is
     // held: for line-like segments (Line/PCB track chains, polygon/curve
@@ -152,6 +164,8 @@ private:
     // chained Line/PCB-track segment) - so layer/fill defaults are applied
     // identically either way.
     GraphicsPrimitive *createPrimitiveForTool(Tool tool) const;
+    // Stamps the new primitive with the shared widgets' current defaults:
+    // the layer combo's layer, the fill checkbox, the pen-style combo.
     void applyDefaults(GraphicsPrimitive *primitive) const;
     // Begins the next chained segment right where the previous one ended -
     // no click consumed, just a live "point 1" preview like any other
@@ -209,6 +223,7 @@ private:
     // Measure tool: m_activePrimitive is a dashed rubber line that never
     // reaches the undo stack - the second click removes it again and leaves
     // only the status-bar readout (see measureUpdated()).
+    // measureText() formats the from->to distance/angle for that readout.
     QString measureText(const QPointF &from, const QPointF &to) const;
     QPointF m_measureStart;
 

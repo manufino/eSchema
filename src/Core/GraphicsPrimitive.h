@@ -35,12 +35,25 @@
 #include "Layer.h"
 
 
+// Abstract base of every drawable element on a Sheet - one subclass per
+// FidoCadJ primitive type (PrimitiveLine, PrimitiveRectangle, ...). It
+// centralizes everything the concrete shapes share: the assigned Layer and
+// the visibility/selectability that follows from it, dash style and arrow
+// attributes with FidoCadJ-exact rendering, the name/value labels (position,
+// font, painting, hit area), the control-point interface the resize handles
+// and the FCD reader/writer both drive, and the manual body-drag that pushes
+// MovePrimitiveCommands onto the sheet's undo stack. Subclasses implement
+// geometry only: boundingRect/shape/paint, the control points, and their own
+// FCD tokens.
 class GraphicsPrimitive : public QObject, public QGraphicsItem
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 
 public:
+    // Which concrete primitive this is - fixed at construction, mapping 1:1
+    // to the FCD instruction codes (LI, RV/RP, TY, PV/PP, EV/EP, BE, CV/CP,
+    // PA, MC, SA, PL, IM in enum order).
     typedef enum {
         Line,
         Rectangle,
@@ -56,9 +69,15 @@ public:
         Image
     } PrimitiveTypes;
 
+    // Sets up the shared state: assigns the current master layer from the
+    // LayerList singleton, makes the item selectable, and defaults the
+    // label/arrow/dash attributes to the FidoCadJ compiled-in defaults.
     explicit GraphicsPrimitive(PrimitiveTypes primitiveType, QGraphicsItem *parent = nullptr);
     ~GraphicsPrimitive();
 
+    // Simple state accessors. name()/value() are the two FidoCadJ-style
+    // labels every primitive can carry (drawn by paintLabels(), saved as TY
+    // follow-up lines); layer() is the Layer this primitive draws with.
     PrimitiveTypes getPrimitiveType() const { return primitiveType; }
     QString name() const { return objName; }
     QString value() const { return objValue; }
@@ -328,10 +347,16 @@ protected:
     QPainterPath withLabelArea(const QPainterPath &path) const;
 
 signals:
+    // Fired by subclasses whose dialogs/panels edited them in place (e.g.
+    // PrimitiveText's edit dialog) so the properties panel can refresh.
     void propertiesChanged(GraphicsPrimitive *primitive);
 
 public slots:
 
+    // Property setters wired to the Properties panel's controls; each
+    // repaints. setVisible() drives the primitive-owned flag isVisible()
+    // reads (used by the CLI's per-layer export split), NOT the
+    // QGraphicsItem visibility - see isOnCanvas() above.
     void penStyleIsChanged(Qt::PenStyle penStyle) { this->penStyle = penStyle; update(); }
     void setIsFilled(bool isFilled) { filled = isFilled; update(); }
     void setNameVisible(bool visible) { showName = visible; }

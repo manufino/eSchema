@@ -31,9 +31,14 @@
 #include "LayerColorPicker.h"
 
 
+// One row of the layer manager's LayerListView: builds the composite row
+// widget (eye, lock, color swatch, editable name, master bookmark) for a
+// Layer and stores the Layer* in the item's data so
+// LayerListView::getSelectedLayer() can recover it.
 class LayerListWidgetItem : public QListWidgetItem {
 public:
     LayerListWidgetItem(Layer *layer, QListWidget *parent = nullptr);
+    // The composite row widget, to hand to QListWidget::setItemWidget().
     QWidget *getWidget() { return widget; }
 
 private:

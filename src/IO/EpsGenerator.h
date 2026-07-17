@@ -44,14 +44,19 @@ public:
     EpsGenerator();
     ~EpsGenerator() override;
 
+    // Output path - the file is created when a QPainter begins on this
+    // device and finalized when it ends. Set all three before painting.
     void setFileName(const QString &fileName);
     // The EPS BoundingBox, in points.
     void setSize(const QSize &size);
+    // Written as the EPS "%%Title:" DSC comment.
     void setTitle(const QString &title);
 
+    // The custom EpsPaintEngine translating QPainter calls to PostScript.
     QPaintEngine *paintEngine() const override;
 
 protected:
+    // Reports size/dpi to QPainter using the 72-dpi points convention.
     int metric(PaintDeviceMetric metric) const override;
 
 private:

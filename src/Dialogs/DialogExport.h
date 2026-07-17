@@ -54,12 +54,16 @@ public:
     void accept() override;
 
 private:
+    // The format combo's current value as GraphicExporter's format string.
     QString selectedFormat() const;
     // Enables/disables the option widgets by what the chosen format supports:
     // antialiasing is bitmap-only, sizing is meaningless for DXF (DxfWriter
     // writes logical coordinates), split-layers is unsupported for DXF.
     void updateWidgetStates();
+    // Recomputes the "resulting size: W x H px" label from the drawing size
+    // and the current sizing controls.
     void updateResultLabel();
+    // Restores the previous session's options from SettingsManager.
     void loadSavedOptions();
 
     Ui::DialogExport *ui;

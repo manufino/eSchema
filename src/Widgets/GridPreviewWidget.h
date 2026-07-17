@@ -37,6 +37,8 @@ public:
     // Same 0/1/2 encoding as the Grid page's type combo and the "grid_type"
     // setting: 0 = lines+dots, 1 = dots, 2 = lines.
     void setGridType(int type) { m_type = type; update(); }
+    // The remaining setters mirror the Grid page's controls one-to-one;
+    // each one just stores the value and repaints the swatch.
     void setStep(int step) { m_step = qMax(1, step); update(); }
     void setMarkStep(int markStep) { m_markStep = qMax(1, markStep); update(); }
     void setDotColor(const QColor &color) { m_dotColor = color; update(); }

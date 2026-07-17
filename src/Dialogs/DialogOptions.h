@@ -44,10 +44,17 @@ public:
     ~DialogOptions();
 
 protected:
+    // Fills every control from SettingsManager's current values.
     void loadSettings();
+    // Writes every control back to SettingsManager (one coalesced
+    // settingIsChanged() emission covers the whole batch) and warns about a
+    // restart when the language or theme changed.
     void saveSettings();
 
 public slots:
+    // OK = saveSettings() + close; Cancel just closes; Apply saves and
+    // stays open; Restore resets the current page to the built-in defaults
+    // (without saving).
     void accept();
     void cancel();
     void apply();

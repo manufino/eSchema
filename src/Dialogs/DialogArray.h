@@ -51,9 +51,11 @@ public:
     explicit DialogArray(QWidget *parent = nullptr);
     ~DialogArray();
 
+    // Which of the two layouts the user chose.
     Mode mode() const;
 
-    // Grid layout.
+    // Grid layout: copies arranged in columns() x rows(), stepped by
+    // spacingX()/spacingY() scene units.
     int columns() const;
     int rows() const;
     qreal spacingX() const;
@@ -69,6 +71,7 @@ public:
     void setSuggestedCenter(const QPointF &center);
 
 private:
+    // Shows the grid or circular parameter group per the mode radio.
     void syncModeVisibility();
 
     Ui::DialogArray *ui;

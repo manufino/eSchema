@@ -29,6 +29,9 @@ namespace Ui {
 class LayerToolBarWidget;
 }
 
+// The main toolbar's layer chooser: a thin .ui wrapper around LayerComboBox
+// that keeps the combo synced with the global LayerList and makes the
+// selected layer the master (the one new primitives are drawn on).
 class LayerToolBarWidget : public QWidget
 {
     Q_OBJECT
@@ -38,10 +41,16 @@ public:
     ~LayerToolBarWidget();
 
 public slots:
+    // Moves the combo's selection onto `layer` without changing any state -
+    // used when the master changes from elsewhere (e.g. the layer manager).
     void setMaster(Layer *layer);
+    // Repopulates the combo from `layerList` - connected to
+    // LayerList::layerListChanged.
     void setList(QList<Layer*> *layerList);
 
 private slots:
+    // The user picked a row: flags that layer as master via
+    // LayerList::setMaster().
     void selectedChanged(int index);
 
 private:

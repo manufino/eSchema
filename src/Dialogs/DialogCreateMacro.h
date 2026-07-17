@@ -42,6 +42,7 @@ public:
     explicit DialogCreateMacro(QWidget *parent = nullptr);
     ~DialogCreateMacro();
 
+    // The user-entered display name and category for the new macro.
     QString macroName() const;
     QString category() const;
     // The chosen library's display name - either an existing user library's,
