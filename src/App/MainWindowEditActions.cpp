@@ -151,6 +151,15 @@ public:
         m_hoverCallback = std::move(callback);
     }
 
+    // Primitives the snapped pick must ignore - callers whose live preview
+    // is made of real primitives on the sheet (Move/Copy with base point)
+    // pass them here, or the preview's own vertices would become snap and
+    // tracking targets that chase the cursor around.
+    void setExcluded(const QList<const GraphicsPrimitive *> &excluded)
+    {
+        m_excluded = excluded;
+    }
+
     bool run(QPointF *picked)
     {
         m_view->viewport()->installEventFilter(this);
@@ -176,7 +185,7 @@ protected:
                 if (mouse->button() == Qt::LeftButton) {
                     const QPointF scenePos =
                             m_view->mapToScene(mouse->position().toPoint());
-                    m_point = m_snap ? m_sheet->snapPosition(scenePos) : scenePos;
+                    m_point = m_snap ? m_sheet->snapPosition(scenePos, m_excluded) : scenePos;
                     m_accepted = true;
                     m_loop.quit();
                     return true; // the click must not also select/draw anything
@@ -193,7 +202,7 @@ protected:
                 const QPointF scenePos = m_view->mapToScene(
                         static_cast<QMouseEvent *>(event)->position().toPoint());
                 if (m_snap)
-                    m_sheet->snapPosition(scenePos);
+                    m_sheet->snapPosition(scenePos, m_excluded);
                 if (m_hoverCallback)
                     m_hoverCallback(scenePos);
                 return true;
@@ -211,6 +220,7 @@ private:
     SheetView *m_view;
     Sheet *m_sheet;
     bool m_snap;
+    QList<const GraphicsPrimitive *> m_excluded;
     std::function<void(const QPointF &)> m_hoverCallback;
     QEventLoop m_loop;
     QPointF m_point;
@@ -1724,12 +1734,18 @@ void MainWindow::moveOrCopyWithBasePoint(bool copyMode)
     // even a large selection previews cheaply. Never on the undo stack.
     QList<GraphicsPrimitive *> preview;
     QList<QVector<QPointF>> previewBase;
+    // The preview clones are real primitives on the sheet, so they must be
+    // excluded from the destination pick's snapping - their vertices track
+    // the cursor and would otherwise be captured (and snap-tracking
+    // acquired) instead of the actual drawing's points.
+    QList<const GraphicsPrimitive *> previewExcluded;
     for (GraphicsPrimitive *primitive : selected) {
         if (GraphicsPrimitive *clone = clonePrimitive(primitive, sheetScene)) {
             clone->setOpacity(0.55);
             sheetScene->addPrimitive(clone);
             preview.append(clone);
             previewBase.append(clone->controlPointSnapshot());
+            previewExcluded.append(clone);
         }
     }
     auto clearPreview = [this, &preview]() {
@@ -1742,10 +1758,12 @@ void MainWindow::moveOrCopyWithBasePoint(bool copyMode)
             tr("Specify the destination point (right click or Esc cancels)"), 0);
     QPointF destination;
     ScenePointPicker destinationPicker(ui->graphicsView, sheetScene, true);
-    destinationPicker.setHoverCallback([this, base, &preview, &previewBase](const QPointF &pos) {
+    destinationPicker.setExcluded(previewExcluded);
+    destinationPicker.setHoverCallback([this, base, &preview, &previewBase,
+                                        &previewExcluded](const QPointF &pos) {
         // Preview against the snapped position, so what's shown is exactly
         // where the click would land.
-        const QPointF delta = sheetScene->snapPosition(pos) - base;
+        const QPointF delta = sheetScene->snapPosition(pos, previewExcluded) - base;
         for (int i = 0; i < preview.size(); ++i) {
             QVector<QPointF> moved = previewBase.at(i);
             for (QPointF &point : moved)
