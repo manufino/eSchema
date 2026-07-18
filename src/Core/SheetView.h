@@ -36,7 +36,11 @@
 
 class PrimitivePlacementController;
 
-#define ZOOM_SCALE_MIN 0.3// Scala minima consentita
+// Minimum allowed scale: low enough that even a drawing filling the whole
+// 5000-unit sheet (or a large SVG/DXF import) fits inside a small viewport
+// - fit-to-view and wheel zoom-out share this same floor, so a fitted view
+// is never a level the wheel refuses to return to.
+#define ZOOM_SCALE_MIN 0.1
 #define ZOOM_SCALE_MAX 15.0// Scala massima consentita
 
 // The interactive viewport onto a Sheet: draws the grid/background/tracing
@@ -144,6 +148,9 @@ protected:
     void dropEvent(QDropEvent *event) override;
 
 private:
+    // Pulls a fitInView()-set scale back inside the wheel-zoom limits,
+    // keeping the view centered - shared by the two fit slots below.
+    void clampZoomToLimits();
     // Reads every grid/color/zoom-related setting into the members below.
     void loadSettings();
     // Applies the current zoomLevel to the view transform and emits

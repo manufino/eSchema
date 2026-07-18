@@ -1053,7 +1053,7 @@ void MainWindow::setConnections()
         menu.addAction(tr("Custom zoom..."), this, [this]() {
             bool ok = false;
             const int percent = QInputDialog::getInt(this, tr("Custom zoom"),
-                    tr("Zoom level (%):"), activeView()->zoomPercent(), 2, 100, 1, &ok);
+                    tr("Zoom level (%):"), activeView()->zoomPercent(), 1, 100, 1, &ok);
             if (ok)
                 activeView()->setZoomPercent(percent);
         });
@@ -2507,12 +2507,21 @@ bool MainWindow::openAnyFile(const QString &path)
 // If the just-loaded drawing sticks out of the drawing area, shift it onto
 // the sheet. One rigid translation for everything - primitives, macros,
 // labels - by a whole number of units, so relative geometry and grid
-// alignment are untouched; the view is then refitted so the user actually
-// sees what was recovered. Deliberately not undoable (it's part of loading,
+// alignment are untouched. Deliberately not undoable (it's part of loading,
 // like the parse itself), and it doesn't dirty the undo stack - the file on
 // disk only changes if the user later saves.
+//
+// Whatever the placement, the view is always fitted and centered on the
+// loaded content, so a file never opens off-screen or larger than the
+// viewport.
 void MainWindow::normalizeLoadedDrawingPosition()
 {
+    // Deferred one event-loop turn: a file opening into a freshly created
+    // tab reaches here before the new dock is laid out, and fitInView()
+    // would measure a bogus viewport size.
+    if (SheetView *view = activeView())
+        QTimer::singleShot(0, view, &SheetView::adjustView);
+
     const QRectF bounds = sheetScene->itemsBoundingRect();
     if (bounds.isEmpty())
         return;
@@ -2544,7 +2553,7 @@ void MainWindow::normalizeLoadedDrawingPosition()
     for (GraphicsPrimitive *primitive : sheetScene->primitives())
         primitive->translateControlPoints(delta);
 
-    activeView()->adjustView();
+    // The deferred adjustView() above re-frames the shifted content too.
     ui->statusbar->showMessage(
             tr("The drawing had elements outside the drawing area and was moved onto the sheet"),
             6000);

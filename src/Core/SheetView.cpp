@@ -650,6 +650,7 @@ void SheetView::settingChanged()
 void SheetView::adjustView()
 {
     fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
+    clampZoomToLimits();
     zoomUpdate();
     emit viewTransformChanged();
 }
@@ -667,8 +668,28 @@ void SheetView::adjustViewToSelection()
         first = false;
     }
     fitInView(bounds, Qt::KeepAspectRatio);
+    clampZoomToLimits();
     zoomUpdate();
     emit viewTransformChanged();
+}
+
+void SheetView::clampZoomToLimits()
+{
+    // fitInView() sets whatever scale the content asks for, ignoring the
+    // wheel-zoom limits - pull it back inside them (keeping the view
+    // centered where the fit put it), so a fit never lands on a level the
+    // wheel can't reach or return to.
+    const qreal current = transform().m11();
+    const qreal clamped = qBound(static_cast<qreal>(ZOOM_SCALE_MIN), current,
+                                 static_cast<qreal>(ZOOM_SCALE_MAX));
+    if (qFuzzyCompare(current, clamped))
+        return;
+    const qreal factor = clamped / current;
+    const QPoint center = viewport()->rect().center();
+    const QPointF anchorBefore = mapToScene(center);
+    scale(factor, factor);
+    const QPointF anchorAfter = mapToScene(center);
+    translate(anchorAfter.x() - anchorBefore.x(), anchorAfter.y() - anchorBefore.y());
 }
 
 void SheetView::resizeEvent(QResizeEvent *event)
