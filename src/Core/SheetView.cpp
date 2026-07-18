@@ -623,6 +623,21 @@ void SheetView::zoomUpdate()
 }
 
 
+void SheetView::setZoomPercent(int percent)
+{
+    const qreal target = qBound(ZOOM_SCALE_MIN, percent * ZOOM_SCALE_MAX / 100.0, ZOOM_SCALE_MAX);
+    const qreal factor = target / transform().m11();
+    // Anchored at the viewport center, through the transform by hand - the
+    // same technique (and reason) as wheelEvent()'s cursor anchoring.
+    const QPoint center = viewport()->rect().center();
+    const QPointF anchorBefore = mapToScene(center);
+    scale(factor, factor);
+    const QPointF anchorAfter = mapToScene(center);
+    translate(anchorAfter.x() - anchorBefore.x(), anchorAfter.y() - anchorBefore.y());
+    zoomUpdate();
+    emit viewTransformChanged();
+}
+
 void SheetView::settingChanged()
 {
     loadSettings();

@@ -157,7 +157,16 @@ private:
     // land on round coordinates.
     qreal guidePositionFor(const Sheet::Guide &guide, const QPoint &viewPos) const;
 
+public:
+    // The current zoom level as the percentage the status bar displays
+    // (100% = ZOOM_SCALE_MAX, so the range is 2-100).
+    int zoomPercent() const { return zoomLevel; }
+
 public slots:
+    // Jumps to an exact zoom percentage (same scale convention as
+    // zoomPercent()), anchored at the viewport center - the status bar's
+    // zoom menu drives this. Clamped to the wheel-zoom limits.
+    void setZoomPercent(int percent);
     // Connected to SettingsManager::settingIsChanged - re-reads the settings
     // and repaints, so Options changes show up live.
     void settingChanged();

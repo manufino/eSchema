@@ -26,7 +26,13 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 
     lblPos->setMinimumWidth(350);
 
-    lblZoomLevel->setText(tr("Zoom 7%"));
+    btnZoomLevel->setText(tr("Zoom 7%"));
+    btnZoomLevel->setAutoRaise(true);
+    btnZoomLevel->setCursor(Qt::PointingHandCursor);
+    btnZoomLevel->setToolTip(tr("Set the zoom level"));
+    connect(btnZoomLevel, &QToolButton::clicked, this, [this]() {
+        emit zoomWidgetClicked(btnZoomLevel->mapToGlobal(QPoint(0, btnZoomLevel->height())));
+    });
     lblPrimitiveCount->setText(tr("Primitives 0  Macros 0"));
     lblPrimitiveCount->setMinimumWidth(150);
 
@@ -35,7 +41,7 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 
     loadSettings();
 
-    this->addPermanentWidget(lblZoomLevel);
+    this->addPermanentWidget(btnZoomLevel);
     this->addPermanentWidget(lblPrimitiveCount);
     this->addPermanentWidget(lblPos);
 }
@@ -91,7 +97,7 @@ void StatusBar::sceneMousePos(QPointF point)
 void StatusBar::zoomLevel(unsigned int level)
 {
     QString pos = tr("Zoom %1%").arg(level);
-    lblZoomLevel->setText(pos);
+    btnZoomLevel->setText(pos);
 }
 
 void StatusBar::settingChanged()

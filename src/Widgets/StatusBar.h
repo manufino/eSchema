@@ -22,6 +22,7 @@
 
 #include <QStatusBar>
 #include <QLabel>
+#include <QToolButton>
 #include <QMouseEvent>
 
 #include "SettingsManager.h"
@@ -44,7 +45,8 @@ private:
 public slots:
     // Updates the coordinate readout - connected to SheetView::mouseMoved.
     void sceneMousePos(QPointF point);
-    // Updates the zoom readout - connected to SheetView::zoomScaleIsChanged.
+    // Updates the zoom readout (a clickable button, see zoomWidgetClicked())
+    // - connected to SheetView::zoomScaleIsChanged.
     void zoomLevel(unsigned int level);
     // Re-reads the settings so unit/grid changes apply live.
     void settingChanged();
@@ -55,10 +57,17 @@ public slots:
 signals:
     // Forwarded zoom-level change (kept for symmetry with zoomLevel()).
     void zoomChanged(unsigned int level);
+    // The zoom readout was clicked; `globalPos` is where a popup menu
+    // should open (the button's bottom-left corner - QMenu flips it above
+    // by itself this close to the screen edge). MainWindow builds the menu:
+    // it owns the fit actions and the active document's view.
+    void zoomWidgetClicked(const QPoint &globalPos);
 
 private:
         QLabel *lblPos = new QLabel(this);
-        QLabel *lblZoomLevel = new QLabel(this);
+        // A flat button rather than a label: the zoom readout doubles as
+        // the trigger for the zoom presets menu.
+        QToolButton *btnZoomLevel = new QToolButton(this);
         QLabel *lblPrimitiveCount = new QLabel(this);
         int gridSize;
         double mm_step;

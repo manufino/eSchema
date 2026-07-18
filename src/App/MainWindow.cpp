@@ -63,6 +63,7 @@
 #include "CreatePrimitiveCommand.h"
 #include "DeletePrimitiveCommand.h"
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QDesktopServices>
 #include <QUrl>
 #include <QFileInfo>
@@ -1006,6 +1007,29 @@ void MainWindow::setConnections()
             this, [this]() { activeView()->adjustView(); });
     connect(ui->actionZoomToSelection, &QAction::triggered,
             this, [this]() { activeView()->adjustViewToSelection(); });
+    // Clicking the status bar's zoom readout opens a quick zoom menu:
+    // preset levels, the two fit actions (reused, so icons/shortcuts/
+    // enabled state match the View menu), and an exact custom value.
+    connect(ui->statusbar, &StatusBar::zoomWidgetClicked,
+            this, [this](const QPoint &globalPos) {
+        QMenu menu(this);
+        for (int percent : { 10, 25, 50, 75, 100 }) {
+            menu.addAction(tr("Zoom %1%").arg(percent), this,
+                           [this, percent]() { activeView()->setZoomPercent(percent); });
+        }
+        menu.addSeparator();
+        menu.addAction(ui->actionAdjustView);
+        menu.addAction(ui->actionZoomToSelection);
+        menu.addSeparator();
+        menu.addAction(tr("Custom zoom..."), this, [this]() {
+            bool ok = false;
+            const int percent = QInputDialog::getInt(this, tr("Custom zoom"),
+                    tr("Zoom level (%):"), activeView()->zoomPercent(), 2, 100, 1, &ok);
+            if (ok)
+                activeView()->setZoomPercent(percent);
+        });
+        menu.exec(globalPos);
+    });
     connect(ui->actionLayerManager, &QAction::triggered, this, &MainWindow::clickLayerManagerAction);
     connect(ui->actionAttachImage, &QAction::triggered, this, &MainWindow::clickAttachImageAction);
     connect(ui->actionSymbolWizard, &QAction::triggered, this, &MainWindow::clickSymbolWizardAction);
