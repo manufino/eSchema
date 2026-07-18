@@ -51,6 +51,7 @@
 #include "PrimitiveText.h"
 #include "PrimitiveImage.h"
 #include "PrimitiveMacro.h"
+#include "WelcomeWidget.h"
 #include "PrimitivePad.h"
 #include "PrimitivePcbTrack.h"
 #include "PrimitiveComplexCurve.h"
@@ -268,6 +269,14 @@ MainWindow::MainWindow(QWidget *parent)
     layerToolBarWidget = new LayerToolBarWidget(this);
     ui->toolBarTools->addWidget(layerToolBarWidget); // add the layer combobox to the toolbar
 
+    // Picking any drawing tool puts the active document's welcome card away
+    // BEFORE the first canvas click, so that click draws instead of being
+    // spent dismissing the card.
+    connect(ui->toolBarPrimitive, &QToolBar::actionTriggered, this, [this](QAction *) {
+        if (m_activeDocument && m_activeDocument->welcome)
+            m_activeDocument->welcome->dismiss();
+    });
+
     // Dropping a .fcd/.dxf file anywhere on the window opens/imports it (see
     // dragEnterEvent()/dropEvent()). Each DocumentView's canvas refuses
     // drops itself (see createDocument()): QGraphicsView forwards drag
@@ -470,6 +479,23 @@ Document *MainWindow::createDocument()
     // The view accepts macro drags itself (SheetView's drag handlers) and
     // deliberately ignores everything else, so file drops still bubble up
     // to this window's own dragEnterEvent()/dropEvent().
+
+    // Welcome card over the still-empty drawing ("welcome_enabled" setting,
+    // on by default): recent files, quick tips. It dismisses itself on any
+    // click; here it is also dismissed as soon as the drawing gains content
+    // (drawing, pasting, a file loaded into this document) or a drawing
+    // tool is picked (see the toolbar hook in the constructor).
+    const QVariant welcomeVal = SettingsManager::getInstance().loadSetting("welcome_enabled");
+    if (!welcomeVal.isValid() || welcomeVal.toBool()) {
+        auto *welcome = new WelcomeWidget(viewWidget);
+        document->welcome = welcome;
+        connect(welcome, &WelcomeWidget::openFileRequested,
+                this, [this](const QString &path) { openFile(path); });
+        connect(sheet, &Sheet::primitivesChanged, welcome, [document]() {
+            if (document->welcome && !document->sheet()->primitives().isEmpty())
+                document->welcome->dismiss();
+        });
+    }
 
     document->placement = new PrimitivePlacementController(
                 view, sheet, ui->toolBarPrimitive, ui->cbPropLayer, ui->checkBox, document);
@@ -2500,6 +2526,10 @@ bool MainWindow::openFile(const QString &filePath)
     setCurrentFilePath(filePath);
     clearAutosaveFor(m_activeDocument);
     syncFcdCodeFromSheet(); // setClean() alone doesn't fire indexChanged()
+    // The primitivesChanged hook covers non-empty files; loading an empty
+    // one must still put the welcome card away.
+    if (m_activeDocument && m_activeDocument->welcome)
+        m_activeDocument->welcome->dismiss();
     return true;
 }
 
@@ -2540,6 +2570,10 @@ bool MainWindow::importDxfFile(const QString &filePath)
     setCurrentFilePath(QString());
     clearAutosaveFor(m_activeDocument);
     syncFcdCodeFromSheet(); // setClean() alone doesn't fire indexChanged()
+    // Same as openFile(): an import into a fresh document must put the
+    // welcome card away even when the DXF turned out empty.
+    if (m_activeDocument && m_activeDocument->welcome)
+        m_activeDocument->welcome->dismiss();
 
     if (!warnings.isEmpty()) {
         QMessageBox::information(this, tr("Import from DXF"),

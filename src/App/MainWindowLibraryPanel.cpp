@@ -26,6 +26,7 @@
 #include "ui_MainWindow.h"
 #include "LibraryManager.h"
 #include "ThemeManager.h"
+#include "WelcomeWidget.h"
 #include <QTreeWidget>
 #include <QFont>
 #include <QMenu>
@@ -201,8 +202,13 @@ void MainWindow::clickLibraryMacroItem(QTreeWidgetItem *item)
     const QString key = item->data(0, Qt::UserRole).toString();
     ui->macroPreview->setMacroKey(key);
     ui->lblMacroPreviewName->setText(key.isEmpty() ? QString() : item->text(0));
-    if (!key.isEmpty())
+    if (!key.isEmpty()) {
         placementController->armMacroPlacement(key);
+        // Same reason as the drawing-tool hook in the constructor: the next
+        // canvas click must place the armed macro, not dismiss the card.
+        if (m_activeDocument && m_activeDocument->welcome)
+            m_activeDocument->welcome->dismiss();
+    }
 }
 
 void MainWindow::showLibraryContextMenu(QTreeWidget *tree, const QString &libraryFilename, const QPoint &pos)

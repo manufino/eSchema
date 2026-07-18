@@ -29,6 +29,7 @@ class Sheet;
 class DocumentView;
 class PrimitivePlacementController;
 class SelectionHandleController;
+class WelcomeWidget;
 class QDockWidget;
 
 // One open drawing: the unit a MainWindow tab represents. Bundles what used
@@ -100,6 +101,10 @@ public:
     QDockWidget *dock = nullptr;
     PrimitivePlacementController *placement = nullptr;
     SelectionHandleController *handles = nullptr;
+    // The welcome card floating over a new empty drawing, nullptr when the
+    // "welcome_enabled" setting is off. Never deleted while the document
+    // lives (dismiss() only hides it), so this pointer stays valid.
+    WelcomeWidget *welcome = nullptr;
     // The sidecar autosaveTick() last wrote for this document (runtime
     // only) - lets clearAutosaveFor() delete the right file even after a
     // Save As changed where future sidecars would go.

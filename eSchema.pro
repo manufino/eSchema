@@ -126,6 +126,7 @@ SOURCES += \
 	src/Widgets/PenStyleComboBox.cpp \
 	src/Widgets/RulerWidget.cpp \
 	src/Widgets/StatusBar.cpp \
+	src/Widgets/WelcomeWidget.cpp \
 	src/Widgets/ToolBarPrimitive.cpp
 
 HEADERS += \
@@ -211,6 +212,7 @@ HEADERS += \
 	src/Widgets/PenStyleComboBox.h \
 	src/Widgets/RulerWidget.h \
 	src/Widgets/StatusBar.h \
+	src/Widgets/WelcomeWidget.h \
 	src/Widgets/ToolBarPrimitive.h
 
 FORMS += \
