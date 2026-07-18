@@ -44,15 +44,16 @@ and writer.
 >   written by the reference FidoCadJ editor can contain negative coordinates;
 >   eSchema accepts them on read and shifts the whole drawing back onto the
 >   sheet as one rigid translation instead of clamping each value to 0.
-> - **§6.3's "for primitives without an `FCJ` (such as `SA`, `PL`, `PA`,
->   `MC`), the name and value `TY` lines simply follow the primitive line
->   directly" is an erratum.** In the reference implementation
->   (`ParserActions`), a name/value `TY` pair is attached to the previous
->   primitive ONLY when announced by an `FCJ` line - a bare `FCJ` for these
->   types (the reference editor's own files show exactly this pattern), the
->   text flag for the types with FCJ attributes. A `TY` directly following
->   `MC`/`SA`/`PL`/`PA` is a **standalone text primitive**. eSchema follows
->   the reference behavior on both read and write.
+> - **§6.3 has been corrected in this copy** (the upstream FidoCadJS text
+>   claimed that for primitives without an `FCJ` - `SA`, `PL`, `PA`, `MC` -
+>   the name/value `TY` lines simply follow the primitive line directly).
+>   In the reference implementation (`ParserActions`), a name/value `TY`
+>   pair is attached to the previous primitive ONLY when announced by an
+>   `FCJ` line - a bare `FCJ` for these types (the reference editor's own
+>   files show exactly this pattern), the text flag for the types with FCJ
+>   attributes. A `TY` directly following `MC`/`SA`/`PL`/`PA` is a
+>   **standalone text primitive**. §4, §5.7-§5.10 and §6.3 below state the
+>   corrected rule; eSchema follows it on both read and write.
 
 ---
 
@@ -228,9 +229,10 @@ Three follow-up mechanisms exist:
 
 1. **`FCJ` line** — immediately *after* a primitive line, supplies FidoCadJ
    extended attributes (arrows, dash style, fill flag, and a “has text” marker).
-2. **`TY` lines as name/value** — after a primitive that has an `FCJ` marker set
-   to “has text” (`1`), up to two `TY` lines provide the primitive's **name**
-   and **value** labels.
+2. **`TY` lines as name/value** — after a primitive whose `FCJ` line set the
+   “has text” flag (`1`) — or, for the primitive types with no `FCJ`
+   attributes (`SA`, `PL`, `PA`, `MC`), after a bare `FCJ` marker line — up
+   to two `TY` lines provide the primitive's **name** and **value** labels.
 3. **Standalone `TY`/`TE`** — when not attached, these declare a free
    **text primitive**.
 
@@ -372,7 +374,8 @@ A connection point (filled dot) at `(x,y)`. Its drawn diameter is the global
 `diameterConnection` (default `2.0`, see §7).
 
 - Minimum tokens: 3.
-- Has no `FCJ`. It may still carry name/value `TY` labels (§6.3).
+- Has no `FCJ` attributes. Name/value `TY` labels, when present, are
+  announced by a bare `FCJ` marker line (§6.3).
 
 ```
 SA 70 60 0
@@ -390,7 +393,8 @@ A printed-circuit-board track from `(x1,y1)` to `(x2,y2)` with the given
 - Minimum tokens: 6.
 - `width` is serialized "intelligently": integral values print without a decimal
   point (e.g. `5`), otherwise the full float is emitted.
-- No `FCJ`; may carry name/value `TY` labels.
+- No `FCJ` attributes; name/value `TY` labels are announced by a bare `FCJ`
+  marker line (§6.3).
 
 ```
 PL 10 110 90 110 5 0
@@ -411,7 +415,8 @@ A PCB pad centered at `(x,y)`.
   - `1` = rectangular,
   - `2` = rounded rectangle.
 - Minimum tokens: 7.
-- No `FCJ`; may carry name/value `TY` labels.
+- No `FCJ` attributes; name/value `TY` labels are announced by a bare `FCJ`
+  marker line (§6.3).
 
 ```
 PA 50 40 10 10 5 0 0     ; round pad, hole 5
@@ -438,7 +443,9 @@ reference point at `(x,y)`.
 - The referenced macro must exist in the loaded library set; an unknown macro is
   skipped without error.
 - May carry name/value `TY` labels which become the macro's name and value
-  annotations (e.g. a reference designator and a part value).
+  annotations (e.g. a reference designator and a part value) - announced by
+  a bare `FCJ` marker line (§6.3); a `TY` following the `MC` directly is a
+  standalone text primitive instead.
 
 ```
 MC 100 100 0 0 ihram.resistor
@@ -494,10 +501,11 @@ TE <x> <y> <text...>
 TE 10 20 Hello      →  TY 10 20 4 3 0 0 0 * Hello
 ```
 
-> **Dual role of `TY`.** A `TY` line is a standalone text primitive *unless* it
-> immediately follows a primitive whose preceding `FCJ` set the “has text”
-> marker. In that position the first `TY` provides the primitive's **name** and
-> the second its **value** (§6.3).
+> **Dual role of `TY`.** A `TY` line is a standalone text primitive *unless*
+> the line(s) before it were a primitive followed by an `FCJ` announcing
+> text - the text flag set to `1`, or a bare `FCJ` after `SA`/`PL`/`PA`/
+> `MC`. In that position the first `TY` provides the primitive's **name**
+> and the second its **value** (§6.3).
 
 ### 5.12 `IM` — Embedded image (FidoCadJS extension)
 
@@ -593,9 +601,10 @@ FCJ 2 0                  ; fine-dotted outline, no text
 
 ### 6.3 Name and value via `TY`
 
-When a primitive's `FCJ` text flag is `1`, the parser reads up to two following
-`TY` lines and assigns them, in order, as the primitive's **name** and
-**value**:
+A name/value pair is always **announced by an `FCJ` line**; the parser then
+reads up to two following `TY` lines and assigns them, in order, as the
+primitive's **name** and **value**. For the primitive types with `FCJ`
+attributes, the announcement is the text flag being `1`:
 
 ```
 <primitive line>
@@ -604,14 +613,18 @@ TY <x> <y> <sizeY> <sizeX> <o> <style> <l> <font> <name text...>
 TY <x> <y> <sizeY> <sizeX> <o> <style> <l> <font> <value text...>
 ```
 
-For primitives without an `FCJ` (such as `SA`, `PL`, `PA`, `MC`), the name and
-value `TY` lines simply follow the primitive line directly; the writer emits an
-`FCJ` marker first only for those primitive types that use one.
+For the primitive types with no `FCJ` attributes (`SA`, `PL`, `PA`, `MC`),
+the announcement is a **bare `FCJ` line** with no arguments. A `TY` line
+following one of these primitives directly - with no `FCJ` in between - is
+NOT a label: it is an ordinary standalone text primitive (this is how the
+reference implementation's `ParserActions` behaves, and what the reference
+editor's own files contain).
 
 Example: a connection with a label.
 
 ```
 SA 70 60 0
+FCJ
 TY 75 65 4 3 0 0 0 * N1
 TY 75 70 4 3 0 0 0 * net1
 ```
@@ -620,6 +633,7 @@ Example: a macro with reference designator and value.
 
 ```
 MC 100 100 0 0 ihram.resistor
+FCJ
 TY 110 105 4 3 0 0 0 * R1
 TY 110 110 4 3 0 0 0 * 10k
 ```
@@ -807,6 +821,7 @@ SA 70 60 0
 CV 0 240 5 260 25 240 30 0
 TY 220 10 4 3 0 4 0 * Title
 MC 100 100 0 0 electronics.rled
+FCJ
 TY 110 105 4 3 0 0 0 * D1
 TY 110 110 4 3 0 0 0 * red
 ```
@@ -835,7 +850,8 @@ A reader is conforming if it:
 - parses all primitives in §5 and the `FCJ`/`TY`/`FJC` extensions in §6–§7;
 - clamps coordinates and layer indices, caps vertex counts, and never aborts the
   whole parse on a single malformed line;
-- treats `TY` after a text-flagged primitive as name/value, otherwise as a text
+- treats `TY` after an `FCJ`-announced primitive as name/value (§6.3),
+  otherwise as a text
   primitive.
 
 A writer is conforming if it follows §9 and produces idempotent output.
