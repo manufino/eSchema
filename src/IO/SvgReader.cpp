@@ -549,7 +549,14 @@ public:
                            || tag == QLatin1String("metadata") || tag == QLatin1String("title")
                            || tag == QLatin1String("desc")
                            || tag.contains(QLatin1String("radient"))
-                           || tag == QLatin1String("pattern") || tag == QLatin1String("filter")) {
+                           || tag == QLatin1String("pattern") || tag == QLatin1String("filter")
+                           // Editor-private metadata, never rendered: Inkscape's
+                           // sodipodi:namedview (page/zoom/window state) and
+                           // similar bookkeeping. QXmlStreamReader::name()
+                           // strips the namespace prefix, so the bare local
+                           // names are matched here.
+                           || tag == QLatin1String("namedview") || tag == QLatin1String("view")
+                           || tag == QLatin1String("script")) {
                     // Definitions and non-rendered content: skip silently
                     // (their referencing users are what gets counted).
                     xml.skipCurrentElement();
