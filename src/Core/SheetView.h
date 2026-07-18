@@ -148,9 +148,11 @@ protected:
     void dropEvent(QDropEvent *event) override;
 
 private:
-    // Pulls a fitInView()-set scale back inside the wheel-zoom limits,
-    // keeping the view centered - shared by the two fit slots below.
-    void clampZoomToLimits();
+    // The shared body of the two fit slots: scales to frame `bounds` (with
+    // a small margin, clamped to the wheel-zoom limits) and centers it in
+    // the viewport, entirely through the transform - see the .cpp comment
+    // for why fitInView()/scrollbars can't be trusted with the placement.
+    void fitToRect(const QRectF &bounds);
     // Reads every grid/color/zoom-related setting into the members below.
     void loadSettings();
     // Applies the current zoomLevel to the view transform and emits

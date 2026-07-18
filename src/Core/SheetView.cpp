@@ -48,6 +48,14 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 
     setMouseTracking(true);
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
+    // Top-left alignment, NOT Qt's default AlignCenter: whenever the scaled
+    // scene is smaller than the viewport (deep zoom-out), AlignCenter makes
+    // the view re-center the scene itself, silently cancelling every
+    // transform translation - which is exactly how this view pans and how
+    // wheel zoom keeps the point under the cursor pinned. With top-left
+    // alignment the transform stays fully authoritative at every zoom
+    // level; fitToRect()/the wheel handler do all positioning explicitly.
+    setAlignment(Qt::AlignLeft | Qt::AlignTop);
     // Antialiasing is applied by loadSettings() per the "render_antialias"
     // setting (Options > Interface).
     setTransformationAnchor(QGraphicsView::NoAnchor);
@@ -649,10 +657,7 @@ void SheetView::settingChanged()
 
 void SheetView::adjustView()
 {
-    fitInView(scene()->itemsBoundingRect(), Qt::KeepAspectRatio);
-    clampZoomToLimits();
-    zoomUpdate();
-    emit viewTransformChanged();
+    fitToRect(scene()->itemsBoundingRect());
 }
 
 void SheetView::adjustViewToSelection()
@@ -667,29 +672,34 @@ void SheetView::adjustViewToSelection()
         bounds = first ? item->sceneBoundingRect() : bounds.united(item->sceneBoundingRect());
         first = false;
     }
-    fitInView(bounds, Qt::KeepAspectRatio);
-    clampZoomToLimits();
-    zoomUpdate();
-    emit viewTransformChanged();
+    fitToRect(bounds);
 }
 
-void SheetView::clampZoomToLimits()
+void SheetView::fitToRect(const QRectF &bounds)
 {
-    // fitInView() sets whatever scale the content asks for, ignoring the
-    // wheel-zoom limits - pull it back inside them (keeping the view
-    // centered where the fit put it), so a fit never lands on a level the
-    // wheel can't reach or return to.
-    const qreal current = transform().m11();
-    const qreal clamped = qBound(static_cast<qreal>(ZOOM_SCALE_MIN), current,
-                                 static_cast<qreal>(ZOOM_SCALE_MAX));
-    if (qFuzzyCompare(current, clamped))
+    if (bounds.isEmpty())
         return;
-    const qreal factor = clamped / current;
-    const QPoint center = viewport()->rect().center();
-    const QPointF anchorBefore = mapToScene(center);
-    scale(factor, factor);
-    const QPointF anchorAfter = mapToScene(center);
-    translate(anchorAfter.x() - anchorBefore.x(), anchorAfter.y() - anchorBefore.y());
+    // By hand, not fitInView(): Qt's own fit positions the result through
+    // the scrollbars, which are clamped to the sceneRect and hand over to
+    // the (transform-cancelling) alignment once the scene fits in the
+    // viewport - the same reasons wheel zoom and panning here already go
+    // through the transform directly. Scale (with a small breathing margin,
+    // clamped to the wheel-zoom limits so a fitted level is always
+    // reachable by the wheel too), then translate so the content's center
+    // lands exactly on the viewport's center.
+    const QRectF viewportRect = viewport()->rect();
+    if (viewportRect.isEmpty())
+        return;
+    qreal scaleFactor = qMin(viewportRect.width() / bounds.width(),
+                             viewportRect.height() / bounds.height()) * 0.95;
+    scaleFactor = qBound(static_cast<qreal>(ZOOM_SCALE_MIN), scaleFactor,
+                         static_cast<qreal>(ZOOM_SCALE_MAX));
+    setTransform(QTransform::fromScale(scaleFactor, scaleFactor));
+    const QPointF viewportCenterInScene = mapToScene(viewportRect.center().toPoint());
+    const QPointF delta = viewportCenterInScene - bounds.center();
+    translate(delta.x(), delta.y());
+    zoomUpdate();
+    emit viewTransformChanged();
 }
 
 void SheetView::resizeEvent(QResizeEvent *event)
