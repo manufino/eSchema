@@ -52,6 +52,8 @@
 #include "PrimitiveImage.h"
 #include "PrimitiveMacro.h"
 #include "WelcomeWidget.h"
+#include "DrawingThumbnails.h"
+#include <QLabel>
 #include "PrimitivePad.h"
 #include "PrimitivePcbTrack.h"
 #include "PrimitiveComplexCurve.h"
@@ -1366,6 +1368,13 @@ void MainWindow::setConnections()
     connect(ui->actionDistributeVertical, &QAction::triggered, this, &MainWindow::clickDistributeVerticalAction);
     connect(ui->actionNewDraw, &QAction::triggered, this, &MainWindow::clickNewAction);
     connect(ui->actionOpenFile, &QAction::triggered, this, &MainWindow::clickOpenAction);
+    // Hovering a recent-file entry shows its thumbnail beside the menu.
+    // Wired once here (the menu object survives rebuilds; its actions don't).
+    connect(ui->menuRecentFiles, &QMenu::hovered, this, &MainWindow::showRecentFilePreview);
+    connect(ui->menuRecentFiles, &QMenu::aboutToHide, this, [this]() {
+        if (m_recentPreview)
+            m_recentPreview->hide();
+    });
     connect(ui->actionImportDxf, &QAction::triggered, this, &MainWindow::clickImportDxfAction);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
@@ -1639,6 +1648,9 @@ void MainWindow::updateRecentFilesMenu()
     // deletion safe.
     for (const QString &path : recents) {
         QAction *action = ui->menuRecentFiles->addAction(path);
+        // The path doubles as the hover-preview key - see
+        // showRecentFilePreview(), wired once in setConnections().
+        action->setData(path);
         connect(action, &QAction::triggered, this, [this, path]() {
             if (!QFileInfo::exists(path)) {
                 QMessageBox::warning(this, tr("Open recent"),
@@ -1659,6 +1671,42 @@ void MainWindow::updateRecentFilesMenu()
         SettingsManager::getInstance().saveSetting("recent_files", QStringList());
         updateRecentFilesMenu();
     }, Qt::QueuedConnection);
+}
+
+void MainWindow::showRecentFilePreview(QAction *action)
+{
+    // Only the file entries carry a path in their data; the separator and
+    // "Clear list" hide any preview left up.
+    const QString path = action ? action->data().toString() : QString();
+    const QPixmap thumb = path.isEmpty() ? QPixmap()
+            : DrawingThumbnails::thumbnail(path, QSize(200, 150));
+    if (thumb.isNull()) {
+        if (m_recentPreview)
+            m_recentPreview->hide();
+        return;
+    }
+    if (!m_recentPreview) {
+        // A tooltip-flagged label: floats above the menu without stealing
+        // activation from it.
+        m_recentPreview = new QLabel(this, Qt::ToolTip | Qt::FramelessWindowHint);
+        m_recentPreview->setFrameShape(QFrame::Box);
+        m_recentPreview->setAttribute(Qt::WA_ShowWithoutActivating);
+    }
+    m_recentPreview->setPixmap(thumb);
+    m_recentPreview->adjustSize();
+    // Beside the hovered row, to the menu's right - flipped to its left
+    // when that would run off the screen.
+    const QRect actionRect = ui->menuRecentFiles->actionGeometry(action);
+    QPoint position = ui->menuRecentFiles->mapToGlobal(actionRect.topRight()) + QPoint(10, 0);
+    if (QScreen *scr = screen()) {
+        const QRect available = scr->availableGeometry();
+        if (position.x() + m_recentPreview->width() > available.right())
+            position.setX(ui->menuRecentFiles->mapToGlobal(actionRect.topLeft()).x()
+                          - m_recentPreview->width() - 10);
+        position.setY(qMin(position.y(), available.bottom() - m_recentPreview->height()));
+    }
+    m_recentPreview->move(position);
+    m_recentPreview->show();
 }
 
 void MainWindow::updateRulers()

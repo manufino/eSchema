@@ -19,6 +19,7 @@
 
 #include "WelcomeWidget.h"
 #include "SettingsManager.h"
+#include "DrawingThumbnails.h"
 #include "appversion.h"
 
 #include <QVBoxLayout>
@@ -114,6 +115,18 @@ void WelcomeWidget::buildRecentFiles(QVBoxLayout *layout)
             break;
         if (!QFileInfo::exists(path))
             continue;
+        // One row per file: a small rendering of the drawing (see
+        // DrawingThumbnails - cached, so rebuilding cards stays cheap)
+        // next to the clickable name.
+        auto *row = new QHBoxLayout;
+        row->setSpacing(10);
+        const QPixmap thumb = DrawingThumbnails::thumbnail(path, QSize(64, 48));
+        if (!thumb.isNull()) {
+            auto *preview = new QLabel(this);
+            preview->setPixmap(thumb);
+            preview->setFrameShape(QFrame::Box);
+            row->addWidget(preview);
+        }
         auto *link = new QLabel(QStringLiteral("<a href=\"%1\">%2</a>")
                 .arg(path.toHtmlEscaped(), QFileInfo(path).fileName().toHtmlEscaped()), this);
         link->setToolTip(QDir::toNativeSeparators(path));
@@ -121,7 +134,9 @@ void WelcomeWidget::buildRecentFiles(QVBoxLayout *layout)
         connect(link, &QLabel::linkActivated, this, [this](const QString &href) {
             emit openFileRequested(href);
         });
-        layout->addWidget(link);
+        row->addWidget(link);
+        row->addStretch();
+        layout->addLayout(row);
         ++shown;
     }
     if (shown == 0) {

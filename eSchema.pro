@@ -55,6 +55,7 @@ SOURCES += \
 	src/App/MainWindowEditActions.cpp \
 	src/Core/BooleanOps.cpp \
 	src/Core/DecoratedText.cpp \
+	src/Core/DrawingThumbnails.cpp \
 	src/Core/GraphicsPrimitive.cpp \
 	src/Core/LayerList.cpp \
 	src/Core/LibraryManager.cpp \
@@ -137,6 +138,7 @@ HEADERS += \
 	src/App/MainWindow.h \
 	src/Core/BooleanOps.h \
 	src/Core/DecoratedText.h \
+	src/Core/DrawingThumbnails.h \
 	src/Core/GlobalUtils.h \
 	src/Core/GraphicsPrimitive.h \
 	src/Core/Layer.h \

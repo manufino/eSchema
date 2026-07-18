@@ -52,6 +52,7 @@ class QTreeWidget;
 class QTreeWidgetItem;
 class QDragEnterEvent;
 class QDropEvent;
+class QLabel;
 class QLineEdit;
 class QMimeData;
 class QTimer;
@@ -440,6 +441,10 @@ private:
     // with the same unsaved-changes prompt as File > Apri) plus a trailing
     // "clear list" entry. Disabled entirely while the list is empty.
     void updateRecentFilesMenu();
+    // Wired to menuRecentFiles' hovered(): shows the hovered file's
+    // DrawingThumbnails rendering in a floating label beside the menu (and
+    // hides it over the non-file entries; aboutToHide hides it too).
+    void showRecentFilePreview(QAction *action);
     // Reads ui->graphicsView's current transform/scroll position and pushes
     // the resulting origin+scale to both rulers - wired to SheetView::
     // viewTransformChanged() (pan/zoom/resize) so they always match what's
@@ -617,6 +622,9 @@ private:
     // The command-palette launcher living in the menu bar's unused
     // right-hand corner - focusing it pops the palette under it.
     QLineEdit *m_menuBarSearch = nullptr;
+    // The recent-files hover preview (created lazily, reused) - see
+    // showRecentFilePreview().
+    QLabel *m_recentPreview = nullptr;
     bool m_menuSearchOpening = false; // re-entry guard for the focus handler
     // Whether the clipboard holds pasteable content - cached on
     // QClipboard::dataChanged, because reading the system clipboard is an
