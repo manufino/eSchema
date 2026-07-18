@@ -133,6 +133,15 @@ protected:
     // rulers' tracking marker should disappear.
     void resizeEvent(QResizeEvent *event) override;
     void leaveEvent(QEvent *event) override;
+    // Macro drag & drop from the Libraries panel (see MacroLibraryTree in
+    // MainWindowLibraryPanel.cpp, the drag source): drags carrying the
+    // custom macro mime type are accepted here and land as macroDropped();
+    // anything else (e.g. .fcd/.dxf files) is ignored ON PURPOSE so the
+    // event propagates up to MainWindow's window-wide file-drop handling
+    // instead of being swallowed by the scene.
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
 private:
     // Reads every grid/color/zoom-related setting into the members below.
@@ -183,6 +192,10 @@ signals:
     // The mouse pointer has left the viewport - MainWindow uses this to hide
     // the rulers' tracking marker, since no further mouseMoved() will arrive.
     void mouseLeftView();
+    // A macro dragged from the Libraries panel was dropped here. `scenePos`
+    // is already snapped (same placementSnap() rule as a placement click);
+    // MainWindow creates the PrimitiveMacro and pushes the undo command.
+    void macroDropped(const QString &macroKey, const QPointF &scenePos);
 
 private:
     int m_originX, m_originY, gridSize, gridMarkSize, zoomLevel;

@@ -50,6 +50,7 @@
 #include "LibraryManager.h"
 #include "PrimitiveText.h"
 #include "PrimitiveImage.h"
+#include "PrimitiveMacro.h"
 #include "PrimitivePad.h"
 #include "PrimitivePcbTrack.h"
 #include "PrimitiveComplexCurve.h"
@@ -465,7 +466,9 @@ Document *MainWindow::createDocument()
     document->viewWidget = viewWidget;
     SheetView *view = viewWidget->view();
     view->setScene(sheet);
-    view->setAcceptDrops(false); // drops are handled window-wide, see the ctor
+    // The view accepts macro drags itself (SheetView's drag handlers) and
+    // deliberately ignores everything else, so file drops still bubble up
+    // to this window's own dragEnterEvent()/dropEvent().
 
     document->placement = new PrimitivePlacementController(
                 view, sheet, ui->toolBarPrimitive, ui->cbPropLayer, ui->checkBox, document);
@@ -482,6 +485,20 @@ Document *MainWindow::createDocument()
     connect(view, &SheetView::zoomScaleIsChanged, ui->statusbar, &StatusBar::zoomLevel);
     connect(view, &SheetView::viewTransformChanged, this, &MainWindow::updateRulers);
     connect(view, &SheetView::contextMenuRequested, this, &MainWindow::showCanvasContextMenu);
+    // A macro dragged from the Libraries panel and dropped here becomes an
+    // instance at the (already snapped) drop position, as one undo step.
+    // Activating the document first keeps the undo group and the active-
+    // document mirrors pointing at the drawing that actually received it.
+    connect(view, &SheetView::macroDropped, this,
+            [this, document](const QString &macroKey, const QPointF &scenePos) {
+        setActiveDocument(document);
+        auto *macro = new PrimitiveMacro();
+        macro->setMacroName(macroKey);
+        macro->setControlPoint(0, scenePos);
+        document->sheet()->addPrimitive(macro);
+        document->sheet()->undoStack()->push(
+                new CreatePrimitiveCommand(document->sheet(), macro));
+    });
     connect(view, &SheetView::mouseMoved, this, [viewWidget](QPointF scenePos) {
         viewWidget->horizontalRuler()->setMarkerPosition(scenePos.x(), true);
         viewWidget->verticalRuler()->setMarkerPosition(scenePos.y(), true);

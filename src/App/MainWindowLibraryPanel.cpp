@@ -31,6 +31,46 @@
 #include <QMenu>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QDrag>
+#include <QMimeData>
+
+namespace {
+
+// The library trees' drag source: dragging a macro leaf starts a drag
+// carrying the macro's key under the custom mime type SheetView accepts
+// (see SheetView::dragEnterEvent()/dropEvent()), so a macro can be dragged
+// straight out of the panel and dropped where it should be placed - the
+// natural gesture alongside the existing click-to-arm placement, which
+// keeps working unchanged (drags only start past the usual distance
+// threshold). Category rows carry no key and produce no drag.
+class MacroLibraryTree : public QTreeWidget
+{
+public:
+    using QTreeWidget::QTreeWidget;
+
+protected:
+    void startDrag(Qt::DropActions) override
+    {
+        QTreeWidgetItem *item = currentItem();
+        const QString key = item ? item->data(0, Qt::UserRole).toString() : QString();
+        if (key.isEmpty())
+            return;
+        auto *mime = new QMimeData;
+        // Same mime type string as SheetView's MacroMimeType.
+        mime->setData(QStringLiteral("application/x-eschema-macro"), key.toUtf8());
+        auto *drag = new QDrag(this);
+        drag->setMimeData(mime);
+        // The macro's own preview follows the cursor, centered on it.
+        const QPixmap icon = LibraryManager::getInstance().icon(key, 48);
+        if (!icon.isNull()) {
+            drag->setPixmap(icon);
+            drag->setHotSpot(QPoint(icon.width() / 2, icon.height() / 2));
+        }
+        drag->exec(Qt::CopyAction);
+    }
+};
+
+} // namespace
 
 void MainWindow::buildLibraryPanel()
 {
@@ -66,10 +106,14 @@ void MainWindow::buildLibraryPanel()
         // level the .fcl format itself defines via "{...}" lines - actually
         // read as sections instead of being just another same-sized cell in
         // an icon grid.
-        auto *tree = new QTreeWidget(ui->toolBoxLib);
+        auto *tree = new MacroLibraryTree(ui->toolBoxLib);
         tree->setHeaderHidden(true);
         tree->setIconSize(showTreeIcons ? iconQSize : QSize(0, 0));
         tree->setIndentation(12);
+        // Macro leaves can be dragged onto a drawing (see MacroLibraryTree
+        // above); the trees never accept drops themselves.
+        tree->setDragEnabled(true);
+        tree->setDragDropMode(QAbstractItemView::DragOnly);
         // NOT uniform: category rows (text-only) and macro rows (icon-sized,
         // which the user can set anywhere from 16 to 128px) are genuinely
         // different heights - forcing a single shared height was clipping/

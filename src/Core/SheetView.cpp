@@ -21,7 +21,15 @@
 #include "PrimitivePlacementController.h"
 #include <QScrollBar>
 #include <QPainterPath>
+#include <QMimeData>
 #include <cmath>
+
+namespace {
+// The custom mime type a macro drag from the Libraries panel carries (its
+// data is the macro key, UTF-8) - shared, by value, with MacroLibraryTree
+// in MainWindowLibraryPanel.cpp, the drag source.
+const char MacroMimeType[] = "application/x-eschema-macro";
+}
 
 SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
 {
@@ -53,6 +61,40 @@ SheetView::SheetView(QWidget *parent) : QGraphicsView(parent)
     // (GraphicsPrimitive's manual drag handling), so the band only starts
     // over empty space.
     setDragMode(QGraphicsView::NoDrag);
+    // For the Libraries panel's macro drags only - see dragEnterEvent():
+    // every other payload (e.g. .fcd/.dxf files) is ignored there so it
+    // still bubbles up to MainWindow's window-wide file-drop handling.
+    setAcceptDrops(true);
+}
+
+void SheetView::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat(QLatin1String(MacroMimeType)))
+        event->acceptProposedAction();
+    else
+        event->ignore(); // not ours - propagate up to MainWindow
+}
+
+void SheetView::dragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasFormat(QLatin1String(MacroMimeType)))
+        event->acceptProposedAction();
+    else
+        event->ignore();
+}
+
+void SheetView::dropEvent(QDropEvent *event)
+{
+    const QString key = QString::fromUtf8(
+            event->mimeData()->data(QLatin1String(MacroMimeType)));
+    if (key.isEmpty()) {
+        event->ignore();
+        return;
+    }
+    event->acceptProposedAction();
+    // Snapped exactly like a placement click, so a dropped macro lands on
+    // the same positions a clicked one would.
+    emit macroDropped(key, placementSnap(event->position().toPoint()));
 }
 
 void SheetView::setGrid(int size, QColor clr)
