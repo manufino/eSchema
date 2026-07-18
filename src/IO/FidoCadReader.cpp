@@ -313,8 +313,15 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
         }
 
         if (code == QStringLiteral("FCJ")) {
-            if (pending && pending->supportsFCJ())
+            if (pending && pending->supportsFCJ()) {
                 applyFCJ(pending, tokens, macroCounter);
+            } else if (pending) {
+                // MC/SA/PL/PA carry no FCJ attributes - after them a (bare)
+                // FCJ line is purely the "name/value TY lines follow" marker.
+                // The reference parser (ParserActions) sets its macroCounter
+                // this way for exactly these types.
+                macroCounter = 2;
+            }
             continue;
         }
 
@@ -389,11 +396,15 @@ QList<GraphicsPrimitive *> parseLines(const QString &text, Sheet *sheet, bool ap
             continue; // unrecognized/malformed line - skip (robustness contract)
 
         pending = primitive;
-        // SA/PL/PA/MC/IM have no FCJ line - their name/value TY lines (if any)
-        // simply follow directly (FIDOSPECS.md 6.3), so optimistically expect
-        // them; if the next line isn't a TY, commitPending() above discards
-        // this state harmlessly when the next real line is processed.
-        macroCounter = pending->supportsFCJ() ? 0 : 2;
+        // A name/value TY pair is ALWAYS announced by an FCJ line first -
+        // for every primitive type, MC/SA/PL/PA included (theirs is a bare
+        // "FCJ", see the branch above). A TY directly following any
+        // primitive line is a standalone text. This matches the reference
+        // parser (ParserActions attaches TY lines only via macroCounter,
+        // which only an FCJ branch ever sets); FIDOSPECS.md 6.3's "for
+        // primitives without an FCJ the labels follow directly" is an
+        // erratum - see the spec's eSchema preface note.
+        macroCounter = 0;
     }
 
     commitPending();

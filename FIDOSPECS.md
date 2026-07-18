@@ -44,6 +44,15 @@ and writer.
 >   written by the reference FidoCadJ editor can contain negative coordinates;
 >   eSchema accepts them on read and shifts the whole drawing back onto the
 >   sheet as one rigid translation instead of clamping each value to 0.
+> - **§6.3's "for primitives without an `FCJ` (such as `SA`, `PL`, `PA`,
+>   `MC`), the name and value `TY` lines simply follow the primitive line
+>   directly" is an erratum.** In the reference implementation
+>   (`ParserActions`), a name/value `TY` pair is attached to the previous
+>   primitive ONLY when announced by an `FCJ` line - a bare `FCJ` for these
+>   types (the reference editor's own files show exactly this pattern), the
+>   text flag for the types with FCJ attributes. A `TY` directly following
+>   `MC`/`SA`/`PL`/`PA` is a **standalone text primitive**. eSchema follows
+>   the reference behavior on both read and write.
 
 ---
 

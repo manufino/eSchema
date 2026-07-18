@@ -84,6 +84,18 @@ void writePrimitive(QStringList &lines, const GraphicsPrimitive *primitive)
         }
     }
 
+    // MC/SA/PL/PA have no FCJ attribute line, but their name/value labels
+    // still need the bare "FCJ" marker announcing them: the reference
+    // parser only attaches TY lines to the previous primitive after an FCJ
+    // (whatever the type) - written without it, a real FidoCadJ (and this
+    // app's own reader) reads the labels back as standalone texts.
+    // (FIDOSPECS.md 6.3 claims labels follow directly - erratum.) Text
+    // primitives are excluded: a standalone TY can never carry labels.
+    if (hasText && !primitive->supportsFCJ()
+            && primitive->getPrimitiveType() != GraphicsPrimitive::Text) {
+        lines << QStringLiteral("FCJ");
+    }
+
     if (hasText) {
         if (!primitive->name().isEmpty())
             lines << buildLabelLine(primitive, primitive->name(), 0);
