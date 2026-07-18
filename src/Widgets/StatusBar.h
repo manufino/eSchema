@@ -53,6 +53,14 @@ public slots:
     // totalPrimitives includes macros - macroCount is the subset of those
     // that are PartLib (MC) instances, shown separately.
     void primitiveCounts(int totalPrimitives, int macroCount);
+    // Shows "Nodes N" while a single complex curve/polygon is selected on
+    // the canvas; a negative count hides the readout entirely - fed by
+    // MainWindow::updatePropertiesPanel().
+    void selectedNodeCount(int count);
+    // Updates the snap-step readout (a clickable button, like the zoom
+    // one - see snapWidgetClicked()) - fed by MainWindow whenever the
+    // "snap_step" setting changes.
+    void snapStep(int step);
 
 signals:
     // Forwarded zoom-level change (kept for symmetry with zoomLevel()).
@@ -62,12 +70,19 @@ signals:
     // by itself this close to the screen edge). MainWindow builds the menu:
     // it owns the fit actions and the active document's view.
     void zoomWidgetClicked(const QPoint &globalPos);
+    // Same contract for the snap-step readout - MainWindow builds the
+    // preset/custom-value menu and writes the "snap_step" setting.
+    void snapWidgetClicked(const QPoint &globalPos);
 
 private:
         QLabel *lblPos = new QLabel(this);
         // A flat button rather than a label: the zoom readout doubles as
         // the trigger for the zoom presets menu.
+        // Flat clickable readouts (see zoomWidgetClicked()/snapWidgetClicked()).
+        QToolButton *btnSnapStep = new QToolButton(this);
         QToolButton *btnZoomLevel = new QToolButton(this);
+        // Hidden until a curve/polygon is selected - see selectedNodeCount().
+        QLabel *lblNodeCount = new QLabel(this);
         QLabel *lblPrimitiveCount = new QLabel(this);
         int gridSize;
         double mm_step;

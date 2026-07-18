@@ -393,42 +393,43 @@ MainWindow::MainWindow(QWidget *parent)
         sheetScene->setObjectSnapEnabled(checked);
     });
 
-    // Quick snap-step picker, living in the status bar (leftmost of its
-    // permanent widgets, next to the zoom readout): the step gets changed
-    // constantly while drawing (coarse placement vs fine detail), so it
-    // earns a permanent slot instead of a trip to Options. Same "snap_step"
-    // key the Options dialog's spinbox reads/writes; kept in sync both ways
-    // through settingIsChanged. Owned and wired here, not inside StatusBar:
-    // it talks to SettingsManager and keeps its tr() context.
-    m_snapStepCombo = new QComboBox(this);
-    for (int step : { 1, 2, 5, 10, 25, 50 })
-        m_snapStepCombo->addItem(tr("Snap %1").arg(step), step);
-    m_snapStepCombo->setToolTip(tr("Snap step (drawing units)"));
-    auto syncSnapStepCombo = [this]() {
+    // Quick snap-step picker in the status bar, mirroring the zoom
+    // readout's pattern: a flat button (owned by StatusBar) whose click
+    // lands here as snapWidgetClicked(), answered with a preset menu plus
+    // an exact custom value. Same "snap_step" key the Options dialog's
+    // spinbox reads/writes; the readout follows every change through
+    // settingIsChanged, wherever it came from.
+    auto currentSnapStep = []() {
         const QVariant val = SettingsManager::getInstance().loadSetting("snap_step");
-        const int step = val.isValid() && val.toInt() > 0 ? val.toInt() : 10;
-        int index = m_snapStepCombo->findData(step);
-        if (index < 0) {
-            // A custom value typed in the Options dialog gets its own entry
-            // rather than being misrepresented by the nearest preset.
-            m_snapStepCombo->addItem(tr("Snap %1").arg(step), step);
-            index = m_snapStepCombo->count() - 1;
-        }
-        const QSignalBlocker blocker(m_snapStepCombo);
-        m_snapStepCombo->setCurrentIndex(index);
+        return val.isValid() && val.toInt() > 0 ? val.toInt() : 10;
     };
-    syncSnapStepCombo();
-    // activated(), not currentIndexChanged(): only real user picks write
-    // the setting - programmatic syncs must never echo back.
-    connect(m_snapStepCombo, &QComboBox::activated, this, [this](int index) {
-        SettingsManager::getInstance().saveSetting("snap_step",
-                m_snapStepCombo->itemData(index).toInt());
-    });
+    auto syncSnapStep = [this, currentSnapStep]() {
+        ui->statusbar->snapStep(currentSnapStep());
+    };
+    syncSnapStep();
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
-            this, syncSnapStepCombo);
-    // Index 0: before the zoom button and the other permanent widgets the
-    // StatusBar constructor already added.
-    ui->statusbar->insertPermanentWidget(0, m_snapStepCombo);
+            this, syncSnapStep);
+    connect(ui->statusbar, &StatusBar::snapWidgetClicked,
+            this, [this, currentSnapStep](const QPoint &globalPos) {
+        const int current = currentSnapStep();
+        QMenu menu(this);
+        for (int step : { 1, 2, 5, 10, 25, 50 }) {
+            QAction *action = menu.addAction(tr("Snap %1").arg(step), this, [step]() {
+                SettingsManager::getInstance().saveSetting("snap_step", step);
+            });
+            action->setCheckable(true);
+            action->setChecked(step == current);
+        }
+        menu.addSeparator();
+        menu.addAction(tr("Custom snap step..."), this, [this, current]() {
+            bool ok = false;
+            const int step = QInputDialog::getInt(this, tr("Custom snap step"),
+                    tr("Snap step (drawing units):"), current, 1, 1000, 1, &ok);
+            if (ok)
+                SettingsManager::getInstance().saveSetting("snap_step", step);
+        });
+        menu.exec(globalPos);
+    });
 
     // Options-dialog settings that map onto live widget state (toolbar icon
     // size, mirrored toggles, ...) - see applyLiveSettings().

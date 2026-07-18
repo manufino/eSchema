@@ -2044,8 +2044,8 @@ Reassign it to the selected command?</source>
     </message>
     <message>
         <location filename="../gui/MainWindow.ui" line="967" />
-        <location filename="../gui/MainWindow.ui" line="2570" />
-        <location filename="../gui/MainWindow.ui" line="2573" />
+        <location filename="../gui/MainWindow.ui" line="2541" />
+        <location filename="../gui/MainWindow.ui" line="2544" />
         <source>Text</source>
         <translation>テキスト</translation>
     </message>
@@ -2105,108 +2105,108 @@ Reassign it to the selected command?</source>
         <translation>高さ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1360" />
+        <location filename="../gui/MainWindow.ui" line="1331" />
         <source>FCD code</source>
         <translation>FCDコード</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1399" />
+        <location filename="../gui/MainWindow.ui" line="1370" />
         <source>Re-parse the text above and replace the whole drawing with it, as one undo step</source>
         <translation>上記のテキストを再解析し、図面全体をそれに置き換えます（1つの取り消し可能な操作として）</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1402" />
+        <location filename="../gui/MainWindow.ui" line="1373" />
         <source>Apply</source>
         <translation>適用</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1409" />
+        <location filename="../gui/MainWindow.ui" line="1380" />
         <source>Discard the text above and regenerate it from the current drawing</source>
         <translation>上記のテキストを破棄し、現在の図面から再生成します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1412" />
+        <location filename="../gui/MainWindow.ui" line="1383" />
         <source>Refresh</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1464" />
+        <location filename="../gui/MainWindow.ui" line="1435" />
         <source>File</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1493" />
-        <location filename="../src/App/MainWindow.cpp" line="1722" />
+        <location filename="../gui/MainWindow.ui" line="1464" />
+        <location filename="../src/App/MainWindow.cpp" line="1718" />
         <source>Open recent</source>
         <translation>最近使用したファイルを開く</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1502" />
+        <location filename="../gui/MainWindow.ui" line="1473" />
         <source>Edit</source>
         <translation>編集</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1544" />
+        <location filename="../gui/MainWindow.ui" line="1515" />
         <source>Align and distribute</source>
         <translation>整列と分布</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1564" />
+        <location filename="../gui/MainWindow.ui" line="1535" />
         <source>Shape</source>
         <translation>形状</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1586" />
+        <location filename="../gui/MainWindow.ui" line="1557" />
         <source>Boolean operations</source>
         <translation>ブール演算</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1597" />
+        <location filename="../gui/MainWindow.ui" line="1568" />
         <source>View</source>
         <translation>表示</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1617" />
+        <location filename="../gui/MainWindow.ui" line="1588" />
         <source>Tools</source>
         <translation>ツール</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1627" />
+        <location filename="../gui/MainWindow.ui" line="1598" />
         <source>Help</source>
         <translation>ヘルプ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1653" />
+        <location filename="../gui/MainWindow.ui" line="1624" />
         <source>ToolBarStandard</source>
         <translation>ToolBarStandard</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1703" />
+        <location filename="../gui/MainWindow.ui" line="1674" />
         <source>ToolBarModify</source>
         <translation>ToolBarModify</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1753" />
+        <location filename="../gui/MainWindow.ui" line="1724" />
         <source>ToolBarPrimitive</source>
         <translation>ToolBarPrimitive</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1805" />
+        <location filename="../gui/MainWindow.ui" line="1776" />
         <source>New drawing</source>
         <translation>新規図面</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1808" />
+        <location filename="../gui/MainWindow.ui" line="1779" />
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1820" />
+        <location filename="../gui/MainWindow.ui" line="1791" />
         <source>Open a file</source>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1823" />
+        <location filename="../gui/MainWindow.ui" line="1794" />
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
@@ -2215,470 +2215,470 @@ Reassign it to the selected command?</source>
         <translation type="vanished">DXFからインポート...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1835" />
+        <location filename="../gui/MainWindow.ui" line="1806" />
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1838" />
+        <location filename="../gui/MainWindow.ui" line="1809" />
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1850" />
+        <location filename="../gui/MainWindow.ui" line="1821" />
         <source>Save as</source>
         <translation>名前を付けて保存</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1853" />
-        <location filename="../gui/MainWindow.ui" line="1919" />
+        <location filename="../gui/MainWindow.ui" line="1824" />
+        <location filename="../gui/MainWindow.ui" line="1890" />
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1865" />
+        <location filename="../gui/MainWindow.ui" line="1836" />
         <source>Save split as...</source>
         <translation>分解して保存...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1868" />
+        <location filename="../gui/MainWindow.ui" line="1839" />
         <source>Save a copy of the drawing with every macro expanded into raw primitives</source>
         <translation>すべてのマクロを基本図形に展開した図面のコピーを保存します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1877" />
-        <location filename="../src/App/MainWindow.cpp" line="2967" />
+        <location filename="../gui/MainWindow.ui" line="1848" />
+        <location filename="../src/App/MainWindow.cpp" line="2963" />
         <source>Print</source>
         <translation>印刷</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1880" />
+        <location filename="../gui/MainWindow.ui" line="1851" />
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="803" />
+        <location filename="../src/App/MainWindow.cpp" line="799" />
         <source>Close</source>
         <translation>閉じる</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1892" />
+        <location filename="../gui/MainWindow.ui" line="1863" />
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1901" />
+        <location filename="../gui/MainWindow.ui" line="1872" />
         <source>Exit</source>
         <translation>終了</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1904" />
+        <location filename="../gui/MainWindow.ui" line="1875" />
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1913" />
+        <location filename="../gui/MainWindow.ui" line="1884" />
         <source>Save all</source>
         <translation>すべて保存</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1916" />
+        <location filename="../gui/MainWindow.ui" line="1887" />
         <source>Save every open drawing with unsaved changes</source>
         <translation>未保存の変更があるすべての図面を保存します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1928" />
+        <location filename="../gui/MainWindow.ui" line="1899" />
         <source>Next document</source>
         <translation>次のドキュメント</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1931" />
+        <location filename="../gui/MainWindow.ui" line="1902" />
         <source>Ctrl+Tab</source>
         <translation>Ctrl+Tab</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1940" />
+        <location filename="../gui/MainWindow.ui" line="1911" />
         <source>Previous document</source>
         <translation>前のドキュメント</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1943" />
+        <location filename="../gui/MainWindow.ui" line="1914" />
         <source>Ctrl+Shift+Tab</source>
         <translation>Ctrl+Shift+Tab</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1952" />
+        <location filename="../gui/MainWindow.ui" line="1923" />
         <source>Export...</source>
         <translation>エクスポート...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1955" />
+        <location filename="../gui/MainWindow.ui" line="1926" />
         <source>Export the drawing as PNG, JPG, SVG, PDF, EPS, or DXF</source>
         <translation>図面をPNG、JPG、SVG、PDF、EPS、またはDXFとしてエクスポートします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1958" />
+        <location filename="../gui/MainWindow.ui" line="1929" />
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1970" />
-        <location filename="../src/App/MainWindow.cpp" line="1477" />
+        <location filename="../gui/MainWindow.ui" line="1941" />
+        <location filename="../src/App/MainWindow.cpp" line="1473" />
         <source>Undo</source>
         <translation>元に戻す</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1973" />
+        <location filename="../gui/MainWindow.ui" line="1944" />
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1985" />
-        <location filename="../src/App/MainWindow.cpp" line="1480" />
+        <location filename="../gui/MainWindow.ui" line="1956" />
+        <location filename="../src/App/MainWindow.cpp" line="1476" />
         <source>Redo</source>
         <translation>やり直し</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1988" />
+        <location filename="../gui/MainWindow.ui" line="1959" />
         <source>Ctrl+Shift+Z</source>
         <translation>Ctrl+Shift+Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2000" />
+        <location filename="../gui/MainWindow.ui" line="1971" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2725" />
         <source>Cut</source>
         <translation>切り取り</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2003" />
+        <location filename="../gui/MainWindow.ui" line="1974" />
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2015" />
+        <location filename="../gui/MainWindow.ui" line="1986" />
         <source>Copy</source>
         <translation>コピー</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2018" />
+        <location filename="../gui/MainWindow.ui" line="1989" />
         <source>Ctrl+C</source>
         <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2030" />
+        <location filename="../gui/MainWindow.ui" line="2001" />
         <source>Copy split</source>
         <translation>分解してコピー</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2033" />
+        <location filename="../gui/MainWindow.ui" line="2004" />
         <source>Copy the selection with every macro expanded into raw primitives</source>
         <translation>すべてのマクロを基本図形に展開して選択範囲をコピーします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2042" />
+        <location filename="../gui/MainWindow.ui" line="2013" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2667" />
         <source>Copy as image</source>
         <translation>画像としてコピー</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2045" />
+        <location filename="../gui/MainWindow.ui" line="2016" />
         <source>Copy the selection (or the whole drawing) to the clipboard as an image</source>
         <translation>選択範囲（または図面全体）を画像としてクリップボードにコピーします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2048" />
+        <location filename="../gui/MainWindow.ui" line="2019" />
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2060" />
+        <location filename="../gui/MainWindow.ui" line="2031" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2828" />
         <source>Paste</source>
         <translation>貼り付け</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2063" />
+        <location filename="../gui/MainWindow.ui" line="2034" />
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2075" />
+        <location filename="../gui/MainWindow.ui" line="2046" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2849" />
         <source>Paste in place</source>
         <translation>同じ位置に貼り付け</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2078" />
+        <location filename="../gui/MainWindow.ui" line="2049" />
         <source>Paste the clipboard exactly where it was copied from, with no offset</source>
         <translation>コピー元とまったく同じ位置に、ずらさずに貼り付けます</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2081" />
+        <location filename="../gui/MainWindow.ui" line="2052" />
         <source>Ctrl+Shift+V</source>
         <translation>Ctrl+Shift+V</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2093" />
+        <location filename="../gui/MainWindow.ui" line="2064" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2196" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2857" />
         <source>Duplicate</source>
         <translation>複製</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2096" />
+        <location filename="../gui/MainWindow.ui" line="2067" />
         <source>Ctrl+D</source>
         <translation>Ctrl+D</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2108" />
+        <location filename="../gui/MainWindow.ui" line="2079" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="891" />
         <source>Rotate</source>
         <translation>回転</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2111" />
+        <location filename="../gui/MainWindow.ui" line="2082" />
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2123" />
+        <location filename="../gui/MainWindow.ui" line="2094" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="841" />
         <source>Mirror</source>
         <translation>反転</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2126" />
+        <location filename="../gui/MainWindow.ui" line="2097" />
         <source>S</source>
         <translation>S</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2138" />
+        <location filename="../gui/MainWindow.ui" line="2109" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="869" />
         <source>Mirror as copy</source>
         <translation>ミラーコピー</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2141" />
+        <location filename="../gui/MainWindow.ui" line="2112" />
         <source>Create a mirrored copy of the selection, leaving the original in place</source>
         <translation>元を残したまま、選択範囲の鏡像コピーを作成します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2150" />
+        <location filename="../gui/MainWindow.ui" line="2121" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2217" />
         <source>Convert macro to primitives</source>
         <translation>マクロをプリミティブに変換</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2162" />
+        <location filename="../gui/MainWindow.ui" line="2133" />
         <source>Create macro from selection...</source>
         <translation>選択範囲からマクロを作成...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2171" />
+        <location filename="../gui/MainWindow.ui" line="2142" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2472" />
         <source>Align left</source>
         <translation>左揃え</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2180" />
+        <location filename="../gui/MainWindow.ui" line="2151" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2488" />
         <source>Align right</source>
         <translation>右揃え</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2189" />
+        <location filename="../gui/MainWindow.ui" line="2160" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2504" />
         <source>Align top</source>
         <translation>上揃え</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2198" />
+        <location filename="../gui/MainWindow.ui" line="2169" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2520" />
         <source>Align bottom</source>
         <translation>下揃え</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2207" />
+        <location filename="../gui/MainWindow.ui" line="2178" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2545" />
         <source>Align horizontal center</source>
         <translation>水平方向中央揃え</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2216" />
+        <location filename="../gui/MainWindow.ui" line="2187" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2569" />
         <source>Align vertical center</source>
         <translation>垂直方向中央揃え</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2225" />
+        <location filename="../gui/MainWindow.ui" line="2196" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2596" />
         <source>Distribute horizontally</source>
         <translation>水平方向に分布</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2234" />
+        <location filename="../gui/MainWindow.ui" line="2205" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2619" />
         <source>Distribute vertically</source>
         <translation>垂直方向に分布</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2246" />
+        <location filename="../gui/MainWindow.ui" line="2217" />
         <source>Select all</source>
         <translation>すべて選択</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2249" />
+        <location filename="../gui/MainWindow.ui" line="2220" />
         <source>Ctrl+A</source>
         <translation>Ctrl+A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2258" />
+        <location filename="../gui/MainWindow.ui" line="2229" />
         <source>Find...</source>
         <translation>検索...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2261" />
+        <location filename="../gui/MainWindow.ui" line="2232" />
         <source>Ctrl+F</source>
         <translation>Ctrl+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2273" />
+        <location filename="../gui/MainWindow.ui" line="2244" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2301" />
         <source>Delete</source>
         <translation>削除</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2276" />
+        <location filename="../gui/MainWindow.ui" line="2247" />
         <source>Del</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2315" />
+        <location filename="../gui/MainWindow.ui" line="2286" />
         <source>About Qt</source>
         <translation>Qtについて</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2399" />
+        <location filename="../gui/MainWindow.ui" line="2370" />
         <source>Measure</source>
         <translation>計測</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2402" />
+        <location filename="../gui/MainWindow.ui" line="2373" />
         <source>Measure: click two points to read their distance and angle in the status bar</source>
         <translation>計測：2 点をクリックすると、距離と角度がステータスバーに表示されます</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2405" />
+        <location filename="../gui/MainWindow.ui" line="2376" />
         <source>W</source>
         <translation>W</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2417" />
+        <location filename="../gui/MainWindow.ui" line="2388" />
         <source>Dimension</source>
         <translation>寸法</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2420" />
+        <location filename="../gui/MainWindow.ui" line="2391" />
         <source>Dimension: click two points, then place the dimension line with its measured distance</source>
         <translation>寸法：2 点をクリックし、測定距離付きの寸法線を配置します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2423" />
+        <location filename="../gui/MainWindow.ui" line="2394" />
         <source>D</source>
         <translation>D</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2432" />
+        <location filename="../gui/MainWindow.ui" line="2403" />
         <source>Symbol wizard...</source>
         <translation>シンボルウィザード...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2435" />
+        <location filename="../gui/MainWindow.ui" line="2406" />
         <source>Generate a DIP/SIP/quad package symbol from its parameters and save it into a library</source>
         <translation>パラメータから DIP/SIP/クアッドのパッケージシンボルを生成してライブラリに保存します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2447" />
+        <location filename="../gui/MainWindow.ui" line="2418" />
         <source>Angular dimension</source>
         <translation>角度寸法</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2450" />
+        <location filename="../gui/MainWindow.ui" line="2421" />
         <source>Angular dimension: click the vertex and a point on each side, then place the arc with the measured angle</source>
         <translation>角度寸法：頂点と両側の点をクリックし、測定角度付きの円弧を配置します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2462" />
+        <location filename="../gui/MainWindow.ui" line="2433" />
         <source>Radial dimension</source>
         <translation>半径寸法</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2465" />
+        <location filename="../gui/MainWindow.ui" line="2436" />
         <source>Radial dimension: click the center and a point on the rim to place a radius arrow with its measure</source>
         <translation>半径寸法：中心と円周上の点をクリックして、測定値付きの半径矢印を配置します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2477" />
+        <location filename="../gui/MainWindow.ui" line="2448" />
         <source>Regular polygon</source>
         <translation>正多角形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2480" />
+        <location filename="../gui/MainWindow.ui" line="2451" />
         <source>Regular polygon: click the center, then a vertex</source>
         <translation>正多角形：中心をクリックし、次に頂点をクリックします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2483" />
+        <location filename="../gui/MainWindow.ui" line="2454" />
         <source>N</source>
         <translation>N</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2495" />
+        <location filename="../gui/MainWindow.ui" line="2466" />
         <source>Arc</source>
         <translation>円弧</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2498" />
+        <location filename="../gui/MainWindow.ui" line="2469" />
         <source>Arc: click the start point, the end point, then a point the arc passes through</source>
         <translation>円弧：始点、終点、次に円弧が通る点をクリックします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2501" />
+        <location filename="../gui/MainWindow.ui" line="2472" />
         <source>U</source>
         <translation>U</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2675" />
+        <location filename="../gui/MainWindow.ui" line="2646" />
         <source>Fit the view to the selection</source>
         <translation>選択範囲に合わせて表示</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2678" />
+        <location filename="../gui/MainWindow.ui" line="2649" />
         <source>Fit the view to the bounding box of the selected elements</source>
         <translation>選択した要素の境界ボックスに合わせて表示します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2681" />
+        <location filename="../gui/MainWindow.ui" line="2652" />
         <source>Ctrl+Shift+F</source>
         <translation>Ctrl+Shift+F</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2693" />
+        <location filename="../gui/MainWindow.ui" line="2664" />
         <source>Show grid</source>
         <translation>グリッドを表示</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2696" />
+        <location filename="../gui/MainWindow.ui" line="2667" />
         <source>Toggle the grid</source>
         <translation>グリッド表示を切り替え</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2704" />
+        <location filename="../gui/MainWindow.ui" line="2675" />
         <source>Snap to grid</source>
         <translation>グリッドにスナップ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2707" />
+        <location filename="../gui/MainWindow.ui" line="2678" />
         <source>Toggle snap to grid</source>
         <translation>グリッドスナップを切り替え</translation>
     </message>
@@ -2687,160 +2687,160 @@ Reassign it to the selected command?</source>
         <translation type="vanished">背景ビットマップ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2288" />
+        <location filename="../gui/MainWindow.ui" line="2259" />
         <source>Options</source>
         <translation>オプション</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2297" />
+        <location filename="../gui/MainWindow.ui" line="2268" />
         <source>About eSchema</source>
         <translation>eSchema について</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1446" />
+        <location filename="../gui/MainWindow.ui" line="1417" />
         <source>Layers</source>
         <translation>レイヤー</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2327" />
-        <location filename="../gui/MainWindow.ui" line="2330" />
+        <location filename="../gui/MainWindow.ui" line="2298" />
+        <location filename="../gui/MainWindow.ui" line="2301" />
         <source>Line</source>
         <translation>直線</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2333" />
+        <location filename="../gui/MainWindow.ui" line="2304" />
         <source>L</source>
         <translation>L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2345" />
-        <location filename="../gui/MainWindow.ui" line="2348" />
+        <location filename="../gui/MainWindow.ui" line="2316" />
+        <location filename="../gui/MainWindow.ui" line="2319" />
         <source>Rectangle</source>
         <translation>長方形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2351" />
+        <location filename="../gui/MainWindow.ui" line="2322" />
         <source>G</source>
         <translation>G</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2363" />
-        <location filename="../gui/MainWindow.ui" line="2366" />
+        <location filename="../gui/MainWindow.ui" line="2334" />
+        <location filename="../gui/MainWindow.ui" line="2337" />
         <source>Polygon</source>
         <translation>多角形</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2369" />
+        <location filename="../gui/MainWindow.ui" line="2340" />
         <source>P</source>
         <translation>P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2381" />
-        <location filename="../gui/MainWindow.ui" line="2384" />
+        <location filename="../gui/MainWindow.ui" line="2352" />
+        <location filename="../gui/MainWindow.ui" line="2355" />
         <source>Ellipse</source>
         <translation>楕円</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2387" />
+        <location filename="../gui/MainWindow.ui" line="2358" />
         <source>E</source>
         <translation>E</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2516" />
-        <location filename="../gui/MainWindow.ui" line="2519" />
+        <location filename="../gui/MainWindow.ui" line="2487" />
+        <location filename="../gui/MainWindow.ui" line="2490" />
         <source>Select</source>
         <translation>選択</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2522" />
+        <location filename="../gui/MainWindow.ui" line="2493" />
         <source>A</source>
         <translation>A</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2534" />
-        <location filename="../gui/MainWindow.ui" line="2537" />
+        <location filename="../gui/MainWindow.ui" line="2505" />
+        <location filename="../gui/MainWindow.ui" line="2508" />
         <source>Bezier</source>
         <translation>ベジェ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2540" />
+        <location filename="../gui/MainWindow.ui" line="2511" />
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2552" />
-        <location filename="../gui/MainWindow.ui" line="2555" />
+        <location filename="../gui/MainWindow.ui" line="2523" />
+        <location filename="../gui/MainWindow.ui" line="2526" />
         <source>Curve</source>
         <translation>曲線</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2558" />
+        <location filename="../gui/MainWindow.ui" line="2529" />
         <source>O</source>
         <translation>O</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2576" />
+        <location filename="../gui/MainWindow.ui" line="2547" />
         <source>T</source>
         <translation>T</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2588" />
-        <location filename="../gui/MainWindow.ui" line="2591" />
+        <location filename="../gui/MainWindow.ui" line="2559" />
+        <location filename="../gui/MainWindow.ui" line="2562" />
         <source>Connection</source>
         <translation>接続</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2594" />
+        <location filename="../gui/MainWindow.ui" line="2565" />
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2606" />
-        <location filename="../gui/MainWindow.ui" line="2609" />
+        <location filename="../gui/MainWindow.ui" line="2577" />
+        <location filename="../gui/MainWindow.ui" line="2580" />
         <source>PCB track</source>
         <translation>PCB配線</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2612" />
+        <location filename="../gui/MainWindow.ui" line="2583" />
         <source>I</source>
         <translation>I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2624" />
-        <location filename="../gui/MainWindow.ui" line="2627" />
+        <location filename="../gui/MainWindow.ui" line="2595" />
+        <location filename="../gui/MainWindow.ui" line="2598" />
         <source>PCB pad</source>
         <translation>PCBパッド</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2630" />
+        <location filename="../gui/MainWindow.ui" line="2601" />
         <source>Z</source>
         <translation>Z</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2642" />
-        <location filename="../gui/MainWindow.ui" line="2645" />
+        <location filename="../gui/MainWindow.ui" line="2613" />
+        <location filename="../gui/MainWindow.ui" line="2616" />
         <source>Image</source>
         <translation>画像</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2648" />
+        <location filename="../gui/MainWindow.ui" line="2619" />
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2660" />
+        <location filename="../gui/MainWindow.ui" line="2631" />
         <source>Fit view</source>
         <translation>ビューを合わせる</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2663" />
+        <location filename="../gui/MainWindow.ui" line="2634" />
         <source>Fit the drawing view</source>
         <translation>図面ビューを合わせる</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2306" />
-        <location filename="../src/App/MainWindow.cpp" line="1561" />
-        <location filename="../src/App/MainWindow.cpp" line="1572" />
+        <location filename="../gui/MainWindow.ui" line="2277" />
+        <location filename="../src/App/MainWindow.cpp" line="1557" />
+        <location filename="../src/App/MainWindow.cpp" line="1568" />
         <source>Check for updates</source>
         <translation>アップデートを確認</translation>
     </message>
@@ -2855,486 +2855,500 @@ Reassign it to the selected command?</source>
         <translation>矢印スタイル</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1311" />
         <source>Nodes</source>
-        <translation>ノード</translation>
+        <translation type="vanished">ノード</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1483" />
+        <location filename="../gui/MainWindow.ui" line="1454" />
         <source>Window</source>
         <translation>ウィンドウ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="1889" />
+        <location filename="../gui/MainWindow.ui" line="1860" />
         <source>Close tab</source>
         <translation>タブを閉じる</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2716" />
+        <location filename="../gui/MainWindow.ui" line="2687" />
         <source>Keyboard shortcuts</source>
         <translation>キーボードショートカット</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2728" />
-        <location filename="../gui/MainWindow.ui" line="2731" />
+        <location filename="../gui/MainWindow.ui" line="2699" />
+        <location filename="../gui/MainWindow.ui" line="2702" />
         <source>Layer management</source>
         <translation>レイヤー管理</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2734" />
+        <location filename="../gui/MainWindow.ui" line="2705" />
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2743" />
+        <location filename="../gui/MainWindow.ui" line="2714" />
         <source>Tracing image...</source>
         <translation>トレース画像...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2746" />
+        <location filename="../gui/MainWindow.ui" line="2717" />
         <source>Attach or remove a reference image drawn under the grid, for tracing over</source>
         <translation>トレース用にグリッドの下に表示する参照画像を添付または削除します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2761" />
+        <location filename="../gui/MainWindow.ui" line="2732" />
         <source>Basic tools</source>
         <translation>基本ツール</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2776" />
-        <location filename="../src/App/MainWindow.cpp" line="2145" />
+        <location filename="../gui/MainWindow.ui" line="2747" />
+        <location filename="../src/App/MainWindow.cpp" line="2141" />
         <source>Drawing tools</source>
         <translation>描画ツール</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2785" />
+        <location filename="../gui/MainWindow.ui" line="2756" />
         <source>Customize toolbars...</source>
         <translation>ツールバーのカスタマイズ...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2788" />
+        <location filename="../gui/MainWindow.ui" line="2759" />
         <source>Add, remove, and reorder the commands on the toolbars</source>
         <translation>ツールバーのコマンドを追加・削除・並べ替えします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2797" />
+        <location filename="../gui/MainWindow.ui" line="2768" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="1525" />
         <source>Split at point</source>
         <translation>点で分割</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2800" />
+        <location filename="../gui/MainWindow.ui" line="2771" />
         <source>Split the selected line, curve or track in two at a clicked point</source>
         <translation>選択した線・曲線・配線をクリックした点で 2 つに分割します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2809" />
+        <location filename="../gui/MainWindow.ui" line="2780" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="1688" />
         <source>Trim to intersection</source>
         <translation>交点までトリム</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2812" />
+        <location filename="../gui/MainWindow.ui" line="2783" />
         <source>Remove the clicked part of a line up to where it crosses other primitives</source>
         <translation>線のクリックした部分を、他の図形との交点まで削除します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2821" />
+        <location filename="../gui/MainWindow.ui" line="2792" />
         <source>Extend to intersection</source>
         <translation>交点まで延長</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2824" />
+        <location filename="../gui/MainWindow.ui" line="2795" />
         <source>Extend the nearest end of a line until it meets another primitive</source>
         <translation>線の近い方の端を、別の図形に当たるまで延長します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2833" />
+        <location filename="../gui/MainWindow.ui" line="2804" />
         <source>Clear guides</source>
         <translation>ガイドを消去</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2836" />
+        <location filename="../gui/MainWindow.ui" line="2807" />
         <source>Remove every guide line dragged out of the rulers</source>
         <translation>定規からドラッグしたガイド線をすべて削除します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2845" />
+        <location filename="../gui/MainWindow.ui" line="2816" />
         <source>Command palette...</source>
         <translation>コマンドパレット...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2848" />
+        <location filename="../gui/MainWindow.ui" line="2819" />
         <source>Search and run any command by name</source>
         <translation>任意のコマンドを名前で検索して実行します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2851" />
+        <location filename="../gui/MainWindow.ui" line="2822" />
         <source>Ctrl+Shift+P</source>
         <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2866" />
+        <location filename="../gui/MainWindow.ui" line="2837" />
         <source>Snap to objects</source>
         <translation>オブジェクトにスナップ</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2869" />
+        <location filename="../gui/MainWindow.ui" line="2840" />
         <source>Snap clicks and drags to endpoints, midpoints, centers, and intersections of what's already drawn</source>
         <translation>クリックやドラッグを、描画済み図形の端点・中点・中心・交点にスナップします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2884" />
+        <location filename="../gui/MainWindow.ui" line="2855" />
         <source>Modify tools</source>
         <translation>修正ツール</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2896" />
+        <location filename="../gui/MainWindow.ui" line="2867" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="939" />
         <source>Union</source>
         <translation>合体</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2899" />
+        <location filename="../gui/MainWindow.ui" line="2870" />
         <source>Merge the selected closed shapes into a single shape</source>
         <translation>選択した閉じた図形を 1 つの図形に結合します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2911" />
+        <location filename="../gui/MainWindow.ui" line="2882" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="944" />
         <source>Subtraction</source>
         <translation>減算</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2914" />
+        <location filename="../gui/MainWindow.ui" line="2885" />
         <source>Subtract the other selected closed shapes from the first one (in drawing order)</source>
         <translation>最初の図形（描画順）から残りの選択した閉じた図形を減算します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2926" />
+        <location filename="../gui/MainWindow.ui" line="2897" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="949" />
         <source>Intersection</source>
         <translation>交差</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2929" />
+        <location filename="../gui/MainWindow.ui" line="2900" />
         <source>Keep only the area shared by all the selected closed shapes</source>
         <translation>選択したすべての閉じた図形に共通する領域だけを残します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2941" />
+        <location filename="../gui/MainWindow.ui" line="2912" />
         <source>Smooth curved results</source>
         <translation>曲線結果を滑らかに</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2944" />
+        <location filename="../gui/MainWindow.ui" line="2915" />
         <source>Turn curved results into complex curves (far fewer nodes, slightly rounded corners) instead of flattened polygons</source>
         <translation>曲線を含む結果を、平坦化した多角形ではなく複雑曲線（ノード数が大幅に少なく、角がわずかに丸くなります）に変換します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2956" />
+        <location filename="../gui/MainWindow.ui" line="2927" />
         <source>Move with base point...</source>
         <translation>基点を指定して移動...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2959" />
+        <location filename="../gui/MainWindow.ui" line="2930" />
         <source>Pick a base point on the selection, then its destination - the selection moves by that exact displacement, with snapping on both points</source>
         <translation>選択範囲上で基点を指定し、次に移動先を指定します。選択範囲はその変位分だけ正確に移動し、両方の点でスナップが効きます</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2971" />
+        <location filename="../gui/MainWindow.ui" line="2942" />
         <source>Copy with base point...</source>
         <translation>基点を指定してコピー...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2974" />
+        <location filename="../gui/MainWindow.ui" line="2945" />
         <source>Pick a base point on the selection, then its destination - a copy is placed at that exact displacement, with snapping on both points</source>
         <translation>選択範囲上で基点を指定し、次に配置先を指定します。その変位分だけ離れた位置にコピーが配置され、両方の点でスナップが効きます</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2986" />
+        <location filename="../gui/MainWindow.ui" line="2957" />
         <source>Rotate by angle...</source>
         <translation>角度を指定して回転...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="2989" />
+        <location filename="../gui/MainWindow.ui" line="2960" />
         <source>Rotate the selection by an arbitrary angle; rectangles and ellipses are converted to polygons/curves first</source>
         <translation>選択範囲を任意の角度で回転します。長方形と楕円は先に多角形／曲線に変換されます</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3001" />
+        <location filename="../gui/MainWindow.ui" line="2972" />
         <source>Scale...</source>
         <translation>拡大縮小...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3004" />
+        <location filename="../gui/MainWindow.ui" line="2975" />
         <source>Scale the selection by a percentage around the first selected primitive's first point</source>
         <translation>最初に選択したプリミティブの最初の点を中心に、選択範囲を百分率で拡大縮小します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3016" />
+        <location filename="../gui/MainWindow.ui" line="2987" />
         <source>Array of copies...</source>
         <translation>コピーの配列...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3019" />
+        <location filename="../gui/MainWindow.ui" line="2990" />
         <source>Replicate the selection on a grid of rows and columns</source>
         <translation>選択範囲を行と列のグリッドに複製します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3028" />
+        <location filename="../gui/MainWindow.ui" line="2999" />
         <source>Hatch...</source>
         <translation>ハッチング...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3031" />
+        <location filename="../gui/MainWindow.ui" line="3002" />
         <source>Fill the selected closed shapes with a pattern of hatch lines</source>
         <translation>選択した閉じた図形をハッチング線のパターンで塗りつぶします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3043" />
+        <location filename="../gui/MainWindow.ui" line="3014" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="981" />
         <source>Convert to polygon</source>
         <translation>多角形に変換</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3046" />
+        <location filename="../gui/MainWindow.ui" line="3017" />
         <source>Rewrite the selected rectangles, ellipses, and closed curves as node-editable polygons</source>
         <translation>選択した長方形・楕円・閉じた曲線を、ノード編集可能な多角形に書き換えます</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3058" />
+        <location filename="../gui/MainWindow.ui" line="3029" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="986" />
         <source>Convert to complex curve</source>
         <translation>複雑曲線に変換</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3061" />
+        <location filename="../gui/MainWindow.ui" line="3032" />
         <source>Rewrite the selected rectangles, ellipses, and polygons as smooth complex curves</source>
         <translation>選択した長方形・楕円・多角形を滑らかな複雑曲線に書き換えます</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3073" />
+        <location filename="../gui/MainWindow.ui" line="3044" />
         <source>Simplify nodes...</source>
         <translation>ノードを簡略化...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3076" />
+        <location filename="../gui/MainWindow.ui" line="3047" />
         <source>Remove nodes that deviate less than the given tolerance from the selected polygons and curves</source>
         <translation>選択した多角形と曲線から、指定した許容差より逸脱の小さいノードを削除します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3088" />
+        <location filename="../gui/MainWindow.ui" line="3059" />
         <source>Fillet corners...</source>
         <translation>角を丸める...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3091" />
+        <location filename="../gui/MainWindow.ui" line="3062" />
         <source>Round every corner of the selected polygons and rectangles with an arc of the given radius</source>
         <translation>選択した多角形と長方形のすべての角を、指定半径の円弧で丸めます</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3103" />
+        <location filename="../gui/MainWindow.ui" line="3074" />
         <source>Chamfer corners...</source>
         <translation>角を面取り...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3106" />
+        <location filename="../gui/MainWindow.ui" line="3077" />
         <source>Cut every corner of the selected polygons and rectangles at the given distance</source>
         <translation>選択した多角形と長方形のすべての角を、指定距離で切り落とします</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3118" />
+        <location filename="../gui/MainWindow.ui" line="3089" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2145" />
         <source>Snap selection to grid</source>
         <translation>選択範囲をグリッドに合わせる</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3121" />
+        <location filename="../gui/MainWindow.ui" line="3092" />
         <source>Round every point of the selection to the snap step - handy after a DXF import or drawing with snapping off</source>
         <translation>選択範囲の各点をスナップ間隔に丸めます。DXF の読み込み後や、スナップを切って描いた後に便利です</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3133" />
+        <location filename="../gui/MainWindow.ui" line="3104" />
         <source>Offset outline...</source>
         <translation>輪郭のオフセット...</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3136" />
+        <location filename="../gui/MainWindow.ui" line="3107" />
         <source>Grow or shrink the selected closed shapes by a parallel offset of their outline</source>
         <translation>選択した閉じた図形を、輪郭の平行オフセットで拡大または縮小します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3145" />
+        <location filename="../gui/MainWindow.ui" line="3116" />
         <source>Invert selection</source>
         <translation>選択を反転</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3148" />
+        <location filename="../gui/MainWindow.ui" line="3119" />
         <source>Ctrl+Shift+I</source>
         <translation>Ctrl+Shift+I</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3160" />
+        <location filename="../gui/MainWindow.ui" line="3131" />
         <source>Select same type</source>
         <translation>同じ種類を選択</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3163" />
+        <location filename="../gui/MainWindow.ui" line="3134" />
         <source>Select every primitive of the same type as the current selection</source>
         <translation>現在の選択と同じ種類のプリミティブをすべて選択します</translation>
     </message>
     <message>
-        <location filename="../gui/MainWindow.ui" line="3178" />
+        <location filename="../gui/MainWindow.ui" line="3149" />
         <source>Show rulers</source>
         <translation>定規を表示</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="804" />
+        <location filename="../src/App/MainWindow.cpp" line="424" />
+        <source>Custom snap step...</source>
+        <translation>カスタムスナップ間隔...</translation>
+    </message>
+    <message>
+        <location filename="../src/App/MainWindow.cpp" line="426" />
+        <source>Custom snap step</source>
+        <translation>カスタムスナップ間隔</translation>
+    </message>
+    <message>
+        <location filename="../src/App/MainWindow.cpp" line="427" />
+        <source>Snap step (drawing units):</source>
+        <translation>スナップ間隔（図面単位）:</translation>
+    </message>
+    <message>
+        <location filename="../src/App/MainWindow.cpp" line="800" />
         <source>Close the others</source>
         <translation>他を閉じる</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="805" />
+        <location filename="../src/App/MainWindow.cpp" line="801" />
         <source>Close all</source>
         <translation>すべて閉じる</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="810" />
+        <location filename="../src/App/MainWindow.cpp" line="806" />
         <source>Copy file path</source>
         <translation>ファイルパスをコピー</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="811" />
+        <location filename="../src/App/MainWindow.cpp" line="807" />
         <source>Open containing folder</source>
         <translation>含まれるフォルダーを開く</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1070" />
+        <location filename="../src/App/MainWindow.cpp" line="1066" />
         <source>Search commands...</source>
         <translation>コマンドを検索...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1112" />
+        <location filename="../src/App/MainWindow.cpp" line="1108" />
         <source>Zoom %1%</source>
         <translation>ズーム %1%</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1119" />
+        <location filename="../src/App/MainWindow.cpp" line="1115" />
         <source>Custom zoom...</source>
         <translation>カスタムズーム...</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1121" />
+        <location filename="../src/App/MainWindow.cpp" line="1117" />
         <source>Custom zoom</source>
         <translation>カスタムズーム</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1122" />
+        <location filename="../src/App/MainWindow.cpp" line="1118" />
         <source>Zoom level (%):</source>
         <translation>ズームレベル (%):</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1477" />
+        <location filename="../src/App/MainWindow.cpp" line="1473" />
         <source>Undo: %1</source>
         <translation>元に戻す: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1480" />
+        <location filename="../src/App/MainWindow.cpp" line="1476" />
         <source>Redo: %1</source>
         <translation>やり直し: %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1551" />
+        <location filename="../src/App/MainWindow.cpp" line="1547" />
         <source>Update available</source>
         <translation>更新があります</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1552" />
+        <location filename="../src/App/MainWindow.cpp" line="1548" />
         <source>A new version of eSchema is available (%1).
 Do you want to download it now?</source>
         <translation>eSchemaの新しいバージョンが利用可能です（%1）。
 今すぐダウンロードしますか？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1562" />
+        <location filename="../src/App/MainWindow.cpp" line="1558" />
         <source>eSchema is already up to date.</source>
         <translation>eSchemaは既に最新版です。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1573" />
+        <location filename="../src/App/MainWindow.cpp" line="1569" />
         <source>Could not check for updates. Check your internet connection.</source>
         <translation>更新を確認できませんでした。インターネット接続を確認してください。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1610" />
+        <location filename="../src/App/MainWindow.cpp" line="1606" />
         <source>Attach tracing image</source>
         <translation>トレース画像を添付</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1660" />
+        <location filename="../src/App/MainWindow.cpp" line="1656" />
         <source>Symbol wizard</source>
         <translation>シンボルウィザード</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1666" />
+        <location filename="../src/App/MainWindow.cpp" line="1662" />
         <source>New drawing* (unsaved)</source>
         <translation>新規図面*(未保存)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1723" />
+        <location filename="../src/App/MainWindow.cpp" line="1719" />
         <source>The file no longer exists:
 %1</source>
         <translation>ファイルはもう存在しません:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1735" />
+        <location filename="../src/App/MainWindow.cpp" line="1731" />
         <source>Clear list</source>
         <translation>リストを消去</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1837" />
-        <location filename="../src/App/MainWindow.cpp" line="2524" />
-        <location filename="../src/App/MainWindow.cpp" line="2680" />
-        <location filename="../src/App/MainWindow.cpp" line="2709" />
-        <location filename="../src/App/MainWindow.cpp" line="2748" />
-        <location filename="../src/App/MainWindow.cpp" line="2961" />
-        <location filename="../src/App/MainWindow.cpp" line="3111" />
+        <location filename="../src/App/MainWindow.cpp" line="1833" />
+        <location filename="../src/App/MainWindow.cpp" line="2520" />
+        <location filename="../src/App/MainWindow.cpp" line="2676" />
+        <location filename="../src/App/MainWindow.cpp" line="2705" />
+        <location filename="../src/App/MainWindow.cpp" line="2744" />
+        <location filename="../src/App/MainWindow.cpp" line="2957" />
+        <location filename="../src/App/MainWindow.cpp" line="3107" />
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1837" />
-        <location filename="../src/App/MainWindow.cpp" line="2961" />
+        <location filename="../src/App/MainWindow.cpp" line="1833" />
+        <location filename="../src/App/MainWindow.cpp" line="2957" />
         <source>Unable to save the file:
 %1</source>
         <translation>ファイルを保存できません:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1928" />
+        <location filename="../src/App/MainWindow.cpp" line="1924" />
         <source>Unsaved changes</source>
         <translation>未保存の変更</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="1929" />
+        <location filename="../src/App/MainWindow.cpp" line="1925" />
         <source>There are unsaved changes. Do you want to save them?</source>
         <translation>未保存の変更があります。保存しますか?</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2492" />
+        <location filename="../src/App/MainWindow.cpp" line="2488" />
         <source>an untitled drawing</source>
         <translation>無題の図面</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2501" />
-        <location filename="../src/App/MainWindow.cpp" line="2534" />
+        <location filename="../src/App/MainWindow.cpp" line="2497" />
+        <location filename="../src/App/MainWindow.cpp" line="2530" />
         <source>Autosave recovery</source>
         <translation>自動保存の復元</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2502" />
+        <location filename="../src/App/MainWindow.cpp" line="2498" />
         <source>eSchema wasn't closed properly last time.
 Autosaves were found for:
 %1
@@ -3357,55 +3371,53 @@ Do you want to recover it?</source>
 復元しますか？</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2525" />
+        <location filename="../src/App/MainWindow.cpp" line="2521" />
         <source>Could not recover the autosave:
 %1</source>
         <translation>自動保存を復元できませんでした:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2553" />
+        <location filename="../src/App/MainWindow.cpp" line="2549" />
         <source>Open drawing</source>
         <translation>図面を開く</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2554" />
+        <location filename="../src/App/MainWindow.cpp" line="2550" />
         <source>Drawings (*.fcd *.dxf *.svg);;FidoCadJ (*.fcd);;AutoCAD DXF (*.dxf);;SVG (*.svg)</source>
         <translation>図面 (*.fcd *.dxf *.svg);;FidoCadJ (*.fcd);;AutoCAD DXF (*.dxf);;SVG (*.svg)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2932" />
-        <location filename="../src/App/MainWindow.cpp" line="2948" />
+        <location filename="../src/App/MainWindow.cpp" line="2928" />
+        <location filename="../src/App/MainWindow.cpp" line="2944" />
         <source>FidoCadJ (*.fcd)</source>
         <translation>FidoCadJ (*.fcd)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2645" />
+        <location filename="../src/App/MainWindow.cpp" line="2641" />
         <source>The drawing had elements outside the drawing area and was moved onto the sheet</source>
         <translation>図面に描画領域の外の要素があったため、シート上に移動しました</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="404" />
-        <location filename="../src/App/MainWindow.cpp" line="413" />
+        <location filename="../src/App/MainWindow.cpp" line="417" />
         <source>Snap %1</source>
         <translation>スナップ %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="405" />
         <source>Snap step (drawing units)</source>
-        <translation>スナップ間隔（図面単位）</translation>
+        <translation type="vanished">スナップ間隔（図面単位）</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2680" />
-        <location filename="../src/App/MainWindow.cpp" line="2709" />
-        <location filename="../src/App/MainWindow.cpp" line="2748" />
+        <location filename="../src/App/MainWindow.cpp" line="2676" />
+        <location filename="../src/App/MainWindow.cpp" line="2705" />
+        <location filename="../src/App/MainWindow.cpp" line="2744" />
         <source>Unable to open the file:
 %1</source>
         <translation>ファイルを開けません:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2727" />
+        <location filename="../src/App/MainWindow.cpp" line="2723" />
         <source>Import from DXF</source>
         <translation>DXFからインポート</translation>
     </message>
@@ -3414,7 +3426,7 @@ Do you want to recover it?</source>
         <translation type="vanished">DXF (*.dxf)</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2728" />
+        <location filename="../src/App/MainWindow.cpp" line="2724" />
         <source>Some elements of the DXF file were not imported:
 
 %1</source>
@@ -3423,12 +3435,12 @@ Do you want to recover it?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2761" />
+        <location filename="../src/App/MainWindow.cpp" line="2757" />
         <source>Import from SVG</source>
         <translation>SVG からインポート</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2762" />
+        <location filename="../src/App/MainWindow.cpp" line="2758" />
         <source>Some elements of the SVG file were not imported:
 
 %1</source>
@@ -3437,44 +3449,44 @@ Do you want to recover it?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2869" />
+        <location filename="../src/App/MainWindow.cpp" line="2865" />
         <source>Edit FCD code</source>
         <translation>FCDコードを編集</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2931" />
+        <location filename="../src/App/MainWindow.cpp" line="2927" />
         <source>Save drawing as</source>
         <translation>名前を付けて図面を保存</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2947" />
+        <location filename="../src/App/MainWindow.cpp" line="2943" />
         <source>Save split as</source>
         <translation>分解して保存</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="2967" />
-        <location filename="../src/App/MainWindow.cpp" line="3081" />
+        <location filename="../src/App/MainWindow.cpp" line="2963" />
+        <location filename="../src/App/MainWindow.cpp" line="3077" />
         <location filename="../src/App/MainWindowEditActions.cpp" line="2667" />
         <source>The drawing is empty.</source>
         <translation>図面が空です。</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="3004" />
+        <location filename="../src/App/MainWindow.cpp" line="3000" />
         <source>Print preview</source>
         <translation>印刷プレビュー</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="3081" />
+        <location filename="../src/App/MainWindow.cpp" line="3077" />
         <source>Export</source>
         <translation>エクスポート</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="3089" />
+        <location filename="../src/App/MainWindow.cpp" line="3085" />
         <source>Export drawing</source>
         <translation>図面をエクスポート</translation>
     </message>
     <message>
-        <location filename="../src/App/MainWindow.cpp" line="3112" />
+        <location filename="../src/App/MainWindow.cpp" line="3108" />
         <source>Could not export the file:
 %1</source>
         <translation>ファイルをエクスポートできませんでした:
@@ -4087,32 +4099,48 @@ snap to grid</source>
         <translation>ズームレベルを設定</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="36" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="37" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="63" />
+        <source>Snap %1</source>
+        <translation>スナップ %1</translation>
+    </message>
+    <message>
+        <location filename="../src/Widgets/StatusBar.cpp" line="40" />
+        <source>Snap step (drawing units)</source>
+        <translation>スナップ間隔（図面単位）</translation>
+    </message>
+    <message>
+        <location filename="../src/Widgets/StatusBar.cpp" line="44" />
         <source>Primitives 0  Macros 0</source>
         <translation>プリミティブ 0  マクロ 0</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="85" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="72" />
+        <source>Nodes %1</source>
+        <translation>ノード %1</translation>
+    </message>
+    <message>
+        <location filename="../src/Widgets/StatusBar.cpp" line="112" />
         <source>X %1 Y %2</source>
         <translation>X %1 Y %2</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="88" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="115" />
         <source>X %1mm Y %2mm</source>
         <translation>X %1mm Y %2mm</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="91" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="118" />
         <source>X %1 Y %2 (X %3mm Y %4mm)</source>
         <translation>X %1 Y %2 (X %3mm Y %4mm)</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="99" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="126" />
         <source>Zoom %1%</source>
         <translation>ズーム %1%</translation>
     </message>
     <message>
-        <location filename="../src/Widgets/StatusBar.cpp" line="111" />
+        <location filename="../src/Widgets/StatusBar.cpp" line="138" />
         <source>Primitives %1  Macros %2</source>
         <translation>プリミティブ %1  マクロ %2</translation>
     </message>

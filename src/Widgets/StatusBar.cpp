@@ -33,6 +33,14 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
     connect(btnZoomLevel, &QToolButton::clicked, this, [this]() {
         emit zoomWidgetClicked(btnZoomLevel->mapToGlobal(QPoint(0, btnZoomLevel->height())));
     });
+
+    btnSnapStep->setText(tr("Snap %1").arg(10));
+    btnSnapStep->setAutoRaise(true);
+    btnSnapStep->setCursor(Qt::PointingHandCursor);
+    btnSnapStep->setToolTip(tr("Snap step (drawing units)"));
+    connect(btnSnapStep, &QToolButton::clicked, this, [this]() {
+        emit snapWidgetClicked(btnSnapStep->mapToGlobal(QPoint(0, btnSnapStep->height())));
+    });
     lblPrimitiveCount->setText(tr("Primitives 0  Macros 0"));
     lblPrimitiveCount->setMinimumWidth(150);
 
@@ -41,9 +49,28 @@ StatusBar::StatusBar(QWidget *parent):QStatusBar(parent)
 
     loadSettings();
 
+    lblNodeCount->hide(); // shown only while a curve/polygon is selected
+
+    this->addPermanentWidget(btnSnapStep);
     this->addPermanentWidget(btnZoomLevel);
+    this->addPermanentWidget(lblNodeCount);
     this->addPermanentWidget(lblPrimitiveCount);
     this->addPermanentWidget(lblPos);
+}
+
+void StatusBar::snapStep(int step)
+{
+    btnSnapStep->setText(tr("Snap %1").arg(step));
+}
+
+void StatusBar::selectedNodeCount(int count)
+{
+    if (count < 0) {
+        lblNodeCount->hide();
+        return;
+    }
+    lblNodeCount->setText(tr("Nodes %1").arg(count));
+    lblNodeCount->show();
 }
 
 void StatusBar::loadSettings()

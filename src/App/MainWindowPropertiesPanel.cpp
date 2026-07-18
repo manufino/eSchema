@@ -64,6 +64,22 @@ void MainWindow::updatePropertiesPanel()
 {
     GraphicsPrimitive *primitive = firstSelectedPrimitive();
 
+    // Status bar node readout: shown while a single complex curve or
+    // polygon is selected, hidden otherwise. Piggybacks on this function
+    // because it already runs on both selection changes and every
+    // undo-stack change - so the canvas context menu's add/remove node
+    // updates the count live.
+    {
+        int nodes = -1;
+        const QList<GraphicsPrimitive *> selection = selectedPrimitivesInOrder();
+        if (selection.size() == 1) {
+            const GraphicsPrimitive::PrimitiveTypes type = selection.first()->getPrimitiveType();
+            if (type == GraphicsPrimitive::Spline || type == GraphicsPrimitive::Polyline)
+                nodes = selection.first()->controlPointCount();
+        }
+        ui->statusbar->selectedNodeCount(nodes);
+    }
+
     const QSignalBlocker blockName(ui->lineEdit);
     const QSignalBlocker blockValue(ui->lineEdit_2);
     const QSignalBlocker blockLayer(ui->cbPropLayer);
@@ -118,7 +134,6 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->labelArrowLength, ui->spinArrowLength, false);
         showRow(ui->labelArrowHalfWidth, ui->spinArrowHalfWidth, false);
         showRow(ui->labelCurveClosed, ui->checkBoxCurveClosed, false);
-        showRow(ui->labelNodeCount, ui->lblNodeCountValue, false);
         showRow(ui->labelTrackWidth, ui->spinTrackWidth, false);
         showRow(ui->labelPadWidth, ui->spinPadWidth, false);
         showRow(ui->labelPadHeight, ui->spinPadHeight, false);
@@ -245,14 +260,6 @@ void MainWindow::updatePropertiesPanel()
     if (isComplexCurve)
         ui->checkBoxCurveClosed->setChecked(static_cast<PrimitiveComplexCurve *>(primitive)->isClosed());
 
-    // Node count for the multi-point primitives (complex curves and
-    // polygons) - read-only: nodes are added/removed on the canvas (context
-    // menu), and this refreshes on every undo-stack change, so it follows
-    // add/remove node immediately.
-    const bool isPolygon = primitive->getPrimitiveType() == GraphicsPrimitive::Polyline;
-    showRow(ui->labelNodeCount, ui->lblNodeCountValue, isComplexCurve || isPolygon);
-    if (isComplexCurve || isPolygon)
-        ui->lblNodeCountValue->setText(QString::number(primitive->controlPointCount()));
 
     const bool isPcbTrack = primitive->getPrimitiveType() == GraphicsPrimitive::PcbTrack;
     showRow(ui->labelTrackWidth, ui->spinTrackWidth, isPcbTrack);
