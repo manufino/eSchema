@@ -547,6 +547,10 @@ private:
     // updateDockTitleBars() re-evaluates this after every layout change
     // (deferred: tabifiedDockWidgets() lags the actual re-layout).
     void setupDockTabBars();       // style the native dock tab bars' close buttons
+    // The right-click menu of a dock tab at `pos` (tab-bar coordinates):
+    // document tabs offer close/close-others/close-all and copy-path/
+    // open-folder; panel tabs fall back to the standard panels menu.
+    void showDocumentTabContextMenu(QTabBar *bar, const QPoint &pos);
     void updateDockTitleBars();    // apply the per-dock title-bar policy
     void applyDockTitleBar(QDockWidget *dock, QMainWindow *area);
     QList<QDockWidget *> allManagedDocks() const; // document + panel docks

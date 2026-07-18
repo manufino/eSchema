@@ -657,6 +657,69 @@ void MainWindow::setupDockTabBars()
             else
                 dock->close();
         });
+        // Right-clicking a tab: document tabs get their own close/copy-path
+        // menu; panel tabs keep the standard panels/toolbars menu.
+        bar->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(bar, &QTabBar::customContextMenuRequested, this, [this, bar](const QPoint &pos) {
+            showDocumentTabContextMenu(bar, pos);
+        });
+    }
+}
+
+void MainWindow::showDocumentTabContextMenu(QTabBar *bar, const QPoint &pos)
+{
+    const int index = bar->tabAt(pos);
+    if (index < 0)
+        return;
+    QDockWidget *dock = dockForTabText(bar->tabText(index));
+    if (!dock)
+        return;
+    Document *document = documentForObject(dock);
+    if (!document) {
+        // A side panel's tab: show the same panels/toolbars visibility menu
+        // a right-click on the toolbar area shows, rather than nothing (the
+        // custom context-menu policy set above suppresses Qt's default).
+        if (QMenu *panelMenu = createPopupMenu()) {
+            panelMenu->setAttribute(Qt::WA_DeleteOnClose);
+            panelMenu->popup(bar->mapToGlobal(pos));
+        }
+        return;
+    }
+
+    QMenu menu(this);
+    QAction *closeAction = menu.addAction(tr("Close"));
+    QAction *closeOthersAction = menu.addAction(tr("Close the others"));
+    QAction *closeAllAction = menu.addAction(tr("Close all"));
+    closeOthersAction->setEnabled(m_documents.size() > 1);
+    menu.addSeparator();
+    // Only meaningful for a document that actually lives on disk.
+    const bool hasPath = !document->filePath().isEmpty();
+    QAction *copyPathAction = menu.addAction(tr("Copy file path"));
+    QAction *openFolderAction = menu.addAction(tr("Open containing folder"));
+    copyPathAction->setEnabled(hasPath);
+    openFolderAction->setEnabled(hasPath);
+
+    QAction *chosen = menu.exec(bar->mapToGlobal(pos));
+    if (!chosen)
+        return;
+    if (chosen == closeAction) {
+        closeDocument(document);
+    } else if (chosen == closeOthersAction || chosen == closeAllAction) {
+        // Iterate a snapshot - closeDocument() mutates m_documents (and
+        // "close all" of the last one resets it to a fresh untitled instead,
+        // per the one-document-always-open rule). Each dirty document still
+        // asks about its unsaved changes; cancelling skips just that one.
+        const QList<Document *> snapshot = m_documents;
+        for (Document *other : snapshot) {
+            if (chosen == closeOthersAction && other == document)
+                continue;
+            if (m_documents.contains(other))
+                closeDocument(other);
+        }
+    } else if (chosen == copyPathAction) {
+        QApplication::clipboard()->setText(QDir::toNativeSeparators(document->filePath()));
+    } else if (chosen == openFolderAction) {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(QFileInfo(document->filePath()).absolutePath()));
     }
 }
 
