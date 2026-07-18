@@ -73,6 +73,17 @@ A complete FidoCadJ primitive set, each with on-canvas resize handles, snap-to-g
 - Faithful, idempotent round-tripping — including the `FCJ` extensions (dash styles, arrowheads) and per-document `FJC` configuration
 - Also available as a headless command-line converter (`eSchema -n -c ...`) for scripted batch conversion to any of the supported export formats
 
+### File format specification
+The complete specification of the FCD drawing format and the FCL library
+format — lexical rules, every primitive, the `FCJ`/`FJC` extensions, macro
+libraries, and worked examples — is bundled in
+**[FIDOSPECS.md](FIDOSPECS.md)**. It is the reference eSchema's reader and
+writer are documented against (the source comments cite its section numbers
+throughout). Originally written by Dante Loi for the
+[FidoCadJS](https://github.com/DanteCpp/FidoCadJS) project; this copy adds a
+preface with the deviations and errata verified against the reference
+FidoCadJ implementation.
+
 ### DXF import/export
 - Import and export AutoCAD DXF drawings, powered by the [libdxfrw](https://github.com/LibreCAD/libdxfrw) library
 - A best-effort mapping between FidoCadJ primitives and DXF entities (lines, circles/ellipses, arcs, polylines, splines, text, blocks) in both directions, with a post-import summary of anything that couldn't be mapped
