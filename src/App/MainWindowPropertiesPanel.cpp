@@ -118,6 +118,7 @@ void MainWindow::updatePropertiesPanel()
         showRow(ui->labelArrowLength, ui->spinArrowLength, false);
         showRow(ui->labelArrowHalfWidth, ui->spinArrowHalfWidth, false);
         showRow(ui->labelCurveClosed, ui->checkBoxCurveClosed, false);
+        showRow(ui->labelNodeCount, ui->lblNodeCountValue, false);
         showRow(ui->labelTrackWidth, ui->spinTrackWidth, false);
         showRow(ui->labelPadWidth, ui->spinPadWidth, false);
         showRow(ui->labelPadHeight, ui->spinPadHeight, false);
@@ -243,6 +244,15 @@ void MainWindow::updatePropertiesPanel()
     showRow(ui->labelCurveClosed, ui->checkBoxCurveClosed, isComplexCurve);
     if (isComplexCurve)
         ui->checkBoxCurveClosed->setChecked(static_cast<PrimitiveComplexCurve *>(primitive)->isClosed());
+
+    // Node count for the multi-point primitives (complex curves and
+    // polygons) - read-only: nodes are added/removed on the canvas (context
+    // menu), and this refreshes on every undo-stack change, so it follows
+    // add/remove node immediately.
+    const bool isPolygon = primitive->getPrimitiveType() == GraphicsPrimitive::Polyline;
+    showRow(ui->labelNodeCount, ui->lblNodeCountValue, isComplexCurve || isPolygon);
+    if (isComplexCurve || isPolygon)
+        ui->lblNodeCountValue->setText(QString::number(primitive->controlPointCount()));
 
     const bool isPcbTrack = primitive->getPrimitiveType() == GraphicsPrimitive::PcbTrack;
     showRow(ui->labelTrackWidth, ui->spinTrackWidth, isPcbTrack);

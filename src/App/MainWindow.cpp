@@ -393,6 +393,48 @@ MainWindow::MainWindow(QWidget *parent)
         sheetScene->setObjectSnapEnabled(checked);
     });
 
+    // Quick snap-step picker, right next to the snap toggles: the step gets
+    // changed constantly while drawing (coarse placement vs fine detail),
+    // so it earns a permanent toolbar slot instead of a trip to Options.
+    // Same "snap_step" key the Options dialog's spinbox reads/writes; kept
+    // in sync both ways through settingIsChanged. A plain widget like the
+    // layer combo, deliberately outside the customizable-command system.
+    m_snapStepCombo = new QComboBox(this);
+    for (int step : { 1, 2, 5, 10, 25, 50 })
+        m_snapStepCombo->addItem(tr("Snap %1").arg(step), step);
+    m_snapStepCombo->setToolTip(tr("Snap step (drawing units)"));
+    auto syncSnapStepCombo = [this]() {
+        const QVariant val = SettingsManager::getInstance().loadSetting("snap_step");
+        const int step = val.isValid() && val.toInt() > 0 ? val.toInt() : 10;
+        int index = m_snapStepCombo->findData(step);
+        if (index < 0) {
+            // A custom value typed in the Options dialog gets its own entry
+            // rather than being misrepresented by the nearest preset.
+            m_snapStepCombo->addItem(tr("Snap %1").arg(step), step);
+            index = m_snapStepCombo->count() - 1;
+        }
+        const QSignalBlocker blocker(m_snapStepCombo);
+        m_snapStepCombo->setCurrentIndex(index);
+    };
+    syncSnapStepCombo();
+    // activated(), not currentIndexChanged(): only real user picks write
+    // the setting - programmatic syncs must never echo back.
+    connect(m_snapStepCombo, &QComboBox::activated, this, [this](int index) {
+        SettingsManager::getInstance().saveSetting("snap_step",
+                m_snapStepCombo->itemData(index).toInt());
+    });
+    connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
+            this, syncSnapStepCombo);
+    // Right after the snap toggles (before the separator that follows them).
+    {
+        const QList<QAction *> toolActions = ui->toolBarTools->actions();
+        const int snapIndex = toolActions.indexOf(ui->actionSnapToObjects);
+        if (snapIndex >= 0 && snapIndex + 1 < toolActions.size())
+            ui->toolBarTools->insertWidget(toolActions.at(snapIndex + 1), m_snapStepCombo);
+        else
+            ui->toolBarTools->addWidget(m_snapStepCombo);
+    }
+
     // Options-dialog settings that map onto live widget state (toolbar icon
     // size, mirrored toggles, ...) - see applyLiveSettings().
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
