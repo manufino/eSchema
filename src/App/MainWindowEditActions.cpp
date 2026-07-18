@@ -669,6 +669,8 @@ void MainWindow::scheduleSelectionRefresh()
         m_selectionRefreshPending = false;
         updateEditActionsState();
         updatePropertiesPanel();
+        // Mirror the canvas selection in the FCD code panel too.
+        highlightSelectionInFcdCode();
     }, Qt::QueuedConnection);
 }
 

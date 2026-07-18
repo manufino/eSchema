@@ -139,6 +139,26 @@ QString write(const Sheet *sheet)
     return writeExpanded(sheet, sheet->primitives());
 }
 
+QString write(const Sheet *sheet,
+              QHash<const GraphicsPrimitive *, PrimitiveLineRange> *lineRanges)
+{
+    QStringList lines;
+    lines << QStringLiteral("[FIDOCAD]");
+    writeDocumentConfig(lines, sheet);
+
+    if (lineRanges)
+        lineRanges->clear();
+    for (GraphicsPrimitive *primitive : sheet->primitives()) {
+        const int before = lines.size();
+        writePrimitive(lines, primitive);
+        // Degenerate primitives write nothing (see writePrimitive) and get
+        // no range - nothing to highlight for them.
+        if (lineRanges && lines.size() > before)
+            lineRanges->insert(primitive, { before, static_cast<int>(lines.size()) - before });
+    }
+    return lines.join(QLatin1Char('\n'));
+}
+
 QString writeExpanded(const Sheet *sheet, const QList<GraphicsPrimitive *> &primitives)
 {
     QStringList lines;

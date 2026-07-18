@@ -89,6 +89,9 @@
 #include <QUndoCommand>
 #include <QPainterPath>
 #include <QTabBar>
+#include <QTextBlock>
+#include <QTextEdit>
+#include <QScrollBar>
 #include <QWidgetAction>
 #include <cmath>
 #include <functional>
@@ -2726,8 +2729,11 @@ void MainWindow::syncFcdCodeFromSheet()
     // signals so this programmatic change doesn't itself trigger anything
     // (e.g. a spell-checker/undo-stack hookup some style sheet might add).
     const QSignalBlocker blocker(ui->txtFcdCode);
-    ui->txtFcdCode->setPlainText(FidoCadWriter::write(sheetScene));
+    ui->txtFcdCode->setPlainText(FidoCadWriter::write(sheetScene, &m_fcdLineRanges));
     ui->txtFcdCode->document()->setModified(false);
+    // The text (and with it the line mapping) is fresh - re-highlight
+    // whatever is selected right away, e.g. after an undo/redo.
+    highlightSelectionInFcdCode();
 }
 
 void MainWindow::refreshFcdCodeIfClean()
@@ -2740,6 +2746,53 @@ void MainWindow::refreshFcdCodeIfClean()
         return;
     if (!ui->txtFcdCode->document()->isModified())
         syncFcdCodeFromSheet();
+}
+
+void MainWindow::highlightSelectionInFcdCode()
+{
+    if (!ui->dockFcdCode->isVisible())
+        return;
+    // A hand-edited text no longer matches m_fcdLineRanges - leave both the
+    // highlights and the user's edit alone (Apply/Refresh resyncs).
+    if (ui->txtFcdCode->document()->isModified())
+        return;
+
+    QTextDocument *document = ui->txtFcdCode->document();
+    QColor background = ui->txtFcdCode->palette().highlight().color();
+    background.setAlpha(70); // a tint, so the text stays readable in every theme
+
+    QList<QTextEdit::ExtraSelection> extras;
+    int scrollTarget = -1;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+        const auto range = m_fcdLineRanges.constFind(primitive);
+        if (range == m_fcdLineRanges.constEnd())
+            continue;
+        for (int i = 0; i < range->lineCount; ++i) {
+            const QTextBlock block = document->findBlockByNumber(range->firstLine + i);
+            if (!block.isValid())
+                continue;
+            QTextEdit::ExtraSelection extra;
+            extra.cursor = QTextCursor(block);
+            extra.format.setBackground(background);
+            extra.format.setProperty(QTextFormat::FullWidthSelection, true);
+            extras.append(extra);
+        }
+        if (scrollTarget < 0)
+            scrollTarget = range->firstLine;
+    }
+    ui->txtFcdCode->setExtraSelections(extras);
+
+    // Bring the first highlighted line into view without touching the caret
+    // (QPlainTextEdit's vertical scrollbar works in whole lines) - and only
+    // when it isn't already visible, so browsing a selection doesn't yank
+    // the panel around.
+    if (scrollTarget >= 0) {
+        QScrollBar *bar = ui->txtFcdCode->verticalScrollBar();
+        const int lineHeight = qMax(1, static_cast<int>(ui->txtFcdCode->fontMetrics().lineSpacing()));
+        const int visibleLines = qMax(1, ui->txtFcdCode->viewport()->height() / lineHeight);
+        if (scrollTarget < bar->value() || scrollTarget >= bar->value() + visibleLines)
+            bar->setValue(qMax(0, scrollTarget - visibleLines / 3));
+    }
 }
 
 void MainWindow::clickRefreshFcdCodeAction()

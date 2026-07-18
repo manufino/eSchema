@@ -40,6 +40,7 @@
 #include "SelectionHandleController.h"
 #include "Document.h"
 #include "DocumentView.h"
+#include "FidoCadWriter.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -524,6 +525,13 @@ private:
     // otherwise their in-progress edit would keep getting silently
     // discarded out from under them.
     void refreshFcdCodeIfClean();
+    // Highlights (via extra selections, so the caret and any scroll the
+    // user made stay untouched) the FCD code lines belonging to the
+    // primitives currently selected on the canvas, scrolling the first one
+    // into view - the mapping comes from m_fcdLineRanges, rebuilt by every
+    // syncFcdCodeFromSheet(). No-op while the panel is hidden or the text
+    // has been hand-edited (the mapping no longer matches then).
+    void highlightSelectionInFcdCode();
 
 private:
     // --- Multi-document infrastructure ------------------------------------
@@ -636,6 +644,10 @@ private:
     // The recent-files hover preview (created lazily, reused) - see
     // showRecentFilePreview().
     QLabel *m_recentPreview = nullptr;
+    // Which lines of the FCD code panel each primitive occupies - filled by
+    // syncFcdCodeFromSheet() together with the text itself, so the two can
+    // never drift apart; consumed by highlightSelectionInFcdCode().
+    QHash<const GraphicsPrimitive *, FidoCadWriter::PrimitiveLineRange> m_fcdLineRanges;
     bool m_menuSearchOpening = false; // re-entry guard for the focus handler
     // Whether the clipboard holds pasteable content - cached on
     // QClipboard::dataChanged, because reading the system clipboard is an

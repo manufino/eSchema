@@ -22,6 +22,7 @@
 
 #include <QString>
 #include <QList>
+#include <QHash>
 
 class Sheet;
 class GraphicsPrimitive;
@@ -34,6 +35,20 @@ namespace FidoCadWriter {
 
 // Returns the full file contents (including the "[FIDOCAD]" header line).
 QString write(const Sheet *sheet);
+
+// Where one primitive's serialization sits inside a write() result:
+// 0-based first line and how many lines it spans (its own instruction line
+// plus any FCJ/TY follow-up lines).
+struct PrimitiveLineRange {
+    int firstLine = 0;
+    int lineCount = 0;
+};
+
+// Like write(), additionally filling `lineRanges` with every primitive's
+// line range within the returned text - the FCD code panel uses this to
+// highlight the lines of the primitives selected on the canvas.
+QString write(const Sheet *sheet,
+              QHash<const GraphicsPrimitive *, PrimitiveLineRange> *lineRanges);
 
 // Like write(), but serializes `primitives` instead of sheet->primitives() -
 // `sheet` is only consulted for its document-wide FJC config (connection
