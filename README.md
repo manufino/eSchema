@@ -144,6 +144,18 @@ Just open `eSchema.pro` in Qt Creator, pick a Qt 6 kit, and build/run — no ext
 
 ## What's new
 
+### 1.1.0
+- **SVG import**: the full path grammar (arcs included), nested groups with transforms and inherited colors, viewBox mapping, physical-size scaling — straight shapes become polygons/lines, lone cubics become Béziers, curved outlines become smooth complex curves, and distinct colors claim layer slots like DXF layers do
+- **One Open dialog for every format**: File > Open lists `.fcd`, `.dxf` and `.svg` together and routes by extension — the separate "Import from DXF" menu entry is gone, and drag & drop accepts SVG too
+- **DXF imports are finally in scale**: the declared `$INSUNITS` unit (mm, inches, cm, ...) rescales the geometry onto the drawing unit, so the dimension tools report the original's real millimeters; imported layer colors are contrast-guarded against the canvas (no more invisible white-on-white drawings), and imports land centered on the sheet instead of hugging its corner
+- **Hatch tool** (Edit > Shape > Hatch): fills the selected closed shapes with clipped parallel lines — angle, spacing, optional cross-hatch — generated as plain lines, so files stay fully FidoCadJ-compatible (holes from boolean keyhole polygons are respected)
+- **Layers panel**: the layer manager is now a dockable panel (Ctrl+L) that lives alongside the drawing instead of a separate window
+- **Welcome card** on new empty drawings: recent files with preview thumbnails, quick tips, and a "show on new drawings" toggle; hovering an Open Recent entry shows a rendering of that drawing beside the menu
+- **Selection mirrored in the FCD code panel**: selecting primitives on the canvas highlights their exact lines (FCJ/TY follow-ups included) and scrolls them into view
+- **More GUI polish**: right-click menu on document tabs (close/close others/close all, copy path, open folder), clickable zoom readout in the status bar with presets and exact value, macros draggable from the Libraries panel straight onto the sheet, recently used commands first in the command palette, and a freshly created document now really comes to the front with focus
+- **View behavior**: opening any file fits and centers it automatically, zoom-out reaches far enough to frame even sheet-filling drawings, and fit/wheel zoom stay consistent at every level; the drawing area grows to 20000 units per side
+- **Format-compatibility fix**: name/value labels are attached only when announced by an `FCJ` marker, exactly like the reference FidoCadJ parser — text primitives directly following an unlabeled macro are no longer swallowed as its labels (and eSchema now writes the marker itself); the bundled FIDOSPECS.md documents the corrected rule
+
 ### 1.0.9
 - **Multiple documents**: any number of drawings open at once, as tabs in the drawing area — drag a tab to split them side by side, stack them back together, or float a drawing in its own window, all with Qt's native dock drag-and-drop and IDE-style slim tabs with a close button
 - **Per-document everything**: each drawing keeps its own undo/redo history, file path, and layer configuration (names, colors, visibility, locks, master layer) — switching tabs swaps them seamlessly, and every existing command simply acts on the active drawing
