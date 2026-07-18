@@ -178,11 +178,19 @@ MainWindow::MainWindow(QWidget *parent)
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockProperties->toggleViewAction());
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockLibraries->toggleViewAction());
     ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockFcdCode->toggleViewAction());
+    ui->menuView->insertAction(ui->actionToolBarBaseVisible, ui->dockLayers->toggleViewAction());
     // The toggle actions inherit each panel's icon (set in the .ui), so the
     // View menu matches the dock tab bar - see refreshDockTabIcons().
     ui->dockProperties->toggleViewAction()->setIcon(ui->dockProperties->windowIcon());
     ui->dockLibraries->toggleViewAction()->setIcon(ui->dockLibraries->windowIcon());
     ui->dockFcdCode->toggleViewAction()->setIcon(ui->dockFcdCode->windowIcon());
+    ui->dockLayers->toggleViewAction()->setIcon(ui->dockLayers->windowIcon());
+    // The Layers panel starts hidden: unlike the other three panels it is
+    // an on-demand tool (Tools > Layer management / Ctrl+L shows it), and
+    // hiding it BEFORE restoreState() means an older saved layout that
+    // doesn't know this dock yet leaves it hidden instead of dropping it
+    // docked-and-visible onto the right edge.
+    ui->dockLayers->hide();
     // Restores whatever dock/toolbar arrangement (position, size, floating,
     // tabbing) was in effect when the window was last closed - see
     // closeEvent(), which is what actually saves it. On the very first run
@@ -207,6 +215,9 @@ MainWindow::MainWindow(QWidget *parent)
         ui->dockFcdCode->setVisible(true);
         tabifyDockWidget(ui->dockLibraries, ui->dockProperties);
         tabifyDockWidget(ui->dockProperties, ui->dockFcdCode);
+        // The Layers panel tabs with the others too (so showing it lands in
+        // the same group), but stays hidden until asked for - see above.
+        tabifyDockWidget(ui->dockFcdCode, ui->dockLayers);
         ui->dockLibraries->raise();
     }
 
@@ -226,7 +237,7 @@ MainWindow::MainWindow(QWidget *parent)
             updateDockTitleBars();
         });
     };
-    for (QDockWidget *dock : { ui->dockLibraries, ui->dockProperties, ui->dockFcdCode }) {
+    for (QDockWidget *dock : { ui->dockLibraries, ui->dockProperties, ui->dockFcdCode, ui->dockLayers }) {
         connect(dock, &QDockWidget::dockLocationChanged, this, refreshPanelDocks);
         connect(dock, &QDockWidget::topLevelChanged, this, refreshPanelDocks);
         connect(dock, &QDockWidget::visibilityChanged, this, refreshPanelDocks);
@@ -586,7 +597,7 @@ QList<QDockWidget *> MainWindow::allManagedDocks() const
         if (document->dock)
             docks.append(document->dock);
     }
-    docks << ui->dockLibraries << ui->dockProperties << ui->dockFcdCode;
+    docks << ui->dockLibraries << ui->dockProperties << ui->dockFcdCode << ui->dockLayers;
     return docks;
 }
 
@@ -1359,19 +1370,14 @@ void MainWindow::handleUpdateCheckFailed()
 
 void MainWindow::clickLayerManagerAction()
 {
-    // Single instance: triggering the action again just brings the open
-    // manager forward. A second, parallel one would keep stale rows (and
-    // dangling Layer* in its item data and row widgets) across deletions
-    // performed in the first.
-    if (layerManager) {
-        layerManager->raise();
-        layerManager->activateWindow();
-        return;
-    }
-    layerManager = new DialogLayerList(this);
-    connect(layerManager, &QDialog::finished, layerManager, &QObject::deleteLater);
-    connect(layerManager, &QDialog::finished, this, [this]() { layerManager = nullptr; });
-    layerManager->show();
+    // The layer manager is a dockable panel (ui->dockLayers, hidden by
+    // default) rather than a separate dialog - this action shows it and
+    // brings it to the front of whatever tab group it lives in, so layers
+    // can be managed side by side with the drawing.
+    ui->dockLayers->setVisible(true);
+    ui->dockLayers->raise();
+    if (ui->dockLayers->isFloating())
+        ui->dockLayers->activateWindow();
 }
 
 void MainWindow::clickAttachImageAction()
@@ -1700,7 +1706,8 @@ bool MainWindow::confirmDiscardChanges()
 // Properties/FCD code), so the match is unambiguous.
 void MainWindow::refreshDockTabIcons()
 {
-    const QList<QDockWidget *> docks = { ui->dockLibraries, ui->dockProperties, ui->dockFcdCode };
+    const QList<QDockWidget *> docks = { ui->dockLibraries, ui->dockProperties, ui->dockFcdCode,
+                                         ui->dockLayers };
     const QList<QTabBar *> tabBars = findChildren<QTabBar *>(QString(), Qt::FindDirectChildrenOnly);
     for (QTabBar *tabBar : tabBars) {
         for (int i = 0; i < tabBar->count(); ++i) {

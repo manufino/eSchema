@@ -23,7 +23,7 @@
 #include "ThemeManager.h"
 
 DialogLayerList::DialogLayerList(QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::DialogLayerList)
 {
     ui->setupUi(this);

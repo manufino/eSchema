@@ -34,7 +34,6 @@
 #include "Layer.h"
 #include "LayerList.h"
 #include "LayerToolBarWidget.h"
-#include "DialogLayerList.h"
 #include "DialogShortcuts.h"
 #include "GlobalUtils.h"
 #include "PrimitivePlacementController.h"
@@ -578,10 +577,6 @@ private:
     Sheet *sheetScene = nullptr; // the ACTIVE document's sheet
     DialogOptions *optionDialog;
     DialogAbout *aboutDialog = nullptr;
-    // Single instance (see clickLayerManagerAction()): a second one would
-    // keep stale rows - and dangling Layer* item data - across deletions
-    // performed in the first. Reset to nullptr on finished.
-    DialogLayerList *layerManager = nullptr;
     DialogShortcuts *shortcutsDialog = nullptr;
     DialogFind *findDialog = nullptr; // created lazily on first Ctrl+F
     QString lastFindText;

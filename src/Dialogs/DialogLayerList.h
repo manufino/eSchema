@@ -20,7 +20,7 @@
 #ifndef DIALOGLAYERLIST_H
 #define DIALOGLAYERLIST_H
 
-#include <QDialog>
+#include <QWidget>
 
 #include "Layer.h"
 #include "LayerListView.h"
@@ -29,11 +29,13 @@ namespace Ui {
 class DialogLayerList;
 }
 
-// The layer manager (Tools menu): a LayerListView of every layer with
-// buttons to reorder, add, delete, and bulk-toggle visibility/locking.
-// All mutations go through the LayerList singleton, so the toolbar combo
-// and the canvas stay in sync while the dialog is open.
-class DialogLayerList : public QDialog
+// The layer manager: a LayerListView of every layer with buttons to
+// reorder, add, delete, and bulk-toggle visibility/locking. Despite the
+// legacy Dialog name, this is a plain widget - it lives inside the "Layers"
+// dock panel (ui->dockLayers in MainWindow.ui), so layers can be managed
+// while drawing. All mutations go through the LayerList singleton, so the
+// toolbar combo and the canvas stay in sync at all times.
+class DialogLayerList : public QWidget
 {
     Q_OBJECT
 

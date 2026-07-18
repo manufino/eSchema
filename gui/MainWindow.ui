@@ -1402,6 +1402,25 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockLayers">
+   <property name="minimumSize">
+    <size>
+     <width>220</width>
+     <height>200</height>
+    </size>
+   </property>
+   <property name="windowIcon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
+   </property>
+   <property name="windowTitle">
+    <string>Layers</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="DialogLayerList" name="layerPanel"/>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -3168,6 +3187,11 @@
    <class>MacroPreviewWidget</class>
    <extends>QFrame</extends>
    <header>MacroPreviewWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DialogLayerList</class>
+   <extends>QWidget</extends>
+   <header>DialogLayerList.h</header>
   </customwidget>
  </customwidgets>
  <resources>

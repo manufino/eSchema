@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>DialogLayerList</class>
- <widget class="QDialog" name="DialogLayerList">
-  <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
-  </property>
+ <widget class="QWidget" name="DialogLayerList">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,14 +12,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>250</width>
-    <height>400</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>400</width>
-    <height>800</height>
+    <width>220</width>
+    <height>200</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -32,14 +23,8 @@
    <iconset resource="../resources.qrc">
     <normaloff>:/res/resources/remix/stack-line.png</normaloff>:/res/resources/remix/stack-line.png</iconset>
   </property>
-  <property name="windowOpacity">
-   <double>1.000000000000000</double>
-  </property>
   <property name="styleSheet">
    <string notr="true"/>
-  </property>
-  <property name="modal">
-   <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
