@@ -393,12 +393,13 @@ MainWindow::MainWindow(QWidget *parent)
         sheetScene->setObjectSnapEnabled(checked);
     });
 
-    // Quick snap-step picker, right next to the snap toggles: the step gets
-    // changed constantly while drawing (coarse placement vs fine detail),
-    // so it earns a permanent toolbar slot instead of a trip to Options.
-    // Same "snap_step" key the Options dialog's spinbox reads/writes; kept
-    // in sync both ways through settingIsChanged. A plain widget like the
-    // layer combo, deliberately outside the customizable-command system.
+    // Quick snap-step picker, living in the status bar (leftmost of its
+    // permanent widgets, next to the zoom readout): the step gets changed
+    // constantly while drawing (coarse placement vs fine detail), so it
+    // earns a permanent slot instead of a trip to Options. Same "snap_step"
+    // key the Options dialog's spinbox reads/writes; kept in sync both ways
+    // through settingIsChanged. Owned and wired here, not inside StatusBar:
+    // it talks to SettingsManager and keeps its tr() context.
     m_snapStepCombo = new QComboBox(this);
     for (int step : { 1, 2, 5, 10, 25, 50 })
         m_snapStepCombo->addItem(tr("Snap %1").arg(step), step);
@@ -425,15 +426,9 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(&SettingsManager::getInstance(), &SettingsManager::settingIsChanged,
             this, syncSnapStepCombo);
-    // Right after the snap toggles (before the separator that follows them).
-    {
-        const QList<QAction *> toolActions = ui->toolBarTools->actions();
-        const int snapIndex = toolActions.indexOf(ui->actionSnapToObjects);
-        if (snapIndex >= 0 && snapIndex + 1 < toolActions.size())
-            ui->toolBarTools->insertWidget(toolActions.at(snapIndex + 1), m_snapStepCombo);
-        else
-            ui->toolBarTools->addWidget(m_snapStepCombo);
-    }
+    // Index 0: before the zoom button and the other permanent widgets the
+    // StatusBar constructor already added.
+    ui->statusbar->insertPermanentWidget(0, m_snapStepCombo);
 
     // Options-dialog settings that map onto live widget state (toolbar icon
     // size, mirrored toggles, ...) - see applyLiveSettings().

@@ -644,7 +644,7 @@ private:
     // The recent-files hover preview (created lazily, reused) - see
     // showRecentFilePreview().
     QLabel *m_recentPreview = nullptr;
-    // The toolbar's quick snap-step picker - mirrors the "snap_step"
+    // The status bar's quick snap-step picker - mirrors the "snap_step"
     // setting both ways (see the constructor's wiring).
     QComboBox *m_snapStepCombo = nullptr;
     // Which lines of the FCD code panel each primitive occupies - filled by
