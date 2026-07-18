@@ -60,10 +60,14 @@ protected:
 
 private:
     // Rebuilds the visible list to the entries matching `needle` (substring
-    // match on command text and category), keeping the first row selected.
+    // match on command text and category), recently-run commands first,
+    // keeping the first runnable row selected.
     void refilter(const QString &needle);
     // Runs the selected command's QAction (if enabled) and closes the popup.
     void triggerCurrent();
+    // Records the just-run command at the front of the persisted
+    // "palette_recent_commands" list refilter() boosts to the top.
+    void rememberRecent(QAction *action);
 
     struct Entry {
         QString category;

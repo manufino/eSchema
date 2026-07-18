@@ -18,6 +18,7 @@
  */
 
 #include "CommandPalette.h"
+#include "SettingsManager.h"
 
 #include <QAction>
 #include <QKeyEvent>
@@ -26,6 +27,8 @@
 #include <QCoreApplication>
 #include <QScreen>
 #include <QVBoxLayout>
+#include <algorithm>
+#include <climits>
 
 namespace {
 // Menu/action texts carry '&' mnemonic markers ("&Edit") that must neither
@@ -107,6 +110,7 @@ void CommandPalette::refilter(const QString &needle)
 {
     m_list->clear();
     const QString trimmed = needle.trimmed();
+    QList<const Entry *> matched;
     for (const Entry &entry : m_entries) {
         const QString name = cleanText(entry.action->text());
         // Both the command's own name and its category match, so "edit mir"
@@ -121,9 +125,31 @@ void CommandPalette::refilter(const QString &needle)
                 break;
             }
         }
-        if (!matches)
-            continue;
+        if (matches)
+            matched.append(&entry);
+    }
 
+    // Recently run commands float to the top (most recent first, see
+    // triggerCurrent()'s bookkeeping); everything else keeps its menu
+    // order below them - so the palette opens straight onto what the user
+    // actually keeps using. stable_sort preserves the menu order within
+    // each group.
+    const QStringList recents = SettingsManager::getInstance()
+            .loadSetting("palette_recent_commands").toStringList();
+    std::stable_sort(matched.begin(), matched.end(),
+                     [&recents](const Entry *a, const Entry *b) {
+        int indexA = recents.indexOf(a->action->objectName());
+        int indexB = recents.indexOf(b->action->objectName());
+        if (indexA < 0)
+            indexA = INT_MAX;
+        if (indexB < 0)
+            indexB = INT_MAX;
+        return indexA < indexB;
+    });
+
+    for (const Entry *entryPtr : matched) {
+        const Entry &entry = *entryPtr;
+        const QString name = cleanText(entry.action->text());
         QString label = name + QStringLiteral("  —  ") + entry.category;
         const QKeySequence shortcut = entry.action->shortcut();
         if (!shortcut.isEmpty())
@@ -152,6 +178,26 @@ void CommandPalette::triggerCurrent()
         return;
     auto *action = static_cast<QAction *>(item->data(Qt::UserRole).value<void *>());
     accept();
-    if (action)
+    if (action) {
+        rememberRecent(action);
         action->trigger();
+    }
+}
+
+void CommandPalette::rememberRecent(QAction *action)
+{
+    // Commands are identified by objectName (the same unique key the
+    // shortcut/toolbar customizations persist under), so the list survives
+    // restarts and language switches. Capped small: this is "what I keep
+    // reaching for", not a history.
+    const QString name = action->objectName();
+    if (name.isEmpty())
+        return;
+    QStringList recents = SettingsManager::getInstance()
+            .loadSetting("palette_recent_commands").toStringList();
+    recents.removeAll(name);
+    recents.prepend(name);
+    while (recents.size() > 8)
+        recents.removeLast();
+    SettingsManager::getInstance().saveSetting("palette_recent_commands", recents);
 }
