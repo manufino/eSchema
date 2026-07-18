@@ -1543,6 +1543,7 @@
      <addaction name="actionFilletCorners"/>
      <addaction name="actionChamferCorners"/>
      <addaction name="actionOffsetOutline"/>
+     <addaction name="actionHatch"/>
      <addaction name="separator"/>
      <addaction name="actionSplitAtPoint"/>
      <addaction name="actionTrimToIntersection"/>
@@ -2997,6 +2998,18 @@
    </property>
    <property name="toolTip">
     <string>Replicate the selection on a grid of rows and columns</string>
+   </property>
+  </action>
+  <action name="actionHatch">
+   <property name="icon">
+    <iconset resource="../resources.qrc">
+     <normaloff>:/res/resources/hatch.png</normaloff>:/res/resources/hatch.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hatch...</string>
+   </property>
+   <property name="toolTip">
+    <string>Fill the selected closed shapes with a pattern of hatch lines</string>
    </property>
   </action>
   <action name="actionConvertToPolygon">

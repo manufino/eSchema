@@ -1075,6 +1075,7 @@ void MainWindow::setConnections()
     connect(ui->actionBooleanSmooth, &QAction::toggled, this, [](bool on) {
         SettingsManager::getInstance().saveSetting("boolean_smooth_results", on);
     });
+    connect(ui->actionHatch, &QAction::triggered, this, &MainWindow::clickHatchAction);
     connect(ui->actionRotateByAngle, &QAction::triggered, this, &MainWindow::clickRotateByAngleAction);
     connect(ui->actionScaleSelection, &QAction::triggered, this, &MainWindow::clickScaleSelectionAction);
     connect(ui->actionMoveBasePoint, &QAction::triggered, this, &MainWindow::clickMoveBasePointAction);

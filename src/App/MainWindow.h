@@ -168,6 +168,10 @@ public slots:
     void clickFilletCornersAction();
     void clickChamferCornersAction();
     void clickOffsetOutlineAction();
+    // Fills every selected closed shape with clipped hatch lines (angle/
+    // spacing/cross from DialogHatch), generated as plain LI primitives on
+    // the shape's own layer - one undo step, format untouched.
+    void clickHatchAction();
     // Splits the single selected line/track/Bezier/open curve in two at a
     // clicked (snappable) point on it.
     void clickSplitAtPointAction();

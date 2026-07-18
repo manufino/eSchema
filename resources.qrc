@@ -23,6 +23,7 @@
         <file>resources/offset.png</file>
         <file>resources/move_base.png</file>
         <file>resources/copy_base.png</file>
+        <file>resources/hatch.png</file>
         <file>resources/tab_close.png</file>
         <file>resources/tab_close_hover.png</file>
         <file>resources/simplify.png</file>

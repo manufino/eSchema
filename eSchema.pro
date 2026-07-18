@@ -97,6 +97,7 @@ SOURCES += \
 	src/IO/GraphicExporter.cpp \
 	src/Dialogs/DialogAbout.cpp \
 	src/Dialogs/DialogArray.cpp \
+	src/Dialogs/DialogHatch.cpp \
 	src/Dialogs/DialogAttachImage.cpp \
 	src/Dialogs/DialogCustomizeToolbars.cpp \
 	src/Dialogs/DialogCreateMacro.cpp \
@@ -182,6 +183,7 @@ HEADERS += \
 	src/IO/GraphicExporter.h \
 	src/Dialogs/DialogAbout.h \
 	src/Dialogs/DialogArray.h \
+	src/Dialogs/DialogHatch.h \
 	src/Dialogs/DialogAttachImage.h \
 	src/Dialogs/DialogCustomizeToolbars.h \
 	src/Dialogs/DialogCreateMacro.h \
@@ -218,6 +220,7 @@ HEADERS += \
 FORMS += \
 	gui/DialogAbout.ui \
 	gui/DialogArray.ui \
+	gui/DialogHatch.ui \
 	gui/DialogAttachImage.ui \
 	gui/DialogCustomizeToolbars.ui \
 	gui/DialogCreateMacro.ui \

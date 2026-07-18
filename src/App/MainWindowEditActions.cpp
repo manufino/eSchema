@@ -43,7 +43,9 @@
 #include "PrimitiveMacro.h"
 #include "PrimitiveImage.h"
 #include "PrimitiveText.h"
+#include "PrimitiveLine.h"
 #include "DialogCreateMacro.h"
+#include "DialogHatch.h"
 #include "DialogFind.h"
 #include <QGuiApplication>
 #include <QClipboard>
@@ -723,6 +725,8 @@ void MainWindow::updateEditActionsState()
     ui->actionBooleanUnion->setEnabled(canCombine);
     ui->actionBooleanSubtract->setEnabled(canCombine);
     ui->actionBooleanIntersect->setEnabled(canCombine);
+    // Hatch fills any single closed shape - one qualifying operand is enough.
+    ui->actionHatch->setEnabled(booleanOperands >= 1);
 
     bool canToPolygon = false, canToCurve = false, canSimplify = false, canRound = false;
     for (GraphicsPrimitive *primitive : selected) {
@@ -1251,6 +1255,140 @@ void MainWindow::clickOffsetOutlineAction()
 void MainWindow::clickChamferCornersAction()
 {
     roundSelectedCorners(true);
+}
+
+namespace {
+
+// The hatch segments filling `region` with parallel lines at `angleDeg`
+// (counterclockwise from horizontal, in the y-grows-down scene space)
+// spaced `spacing` units apart. Classic scanline clipping: each candidate
+// line is intersected with every polygon edge of the region, the crossing
+// points are sorted along the line, and consecutive pairs bound an inside
+// stretch (even-odd rule - which also carves holes, e.g. a boolean
+// "keyhole" polygon, for free). Nearly-coincident crossings (the line
+// grazing a vertex, which would otherwise unbalance the pairing) collapse
+// into one.
+QList<QLineF> hatchSegments(const QPainterPath &region, qreal angleDeg, qreal spacing)
+{
+    QList<QLineF> segments;
+    const QRectF bounds = region.boundingRect();
+    if (bounds.isEmpty() || spacing <= 0)
+        return segments;
+
+    const qreal radians = qDegreesToRadians(angleDeg);
+    // Negative y component: scene y grows downwards, and the dialog's angle
+    // should read the usual way (45 = rising to the right).
+    const QPointF dir(std::cos(radians), -std::sin(radians));
+    const QPointF normal(-dir.y(), dir.x());
+
+    // Scan range: project the bounding rect's corners onto the normal.
+    const QPointF center = bounds.center();
+    const QPointF corners[4] = { bounds.topLeft(), bounds.topRight(),
+                                 bounds.bottomLeft(), bounds.bottomRight() };
+    qreal minOffset = 0.0, maxOffset = 0.0;
+    for (int i = 0; i < 4; ++i) {
+        const QPointF d = corners[i] - center;
+        const qreal offset = d.x() * normal.x() + d.y() * normal.y();
+        minOffset = i == 0 ? offset : qMin(minOffset, offset);
+        maxOffset = i == 0 ? offset : qMax(maxOffset, offset);
+    }
+    // Long enough to cross the whole bounding rect at any angle.
+    const qreal halfLength = std::hypot(bounds.width(), bounds.height());
+
+    // The region's outline as closed rings.
+    QList<QPolygonF> rings = region.toSubpathPolygons();
+    for (QPolygonF &ring : rings) {
+        if (!ring.isEmpty() && ring.first() != ring.last())
+            ring.append(ring.first());
+    }
+
+    for (qreal offset = std::ceil(minOffset / spacing) * spacing;
+            offset <= maxOffset; offset += spacing) {
+        const QPointF base = center + normal * offset;
+        const QPointF a = base - dir * halfLength;
+        const QPointF b = base + dir * halfLength;
+        const QLineF scan(a, b);
+        const QPointF ab = b - a;
+        const qreal abLengthSq = QPointF::dotProduct(ab, ab);
+
+        QVector<qreal> crossings;
+        for (const QPolygonF &ring : rings) {
+            for (int i = 0; i + 1 < ring.size(); ++i) {
+                const QLineF edge(ring.at(i), ring.at(i + 1));
+                QPointF intersection;
+                if (scan.intersects(edge, &intersection) == QLineF::BoundedIntersection)
+                    crossings.append(QPointF::dotProduct(intersection - a, ab) / abLengthSq);
+            }
+        }
+        std::sort(crossings.begin(), crossings.end());
+        // Collapse vertex-grazing duplicates (see the comment above).
+        QVector<qreal> unique;
+        for (qreal t : crossings) {
+            if (unique.isEmpty() || (t - unique.last()) * halfLength * 2 > 0.01)
+                unique.append(t);
+        }
+        for (int i = 0; i + 1 < unique.size(); i += 2) {
+            const QPointF p1 = a + ab * unique.at(i);
+            const QPointF p2 = a + ab * unique.at(i + 1);
+            if (QLineF(p1, p2).length() > 0.01)
+                segments.append(QLineF(p1, p2));
+        }
+    }
+    return segments;
+}
+
+} // namespace
+
+void MainWindow::clickHatchAction()
+{
+    QList<GraphicsPrimitive *> shapes;
+    for (GraphicsPrimitive *primitive : selectedPrimitivesInOrder()) {
+        if (primitive->supportsBooleanOps())
+            shapes.append(primitive);
+    }
+    if (shapes.isEmpty())
+        return;
+
+    DialogHatch dialog(this);
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+    QList<qreal> angles = { dialog.angleDeg() };
+    if (dialog.crossHatch())
+        angles.append(dialog.angleDeg() + 90.0);
+
+    // All segments first, so a runaway combination (huge shape, tiny
+    // spacing) can be refused before anything reaches the undo stack.
+    QList<QPair<GraphicsPrimitive *, QLineF>> generated;
+    for (GraphicsPrimitive *shape : shapes) {
+        const QPainterPath region = shape->booleanOutline();
+        for (qreal angle : angles) {
+            const QList<QLineF> segments = hatchSegments(region, angle, dialog.spacing());
+            for (const QLineF &segment : segments)
+                generated.append({ shape, segment });
+        }
+    }
+    if (generated.isEmpty())
+        return;
+    if (generated.size() > 5000) {
+        QMessageBox::warning(this, tr("Hatch"),
+                tr("This hatch would create %1 lines - increase the spacing and try again.")
+                        .arg(generated.size()));
+        return;
+    }
+
+    // Plain LI primitives on the shape's own layer, in one undo step - the
+    // outline itself stays untouched, and the file format stays exactly
+    // FidoCadJ's.
+    QUndoStack *undo = sheetScene->undoStack();
+    undo->beginMacro(tr("Hatch"));
+    for (const auto &entry : generated) {
+        auto *line = new PrimitiveLine();
+        line->setControlPoint(0, entry.second.p1());
+        line->setControlPoint(1, entry.second.p2());
+        line->setLayer(entry.first->layer());
+        undo->push(new CreatePrimitiveCommand(sheetScene, line));
+    }
+    undo->endMacro();
 }
 
 // Splits the single selected line-like primitive in two at a clicked point:
