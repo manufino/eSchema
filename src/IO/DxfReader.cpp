@@ -21,6 +21,7 @@
 #include "DxfCommon.h"
 #include "Sheet.h"
 #include "LayerList.h"
+#include "GlobalUtils.h"
 #include "Layer.h"
 #include "PrimitiveLine.h"
 #include "PrimitiveEllipse.h"
@@ -596,7 +597,11 @@ QHash<QString, Layer *> remapLayers(const QStringList &usedLayerNamesInOrder,
         if (nextSlot < slotCount) {
             Layer *layer = layers->at(nextSlot);
             layer->setName(name);
-            layer->setColor(layerColors.value(name, QColor(Qt::white)));
+            // Contrast-guarded: DXF layers are routinely white (AutoCAD's
+            // "foreground" color 7, black-on-white there) - applied as-is
+            // on this app's light canvas the drawing would be invisible.
+            layer->setColor(Utils::instance().contrastingDrawingColor(
+                    layerColors.value(name, QColor(Qt::white))));
             mapping.insert(name, layer);
             claimedSlots.insert(nextSlot);
             lastClaimed = layer;

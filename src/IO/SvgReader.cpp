@@ -30,6 +30,7 @@
 #include "PrimitiveText.h"
 #include "LayerList.h"
 #include "Layer.h"
+#include "GlobalUtils.h"
 
 #include <QXmlStreamReader>
 #include <QFile>
@@ -79,7 +80,10 @@ public:
         }
         Layer *layer = layers->at(m_nextSlot);
         layer->setName(QStringLiteral("SVG %1").arg(color.name()));
-        layer->setColor(color);
+        // Contrast-guarded like the DXF importer: white (or near-background)
+        // SVG art must not vanish against the canvas. The label above keeps
+        // the original color's name, so the source stays recognizable.
+        layer->setColor(Utils::instance().contrastingDrawingColor(color));
         m_assigned.insert(color.rgb(), m_nextSlot);
         ++m_nextSlot;
         return layer;
