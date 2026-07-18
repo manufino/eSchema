@@ -423,6 +423,10 @@ private:
     // translation and the view refitted, so nothing opens stranded out of
     // sight. A no-op for well-placed files.
     void normalizeLoadedDrawingPosition();
+    // Rigidly translates freshly IMPORTED content (DXF/SVG - never native
+    // .fcd, whose coordinates must round-trip untouched) to the middle of
+    // the sheet, so working near it never fights the drawing-area edges.
+    void centerLoadedDrawingOnSheet();
     // Writes `document` to `filePath` (backup per the option), marks its
     // stack clean, drops its recovery sidecar and refreshes its titles.
     bool saveDocumentToPath(Document *document, const QString &filePath);

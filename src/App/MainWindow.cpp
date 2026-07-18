@@ -460,7 +460,14 @@ Document *MainWindow::createDocument()
     auto *document = new Document(this);
     document->setUntitledNumber(nextUntitledNumber());
     Sheet *sheet = document->sheet();
-    sheet->setSceneRect(0, 0, 5000, 5000); // fix the scene dimensions
+    // Fixed drawing-area size. 20000 units (= 100 inches / 2.54 m per side
+    // at the 1/200-inch unit) rather than the old 5000: real-world imports
+    // rescaled by their declared unit need the headroom (an A0 sheet in mm
+    // is ~9400 units on its long side), and imported content is centered
+    // mid-sheet (see centerLoadedDrawingOnSheet()) so panning/zooming near
+    // it never bumps into the drawing-area edge. Native FidoCadJ drawings
+    // keep living near the origin as always.
+    sheet->setSceneRect(0, 0, 20000, 20000);
     // 0 = unlimited (QUndoStack's own default). Only effective while the
     // stack is empty, hence set at creation; a change from the Options
     // dialog takes effect for documents opened afterwards.
@@ -2504,6 +2511,27 @@ bool MainWindow::openAnyFile(const QString &path)
     return openFile(path);
 }
 
+// Centers the just-imported drawing on the sheet (whole units, one rigid
+// translation - same contract as normalizeLoadedDrawingPosition() below).
+// Imports land wherever the source file's coordinates put them - typically
+// hugging the sheet's origin corner, where panning and zooming keep bumping
+// into the drawing-area edge; mid-sheet there is room in every direction.
+// Deliberately NOT applied to native .fcd loads: their coordinates must
+// round-trip byte-identical to the file, not be rewritten for viewing
+// comfort.
+void MainWindow::centerLoadedDrawingOnSheet()
+{
+    const QRectF bounds = sheetScene->itemsBoundingRect();
+    if (bounds.isEmpty())
+        return;
+    const QPointF offset = sheetScene->sceneRect().center() - bounds.center();
+    const QPointF delta(std::round(offset.x()), std::round(offset.y()));
+    if (qFuzzyIsNull(delta.x()) && qFuzzyIsNull(delta.y()))
+        return;
+    for (GraphicsPrimitive *primitive : sheetScene->primitives())
+        primitive->translateControlPoints(delta);
+}
+
 // If the just-loaded drawing sticks out of the drawing area, shift it onto
 // the sheet. One rigid translation for everything - primitives, macros,
 // labels - by a whole number of units, so relative geometry and grid
@@ -2622,6 +2650,7 @@ bool MainWindow::importDxfFile(const QString &filePath)
         QMessageBox::warning(this, tr("Error"), tr("Unable to open the file:\n%1").arg(error));
         return false;
     }
+    centerLoadedDrawingOnSheet();
     normalizeLoadedDrawingPosition();
     sheetScene->undoStack()->setClean();
     // A DXF file has no notion of "this eSchema document's own path" - it's
@@ -2660,6 +2689,7 @@ bool MainWindow::importSvgFile(const QString &filePath)
         QMessageBox::warning(this, tr("Error"), tr("Unable to open the file:\n%1").arg(error));
         return false;
     }
+    centerLoadedDrawingOnSheet();
     normalizeLoadedDrawingPosition();
     sheetScene->undoStack()->setClean();
     setCurrentFilePath(QString());
