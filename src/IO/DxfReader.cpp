@@ -532,7 +532,21 @@ public:
     void addImage(const DRW_Image *) override { ++ctx.unsupportedCounts[QStringLiteral("IMAGE")]; }
 
     // --- structural / irrelevant ---------------------------------------------
-    void addHeader(const DRW_Header *) override {}
+    // $INSUNITS: the drawing's declared measurement unit, read so the
+    // import can rescale real-world sizes onto eSchema's fixed 1/200-inch
+    // unit (see the scale computation in read()).
+    void addHeader(const DRW_Header *data) override
+    {
+        // The public API for reading header vars is the `vars` map itself
+        // (getInt() is private) - see drw_header.h's own class comment.
+        if (!data)
+            return;
+        const auto it = data->vars.find("$INSUNITS");
+        if (it != data->vars.end() && it->second
+                && it->second->type() == DRW_Variant::INTEGER)
+            insunits = it->second->content.i;
+    }
+    int insunits = 0; // 0 = unitless
     void addLType(const DRW_LType &) override {}
     void addDimStyle(const DRW_Dimstyle &) override {}
     void addVport(const DRW_Vport &) override {}
@@ -555,6 +569,26 @@ public:
     void writeObjects() override {}
     void writeAppId() override {}
 };
+
+// Millimeters per DXF drawing unit for the $INSUNITS codes worth honoring;
+// 0 for unitless (code 0) and the exotic astronomical/sub-micron codes,
+// which keep the import 1:1.
+qreal insunitsToMillimeters(int insunits)
+{
+    switch (insunits) {
+    case 1: return 25.4;        // inches
+    case 2: return 304.8;       // feet
+    case 4: return 1.0;         // millimeters
+    case 5: return 10.0;        // centimeters
+    case 6: return 1000.0;      // meters
+    case 8: return 0.0000254;   // microinches
+    case 9: return 0.0254;      // mils
+    case 10: return 914.4;      // yards
+    case 13: return 0.001;      // microns
+    case 14: return 100.0;      // decimeters
+    default: return 0.0;
+    }
+}
 
 // Renames/recolors the existing global 16-slot LayerList to mirror the
 // distinct DXF layers actually used by a kept (non-skipped) entity, in
@@ -661,10 +695,30 @@ bool readFile(const QString &filePath, Sheet *sheet, QString *errorMessage, QStr
     }
     const QHash<QString, Layer *> layerMapping = remapLayers(usedLayerNames, iface.layerColors, warnings);
 
+    // Physical scale: a DXF declaring real-world units ($INSUNITS - metric
+    // drawings are typically 4, millimeters) is rescaled onto the FidoCadJ
+    // logical unit (1/200 inch = 0.127 mm), so the dimension/measure tools
+    // report the original's true millimeters instead of reading the raw
+    // numbers ~8x too small. Unitless files - including eSchema's own DXF
+    // exports, which write no $INSUNITS - keep their coordinates 1:1.
+    const qreal mmPerUnit = insunitsToMillimeters(iface.insunits);
+    const qreal scale = mmPerUnit > 0 ? mmPerUnit / 0.127 : 1.0;
+
     for (const ParsedPrimitive &pp : iface.topLevel) {
         if (pp.primitive->isDegenerate()) {
             delete pp.primitive;
             continue;
+        }
+        if (!qFuzzyCompare(scale, 1.0)) {
+            GraphicsPrimitive *primitive = pp.primitive;
+            for (int i = 0; i < primitive->controlPointCount(); ++i)
+                primitive->setControlPoint(i, primitive->controlPoint(i) * scale);
+            // The two primitive types carrying a size beyond their points.
+            if (auto *track = dynamic_cast<PrimitivePcbTrack *>(primitive))
+                track->setWidth(track->width() * scale);
+            else if (auto *text = dynamic_cast<PrimitiveText *>(primitive))
+                text->setSize(qMax(1, qRound(text->sizeY() * scale)),
+                              qMax(1, qRound(text->sizeX() * scale)));
         }
         pp.primitive->setLayer(layerMapping.value(pp.dxfLayer, LayerList::getInstance().getMaster()));
         sheet->addPrimitive(pp.primitive);
