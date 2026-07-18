@@ -44,6 +44,7 @@
 #include "DialogExport.h"
 #include "DialogPrintOptions.h"
 #include "DxfReader.h"
+#include "SvgReader.h"
 #include "FidoCadReader.h"
 #include "FidoCadWriter.h"
 #include "GraphicExporter.h"
@@ -1375,7 +1376,6 @@ void MainWindow::setConnections()
         if (m_recentPreview)
             m_recentPreview->hide();
     });
-    connect(ui->actionImportDxf, &QAction::triggered, this, &MainWindow::clickImportDxfAction);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::clickSaveAction);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::clickSaveAsAction);
     connect(ui->actionSaveSplit, &QAction::triggered, this, &MainWindow::clickSaveSplitAction);
@@ -2480,14 +2480,28 @@ void MainWindow::clickNewAction()
 
 void MainWindow::clickOpenAction()
 {
-    // No unsaved-changes prompt anymore: the file opens in its own tab (or
-    // reuses a pristine untitled one) - see openFile().
+    // One dialog for every openable format - importable ones (DXF, SVG)
+    // included, instead of separate import menu entries. No unsaved-changes
+    // prompt anymore: the file opens in its own tab (or reuses a pristine
+    // untitled one) - see openFile()/openAnyFile().
     const QString path = QFileDialog::getOpenFileName(this, tr("Open drawing"), QString(),
-                                                        tr("FidoCadJ (*.fcd)"));
+            tr("Drawings (*.fcd *.dxf *.svg);;FidoCadJ (*.fcd);;AutoCAD DXF (*.dxf);;SVG (*.svg)"));
     if (path.isEmpty())
         return;
 
-    openFile(path);
+    openAnyFile(path);
+}
+
+bool MainWindow::openAnyFile(const QString &path)
+{
+    // Routed by extension: native .fcd files open (and land in the recent
+    // list), .dxf/.svg go through their import readers - same behavior
+    // whether the file came from the Open dialog or a drag & drop.
+    if (path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
+        return importDxfFile(path);
+    if (path.endsWith(QStringLiteral(".svg"), Qt::CaseInsensitive))
+        return importSvgFile(path);
+    return openFile(path);
 }
 
 // If the just-loaded drawing sticks out of the drawing area, shift it onto
@@ -2582,18 +2596,6 @@ bool MainWindow::openFile(const QString &filePath)
     return true;
 }
 
-void MainWindow::clickImportDxfAction()
-{
-    // No unsaved-changes prompt: the import lands in its own tab (or reuses
-    // a pristine untitled one) - see importDxfFile().
-    const QString path = QFileDialog::getOpenFileName(this, tr("Import from DXF"), QString(),
-                                                        tr("DXF (*.dxf)"));
-    if (path.isEmpty())
-        return;
-
-    importDxfFile(path);
-}
-
 bool MainWindow::importDxfFile(const QString &filePath)
 {
     // Same tab policy as openFile(): reuse a pristine untitled document,
@@ -2627,6 +2629,39 @@ bool MainWindow::importDxfFile(const QString &filePath)
     if (!warnings.isEmpty()) {
         QMessageBox::information(this, tr("Import from DXF"),
                                   tr("Some elements of the DXF file were not imported:\n\n%1")
+                                          .arg(warnings.join(QLatin1Char('\n'))));
+    }
+    return true;
+}
+
+bool MainWindow::importSvgFile(const QString &filePath)
+{
+    // Mirrors importDxfFile() step for step: same tab policy, same
+    // non-undoable bulk-load contract, same "import keeps the document
+    // untitled" rule so Save still goes through Save As.
+    if (!(currentFilePath.isEmpty() && sheetScene->primitives().isEmpty()
+          && sheetScene->undoStack()->isClean()))
+        createDocument();
+
+    if (placementController)
+        placementController->cancelPlacement(); // see openFile()
+    QString error;
+    QStringList warnings;
+    if (!SvgReader::readFile(filePath, sheetScene, &error, &warnings)) {
+        QMessageBox::warning(this, tr("Error"), tr("Unable to open the file:\n%1").arg(error));
+        return false;
+    }
+    normalizeLoadedDrawingPosition();
+    sheetScene->undoStack()->setClean();
+    setCurrentFilePath(QString());
+    clearAutosaveFor(m_activeDocument);
+    syncFcdCodeFromSheet(); // setClean() alone doesn't fire indexChanged()
+    if (m_activeDocument && m_activeDocument->welcome)
+        m_activeDocument->welcome->dismiss();
+
+    if (!warnings.isEmpty()) {
+        QMessageBox::information(this, tr("Import from SVG"),
+                                  tr("Some elements of the SVG file were not imported:\n\n%1")
                                           .arg(warnings.join(QLatin1Char('\n'))));
     }
     return true;
@@ -2709,7 +2744,8 @@ QStringList MainWindow::droppableFilePaths(const QMimeData *mimeData)
     for (const QUrl &url : mimeData->urls()) {
         const QString path = url.toLocalFile();
         if (path.endsWith(QStringLiteral(".fcd"), Qt::CaseInsensitive)
-                || path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
+                || path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive)
+                || path.endsWith(QStringLiteral(".svg"), Qt::CaseInsensitive))
             paths.append(path);
     }
     return paths;
@@ -2729,12 +2765,8 @@ void MainWindow::dropEvent(QDropEvent *event)
 
     event->acceptProposedAction();
     // Each file lands in its own tab - nothing to confirm anymore.
-    for (const QString &path : paths) {
-        if (path.endsWith(QStringLiteral(".dxf"), Qt::CaseInsensitive))
-            importDxfFile(path);
-        else
-            openFile(path);
-    }
+    for (const QString &path : paths)
+        openAnyFile(path);
 }
 
 void MainWindow::clickSaveAction()

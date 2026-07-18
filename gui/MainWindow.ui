@@ -1437,7 +1437,6 @@
     <addaction name="actionNewDraw"/>
     <addaction name="actionOpenFile"/>
     <addaction name="menuRecentFiles"/>
-    <addaction name="actionImportDxf"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
@@ -1793,15 +1792,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="actionImportDxf">
-   <property name="icon">
-    <iconset resource="../resources.qrc">
-     <normaloff>:/res/resources/remix/folder-add-line.png</normaloff>:/res/resources/remix/folder-add-line.png</iconset>
-   </property>
-   <property name="text">
-    <string>Import from DXF...</string>
    </property>
   </action>
   <action name="actionSave">

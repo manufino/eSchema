@@ -96,6 +96,7 @@ SOURCES += \
 	src/IO/FidoCadTokenUtils.cpp \
 	src/IO/FidoCadWriter.cpp \
 	src/IO/GraphicExporter.cpp \
+	src/IO/SvgReader.cpp \
 	src/Dialogs/DialogAbout.cpp \
 	src/Dialogs/DialogArray.cpp \
 	src/Dialogs/DialogHatch.cpp \
@@ -183,6 +184,7 @@ HEADERS += \
 	src/IO/FidoCadTokenUtils.h \
 	src/IO/FidoCadWriter.h \
 	src/IO/GraphicExporter.h \
+	src/IO/SvgReader.h \
 	src/Dialogs/DialogAbout.h \
 	src/Dialogs/DialogArray.h \
 	src/Dialogs/DialogHatch.h \

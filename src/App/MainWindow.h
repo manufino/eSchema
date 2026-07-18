@@ -196,8 +196,9 @@ public slots:
     void clickSelectSameTypeAction();
     void clickInvertSelectionAction();
     void clickNewAction();
+    // One Open dialog for every openable format (.fcd, and the .dxf/.svg
+    // imports - no separate import menu entries), routed by openAnyFile().
     void clickOpenAction();
-    void clickImportDxfAction();
     void clickSaveAction();
     void clickSaveAsAction();
     void clickSaveSplitAction();
@@ -404,6 +405,12 @@ private:
     // DXF and dropping a .dxf onto the window. Returns false on read errors
     // (already reported to the user).
     bool importDxfFile(const QString &filePath);
+    // Same contract as importDxfFile(), for SVG files (see SvgReader).
+    bool importSvgFile(const QString &filePath);
+    // Opens `path` with the reader its extension calls for: .dxf/.svg
+    // through their importers, everything else as a native .fcd - shared by
+    // the Open dialog and dropEvent().
+    bool openAnyFile(const QString &path);
     // The droppable local files carried by a drag's mime data - empty if
     // the drag holds none (wrong extension, non-file payload). Shared by
     // dragEnterEvent (to decide acceptance) and dropEvent; each dropped
