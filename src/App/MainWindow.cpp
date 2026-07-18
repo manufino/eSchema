@@ -635,12 +635,26 @@ Document *MainWindow::createDocument()
     updateRulersVisibility(); // apply the rulers setting to the new view too
     dock->raise();            // bring the new document's tab to the front
     setActiveDocument(document);
+    // Keyboard focus moves to the new drawing right away, so Escape/arrow
+    // keys and the wheel land on it and not on the previous document.
+    view->setFocus();
     setupDockTabBars();       // tabifying above may have created a tab bar
     // Deferred: tabifiedDockWidgets() only reflects the tabify above after
     // Qt has re-laid-out the docks, so a synchronous updateDockTitleBars()
     // here would still see the just-grouped docks as ungrouped (leaving
     // their title bars up until the next event).
-    QTimer::singleShot(0, this, [this]() { updateDockTitleBars(); });
+    // The raise is repeated then too: the synchronous raise() above runs
+    // BEFORE Qt has built/updated the native tab bar for the tabify, so on
+    // its own the new document could end up created-but-behind, leaving the
+    // user still looking at the previous drawing.
+    QTimer::singleShot(0, this, [this, document]() {
+        updateDockTitleBars();
+        if (!m_documents.contains(document) || !document->dock)
+            return; // closed again in the meantime
+        document->dock->raise();
+        if (document->viewWidget)
+            document->viewWidget->view()->setFocus();
+    });
     return document;
 }
 
